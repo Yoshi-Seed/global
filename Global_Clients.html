@@ -53,8 +53,11 @@
                 <button id="analyze-total-button" class="flex items-center justify-center gap-2 w-full sm:w-auto bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-indigo-700 transition-colors">
                     ✨ 全体の傾向を分析
                 </button>
+                <button id="analyze-swot-button" class="flex items-center justify-center gap-2 w-full sm:w-auto bg-orange-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-orange-600 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed">
+                    ✨ SWOT分析 (1社選択)
+                </button>
                 <button id="analyze-companies-button" class="flex items-center justify-center gap-2 w-full sm:w-auto bg-teal-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-teal-600 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed">
-                    ✨ 選択した企業を比較
+                    ✨ 企業比較 (2社以上)
                 </button>
             </div>
         </div>
@@ -285,7 +288,9 @@
             const selectedCompanyNodes = document.querySelectorAll("#company-filter input:checked");
             const selectedCompanies = Array.from(selectedCompanyNodes).map(node => node.value);
             
-            document.getElementById('analyze-companies-button').disabled = selectedCompanies.length === 0;
+            // AI分析ボタンの有効/無効を切り替え
+            document.getElementById('analyze-swot-button').disabled = selectedCompanies.length !== 1;
+            document.getElementById('analyze-companies-button').disabled = selectedCompanies.length < 2;
 
             const filteredData = data.filter(d => selectedCompanies.includes(d.company));
             const terms = [...new Set(data.map(d => d.term))].sort((a,b) => a - b);
@@ -329,6 +334,7 @@
             const modal = document.getElementById('ai-modal');
             const closeModalButton = document.getElementById('close-modal-button');
             const analyzeTotalButton = document.getElementById('analyze-total-button');
+            const analyzeSwotButton = document.getElementById('analyze-swot-button');
             const analyzeCompaniesButton = document.getElementById('analyze-companies-button');
             const modalTitle = document.getElementById('modal-title');
             const modalContent = document.getElementById('modal-content');
@@ -365,7 +371,59 @@
                 const totalSalesData = Array.from(totalSalesByTerm, ([key, value]) => ({term: key, totalSales: value})).sort((a, b) => a.term - b.term);
                 const promptData = totalSalesData.map(d => `${d.term}期: ${d.totalSales.toLocaleString()}円`).join('\n');
                 
-                const prompt = `以下のデータは、ある事業の38期から43期までのトップ10海外企業の合計売上推移です。このデータの傾向を専門家として分析し、要点を箇条書きでまとめてください。特に、成長のトレンド、ピーク時、今後の見通しについて具体的に言及してください。重要：43期のデータは第1四半期のみの途中経過の数値であるため、通期の売上予測をする際はその点を必ず加味してください。\n\n[売上データ]\n${promptData}`;
+                const prompt = `以下のデータは、医療・ヘルスケア分野を専門とする海外マーケットリサーチエージェンシー上位10社の合計売上推移です。このデータの傾向を、業界の専門家として分析し、要点を箇条書きでまとめてください。特に、成長のトレンド、ピーク時、今後の見通しについて具体的に言及してください。重要：43期のデータは第1四半期のみの途中経過の数値であるため、通期の売上予測をする際はその点を必ず加味してください。\n\n[売上データ]\n${promptData}`;
+
+                try {
+                    const result = await callGemini(prompt);
+                    modalContent.textContent = result;
+                } catch (error) {
+                    console.error("Gemini API Error:", error);
+                    modalContent.textContent = `分析中にエラーが発生しました。\n${error.message}`;
+                } finally {
+                    modalLoading.classList.add('hidden');
+                    modalContent.classList.remove('hidden');
+                }
+            });
+            
+            analyzeSwotButton.addEventListener('click', async () => {
+                const selectedCompanyNodes = document.querySelectorAll("#company-filter input:checked");
+                const selectedCompanies = Array.from(selectedCompanyNodes).map(node => node.value);
+                if (selectedCompanies.length !== 1) return;
+                const companyName = selectedCompanies[0];
+
+                openModal();
+                modalTitle.textContent = `AIによるSWOT分析: ${companyName}`;
+                modalContent.classList.add('hidden');
+                modalLoading.classList.remove('hidden');
+
+                if (!apiKey) {
+                    modalContent.textContent = 'エラー: Gemini APIキーが設定されていません。スクリプト内の`apiKey`に変数を設定してください。';
+                    modalLoading.classList.add('hidden');
+                    modalContent.classList.remove('hidden');
+                    return;
+                }
+
+                const filteredData = data.filter(d => d.company === companyName);
+                const promptData = filteredData.sort((a,b) => a.term - b.term).map(d => `  ${d.term}期: ${d.sales.toLocaleString()}円`).join('\n');
+
+                const prompt = `あなたは医療・ヘルスケア分野専門の経営コンサルタントです。
+企業「${companyName}」は、この分野のマーケットリサーチエージェンシーです。この前提を踏まえ、SWOT分析（強み、弱み、機会、脅威）を実施してください。
+
+分析には、以下の2つの情報源を統合してください：
+1. 提供された売上推移データ
+2. あなたが持つ、この企業に関するWeb上の公開情報（事業内容、市場での評判、主要なサービス、競合など）
+
+アウトプットは、以下の構造で明確に記述してください：
+・**強み (Strengths):**
+・**弱み (Weaknesses):**
+・**機会 (Opportunities):**
+・**脅威 (Threats):**
+・**総括:**
+
+重要：43期のデータは第1四半期のみの途中経過の数値です。この点を必ず考慮して分析してください。
+
+[${companyName}の売上データ]
+${promptData}`;
 
                 try {
                     const result = await callGemini(prompt);
@@ -382,7 +440,7 @@
             analyzeCompaniesButton.addEventListener('click', async () => {
                 const selectedCompanyNodes = document.querySelectorAll("#company-filter input:checked");
                 const selectedCompanies = Array.from(selectedCompanyNodes).map(node => node.value);
-                if (selectedCompanies.length === 0) return;
+                if (selectedCompanies.length < 2) return;
 
                 openModal();
                 modalTitle.textContent = 'AIによる企業比較分析';
@@ -405,7 +463,8 @@
                     promptData += salesString + '\n\n';
                 });
 
-                const prompt = `あなたは優秀な経営コンサルタントです。以下の2つの情報源を基に、企業比較分析レポートを作成してください。
+                const prompt = `あなたは医療・ヘルスケア分野専門の経営コンサルタントです。
+以下の企業はすべて、この分野のマーケットリサーチエージェンシーです。この前提を踏まえ、2つの情報源を基に企業比較分析レポートを作成してください。
 
 情報源1：各社の売上推移データ
 情報源2：あなたが持つ、これらの企業に関するWeb上の公開情報（事業内容、市場での評判、主要なサービスなど）
