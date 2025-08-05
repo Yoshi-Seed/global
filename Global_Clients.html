@@ -32,6 +32,14 @@
             <p class="text-md text-gray-600 mt-2">38期〜43期までの売上データの推移（※43期は集計途中のデータです）</p>
         </header>
 
+        <!-- 全体の売上推移 -->
+        <div class="bg-white p-6 rounded-2xl shadow-md mb-8">
+            <h2 class="text-xl font-semibold mb-4 text-gray-700">全体の売上推移</h2>
+            <div class="chart-container">
+                <canvas id="total-sales-chart"></canvas>
+            </div>
+        </div>
+
         <!-- ✨ AI Analysis Section -->
         <div class="bg-white p-6 rounded-2xl shadow-md mb-8">
             <h2 class="text-xl font-semibold mb-4 text-gray-700 flex items-center gap-2">
@@ -48,14 +56,6 @@
                 <button id="analyze-companies-button" class="flex items-center justify-center gap-2 w-full sm:w-auto bg-teal-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-teal-600 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed">
                     ✨ 選択した企業を比較
                 </button>
-            </div>
-        </div>
-
-        <!-- 全体の売上推移 -->
-        <div class="bg-white p-6 rounded-2xl shadow-md mb-8">
-            <h2 class="text-xl font-semibold mb-4 text-gray-700">全体の売上推移</h2>
-            <div class="chart-container">
-                <canvas id="total-sales-chart"></canvas>
             </div>
         </div>
 
@@ -405,7 +405,22 @@
                     promptData += salesString + '\n\n';
                 });
 
-                const prompt = `以下のデータは、複数の企業の38期から43期までの売上推移です。これらの企業を経営コンサルタントとして比較分析し、レポートを作成してください。各社の強み・弱み、成長性、安定性、市場でのポジショニングについて論じてください。特に注目すべき企業や、今後の動向について見解を述べてください。重要：43期のデータは第1四半期のみの途中経過の数値であるため、通期の売上予測をする際はその点を必ず加味してください。\n\n[売上データ]\n${promptData}`;
+                const prompt = `あなたは優秀な経営コンサルタントです。以下の2つの情報源を基に、企業比較分析レポートを作成してください。
+
+情報源1：各社の売上推移データ
+情報源2：あなたが持つ、これらの企業に関するWeb上の公開情報（事業内容、市場での評判、主要なサービスなど）
+
+分析レポートには、以下の要素を含めてください：
+・各社の強みと弱み
+・成長性と安定性の評価
+・売上データと公開情報から見える市場でのポジショニング
+・特に注目すべき企業とその理由
+・今後の動向予測
+
+重要：43期のデータは第1四半期のみの途中経過の数値です。この点を必ず考慮して分析してください。
+
+[売上データ]
+${promptData}`;
 
                 try {
                     const result = await callGemini(prompt);
