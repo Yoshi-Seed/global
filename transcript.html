@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>かんたん文字起こしビューアー</title>
+  <style>
+    :root { --bg:#0b1220; --card:#0f172a; --ink:#e5e7eb; --muted:#9ca3af; --accent:#60a5fa; }
+    * { box-sizing: border-box; }
+    html, body { margin:0; padding:0; background:var(--bg); color:var(--ink); font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", sans-serif; }
+    header { padding:14px 16px; border-bottom:1px solid #132035; position:sticky; top:0; background:rgba(11,18,32,.9); backdrop-filter:blur(6px); }
+    h1 { margin:0; font-size:18px; }
+    .container { max-width:980px; margin:0 auto; padding:16px; }
+    .panel { background:var(--card); border-radius:14px; padding:14px; border:1px solid #132035; }
+    .row { display:flex; gap:14px; flex-wrap:wrap; }
+    .col { flex:1 1 320px; min-width:300px; }
+    .badge { display:inline-block; padding:4px 8px; border-radius:999px; background:#0b1426; border:1px solid #1f2f4a; color:#94a3b8; font-size:12px; }
+    .controls { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:8px; }
+    input[type="search"] { flex:1; padding:9px 12px; border-radius:10px; background:#0b1426; border:1px solid #1f2f4a; color:var(--ink); }
+    .btn { padding:9px 12px; border-radius:10px; background:#0b1426; border:1px solid #1f2f4a; color:var(--ink); cursor:pointer; }
+    .btn:hover { border-color: var(--accent); }
+    .segment { padding:10px 12px; border-radius:10px; border:1px solid #1f2f4a; margin-bottom:8px; background:#0b1426; }
+    .segment:hover { border-color: var(--accent); cursor:pointer; }
+    .time { font-variant-numeric: tabular-nums; color: var(--accent); font-weight:600; margin-right:8px; }
+    .muted { color: var(--muted); font-size:12px; }
+    .highlight { background: rgba(96,165,250,0.18); }
+    .empty { color:#94a3b8; font-size:14px; text-align:center; padding:16px; border:1px dashed #1f2f4a; border-radius:10px; }
+    footer { text-align:center; color:#6b7280; padding:20px; font-size:12px; }
+    .warn { background:#3b1f1f; border:1px solid #7f1d1d; color:#fecaca; padding:10px 12px; border-radius:10px; margin-top:8px; display:none; }
+    code { background:#0b1426; padding:0 6px; border:1px solid #1f2f4a; border-radius:6px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>かんたん文字起こしビューアー（同じフォルダに置くだけ）</h1>
+  </header>
+  <div class="container">
+    <div class="row">
+      <div class="col panel">
+        <div>
+          <span class="badge">A. 自動読み込み（超かんたん）</span>
+          <div class="muted" style="margin-top:6px;">
+            このHTMLと<strong>同じフォルダ</strong>に <code>audio.m4a</code> と <code>transcript.vtt</code>（または <code>transcript.srt</code>）を置くと自動で読み込みます。<br/>
+            ※ ローカルの <code>file://</code> で開くとブラウザの制限で読み込みに失敗する場合があります。その時は GitHub Pages に置くか、下の「B. 手動読み込み」を使ってください。
+          </div>
+          <div id="autoWarn" class="warn">自動読み込みに失敗しました。<br/>→ 同じフォルダに <code>audio.m4a</code> と <code>transcript.vtt</code>/<code>transcript.srt</code> があるか確認するか、下の手動読み込みを使ってください。</div>
+        </div>
+        <div style="margin-top:12px;">
+          <span class="badge">B. 手動読み込み（ファイル名自由）</span>
+          <div class="controls">
+            <input id="q" type="search" placeholder="検索（Enter）」 />
+            <button id="clear" class="btn">クリア</button>
+          </div>
+          <div class="controls">
+            <input id="pickAudio" type="file" accept="audio/*" />
+            <input id="pickText" type="file" accept=".vtt,.srt,text/vtt,text/plain" />
+            <button id="load" class="btn">読み込む</button>
+          </div>
+          <audio id="player" controls style="width:100%; margin-top:12px;"></audio>
+        </div>
+      </div>
+      <div class="col panel">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span class="badge">Segments</span>
+          <span class="muted">件数: <span id="count">0</span></span>
+        </div>
+        <div id="segments" class="empty">まだ読み込まれていません。<br/>同フォルダに置くか、手動で読み込んでください。</div>
+      </div>
+    </div>
+  </div>
+  <footer>Made for Yoshi 🫶</footer>
+
+<script>
+const player = document.getElementById('player');
+const segEl = document.getElementById('segments');
+const countEl = document.getElementById('count');
+const q = document.getElementById('q');
+const clearBtn = document.getElementById('clear');
+const pickAudio = document.getElementById('pickAudio');
+const pickText = document.getElementById('pickText');
+const loadBtn = document.getElementById('load');
+const autoWarn = document.getElementById('autoWarn');
+
+let segments = [];
+
+function secondsFromHMS(s){
+  const p = s.split(':');
+  if (p.length === 3) return (+p[0])*3600 + (+p[1])*60 + (+p[2]);
+  if (p.length === 2) return (+p[0])*60 + (+p[1]);
+  return parseFloat(s)||0;
+}
+
+function render(list){
+  if (!list || list.length === 0){
+    segEl.className = 'empty';
+    segEl.innerHTML = '該当なし';
+    countEl.textContent = '0';
+    return;
+  }
+  segEl.className = '';
+  segEl.innerHTML = '';
+  list.forEach(seg => {
+    const div = document.createElement('div');
+    div.className = 'segment';
+    div.innerHTML = `<span class="time">${seg.start}</span><span class="muted"> → ${seg.end}</span><div>${seg.text}</div>`;
+    div.onclick = () => {
+      player.currentTime = secondsFromHMS(seg.start);
+      player.play();
+    };
+    segEl.appendChild(div);
+  });
+  countEl.textContent = list.length;
+}
+
+function parseVTT(text){
+  const lines = text.replace(/\r/g,'').split('\n');
+  const out = []; let i=0, idx=1;
+  while(i < lines.length){
+    let line = lines[i].trim();
+    if (!line){ i++; continue; }
+    if (line.toLowerCase() === 'webvtt'){ i++; continue; }
+    if (line.includes('-->')){
+      const [a,b] = line.split('-->').map(s => s.trim().split(' ')[0]);
+      i++;
+      let textLines = [];
+      while(i < lines.length && lines[i].trim() !== ''){ textLines.push(lines[i]); i++; }
+      out.push({id: idx++, start:a, end:b, text:textLines.join('\n').trim()});
+    } else { i++; }
+  }
+  return out;
+}
+
+function parseSRT(text){
+  const blocks = text.replace(/\r/g,'').split(/\n\n+/);
+  const out = [];
+  for (const block of blocks){
+    const lines = block.split('\n').filter(Boolean);
+    if (lines.length < 2) continue;
+    let tsLine = lines[0];
+    let textLines = [];
+    if (/^\d+$/.test(lines[0]) && lines[1] && lines[1].includes('-->')){ tsLine = lines[1]; textLines = lines.slice(2); }
+    else if (lines[0].includes('-->')){ textLines = lines.slice(1); }
+    else { continue; }
+    const parts = tsLine.split('-->');
+    const start = parts[0].trim().replace(',', '.');
+    const end = parts[1].trim().replace(',', '.');
+    out.push({id: out.length+1, start, end, text: textLines.join('\n').trim()});
+  }
+  return out;
+}
+
+function highlight(term){
+  if (!term) return;
+  const rx = new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'ig');
+  document.querySelectorAll('.segment div').forEach(div => {
+    div.innerHTML = div.textContent.replace(rx, m => `<mark class="highlight">${m}</mark>`);
+  });
+}
+
+function searchAndRender(){
+  const term = q.value.trim();
+  if (!term){ render(segments); return; }
+  const rx = new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+  const filtered = segments.filter(s => rx.test(s.text));
+  render(filtered);
+  highlight(term);
+}
+
+clearBtn.onclick = () => { q.value=''; render(segments); };
+
+loadBtn.onclick = async () => {
+  const a = pickAudio.files[0];
+  const t = pickText.files[0];
+  if (a){ player.src = URL.createObjectURL(a); }
+  if (t){
+    const text = await t.text();
+    segments = t.name.endsWith('.vtt') ? parseVTT(text) : parseSRT(text);
+    render(segments);
+  }
+};
+
+q.addEventListener('keydown', (e) => { if (e.key === 'Enter') searchAndRender(); });
+
+async function autoLoad(){
+  try {
+    const audioUrl = 'audio.m4a';
+    const vttUrl = 'transcript.vtt';
+    const srtUrl = 'transcript.srt';
+
+    // 1) audio
+    player.src = audioUrl; // 失敗しても例外は出ない（404時は再生不可）
+
+    // 2) vtt → srt の順で試す
+    let ok = false;
+    let resp = await fetch(vttUrl);
+    if (resp.ok){
+      const text = await resp.text();
+      segments = parseVTT(text); render(segments); ok = true;
+    } else {
+      resp = await fetch(srtUrl);
+      if (resp.ok){ const text = await resp.text(); segments = parseSRT(text); render(segments); ok = true; }
+    }
+    if (!ok){ autoWarn.style.display = 'block'; }
+  } catch (e) {
+    autoWarn.style.display = 'block';
+  }
+}
+
+// 自動ロード（GitHub Pages 推奨）。ローカル file:// では失敗することがあります。
+autoLoad();
+
+// Drag & Drop（任意）
+window.addEventListener('dragover', e => e.preventDefault());
+window.addEventListener('drop', async e => {
+  e.preventDefault();
+  const files = [...e.dataTransfer.files];
+  for (const f of files){
+    if (f.type.startsWith('audio/')){
+      player.src = URL.createObjectURL(f);
+    } else if (f.name.endsWith('.vtt') || f.name.endsWith('.srt')){
+      const text = await f.text();
+      segments = f.name.endsWith('.vtt') ? parseVTT(text) : parseSRT(text);
+      render(segments);
+    }
+  }
+});
+</script>
+</body>
+</html>
