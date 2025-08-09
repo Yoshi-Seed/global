@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音声ファイル文字起こしアプリ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+        }
+        .loader {
+            border-top-color: #3498db;
+            -webkit-animation: spin 1s linear infinite;
+            animation: spin 1s linear infinite;
+        }
+        @-webkit-keyframes spin {
+            0% { -webkit-transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); }
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 flex items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-w-3xl bg-white rounded-xl shadow-lg p-6 md:p-8 space-y-6">
+        <div class="text-center">
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-900">音声ファイル文字起こし</h1>
+            <p class="text-gray-600 mt-2">MP3, MP4, M4Aなどの音声ファイルをアップロードして文字起こしします。</p>
+        </div>
+
+        <!-- Step 1: File Upload -->
+        <div id="upload-section">
+            <label for="audio-file" class="block mb-2 text-sm font-medium text-gray-700">音声ファイルを選択</label>
+            <div class="flex items-center justify-center w-full">
+                <label for="audio-file" class="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
+                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                        <svg class="w-10 h-10 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                        </svg>
+                        <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">クリックしてファイルを選択</span></p>
+                        <p class="text-xs text-gray-500">またはドラッグ＆ドロップ</p>
+                        <p id="file-name" class="mt-2 text-sm text-blue-600 font-semibold"></p>
+                    </div>
+                    <input id="audio-file" type="file" class="hidden" accept="audio/*,video/*">
+                </label>
+            </div>
+        </div>
+
+        <!-- Control Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4">
+            <button id="start-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>
+                書き起こし開始
+            </button>
+            <button id="download-btn" class="w-full bg-green-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>
+                テキストをダウンロード
+            </button>
+        </div>
+
+        <!-- Step 2: Transcription Progress -->
+        <div id="status-section" class="hidden items-center justify-center bg-blue-50 p-4 rounded-lg space-x-3">
+            <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-8 w-8"></div>
+            <p id="status-text" class="text-blue-800 font-medium">準備中...</p>
+        </div>
+        
+        <!-- Error Message -->
+        <div id="error-section" class="hidden items-center bg-red-50 p-4 rounded-lg space-x-3">
+             <p id="error-text" class="text-red-800 font-medium"></p>
+        </div>
+
+        <!-- Step 3: Result -->
+        <div>
+            <label for="result-text" class="block mb-2 text-sm font-medium text-gray-700">書き起こし結果</label>
+            <textarea id="result-text" rows="15" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="ここに書き起こし結果が表示されます..."></textarea>
+        </div>
+
+    </div>
+
+    <script>
+        // --- DOM Element References ---
+        const audioFileInput = document.getElementById('audio-file');
+        const fileNameDisplay = document.getElementById('file-name');
+        const startBtn = document.getElementById('start-btn');
+        const downloadBtn = document.getElementById('download-btn');
+        const resultText = document.getElementById('result-text');
+        const statusSection = document.getElementById('status-section');
+        const statusText = document.getElementById('status-text');
+        const errorSection = document.getElementById('error-section');
+        const errorText = document.getElementById('error-text');
+
+        // --- Web Speech API and Web Audio API setup ---
+        // Cross-browser compatibility
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = SpeechRecognition ? new SpeechRecognition() : null;
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioContext;
+
+        let audioFile = null;
+        let finalTranscript = '';
+
+        // --- Initial Check ---
+        if (!SpeechRecognition) {
+            showError('お使いのブラウザは音声認識に対応していません。Google Chromeなど別のブラウザをお試しください。');
+            startBtn.disabled = true;
+        } else {
+            // Configure SpeechRecognition
+            recognition.continuous = true; // Keep listening
+            recognition.interimResults = true; // Get results as they come
+            recognition.lang = 'ja-JP'; // Set language to Japanese
+        }
+
+        // --- Event Listeners ---
+        audioFileInput.addEventListener('change', (event) => {
+            const files = event.target.files;
+            if (files.length > 0) {
+                audioFile = files[0];
+                fileNameDisplay.textContent = audioFile.name;
+                startBtn.disabled = false;
+                resetState();
+            }
+        });
+
+        startBtn.addEventListener('click', () => {
+            if (!audioFile || !recognition) return;
+            startTranscription();
+        });
+
+        downloadBtn.addEventListener('click', () => {
+            if (resultText.value.trim() === '') return;
+            
+            const blob = new Blob([resultText.value], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            // Create a filename from the original audio file name
+            const originalFileName = audioFile.name.split('.').slice(0, -1).join('.');
+            a.download = `${originalFileName}_transcription.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+
+        // --- Core Functions ---
+
+        /**
+         * Resets the application state to initial values.
+         */
+        function resetState() {
+            resultText.value = '';
+            finalTranscript = '';
+            downloadBtn.disabled = true;
+            statusSection.classList.add('hidden');
+            errorSection.classList.add('hidden');
+        }
+
+        /**
+         * Displays an error message in the UI.
+         * @param {string} message - The error message to display.
+         */
+        function showError(message) {
+            errorText.textContent = message;
+            errorSection.classList.remove('hidden');
+            statusSection.classList.add('hidden');
+            startBtn.disabled = true;
+            audioFileInput.disabled = false;
+        }
+        
+        /**
+         * Updates the status message in the UI.
+         * @param {string} message - The status message to display.
+         */
+        function updateStatus(message) {
+            statusText.textContent = message;
+            statusSection.classList.remove('hidden');
+        }
+
+        /**
+         * Starts the transcription process.
+         */
+        async function startTranscription() {
+            resetState();
+            startBtn.disabled = true;
+            audioFileInput.disabled = true;
+            updateStatus('音声ファイルを読み込んでいます...');
+
+            try {
+                // Initialize AudioContext on user gesture
+                if (!audioContext) {
+                    audioContext = new AudioContext();
+                }
+
+                const arrayBuffer = await audioFile.arrayBuffer();
+                updateStatus('音声をデコードしています...');
+                const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+                // Create a source node and play the audio through a destination
+                // that can be captured as a MediaStream.
+                const sourceNode = audioContext.createBufferSource();
+                sourceNode.buffer = audioBuffer;
+
+                const destinationNode = audioContext.createMediaStreamDestination();
+                sourceNode.connect(destinationNode);
+
+                // The recognition API doesn't directly support MediaStream,
+                // so we have to use a workaround by creating an audio element.
+                const audio = new Audio();
+                audio.srcObject = destinationNode.stream;
+                
+                // Although we don't hear it, the audio element needs to be "playing"
+                // for the stream to be active. We mute it to avoid playback.
+                audio.muted = true;
+                
+                // Start recognition and audio playback simultaneously
+                recognition.start();
+                sourceNode.start(0);
+                audio.play();
+
+                // Stop recognition when the audio finishes playing
+                sourceNode.onended = () => {
+                    recognition.stop();
+                    audio.pause();
+                    audio.srcObject = null; // Clean up
+                };
+
+            } catch (e) {
+                console.error('Error processing audio file:', e);
+                showError('音声ファイルの処理中にエラーが発生しました。ファイルが破損しているか、対応していない形式の可能性があります。');
+            }
+        }
+
+        // --- SpeechRecognition Event Handlers ---
+
+        if (recognition) {
+            recognition.onresult = (event) => {
+                let interimTranscript = '';
+                // Reset final transcript to rebuild it
+                finalTranscript = ''; 
+                for (let i = 0; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        finalTranscript += event.results[i][0].transcript;
+                    } else {
+                        interimTranscript += event.results[i][0].transcript;
+                    }
+                }
+                resultText.value = finalTranscript + interimTranscript;
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+                let errorMessage = '音声認識中にエラーが発生しました。';
+                if (event.error === 'no-speech') {
+                    errorMessage = '音声を検出できませんでした。';
+                } else if (event.error === 'network') {
+                    errorMessage = 'ネットワークエラーが発生しました。インターネット接続を確認してください。';
+                } else if (event.error === 'not-allowed') {
+                    errorMessage = 'マイクへのアクセスが許可されていません。';
+                }
+                showError(errorMessage);
+            };
+
+            recognition.onstart = () => {
+                updateStatus('音声認識を開始しました。書き起こし中です...');
+            };
+
+            recognition.onend = () => {
+                updateStatus('書き起こしが完了しました。');
+                // Final update to the text area without interim results
+                resultText.value = finalTranscript;
+                if (finalTranscript.trim() !== '') {
+                    downloadBtn.disabled = false;
+                }
+                startBtn.disabled = false;
+                audioFileInput.disabled = false;
+            };
+        }
+    </script>
+</body>
+</html>
