@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>42期・43期（3-2月決算）売上インフォグラフィック｜B3のみ</title>
+  <!-- UMD版ライブラリ。社内ネットワークでCDNがブロックされる場合は後述のオフライン版をご利用ください -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/recharts/umd/Recharts.min.js"></script>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial; background:#fff; margin:0; }
+    .container { max-width: 1080px; margin: 24px auto; padding: 0 16px; }
+    .card { border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.06); background:#fff; padding: 16px; margin-bottom: 24px; }
+    .title { font-size: 22px; font-weight: 700; margin: 0 0 8px; }
+    .subtitle { color:#6b7280; font-size: 13px; margin: 0 0 16px; }
+    .row { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    @media (min-width: 960px){ .row.two { grid-template-columns: 1fr 1fr; } }
+    .toolbar { display:flex; align-items:center; gap:12px; margin: 8px 0 16px; }
+    .btn { border:1px solid #d1d5db; background:#fff; padding:6px 12px; border-radius: 20px; cursor:pointer; }
+    .err { color:crimson; background:#fff0f0; padding:12px; border-radius:8px; white-space:pre-wrap; }
+  </style>
+</head>
+<body>
+  <div id="app" class="container"></div>
+  <script>
+  // ===== データ埋め込み（Excel集計済み：担G1=B3／税抜） =====
+  const DATA = {
+    // FY順（3→2）で全体推移。43期は3–7月のみ表示にする（後段のclipで非対象月は null に変換）
+    monthly_total: [
+      { "月": "3月",  "42期": 13578766, "43期": 25602185 },
+      { "月": "4月",  "42期": 20949377, "43期": 15253179 },
+      { "月": "5月",  "42期": 19366544, "43期": 19394900 },
+      { "月": "6月",  "42期":  5073267, "43期":     78744 },
+      { "月": "7月",  "42期": 15918791, "43期": 24759005 },
+      { "月": "8月",  "42期": 31101010, "43期":         0 },
+      { "月": "9月",  "42期": 21924723, "43期":         0 },
+      { "月": "10月", "42期": 15282489, "43期":         0 },
+      { "月": "11月", "42期": 33731261, "43期":         0 },
+      { "月": "12月", "42期": 16257027, "43期":         0 },
+      { "月": "1月",  "42期": 10355140, "43期":         0 },
+      { "月": "2月",  "42期": 19206095, "43期":         0 }
+    ],
+    months_43: [3,4,5,6,7],
+    // クライアント別：TLG / Holden のFY順推移（3–7月を埋め込む）
+    tlg_series: [
+      { "月": "3月", "42期":  9067950, "43期":  2674850 },
+      { "月": "4月", "42期": 10885500, "43期":  7627500 },
+      { "月": "5月", "42期": 10272790, "43期": 16219300 },
+      { "月": "6月", "42期":  4372550, "43期":        0 },
+      { "月": "7月", "42期": 11927750, "43期":  9459750 }
+    ],
+    holden_series: [
+      { "月": "3月", "42期":    56916, "43期":  8599885 },
+      { "月": "4月", "42期":  6481177, "43期":  5181679 },
+      { "月": "5月", "42期":  9093754, "43期":        0 },
+      { "月": "6月", "42期":   700717, "43期":    78744 },
+      { "月": "7月", "42期":   873291, "43期":  6854380 }
+    ],
+    // 組織別構成：名前(name)と値(value)の配列（上位のみ抜粋／必要なら追記可）
+    pie_42_all: [
+      { name: 'The Link Group', value: 111791240 },
+      { name: 'Holden', value: 53837939 },
+      { name: 'Escalent', value: 17169550 },
+      { name: 'fieldcats', value: 10404750 }
+      // 以降も追加可能（上位10 + その他 推奨）
+    ],
+    pie_43_all: [
+      { name: 'The Link Group', value: 35981400 },
+      { name: 'Holden', value: 20714688 },
+      { name: 'Blue Matter', value: 14521325 },
+      { name: 'fieldcats', value: 8251000 },
+      { name: 'Escalent', value: 3175600 },
+      { name: 'ifop', value: 2444000 }
+    ]
+  };
+
+  const COLORS = { k42:'#2563eb', k43:'#f97316', grid:'#e5e7eb' };
+  const PALETTE = ['#10b981','#8b5cf6','#ef4444','#3b82f6','#f59e0b','#14b8a6','#a855f7','#84cc16','#06b6d4','#f97316','#64748b'];
+  const yen = (v) => typeof v === 'number' ? '¥' + v.toLocaleString() : '-';
+
+  function clipFY(rows, allowedMonths) {
+    const allowed = new Set(allowedMonths.map(String));
+    return rows.map(r => {
+      const m = String(parseInt(r.月));
+      return Object.assign({}, r, { '43期': allowed.has(m) ? r['43期'] : null });
+    });
+  }
+
+  (function main(){
+    try {
+      if (!window.Recharts) throw new Error('Rechartsが読み込めていません（ネットワークやCORSを確認）');
+      const { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, Pie, Cell } = window.Recharts;
+      const rootEl = document.getElementById('app');
+      const monthly = clipFY(DATA.monthly_total, DATA.months_43);
+      const tlg = clipFY(DATA.tlg_series, DATA.months_43);
+      const holden = clipFY(DATA.holden_series, DATA.months_43);
+
+      function SectionTitle(t){ return React.createElement('h2',{className:'title'},t); }
+      function Subtitle(t){ return React.createElement('p',{className:'subtitle'},t); }
+
+      function Card(children){ return React.createElement('div',{className:'card'},children); }
+
+      // ------- 画面構築 -------
+      const app = React.createElement('div', {}, [
+        Card([
+          React.createElement('h1',{className:'title'},'42期・43期（3-2月決算）売上インフォグラフィック（B3のみ）'),
+          Subtitle('会計期：3→2月。 担G1=B3／税抜。 43期は 3–7月 のみ表示。')
+        ]),
+
+        Card([
+          SectionTitle('42期 vs 43期：月次売上推移（FY 3→2）'),
+          React.createElement('div',{style:{width:'100%',height:'340px'}},
+            React.createElement(ResponsiveContainer,{},
+              React.createElement(LineChart,{data:monthly,margin:{top:10,right:24,bottom:0,left:0}},[
+                React.createElement(CartesianGrid,{strokeDasharray:'3 3',stroke:COLORS.grid}),
+                React.createElement(XAxis,{dataKey:'月'}),
+                React.createElement(YAxis,{tickFormatter:(v)=> (v/100000000).toFixed(1)+'億'}),
+                React.createElement(Tooltip,{formatter:(v)=> yen(Number(v))}),
+                React.createElement(Legend,null),
+                React.createElement(Line,{type:'monotone',dataKey:'42期',stroke:COLORS.k42,strokeWidth:2.2,dot:{r:3}}),
+                React.createElement(Line,{type:'monotone',dataKey:'43期',stroke:COLORS.k43,strokeWidth:2.2,dot:{r:3}})
+              ])
+            )
+          )
+        ]),
+
+        React.createElement('div',{className:'row two'},[
+          Card([
+            SectionTitle('TLG：月次売上推移（FY 3→2）'),
+            React.createElement('div',{style:{width:'100%',height:'300px'}},
+              React.createElement(ResponsiveContainer,{},
+                React.createElement(LineChart,{data:tlg,margin:{top:10,right:24,bottom:0,left:0}},[
+                  React.createElement(CartesianGrid,{strokeDasharray:'3 3',stroke:COLORS.grid}),
+                  React.createElement(XAxis,{dataKey:'月'}),
+                  React.createElement(YAxis,{tickFormatter:(v)=> (v/100000000).toFixed(1)+'億'}),
+                  React.createElement(Tooltip,{formatter:(v)=> yen(Number(v))}),
+                  React.createElement(Legend,null),
+                  React.createElement(Line,{type:'monotone',dataKey:'42期',stroke:COLORS.k42,strokeWidth:2.2,dot:{r:3}}),
+                  React.createElement(Line,{type:'monotone',dataKey:'43期',stroke:COLORS.k43,strokeWidth:2.2,dot:{r:3}})
+                ])
+              )
+            )
+          ]),
+          Card([
+            SectionTitle('Holden：月次売上推移（FY 3→2）'),
+            React.createElement('div',{style:{width:'100%',height:'300px'}},
+              React.createElement(ResponsiveContainer,{},
+                React.createElement(LineChart,{data:holden,margin:{top:10,right:24,bottom:0,left:0}},[
+                  React.createElement(CartesianGrid,{strokeDasharray:'3 3',stroke:COLORS.grid}),
+                  React.createElement(XAxis,{dataKey:'月'}),
+                  React.createElement(YAxis,{tickFormatter:(v)=> (v/100000000).toFixed(1)+'億'}),
+                  React.createElement(Tooltip,{formatter:(v)=> yen(Number(v))}),
+                  React.createElement(Legend,null),
+                  React.createElement(Line,{type:'monotone',dataKey:'42期',stroke:COLORS.k42,strokeWidth:2.2,dot:{r:3}}),
+                  React.createElement(Line,{type:'monotone',dataKey:'43期',stroke:COLORS.k43,strokeWidth:2.2,dot:{r:3}})
+                ])
+              )
+            )
+          ])
+        ]),
+
+        React.createElement('div',{className:'row two'},[
+          Card([
+            SectionTitle('42期：全クライアント売上構成（B3）'),
+            React.createElement('div',{style:{width:'100%',height:'320px'}},
+              React.createElement(ResponsiveContainer,{},
+                React.createElement(PieChart,null,[
+                  React.createElement(Tooltip,{formatter:(v)=> yen(Number(v))}),
+                  React.createElement(Legend,null),
+                  React.createElement(Pie,{data:DATA.pie_42_all,dataKey:'value',nameKey:'name',cx:'50%',cy:'50%',outerRadius:110,label:true},
+                    DATA.pie_42_all.map((_,i)=> React.createElement(Cell,{key:'p42-'+i,fill:PALETTE[i%PALETTE.length]}))
+                  )
+                ])
+              )
+            )
+          ]),
+          Card([
+            SectionTitle('43期（3–7月）：全クライアント売上構成（B3）'),
+            React.createElement('div',{style:{width:'100%',height:'320px'}},
+              React.createElement(ResponsiveContainer,{},
+                React.createElement(PieChart,null,[
+                  React.createElement(Tooltip,{formatter:(v)=> yen(Number(v))}),
+                  React.createElement(Legend,null),
+                  React.createElement(Pie,{data:DATA.pie_43_all,dataKey:'value',nameKey:'name',cx:'50%',cy:'50%',outerRadius:110,label:true},
+                    DATA.pie_43_all.map((_,i)=> React.createElement(Cell,{key:'p43-'+i,fill:PALETTE[i%PALETTE.length]}))
+                  )
+                ])
+              )
+            )
+          ])
+        ])
+      ]);
+
+      const root = ReactDOM.createRoot(rootEl);
+      root.render(app);
+    } catch (e) {
+      console.error(e);
+      const err = document.createElement('pre');
+      err.className = 'err';
+      err.textContent = 'エラー: ' + (e && e.message ? e.message : e);
+      document.body.prepend(err);
+    }
+  })();
+  </script>
+</body>
+</html>
