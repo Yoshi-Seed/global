@@ -3,205 +3,318 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>42期・43期（3-2月決算）売上インフォグラフィック｜B3のみ</title>
-  <!-- UMD版ライブラリ。社内ネットワークでCDNがブロックされる場合は後述のオフライン版をご利用ください -->
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/recharts/umd/Recharts.min.js"></script>
+  <title>42期／43期（途中） 営業実績インフォグラフィック</title>
   <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial; background:#fff; margin:0; }
-    .container { max-width: 1080px; margin: 24px auto; padding: 0 16px; }
-    .card { border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.06); background:#fff; padding: 16px; margin-bottom: 24px; }
-    .title { font-size: 22px; font-weight: 700; margin: 0 0 8px; }
-    .subtitle { color:#6b7280; font-size: 13px; margin: 0 0 16px; }
-    .row { display: grid; grid-template-columns: 1fr; gap: 16px; }
-    @media (min-width: 960px){ .row.two { grid-template-columns: 1fr 1fr; } }
-    .toolbar { display:flex; align-items:center; gap:12px; margin: 8px 0 16px; }
-    .btn { border:1px solid #d1d5db; background:#fff; padding:6px 12px; border-radius: 20px; cursor:pointer; }
-    .err { color:crimson; background:#fff0f0; padding:12px; border-radius:8px; white-space:pre-wrap; }
+    :root{--gap:12px;--bg:#f7f7fb;--ink:#111827;--muted:#6b7280;--brand:#4c6fff}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Hiragino Sans","Noto Sans JP","Yu Gothic UI",sans-serif}
+    header{padding:18px 20px 8px}
+    h1{font-size:20px;margin:0 0 4px}
+    .sub{color:var(--muted);font-size:13px}
+    .wrap{padding:0 16px 24px;max-width:1200px;margin:0 auto}
+    .panel{background:#fff;border:1px solid #e7e7ef;border-radius:16px;padding:14px;margin-top:14px}
+    .grid{display:grid;grid-template-columns:1fr;gap:var(--gap)}
+    @media (min-width:980px){.grid{grid-template-columns:1fr 1fr}}
+    .controls{display:flex;flex-wrap:wrap;gap:var(--gap);align-items:center;margin:6px 0 10px}
+    .btn{appearance:none;border:1px solid #d7d7e5;border-radius:999px;background:#fff;padding:8px 12px;font-size:13px;color:#333;cursor:pointer}
+    .btn.primary{background:var(--brand);color:#fff;border-color:transparent}
+    .kpi{display:flex;flex-wrap:wrap;gap:10px}
+    .kpi .card{flex:1 1 180px;background:#f9fafb;border:1px solid #eef0f7;border-radius:12px;padding:10px}
+    .kpi .title{font-size:12px;color:#6b7280}
+    .kpi .value{font-size:18px;font-weight:600}
+    .alert{background:#fff8f0;border:1px solid #ffd9b5;color:#8a4b16;border-radius:12px;padding:10px;font-size:13px}
+    #chart42,#chart43,#chartOrg42,#chartOrg43,#chartTLGHolden42,#chartTLGHolden43{width:100%;height:420px}
+    .foot{font-size:12px;color:var(--muted)}
+    .error{background:#fee2e2;border:1px solid #fecaca;color:#991b1b;border-radius:12px;padding:10px;margin-top:10px;font-size:13px;display:none}
   </style>
+  <!-- ECharts -->
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  <!-- SheetJS for Excel parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
-  <div id="app" class="container"></div>
-  <script>
-  // ===== データ埋め込み（Excel集計済み：担G1=B3／税抜） =====
-  const DATA = {
-    // FY順（3→2）で全体推移。43期は3–7月のみ表示にする（後段のclipで非対象月は null に変換）
-    monthly_total: [
-      { "月": "3月",  "42期": 13578766, "43期": 25602185 },
-      { "月": "4月",  "42期": 20949377, "43期": 15253179 },
-      { "月": "5月",  "42期": 19366544, "43期": 19394900 },
-      { "月": "6月",  "42期":  5073267, "43期":     78744 },
-      { "月": "7月",  "42期": 15918791, "43期": 24759005 },
-      { "月": "8月",  "42期": 31101010, "43期":         0 },
-      { "月": "9月",  "42期": 21924723, "43期":         0 },
-      { "月": "10月", "42期": 15282489, "43期":         0 },
-      { "月": "11月", "42期": 33731261, "43期":         0 },
-      { "月": "12月", "42期": 16257027, "43期":         0 },
-      { "月": "1月",  "42期": 10355140, "43期":         0 },
-      { "月": "2月",  "42期": 19206095, "43期":         0 }
-    ],
-    months_43: [3,4,5,6,7],
-    // クライアント別：TLG / Holden のFY順推移（3–7月を埋め込む）
-    tlg_series: [
-      { "月": "3月", "42期":  9067950, "43期":  2674850 },
-      { "月": "4月", "42期": 10885500, "43期":  7627500 },
-      { "月": "5月", "42期": 10272790, "43期": 16219300 },
-      { "月": "6月", "42期":  4372550, "43期":        0 },
-      { "月": "7月", "42期": 11927750, "43期":  9459750 }
-    ],
-    holden_series: [
-      { "月": "3月", "42期":    56916, "43期":  8599885 },
-      { "月": "4月", "42期":  6481177, "43期":  5181679 },
-      { "月": "5月", "42期":  9093754, "43期":        0 },
-      { "月": "6月", "42期":   700717, "43期":    78744 },
-      { "月": "7月", "42期":   873291, "43期":  6854380 }
-    ],
-    // 組織別構成：名前(name)と値(value)の配列（上位のみ抜粋／必要なら追記可）
-    pie_42_all: [
-      { name: 'The Link Group', value: 111791240 },
-      { name: 'Holden', value: 53837939 },
-      { name: 'Escalent', value: 17169550 },
-      { name: 'fieldcats', value: 10404750 }
-      // 以降も追加可能（上位10 + その他 推奨）
-    ],
-    pie_43_all: [
-      { name: 'The Link Group', value: 35981400 },
-      { name: 'Holden', value: 20714688 },
-      { name: 'Blue Matter', value: 14521325 },
-      { name: 'fieldcats', value: 8251000 },
-      { name: 'Escalent', value: 3175600 },
-      { name: 'ifop', value: 2444000 }
-    ]
-  };
+<header>
+  <h1>42期・43期（途中）営業実績インフォグラフィック</h1>
+  <div class="sub">対象：<b>海外クライアントのみ</b>（画像掲載の組織）。表記ゆれは正規化（例：INTERFACEHOLDEN-ASIA → Holden）。<b>担1列は無視</b>。43期は<b>3〜7月</b>のみ集計。</div>
+</header>
 
-  const COLORS = { k42:'#2563eb', k43:'#f97316', grid:'#e5e7eb' };
-  const PALETTE = ['#10b981','#8b5cf6','#ef4444','#3b82f6','#f59e0b','#14b8a6','#a855f7','#84cc16','#06b6d4','#f97316','#64748b'];
-  const yen = (v) => typeof v === 'number' ? '¥' + v.toLocaleString() : '-';
+<div class="wrap">
+  <div class="panel">
+    <div class="controls">
+      <input type="file" id="file" accept=".xlsx,.xls" />
+      <button class="btn primary" id="btnLoad">読み込む</button>
+      <button class="btn" id="btnDownload">画像を保存（PNG）</button>
+    </div>
+    <div id="err" class="error"></div>
+    <div class="kpi" id="kpis">
+      <div class="card"><div class="title">42期 合計（海外）</div><div class="value" id="k42">-</div></div>
+      <div class="card"><div class="title">43期（3–7月）合計（海外）</div><div class="value" id="k43">-</div></div>
+      <div class="card"><div class="title">主要2社シェア（42期）</div><div class="value" id="kshare42">-</div></div>
+      <div class="card"><div class="title">主要2社シェア（43期 3–7）</div><div class="value" id="kshare43">-</div></div>
+    </div>
+    <div class="alert" id="anomaly" style="display:none"></div>
+  </div>
 
-  function clipFY(rows, allowedMonths) {
-    const allowed = new Set(allowedMonths.map(String));
-    return rows.map(r => {
-      const m = String(parseInt(r.月));
-      return Object.assign({}, r, { '43期': allowed.has(m) ? r['43期'] : null });
-    });
+  <div class="grid">
+    <div class="panel">
+      <h3 style="margin:0 0 6px">42期：月次売上（海外のみ）</h3>
+      <div id="chart42"></div>
+    </div>
+    <div class="panel">
+      <h3 style="margin:0 0 6px">43期：月次売上（3–7月／海外のみ）</h3>
+      <div id="chart43"></div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="panel">
+      <h3 style="margin:0 0 6px">42期：組織別シェア</h3>
+      <div id="chartOrg42"></div>
+    </div>
+    <div class="panel">
+      <h3 style="margin:0 0 6px">43期：組織別シェア（3–7月）</h3>
+      <div id="chartOrg43"></div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="panel">
+      <h3 style="margin:0 0 6px">The Link Group / Holden：月次推移（42期）</h3>
+      <div id="chartTLGHolden42"></div>
+    </div>
+    <div class="panel">
+      <h3 style="margin:0 0 6px">The Link Group / Holden：月次推移（43期 3–7月）</h3>
+      <div id="chartTLGHolden43"></div>
+    </div>
+  </div>
+
+  <div class="panel foot">
+    <div>※ 単位：円（税抜）。月次＝「期×月」で集計。組織は海外クライアントのみ（画像掲載の組織）。表記ゆれは自動統一。43期は 3〜7月のみ集計。<br>※ うまく読み込めない場合は、Excelのシート名が <b>売上Data</b> になっているか、月の列が <b>"3月" 形式</b>かを確認してください（数字のときも自動補正します）。</div>
+  </div>
+</div>
+
+<script>
+// ===== 設定 & 正規化 =====
+const ALLOWED_ORGS = [
+  "AM-Pharma B.V.",
+  "Asia Medical & Professional Research",
+  "Borderless Access Private Limited",
+  "Cathaya Technologies LLC",
+  "Cello Health Insight",
+  "Escalent",
+  "FieldCats, Inc.",
+  "GLocalMind Inc.",
+  "Holden",
+  "Insync",
+  "Just-Worldwide",
+  "M3 Global Research",
+  "Market Xcel USA",
+  "Medefield",
+  "Medicem Group a.s.",
+  "PSL Group Services SARL",
+  "Purdie Pascoe",
+  "QualWorld",
+  "Survey Healthcare Globus",
+  "The Link Group",
+  "The Planning Shop",
+  "sermo",
+  // 追加（漏れ対策）
+  "Blue Matter",
+  "ifop"
+];
+
+const MONTHS_42 = ["3月","4月","5月","6月","7月","8月","9月","10月","11月","12月","1月","2月"];
+const MONTHS_43 = ["3月","4月","5月","6月","7月"]; // 途中
+
+function normalizeOrg(name){
+  if(!name) return ""; const raw=String(name).trim(); const low=raw.toLowerCase().replace(/[\s‐ー―-]+/g,"");
+  if(low.includes("holden")||low.includes("interfaceholden")||low.includes("interfaceasiaholden")) return "Holden";
+  if(low.includes("fieldcats")) return "FieldCats, Inc.";
+  if(low.startsWith("psl")) return "PSL Group Services SARL";
+  if(low.includes("sermo")) return "sermo";
+  if(low.includes("glocalmind")) return "GLocalMind Inc.";
+  if(low.includes("theplanningshop")) return "The Planning Shop";
+  if(low.includes("justworldwide")) return "Just-Worldwide";
+  if(low.includes("marketxcel")) return "Market Xcel USA";
+  if(/\bm3\b/.test(low)&&low.includes("research")) return "M3 Global Research";
+  if(low.includes("cellohealthinsight")) return "Cello Health Insight";
+  if(low.includes("surveyhealthcareglobus")) return "Survey Healthcare Globus";
+  if(low.includes("asiamedical")) return "Asia Medical & Professional Research";
+  if(low.includes("borderlessaccess")) return "Borderless Access Private Limited";
+  if(low.includes("cathaya")) return "Cathaya Technologies LLC";
+  if(low.includes("medefield")) return "Medefield";
+  if(low.includes("medicemgroup")) return "Medicem Group a.s.";
+  if(low.includes("am-pharma")||low.includes("ampharma")) return "AM-Pharma B.V.";
+  if(low.includes("insync")) return "Insync";
+  if(low.includes("qualworld")) return "QualWorld";
+  if(low.includes("thelinkgroup")) return "The Link Group";
+  if(low.includes("bluematter")) return "Blue Matter";
+  if(low==="ifop") return "ifop";
+  return raw;
+}
+
+function normalizeMonth(m){
+  const s = String(m).trim();
+  if(/^[0-9]{1,2}$/.test(s)) return s+"月"; // 数字 → "n月" に補正
+  return s;
+}
+
+// ===== Excel読込 =====
+const input = document.getElementById('file');
+const btnLoad = document.getElementById('btnLoad');
+const errBox = document.getElementById('err');
+let ROWS = [];
+
+async function readExcel(file){
+  const buf = await file.arrayBuffer();
+  const wb = XLSX.read(buf, {type:'array'});
+  const sheet = wb.Sheets['売上Data'];
+  if(!sheet) throw new Error('シート「売上Data」が見つかりません');
+  const rows = XLSX.utils.sheet_to_json(sheet, {defval:''});
+  return rows.map(r=>({
+    期: String(r['期']).trim(),
+    月: normalizeMonth(r['月']),
+    組織: normalizeOrg(r['組織']),
+    売上: Number(r['売上（税抜）'])||0
+  }));
+}
+
+btnLoad.addEventListener('click', async()=>{
+  errBox.style.display='none'; errBox.textContent='';
+  try{
+    if(!input.files?.length) throw new Error('Excelファイル（売上Dataシート）を選択してください');
+    ROWS = await readExcel(input.files[0]);
+    build();
+  }catch(e){
+    errBox.style.display='block';
+    errBox.textContent = '読み込みエラー：'+ (e && e.message ? e.message : e);
   }
+});
 
-  (function main(){
-    try {
-      if (!window.Recharts) throw new Error('Rechartsが読み込めていません（ネットワークやCORSを確認）');
-      const { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, Pie, Cell } = window.Recharts;
-      const rootEl = document.getElementById('app');
-      const monthly = clipFY(DATA.monthly_total, DATA.months_43);
-      const tlg = clipFY(DATA.tlg_series, DATA.months_43);
-      const holden = clipFY(DATA.holden_series, DATA.months_43);
+// ===== 集計 =====
+function aggregate(){
+  const overseas = ROWS.filter(r=>ALLOWED_ORGS.includes(r.組織));
+  const f42 = overseas.filter(r=>r.期==='42期');
+  const f43 = overseas.filter(r=>r.期==='43期' && MONTHS_43.includes(r.月));
 
-      function SectionTitle(t){ return React.createElement('h2',{className:'title'},t); }
-      function Subtitle(t){ return React.createElement('p',{className:'subtitle'},t); }
+  const sum = arr => arr.reduce((a,b)=>a+b,0);
 
-      function Card(children){ return React.createElement('div',{className:'card'},children); }
+  // 月次
+  const m42 = MONTHS_42.map(m=>({月:m, 売上: sum(f42.filter(r=>r.月===m).map(r=>r.売上))}))
+  const m43 = MONTHS_43.map(m=>({月:m, 売上: sum(f43.filter(r=>r.月===m).map(r=>r.売上))}))
 
-      // ------- 画面構築 -------
-      const app = React.createElement('div', {}, [
-        Card([
-          React.createElement('h1',{className:'title'},'42期・43期（3-2月決算）売上インフォグラフィック（B3のみ）'),
-          Subtitle('会計期：3→2月。 担G1=B3／税抜。 43期は 3–7月 のみ表示。')
-        ]),
+  // 組織別トータル
+  const org42 = {} , org43 = {};
+  for(const r of f42){ org42[r.組織]=(org42[r.組織]||0)+r.売上 }
+  for(const r of f43){ org43[r.組織]=(org43[r.組織]||0)+r.売上 }
 
-        Card([
-          SectionTitle('42期 vs 43期：月次売上推移（FY 3→2）'),
-          React.createElement('div',{style:{width:'100%',height:'340px'}},
-            React.createElement(ResponsiveContainer,{},
-              React.createElement(LineChart,{data:monthly,margin:{top:10,right:24,bottom:0,left:0}},[
-                React.createElement(CartesianGrid,{strokeDasharray:'3 3',stroke:COLORS.grid}),
-                React.createElement(XAxis,{dataKey:'月'}),
-                React.createElement(YAxis,{tickFormatter:(v)=> (v/100000000).toFixed(1)+'億'}),
-                React.createElement(Tooltip,{formatter:(v)=> yen(Number(v))}),
-                React.createElement(Legend,null),
-                React.createElement(Line,{type:'monotone',dataKey:'42期',stroke:COLORS.k42,strokeWidth:2.2,dot:{r:3}}),
-                React.createElement(Line,{type:'monotone',dataKey:'43期',stroke:COLORS.k43,strokeWidth:2.2,dot:{r:3}})
-              ])
-            )
-          )
-        ]),
+  // TLG/Holden 月次
+  const tlg42 = MONTHS_42.map(m=>({月:m, 売上: sum(f42.filter(r=>r.月===m && r.組織==='The Link Group').map(r=>r.売上))}))
+  const hdn42 = MONTHS_42.map(m=>({月:m, 売上: sum(f42.filter(r=>r.月===m && r.組織==='Holden').map(r=>r.売上))}))
+  const tlg43 = MONTHS_43.map(m=>({月:m, 売上: sum(f43.filter(r=>r.月===m && r.組織==='The Link Group').map(r=>r.売上))}))
+  const hdn43 = MONTHS_43.map(m=>({月:m, 売上: sum(f43.filter(r=>r.月===m && r.組織==='Holden').map(r=>r.売上))}))
 
-        React.createElement('div',{className:'row two'},[
-          Card([
-            SectionTitle('TLG：月次売上推移（FY 3→2）'),
-            React.createElement('div',{style:{width:'100%',height:'300px'}},
-              React.createElement(ResponsiveContainer,{},
-                React.createElement(LineChart,{data:tlg,margin:{top:10,right:24,bottom:0,left:0}},[
-                  React.createElement(CartesianGrid,{strokeDasharray:'3 3',stroke:COLORS.grid}),
-                  React.createElement(XAxis,{dataKey:'月'}),
-                  React.createElement(YAxis,{tickFormatter:(v)=> (v/100000000).toFixed(1)+'億'}),
-                  React.createElement(Tooltip,{formatter:(v)=> yen(Number(v))}),
-                  React.createElement(Legend,null),
-                  React.createElement(Line,{type:'monotone',dataKey:'42期',stroke:COLORS.k42,strokeWidth:2.2,dot:{r:3}}),
-                  React.createElement(Line,{type:'monotone',dataKey:'43期',stroke:COLORS.k43,strokeWidth:2.2,dot:{r:3}})
-                ])
-              )
-            )
-          ]),
-          Card([
-            SectionTitle('Holden：月次売上推移（FY 3→2）'),
-            React.createElement('div',{style:{width:'100%',height:'300px'}},
-              React.createElement(ResponsiveContainer,{},
-                React.createElement(LineChart,{data:holden,margin:{top:10,right:24,bottom:0,left:0}},[
-                  React.createElement(CartesianGrid,{strokeDasharray:'3 3',stroke:COLORS.grid}),
-                  React.createElement(XAxis,{dataKey:'月'}),
-                  React.createElement(YAxis,{tickFormatter:(v)=> (v/100000000).toFixed(1)+'億'}),
-                  React.createElement(Tooltip,{formatter:(v)=> yen(Number(v))}),
-                  React.createElement(Legend,null),
-                  React.createElement(Line,{type:'monotone',dataKey:'42期',stroke:COLORS.k42,strokeWidth:2.2,dot:{r:3}}),
-                  React.createElement(Line,{type:'monotone',dataKey:'43期',stroke:COLORS.k43,strokeWidth:2.2,dot:{r:3}})
-                ])
-              )
-            )
-          ])
-        ]),
+  return {m42,m43,org42,org43,tlg42,hdn42,tlg43,hdn43};
+}
 
-        React.createElement('div',{className:'row two'},[
-          Card([
-            SectionTitle('42期：全クライアント売上構成（B3）'),
-            React.createElement('div',{style:{width:'100%',height:'320px'}},
-              React.createElement(ResponsiveContainer,{},
-                React.createElement(PieChart,null,[
-                  React.createElement(Tooltip,{formatter:(v)=> yen(Number(v))}),
-                  React.createElement(Legend,null),
-                  React.createElement(Pie,{data:DATA.pie_42_all,dataKey:'value',nameKey:'name',cx:'50%',cy:'50%',outerRadius:110,label:true},
-                    DATA.pie_42_all.map((_,i)=> React.createElement(Cell,{key:'p42-'+i,fill:PALETTE[i%PALETTE.length]}))
-                  )
-                ])
-              )
-            )
-          ]),
-          Card([
-            SectionTitle('43期（3–7月）：全クライアント売上構成（B3）'),
-            React.createElement('div',{style:{width:'100%',height:'320px'}},
-              React.createElement(ResponsiveContainer,{},
-                React.createElement(PieChart,null,[
-                  React.createElement(Tooltip,{formatter:(v)=> yen(Number(v))}),
-                  React.createElement(Legend,null),
-                  React.createElement(Pie,{data:DATA.pie_43_all,dataKey:'value',nameKey:'name',cx:'50%',cy:'50%',outerRadius:110,label:true},
-                    DATA.pie_43_all.map((_,i)=> React.createElement(Cell,{key:'p43-'+i,fill:PALETTE[i%PALETTE.length]}))
-                  )
-                ])
-              )
-            )
-          ])
-        ])
-      ]);
+// ===== 描画 =====
+const palette=['#8884d8','#82ca9d','#ffc658','#d0ed57','#a4de6c','#8dd1e1','#ff8042','#00C49F','#FFBB28','#FF8042','#E7B84B','#57C4E5','#A5D6A7','#FFD54F','#9575CD','#4DB6AC','#FFAB91','#64B5F6','#BA68C8','#DCE775'];
+function yenShort(v){ if(v>=1e8) return (v/1e8).toFixed(2)+'億'; if(v>=1e6) return (v/1e6).toFixed(1)+'百万円'; return String(v); }
 
-      const root = ReactDOM.createRoot(rootEl);
-      root.render(app);
-    } catch (e) {
-      console.error(e);
-      const err = document.createElement('pre');
-      err.className = 'err';
-      err.textContent = 'エラー: ' + (e && e.message ? e.message : e);
-      document.body.prepend(err);
+function drawBar(el, data){
+  const x = echarts.init(document.getElementById(el));
+  x.setOption({
+    tooltip:{trigger:'axis',valueFormatter:v=>Number(v).toLocaleString()+"円"},
+    grid:{left:60,right:20,top:20,bottom:40},
+    xAxis:{type:'category',data:data.map(d=>d.月)},
+    yAxis:{type:'value',axisLabel:{formatter:(v)=>yenShort(v)}},
+    series:[{type:'bar',data:data.map(d=>d.売上),itemStyle:{color:palette[0]}}]
+  });
+}
+
+function drawShare(el, dict){
+  const items = Object.entries(dict).sort((a,b)=>b[1]-a[1]);
+  const top = items.slice(0,12);
+  const x = echarts.init(document.getElementById(el));
+  x.setOption({
+    tooltip:{trigger:'item',valueFormatter:v=>Number(v).toLocaleString()+"円"},
+    grid:{left:120,right:20,top:10,bottom:30},
+    xAxis:{type:'value'},
+    yAxis:{type:'category',data:top.map(([k])=>k)},
+    series:[{type:'bar',data:top.map(([k,v])=>v),itemStyle:{color:palette[3]}}]
+  });
+}
+
+function drawLines(el, tlg, hdn){
+  const x = echarts.init(document.getElementById(el));
+  x.setOption({
+    tooltip:{trigger:'axis',valueFormatter:v=>Number(v).toLocaleString()+"円"},
+    grid:{left:60,right:20,top:20,bottom:40},
+    xAxis:{type:'category',data:tlg.map(d=>d.月)},
+    yAxis:{type:'value',axisLabel:{formatter:(v)=>yenShort(v)}},
+    legend:{data:['The Link Group','Holden']},
+    series:[
+      {name:'The Link Group',type:'line',data:tlg.map(d=>d.売上),smooth:true,itemStyle:{color:palette[8]}},
+      {name:'Holden',type:'line',data:hdn.map(d=>d.売上),smooth:true,itemStyle:{color:palette[6]}}
+    ]
+  });
+}
+
+function fmtYen(n){return Number(n).toLocaleString()+"円"}
+
+function build(){
+  const {m42,m43,org42,org43,tlg42,hdn42,tlg43,hdn43} = aggregate();
+  // KPI
+  const sum = arr => arr.reduce((a,b)=>a+b,0);
+  const k42 = sum(m42.map(d=>d.売上));
+  const k43 = sum(m43.map(d=>d.売上));
+  document.getElementById('k42').textContent = fmtYen(k42);
+  document.getElementById('k43').textContent = fmtYen(k43);
+
+  const tlg42Sum = org42['The Link Group']||0; const hdn42Sum = org42['Holden']||0;
+  const tlg43Sum = org43['The Link Group']||0; const hdn43Sum = org43['Holden']||0;
+  const share42 = ((tlg42Sum+hdn42Sum)/Math.max(1,k42)*100).toFixed(1)+'%';
+  const share43 = ((tlg43Sum+hdn43Sum)/Math.max(1,k43)*100).toFixed(1)+'%';
+  document.getElementById('kshare42').textContent = share42;
+  document.getElementById('kshare43').textContent = share43;
+
+  // アノマリー（43期6月）
+  const m6 = m43.find(d=>d.月==='6月');
+  const box = document.getElementById('anomaly');
+  if(m6){
+    const prev = m43.find(d=>d.月==='5月');
+    const diff = prev? m6.売上 - prev.売上 : m6.売上;
+    const tlg6 = tlg43.find(d=>d.月==='6月')?.売上||0; const hdn6 = hdn43.find(d=>d.月==='6月')?.売上||0;
+    box.style.display='block';
+    box.innerHTML = `43期 <b>6月</b> 売上は <b>${fmtYen(m6.売上)}</b>（前月差 ${fmtYen(diff)}）。内訳：TLG=${fmtYen(tlg6)}、Holden=${fmtYen(hdn6)}。`;
+  } else { box.style.display='none'; }
+
+  // Charts
+  drawBar('chart42', m42);
+  drawBar('chart43', m43);
+  drawShare('chartOrg42', org42);
+  drawShare('chartOrg43', org43);
+  drawLines('chartTLGHolden42', tlg42, hdn42);
+  drawLines('chartTLGHolden43', tlg43, hdn43);
+}
+
+// 画像保存（各チャートを個別保存）
+document.getElementById('btnDownload').addEventListener('click',()=>{
+  const ids=['chart42','chart43','chartOrg42','chartOrg43','chartTLGHolden42','chartTLGHolden43'];
+  ids.forEach((id)=>{
+    const inst = echarts.getInstanceByDom(document.getElementById(id));
+    if(inst){
+      const url = inst.getDataURL({pixelRatio:2,backgroundColor:'#fff'});
+      const a=document.createElement('a'); a.href=url; a.download=`infographic_${id}.png`; a.click();
     }
-  })();
-  </script>
+  });
+});
+
+window.addEventListener('resize', ()=>{
+  ['chart42','chart43','chartOrg42','chartOrg43','chartTLGHolden42','chartTLGHolden43'].forEach(id=>{
+    const inst=echarts.getInstanceByDom(document.getElementById(id)); if(inst) inst.resize();
+  })
+});
+</script>
 </body>
 </html>
