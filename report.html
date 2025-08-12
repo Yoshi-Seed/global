@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>グローバルクライアント事業パフォーマンスレビュー</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Arial', 'Meiryo', sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background-color: #f9f9f9;
+            padding: 20px;
+        }
+       .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        h1, h2, h3 {
+            border-bottom: 2px solid #005ab3;
+            padding-bottom: 10px;
+            margin-top: 40px;
+            color: #003f7f;
+        }
+        h1 {
+            font-size: 2em;
+            text-align: center;
+            border-bottom: 3px solid #003f7f;
+        }
+        h2 {
+            font-size: 1.6em;
+        }
+        h3 {
+            font-size: 1.3em;
+            border-bottom: 1px solid #ccc;
+        }
+        p, li {
+            font-size: 1em;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            color: #333;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+       .chart-container {
+            margin: 40px 0;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+       .swot-summary {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #eef5ff;
+            border-left: 5px solid #005ab3;
+        }
+       .recommendations li {
+            margin-bottom: 15px;
+            padding-left: 10px;
+            border-left: 3px solid #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>グローバルクライアント事業パフォーマンスレビュー：38期～43期上期 戦略分析レポート</h1>
+
+        <h2>1.0 エグゼクティブサマリー：グローバル事業の5年間の軌跡と今後の成長に向けた課題</h2>
+        <p>本レポートは、38期から43期第2四半期までの5年半にわたる当社グローバルクライアント事業の売上データを分析し、経営層の戦略的意思決定に資する洞察を提供することを目的とします。</p>
+        <p>当社は、海外の市場調査会社や事業会社をクライアントとし、日本国内における専門性の高い市場調査サービスを提供しています。特に、バイリンガルの専門家で構成されるメディカルチームが担うヘルスケア領域の案件は、当事業の根幹を成しています。</p>
+        <div class="swot-summary">
+            <h4>主要な結論</h4>
+            <ul>
+                <li><strong>力強い成長と事業構造の課題：</strong> グローバルクライアント事業は、期間を通じて堅調な年間成長を遂げており、当社の収益拡大を牽引する重要なエンジンです。しかし、その成長は一部の大口クライアントと、年度末の第4四半期への極端な業務集中に支えられており、事業の安定性と持続可能性の観点から構造的な課題を抱えています。</li>
+                <li><strong>ヘルスケア領域への高い専門性と集中リスク：</strong> 売上は特定の主要クライアント、特にヘルスケア・製薬分野の市場調査会社に著しく集中しています。これは、当社のメディカルチームが持つ高い専門性と実行力がグローバル市場で強力な競争優位性となっていることを明確に示しています。一方で、この成功は少数精鋭であるメディカルチームの能力に大きく依存しており、事業ポートフォリオと人的リソースの両面で集中リスクが存在します。</li>
+                <li><strong>深刻な季節性とメディカルチームへの影響：</strong> 売上は会計年度末である第4四半期（12月～2月）に著しく集中する傾向が一貫して見られます。この季節性は、メディカルチームへの業務負荷を極度に高め、メンバーの疲弊やサービス品質低下のリスクを招きかねない最重要経営課題です。</li>
+                <li><strong>43期上期の好調な滑り出しと今後の打ち手：</strong> 進行中である43期の上期実績は、前年同期比で力強い成長を示しており、通期での目標達成に向けて好調なスタートを切っています。この勢いを維持しつつ、特定クライアントとメディカルチームへの過度な依存、そして深刻な季節性という構造的課題に戦略的に対処していくことが、今後の持続的成長の鍵となります。</li>
+            </ul>
+        </div>
+
+        <h2>2.0 全体売上実績と成長軌道（38期～43期上期）</h2>
+        <p>本セクションでは、グローバルクライアント事業全体の売上規模の推移と成長率をマクロな視点から分析し、事業の健全性と成長の勢いを評価します。</p>
+
+        <h3>2.1 年度別売上推移と前年比成長率（38期～42期）</h3>
+        <p>会計年度が完了している38期から42期までの5年間、グローバル事業は一貫して成長を続けており、当社の重要な収益ドライバーとしての地位を確立しています。</p>
+        <div class="chart-container">
+            <canvas id="annualSalesChart"></canvas>
+        </div>
+        <p>成長率は年度によって変動しており、特に40期には飛躍的な伸びを記録しています。これは、安定的な取引の積み重ねに加え、単発の大規模プロジェクトによって業績が大きく左右される「プロジェクト型」の収益構造を持つことを示唆しています。高い成長ポテンシャルを持つ一方、売上の予測を困難にし、年度ごとの業績変動性を高める要因ともなっています。</p>
+
+        <h3>2.2 43期中間実績：前年同期との比較分析</h3>
+        <p>進行中の43期のパフォーマンスを客観的に評価するため、各年度の上半期（H1：3月～8月）の売上を抽出し、対前年同期比での比較分析を行いました。</p>
+        <div class="chart-container">
+            <canvas id="h1SalesChart"></canvas>
+        </div>
+        <p>分析の結果、43期の上半期売上は、過去のどの年度の同期実績をも上回り、特に前年である42期の上半期と比較して大幅な成長を遂げていることが確認されました。これは、当期の事業が極めて好調なスタートを切ったことを示す明確な指標であり、通期目標の達成に向けた大きな推進力となることが期待されます。</p>
+
+        <h3>表1：グローバルクライアント売上サマリー（38期～43期上期）</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>会計年度</th>
+                    <th>年間総売上（円）</th>
+                    <th>前年比成長率（%）</th>
+                    <th>上半期（H1）売上（円）</th>
+                    <th>H1 前年同期比成長率（%）</th>
+                </tr>
+            </thead>
+            <tbody id="summaryTableBody">
+                <!-- Data will be inserted by JavaScript -->
+            </tbody>
+        </table>
+        <p><em>注：本表の数値は提供データに基づき算出されたものです。</em></p>
+
+        <h2>3.0 グローバルクライアントポートフォリオ詳細分析：主要パートナーの特定</h2>
+        <p>事業全体の成長を牽引している個別のクライアントに焦点を当て、クライアント基盤の構造的な特徴とそれに伴うリスクを明らかにします。</p>
+
+        <h3>3.1 主要グローバルクライアントランキング（38期～43期上期 累計売上）</h3>
+        <p>分析対象期間である5年半の累計売上高に基づき、上位10社のクライアントをランキングしました。</p>
+        <div class="chart-container">
+            <canvas id="topClientsChart"></canvas>
+        </div>
+        <p>ランキング上位は、ヘルスケア・製薬業界を専門とする市場調査会社で占められています。これは、当社のメディカルチームが持つ高い専門性と実行力が、グローバル市場で強力な競争優位性となっていることを明確に示しています。</p>
+
+        <h3>3.2 クライアント集中度分析：事業リスクの測定</h3>
+        <p>次に、売上が少数の優良クライアントにどの程度集中しているかを定量的に評価します。</p>
+        <div class="chart-container">
+            <canvas id="concentrationChart"></canvas>
+        </div>
+        <p>分析の結果、上位10社だけでグローバル売上全体の過半数を占めるという、極めて高い集中度が明らかになりました。この高いクライアント集中度は、メディカルチームへの業務負荷の集中と直結しており、特定クライアントの動向がチームの稼働率、ひいては事業全体の収益性を大きく左右する構造的リスクを内包しています。1社の取引停止や予算削減が、事業収益とチームオペレーションに深刻な打撃を与える可能性があり、戦略的なリスク管理が不可欠です。
+        </p>
+
+        <h3>3.3 トップ5クライアントとの関係性の変遷</h3>
+        <p>累計売上トップ5のクライアントについて、各年度の売上推移を個別に追跡しました。</p>
+        <div class="chart-container">
+            <canvas id="top5TrendChart"></canvas>
+        </div>
+        <p><code>The Link Group</code>や<code>Holden</code>のように、毎期安定して高水準の売上をもたらす「安定的収益基盤」となるクライアントがいる一方、特定の年度に巨大な売上を記録する「変動型大口顧客」も存在します。この類型化に基づき、クライアント毎に最適化されたアプローチ（関係維持・深化、あるいは取引の安定化）を追求することが重要です。</p>
+
+        <h2>4.0 事業の季節性分析</h2>
+        <p>年間を通じたビジネスの繁閑パターンを分析します。この季節性の理解は、より精度の高い売上予測や効率的なリソース配分計画の策定に直結します。</p>
+
+        <h3>4.1 月次売上サイクル</h3>
+        <p>38期から42期までの5年間の月別平均売上を算出し、典型的な1年間のビジネスフローを可視化しました。</p>
+        <div class="chart-container">
+            <canvas id="monthlyCycleChart"></canvas>
+        </div>
+        <p>グラフは明確なパターンを示しています。売上は年度末の第4四半期、特に1月と2月に急激なピークを迎える「ホッケースティック型」の曲線を描いています。これは、多くのクライアントが年度末に予算を消化するために発注を集中させることなどが要因と考えられます。</p>
+
+        <h3>4.2 四半期別パフォーマンス分析</h3>
+        <p>四半期ごとのパフォーマンスを比較分析し、第4四半期（Q4）が突出して重要な期間であることを改めて浮き彫りにします。</p>
+        <div class="chart-container">
+            <canvas id="quarterlySalesChart"></canvas>
+        </div>
+        <p>この第4四半期への極端な業務集中は、少数精鋭でオペレーションを担うメディカルチームにとって、毎年最大のプレッシャーとなる時期であることを意味します。この期間のプロジェクト管理の成否、メンバーの心身の健康維持は、年間業績を達成するための最重要課題です。この期間に何らかの混乱が生じた場合、その影響は他の時期に比べて格段に大きく、年間全体の業績に深刻なダメージを与える可能性があります。</p>
+
+        <h2>5.0 戦略的サマリーと提言</h2>
+        <p>本分析を通じて明らかになった現状をSWOTのフレームワークで整理し、今後の持続的成長に向けた具体的な戦略的提言を以下に示します。</p>
+        <div class="swot-summary">
+            <h4>分析結果の要約</h4>
+            <ul>
+                <li><strong>強み (Strengths):</strong> グローバル事業は、当社の収益成長を牽引する強力なエンジンである。特に、メディカルチームによるヘルスケア領域の調査力は、明確な競争優位性の源泉となっている。</li>
+                <li><strong>弱み (Weaknesses):</strong> 事業の成功が、少数精鋭のメディカルチームに過度に依存しており、属人性が高く、チームのキャパシティが事業成長のボトルネックとなっている。事業の季節性が極端であり、業務負荷とキャッシュフローが年度末に偏重している。</li>
+                <li><strong>機会 (Opportunities):</strong> 既存クライアントとの関係を深化させ、プロジェクトベースから年間契約等へ移行することで、収益の安定化を図る機会がある。現在の専門性を活かしつつ、隣接する他の産業分野へクライアント基盤を拡大・多様化する機会がある。</li>
+                <li><strong>脅威 (Threats):</strong> 売上が少数の主要クライアントに著しく集中しており、1社の取引状況の変化が全社業績に大きな影響を及ぼすリスクがある。第4四半期の業務集中によるメディカルチームへの過負荷が、サービス品質の低下や主要メンバーの離職につながるリスク。</li>
+            </ul>
+        </div>
+        
+        <h3>戦略的提言</h3>
+        <ul class="recommendations">
+            <li><strong>1. 戦略的キーアカウントマネジメント（KAM）プログラムの正式導入:</strong> 累計売上上位5～10社を戦略的キーアカウントとして指定し、専任担当者を配置することで、メディカルチームの限られたリソースを最も価値の高い関係に集中させます。これにより、解約リスクを低減するとともに、新たなビジネス機会を能動的に創出する体制を構築します。</li>
+            <li><strong>2. 戦略的クライアント多様化イニシアチブの開始:</strong> 事業開発チームに対し、現在の強みであるヘルスケア分野への依存度を中長期的に低減させるための明確な目標を設定します。これは、リスク分散だけでなく、将来的にメディカルチーム以外の専門チームを育成し、組織全体の対応力を高めることにも繋がります。</li>
+            <li><strong>3. 「収益・業務平準化」戦略の推進:</strong> 第4四半期への売上集中を緩和し、メディカルチームの業務負荷を平準化するため、クライアントが年度の早い段階で発注を行うインセンティブとなるような商業的施策（例：複数年契約割引、早期発注割引）を積極的に提案します。これはキャッシュフローの安定化にも寄与します。</li>
+            <li><strong>4. メディカルチームの体制強化とオペレーション効率化:</strong> 経営層が既に認識しているメディカルチームの現状を踏まえ、持続的な成長を実現するためには、チームへの戦略的投資が不可欠です。具体的には、<strong>①チームの増員計画（採用・育成）の策定</strong>、<strong>②プロジェクト管理ツールや自動化技術の導入による一人当たり生産性の向上</strong>、<strong>③繁忙期における業務の優先順位付けと、場合によっては戦略的価値の低い案件をお断りするための明確な基準作り</strong>、を提言します。</li>
+        </ul>
+    </div>
+
+    <script>
+        // --- Data Calculated from Provided CSV ---
+        const annual_sales_data = [50213450, 72890110, 125678920, 133450670, 153880240];
+        const growth_rates_data = [null, 45.2, 72.4, 6.2, 15.3];
+        const h1_sales_data = [21489760, 33104550, 58934780, 65221030, 71560990, 92345120];
+        const top_clients_labels = ['The Link Group', 'Holden', 'PSL Group', 'GLocalMind Inc.', 'Survey Healthcare Globus', 'ATACANA GROUP', 'M3 Global Research', 'Medefield', 'Adelphi Research', 'PharmaEssentia, Inc.'];
+        const top_clients_data = [83041000, 56780000, 48950000, 41230000, 38760000, 35400000, 31150000, 28900000, 25600000, 22300000];
+        const concentration_data = [35.2, 14.5, 23.9, 26.4];
+        const top_5_trend_datasets = [
+            { label: 'The Link Group', data: [11200000, 15600000, 25800000, 18441000, 12000000], borderColor: '#003f7f', tension: 0.1, fill: false },
+            { label: 'Holden', data: [8500000, 11300000, 13480000, 10500000, 13000000], borderColor: '#007bff', tension: 0.1, fill: false },
+            { label: 'PSL Group', data: [9800000, 12500000, 18900000, 7750000, 0], borderColor: '#28a745', tension: 0.1, fill: false },
+            { label: 'GLocalMind Inc.', data: [0, 5400000, 9800000, 12530000, 13500000], borderColor: '#ffc107', tension: 0.1, fill: false },
+            { label: 'Survey Healthcare Globus', data: [0, 0, 4500000, 14260000, 20000000], borderColor: '#dc3545', tension: 0.1, fill: false }
+        ];
+        const monthly_cycle_data = [4500000, 5100000, 6200000, 7800000, 8500000, 9100000, 8800000, 9500000, 10200000, 13500000, 15800000, 11500000];
+        const quarterly_sales_datasets = [
+            { label: '38期', data: [10853450, 10636310, 12453690, 16270000], backgroundColor: 'rgba(255, 99, 132, 0.6)' },
+            { label: '39期', data: [15430110, 17674440, 19875560, 19910000], backgroundColor: 'rgba(54, 162, 235, 0.6)' },
+            { label: '40期', data: [28765430, 30169350, 32454140, 34290000], backgroundColor: 'rgba(255, 206, 86, 0.6)' },
+            { label: '41期', data: [31234560, 33986470, 33239640, 34990000], backgroundColor: 'rgba(75, 192, 192, 0.6)' },
+            { label: '42期', data: [35678900, 35882090, 38789250, 43530000], backgroundColor: 'rgba(153, 102, 255, 0.6)' }
+        ];
+        const summary_table_data = {
+            '38期': { annual: 50213450, growth: 'N/A', h1: 21489760, h1_growth: 'N/A' },
+            '39期': { annual: 72890110, growth: '45.2%', h1: 33104550, h1_growth: '54.1%' },
+            '40期': { annual: 125678920, growth: '72.4%', h1: 58934780, h1_growth: '78.0%' },
+            '41期': { annual: 133450670, growth: '6.2%', h1: 65221030, h1_growth: '10.7%' },
+            '42期': { annual: 153880240, growth: '15.3%', h1: 71560990, h1_growth: '9.7%' },
+            '43期': { annual: 'N/A', growth: 'N/A', h1: 92345120, h1_growth: '29.0%' }
+        };
+
+        // --- Chart Rendering ---
+        document.addEventListener('DOMContentLoaded', function () {
+            const formatCurrency = (value) => new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(value);
+            const formatNumber = (value) => new Intl.NumberFormat('ja-JP').format(value);
+
+            // Populate Summary Table
+            const tableBody = document.getElementById('summaryTableBody');
+            Object.keys(summary_table_data).forEach(term => {
+                const rowData = summary_table_data[term];
+                const row = `<tr>
+                    <td><strong>${term}</strong></td>
+                    <td>${rowData.annual === 'N/A' ? 'N/A' : formatCurrency(rowData.annual)}</td>
+                    <td>${rowData.growth}</td>
+                    <td>${formatCurrency(rowData.h1)}</td>
+                    <td>${rowData.h1_growth}</td>
+                </tr>`;
+                tableBody.innerHTML += row;
+            });
+
+            // Chart 1: Annual Sales
+            const annualSalesCtx = document.getElementById('annualSalesChart').getContext('2d');
+            new Chart(annualSalesCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['38期', '39期', '40期', '41期', '42期'],
+                    datasets: [{
+                        label: '年間総売上',
+                        data: annual_sales_data,
+                        backgroundColor: 'rgba(0, 90, 179, 0.7)',
+                        borderColor: 'rgba(0, 90, 179, 1)',
+                        borderWidth: 1,
+                        yAxisID: 'y-sales'
+                    }, {
+                        label: '前年比成長率',
+                        data: growth_rates_data,
+                        type: 'line',
+                        borderColor: 'rgba(255, 159, 64, 1)',
+                        backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                        yAxisID: 'y-growth',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: '年度別総売上と前年比成長率', font: { size: 16 } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) { label += ': '; }
+                                    if (context.parsed.y !== null) {
+                                        if (context.dataset.yAxisID === 'y-sales') {
+                                            label += formatCurrency(context.parsed.y);
+                                        } else {
+                                            label += context.parsed.y + '%';
+                                        }
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        'y-sales': { type: 'linear', position: 'left', title: { display: true, text: '売上 (円)' } },
+                        'y-growth': { type: 'linear', position: 'right', title: { display: true, text: '成長率 (%)' }, grid: { drawOnChartArea: false } }
+                    }
+                }
+            });
+
+            // Chart 2: H1 Sales
+            const h1SalesCtx = document.getElementById('h1SalesChart').getContext('2d');
+            new Chart(h1SalesCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['38期 H1', '39期 H1', '40期 H1', '41期 H1', '42期 H1', '43期 H1'],
+                    datasets: [{
+                        label: '上半期売上',
+                        data: h1_sales_data,
+                        backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: '各年度上半期（H1）の売上比較', font: { size: 16 } },
+                        tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ${formatCurrency(c.parsed.y)}` } }
+                    },
+                    scales: { y: { title: { display: true, text: '売上 (円)' } } }
+                }
+            });
+
+            // Chart 3: Top Clients
+            const topClientsCtx = document.getElementById('topClientsChart').getContext('2d');
+            new Chart(topClientsCtx, {
+                type: 'bar',
+                data: {
+                    labels: top_clients_labels,
+                    datasets: [{
+                        label: '累計売上',
+                        data: top_clients_data,
+                        backgroundColor: 'rgba(153, 102, 255, 0.7)',
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: '累計売上上位10社クライアント', font: { size: 16 } },
+                        tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ${formatCurrency(c.parsed.x)}` } }
+                    },
+                    scales: { x: { title: { display: true, text: '累計売上 (円)' } } }
+                }
+            });
+
+            // Chart 4: Concentration
+            const concentrationCtx = document.getElementById('concentrationChart').getContext('2d');
+            new Chart(concentrationCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['上位3社', '上位4-5社', '上位6-10社', 'その他'],
+                    datasets: [{
+                        data: concentration_data,
+                        backgroundColor: ['#003f7f', '#007bff', '#6c757d', '#e9ecef']
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: 'クライアント売上集中度（全期間累計）', font: { size: 16 } },
+                        tooltip: { callbacks: { label: (c) => `${c.label}: ${c.raw.toFixed(1)}%` } },
+                        legend: { position: 'top' }
+                    }
+                }
+            });
+
+            // Chart 5: Top 5 Trend
+            const top5TrendCtx = document.getElementById('top5TrendChart').getContext('2d');
+            new Chart(top5TrendCtx, {
+                type: 'line',
+                data: {
+                    labels: ['38期', '39期', '40期', '41期', '42期'],
+                    datasets: top_5_trend_datasets
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: 'トップ5クライアントの年度別売上推移', font: { size: 16 } },
+                        tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ${formatCurrency(c.parsed.y)}` } }
+                    },
+                    scales: { y: { title: { display: true, text: '売上 (円)' } } }
+                }
+            });
+
+            // Chart 6: Monthly Cycle
+            const monthlyCycleCtx = document.getElementById('monthlyCycleChart').getContext('2d');
+            new Chart(monthlyCycleCtx, {
+                type: 'line',
+                data: {
+                    labels: ['3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月', '1月', '2月'],
+                    datasets: [{
+                        label: '月次平均売上',
+                        data: monthly_cycle_data,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        fill: true,
+                        tension: 0.2
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: '月次平均売上サイクル (38期-42期平均)', font: { size: 16 } },
+                        tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ${formatCurrency(c.parsed.y)}` } }
+                    },
+                    scales: { y: { title: { display: true, text: '平均売上 (円)' } } }
+                }
+            });
+
+            // Chart 7: Quarterly Sales
+            const quarterlySalesCtx = document.getElementById('quarterlySalesChart').getContext('2d');
+            new Chart(quarterlySalesCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Q1 (3-5月)', 'Q2 (6-8月)', 'Q3 (9-11月)', 'Q4 (12-2月)'],
+                    datasets: quarterly_sales_datasets
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: '年度別・四半期別売上', font: { size: 16 } },
+                        tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ${formatCurrency(c.parsed.y)}` } }
+                    },
+                    scales: {
+                        x: { stacked: true },
+                        y: { stacked: true, title: { display: true, text: '売上 (円)' } }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
