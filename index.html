@@ -100,98 +100,93 @@
 <script src="data/faqs.js"></script>
 
 <script>
-// --- Search + suggest（アクセシブル＆キーボード対応版） ---
-const search = document.getElementById('search'), suggest = document.getElementById('suggest');
-let activeIndex = -1; // キーボード選択位置
+function getAllFAQs(){
+  try {
+    if (Array.isArray(window.FAQS) && window.FAQS.length) return window.FAQS;
+  } catch(e){}
+  try {
+    // 別ファイルで `const FAQS = [...]` の場合でも拾う
+    if (typeof FAQS !== 'undefined' && Array.isArray(FAQS) && FAQS.length) return FAQS;
+  } catch(e){}
+  return [];
+}
+  
+/* ====== UI logic (no external deps) ====== */
+function getAllFAQs(){
+  try { if (Array.isArray(window.FAQS) && window.FAQS.length) return window.FAQS; } catch(e){}
+  try { if (typeof FAQS !== 'undefined' && Array.isArray(FAQS) && FAQS.length) return FAQS; } catch(e){}
+  return [];
+}
+const SECTIONS = ["Patients","HCP","System","Compliance","Fieldwork","Operations","Timeline"];
+const ALL = getAllFAQs(); // ← ここが肝
+// de-dup by id, keep last
+const byId = new Map(); for (const it of ALL) { byId.set(it.id, it); }
+const FAQS = [...byId.values()];
 
-function renderSuggestList(items, q){
-  suggest.innerHTML = items.map(({it}, idx) => {
-    const id = `opt-${it.id}`;
-    return `
-      <div class="s-item" role="option" id="${id}" data-index="${idx}" data-id="${it.id}"
-           tabindex="-1" aria-selected="false">
-        <div class="s-title">${escapeHTML(it.question)}</div>
-        <div class="s-snippet">${snippet(it.answer, q)}</div>
-      </div>`;
-  }).join('');
+
+function escapeHTML(s){return String(s||"").replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m]))}
+function cardHtml(f){
+  const link=`articles.html?id=${encodeURIComponent(f.id)}`;
+  const tags=(f.categories||[]).map(c=>`<span class="tag">#${escapeHTML(c)}</span>`).join(' ');
+  const a = String(f.answer||'');
+  const preview = a.length>150 ? a.slice(0,150)+'…' : a;
+  return `<article class="faq" tabindex="0">
+    <h3 class="q"><a href="${link}">${escapeHTML(f.question)}</a></h3>
+    <p class="a">${escapeHTML(preview)}</p>
+    <div class="meta">${tags} <a class="back" href="${link}" aria-label="Read: ${escapeHTML(f.question)}">Read</a></div>
+  </article>`;
+}
+function renderSections(){
+  const counts=Object.fromEntries(SECTIONS.map(s=>[s,0]));
+  SECTIONS.forEach(section=>{
+    const grid=document.querySelector(`.faq-grid[data-section="${section}"]`);
+    const list=FAQS.filter(f=>Array.isArray(f.categories) && f.categories.includes(section));
+    grid.innerHTML=list.map(cardHtml).join('');
+    counts[section]=list.length;
+    const badge=document.getElementById('count-'+section);
+    if(badge) badge.textContent=String(list.length);
+  });
+}
+function normalize(s){return String(s||'').toLowerCase()}
+function snippet(text,q){
+  const t=String(text||''),i=t.toLowerCase().indexOf(q.toLowerCase());
+  if(i<0) return escapeHTML(t.slice(0,140))+(t.length>140?'…':'');
+  const s=Math.max(0,i-60),e=Math.min(t.length,i+q.length+60);
+  return (s>0?'…':'')+escapeHTML(t.slice(s,i))+`<mark>${escapeHTML(t.slice(i,i+q.length))}</mark>`+escapeHTML(t.slice(i+q.length,e))+(e<t.length?'…':'');
+}
+function score(query,it){
+  const terms=normalize(query).split(/\s+/).filter(Boolean);
+  let sc=0;
+  terms.forEach(t=>{
+    const hay=(it.question+' '+(it.answer||'')).toLowerCase();
+    if(hay.includes(t)) sc+=2;
+    if((it.question||'').toLowerCase().includes(t)) sc+=2;
+  });
+  return sc;
 }
 
-function setActive(idx){
-  const opts = Array.from(suggest.querySelectorAll('.s-item[role="option"]'));
-  opts.forEach(el => el.setAttribute('aria-selected', 'false'));
-  if (idx >= 0 && idx < opts.length) {
-    opts[idx].setAttribute('aria-selected', 'true');
-    opts[idx].focus({ preventScroll: true });
-    suggest.setAttribute('aria-activedescendant', opts[idx].id);
-    activeIndex = idx;
-  } else {
-    suggest.removeAttribute('aria-activedescendant');
-    activeIndex = -1;
-  }
-}
-
+// Search + suggest
+const search=document.getElementById('search'), suggest=document.getElementById('suggest');
 function updateSuggest(v){
-  const q = v.trim();
-  if(!q){
-    suggest.classList.remove('visible');
-    suggest.setAttribute('aria-expanded','false');
-    suggest.innerHTML = '';
-    activeIndex = -1;
-    return;
-  }
-  const ranked = FAQS
-    .map(it => ({ it, score: score(q, it) }))
-    .filter(x => x.score > 0)
-    .sort((a,b) => b.score - a.score)
-    .slice(0, 12);
-
-  if (!ranked.length) {
-    suggest.innerHTML = `
-      <div class="s-item" aria-disabled="true" tabindex="-1">
-        No matches. Try broader words or open a section below.
-      </div>`;
-    suggest.classList.add('visible');
-    suggest.setAttribute('aria-expanded','true');
-    activeIndex = -1;
-    return;
-  }
-  renderSuggestList(ranked, q);
+  const q=v.trim(); if(!q){suggest.classList.remove('visible'); suggest.innerHTML=''; return;}
+  const ranked=FAQS.map(it=>({it,score:score(q,it)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,12);
+  if(!ranked.length){suggest.classList.remove('visible'); suggest.innerHTML=''; return;}
+  suggest.innerHTML=ranked.map(({it})=>`<div class="s-item" data-id="${it.id}" tabindex="0"><div class="s-title">${escapeHTML(it.question)}</div><div class="s-snippet">${snippet(it.answer,q)}</div></div>`).join('');
   suggest.classList.add('visible');
-  suggest.setAttribute('aria-expanded','true');
 }
-
-search.addEventListener('input', e => updateSuggest(e.target.value));
-search.addEventListener('focus', e => updateSuggest(e.target.value));
-
-suggest.addEventListener('click', e => {
-  const it = e.target.closest('.s-item');
-  if(!it || it.getAttribute('aria-disabled') === 'true') return;
-  location.href = `articles.html?id=${encodeURIComponent(it.dataset.id)}`;
+search.addEventListener('input',e=>updateSuggest(e.target.value));
+search.addEventListener('focus',e=>updateSuggest(e.target.value));
+suggest.addEventListener('click',e=>{
+  const it=e.target.closest('.s-item'); if(!it) return;
+  location.href=`articles.html?id=${encodeURIComponent(it.dataset.id)}`;
 });
-
-// キーボード操作（↑↓で移動、Enterで決定、Escで閉じる）
-search.addEventListener('keydown', e => {
-  const open = suggest.classList.contains('visible');
-  if (e.key === 'ArrowDown') {
-    const n = suggest.querySelectorAll('.s-item[role="option"]').length; if(!n) return;
-    e.preventDefault(); setActive((activeIndex + 1) % n); return;
-  }
-  if (e.key === 'ArrowUp') {
-    const n = suggest.querySelectorAll('.s-item[role="option"]').length; if(!n) return;
-    e.preventDefault(); setActive((activeIndex - 1 + n) % n); return;
-  }
-  if (e.key === 'Enter' && open && activeIndex > -1) {
-    e.preventDefault();
-    const el = suggest.querySelector(`.s-item[data-index="${activeIndex}"]`);
-    if (el) location.href = `articles.html?id=${encodeURIComponent(el.dataset.id)}`;
-  }
-  if (e.key === 'Escape' && open) {
-    suggest.classList.remove('visible');
-    suggest.setAttribute('aria-expanded','false');
-    activeIndex = -1;
-  }
+document.addEventListener('keydown',e=>{
+  if(e.key==='/'&&!/input|textarea/i.test(document.activeElement.tagName)){e.preventDefault();search.focus();}
 });
+document.getElementById('year').textContent=new Date().getFullYear();
+
+// Init
+renderSections();
 </script>
-
 </body>
 </html>
