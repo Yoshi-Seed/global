@@ -107,143 +107,115 @@
 <script src="data/faqs.js"></script>
 
 <script>
-/* ===== Search / Highlight ===== */
-function norm(s){ // 全半角や長音の揺れを軽減（軽めの正規化）
-  return String(s||'')
-    .toLowerCase()
-    .replace(/[\u2010-\u2015\u2212]/g,'-')
-    .replace(/[Ａ-Ｚａ-ｚ０-９]/g,ch=>String.fromCharCode(ch.charCodeAt(0)-0xFEE0));
-}
-function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+    document.addEventListener('DOMContentLoaded', function () {
+        const faqs = window.faqs;
+        const faqContainer = document.getElementById('faq-container');
+        const searchInput = document.getElementById('search-input');
+        const categoryButtonsContainer = document.getElementById('category-buttons-container');
 
-// 安全に <mark> を差し込む（先にエスケープ→正規表現マッチ）
-function highlightEscaped(text, query){
-  if(!query) return esc(text);
-  const q = norm(query).replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); // 正規表現エスケープ
-  if(!q) return esc(text);
-  const src = esc(text);
-  // 可視テキストでの検索なので、src側をノーマライズしたインデックスと同期させたい
-  // 簡易的に、位置ごとに比較して置換（小規模データ前提）
-  const lower = src.toLowerCase();
-  const idxs = [];
-  let i=0;
-  while(i < lower.length){
-    const j = lower.indexOf(q, i);
-    if(j === -1) break;
-    idxs.push([j, j+q.length]);
-    i = j + q.length;
-  }
-  if(!idxs.length) return src;
-  let out='', pos=0;
-  for(const [a,b] of idxs){
-    out += src.slice(pos,a) + '<mark>' + src.slice(a,b) + '</mark>';
-    pos = b;
-  }
-  out += src.slice(pos);
-  return out;
-}
+        // 'All'ボタン以外のカテゴリボタンを動的に生成
+        const uniqueCategories = [...new Set(faqs.map(faq => faq.category))];
+        const buttonsFragment = document.createDocumentFragment();
 
-// 検索キーワードを使ってカードHTMLを生成（ハイライト版）
-function cardHtmlHighlighted(f, query){
-  const link=`articles.html?id=${encodeURIComponent(f.id)}${query?('&q='+encodeURIComponent(query)) : ''}`;
-  const tags=(f.categories||[]).map(c=>`<span class="tag">#${esc(c)}</span>`).join(' ');
-  const a = String(f.answer||'');
-  const preview = a.length>150 ? a.slice(0,150)+'…' : a;
-  const title = query ? highlightEscaped(f.question, query) : esc(f.question);
-  const prev  = query ? highlightEscaped(preview, query)  : esc(preview);
-  return `<article class="faq" tabindex="0">
-    <h3 class="q"><a href="${link}">${title}</a></h3>
-    <p class="a">${prev}</p>
-    <div class="meta">${tags} <a class="back" href="${link}" aria-label="Read: ${esc(f.question)}">Read</a></div>
-  </article>`;
-}
+        uniqueCategories.forEach(category => {
+            const button = document.createElement('button');
+            button.className = 'category-btn bg-gray-200 text-gray-800 px-4 py-2 rounded';
+            button.setAttribute('data-category', category);
+            button.textContent = category;
+            buttonsFragment.appendChild(button);
+        });
+        categoryButtonsContainer.appendChild(buttonsFragment);
 
-async function renderSectionsWithSearch(query){
-  const FAQS = await DATA_PROMISE;
-  const qn = norm(query||'').trim();
-  const counts=Object.fromEntries(SECTIONS.map(s=>[s,0]));
-  SECTIONS.forEach(section=>{
-    const grid=document.querySelector(`.faq-grid[data-section="${section}"]`);
-    if(!grid) return;
-    let list=[];
-    if(section==="All"){
-      list=FAQS;
-    }else if(section==="Uncategorized"){
-      list=FAQS.filter(f=>!Array.isArray(f.categories) || f.categories.length===0);
-    }else{
-      list=FAQS.filter(f=>Array.isArray(f.categories) && f.categories.includes(section));
-    }
-    // フィルタはせず「常に表示」。ヒットがあればハイライトのみ行う。
-    grid.innerHTML=list.map(f=>cardHtmlHighlighted(f, qn)).join('');
-    counts[section]=list.length;
-    const badge=document.getElementById('count-'+section);
-    if(badge) badge.textContent=String(list.length);
-  });
-}
+        // すべてのカテゴリボタン（'All'を含む）を取得
+        const categoryButtons = document.querySelectorAll('.category-btn');
 
-// サジェスト表示（タイトルと冒頭スニペット）
-async function renderSuggest(query){
-  const box = document.getElementById('suggest');
-  if(!box) return;
-  const q = norm(query||'').trim();
-  if(!q){ box.classList.remove('visible'); box.innerHTML=''; return; }
+        // FAQリストを表示するメインの関数
+        function displayFaqs(filterCategory = 'All', searchTerm = '') {
+            faqContainer.innerHTML = ''; // 表示エリアを一度空にする
+            let filteredFaqs = faqs;
 
-  const FAQS = await DATA_PROMISE;
-  const hits = FAQS.filter(f=>{
-    const hay = norm(f.question+' '+(f.answer||''));
-    return hay.includes(q);
-  }).slice(0,20);
+            // カテゴリで絞り込み（'All'以外が選択された場合）
+            if (filterCategory !== 'All') {
+                filteredFaqs = filteredFaqs.filter(faq => faq.category === filterCategory);
+            }
 
-  if(!hits.length){ box.classList.remove('visible'); box.innerHTML=''; return; }
+            // 検索キーワードで絞り込み
+            if (searchTerm) {
+                const lowerCaseSearchTerm = searchTerm.toLowerCase();
+                filteredFaqs = filteredFaqs.filter(faq =>
+                    faq.question.toLowerCase().includes(lowerCaseSearchTerm) ||
+                    faq.answer.toLowerCase().includes(lowerCaseSearchTerm)
+                );
+            }
 
-  box.innerHTML = hits.map(f=>{
-    const title = highlightEscaped(f.question, query);
-    const snip  = highlightEscaped(String(f.answer||'').slice(0,120), query);
-    const href  = `articles.html?id=${encodeURIComponent(f.id)}&q=${encodeURIComponent(query)}`;
-    return `<div class="s-item" role="option" data-id="${esc(f.id)}" data-href="${href}">
-      <div class="s-title">${title}</div>
-      <div class="s-snippet">${snip}</div>
-    </div>`;
-  }).join('');
-  box.classList.add('visible');
+            // 絞り込んだ結果をカテゴリごとにグループ化
+            const faqsByCategory = filteredFaqs.reduce((acc, faq) => {
+                if (!acc[faq.category]) {
+                    acc[faq.category] = [];
+                }
+                acc[faq.category].push(faq);
+                return acc;
+            }, {});
 
-  // クリックで遷移
-  box.querySelectorAll('.s-item').forEach(it=>{
-    it.addEventListener('click', ()=>{ location.href = it.getAttribute('data-href'); });
-  });
-}
+            const displayCategories = Object.keys(faqsByCategory).sort();
 
-// 入力イベント（1文字目から反応）
-(function wireSearch(){
-  const input = document.getElementById('search');
-  const suggest = document.getElementById('suggest');
-  if(!input) return;
+            // 結果がなければメッセージを表示
+            if (displayCategories.length === 0) {
+                faqContainer.innerHTML = '<p>No results found.</p>';
+                return;
+            }
 
-  // ショートカット： "/" でフォーカス
-  window.addEventListener('keydown', (e)=>{ if(e.key==='/'){ e.preventDefault(); input.focus(); } });
+            // カテゴリごとに見出しと質問リストをHTMLとして生成
+            displayCategories.forEach(category => {
+                const categorySection = document.createElement('div');
+                categorySection.className = 'mb-8';
+                categorySection.id = category;
+                
+                const title = document.createElement('h2');
+                title.className = 'text-2xl font-bold border-b-2 border-teal-500 pb-2 mb-4';
+                title.textContent = category;
+                categorySection.appendChild(title);
 
-  let t=null;
-  input.addEventListener('input', (e)=>{
-    const v = e.target.value;
-    clearTimeout(t);
-    // 軽いデバウンス（50ms）
-    t = setTimeout(()=>{
-      renderSectionsWithSearch(v);
-      renderSuggest(v);
-    }, 50);
-  });
+                const questionList = document.createElement('ul');
+                faqsByCategory[category].forEach(faq => {
+                    const li = document.createElement('li');
+                    li.className = 'mb-2';
+                    li.innerHTML = `<a href="article.html?id=${faq.id}" class="text-blue-600 hover:underline">${faq.question}</a>`;
+                    questionList.appendChild(li);
+                });
 
-  // フォーカス外れたらサジェスト閉じる
-  document.addEventListener('click', (e)=>{
-    if(!suggest) return;
-    const within = e.target===suggest || suggest.contains(e.target) || e.target===input;
-    if(!within){ suggest.classList.remove('visible'); }
-  });
-})();
+                categorySection.appendChild(questionList);
+                faqContainer.appendChild(categorySection);
+            });
+        }
+
+        // 検索入力時のイベントリスナー
+        searchInput.addEventListener('input', (e) => {
+            const activeCategory = document.querySelector('.category-btn.active').dataset.category;
+            displayFaqs(activeCategory, e.target.value);
+        });
+
+        // カテゴリボタンクリック時のイベントリスナー
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                categoryButtons.forEach(btn => {
+                    btn.classList.remove('active', 'bg-blue-500', 'text-white');
+                    btn.classList.add('bg-gray-200', 'text-gray-800');
+                });
+                button.classList.add('active', 'bg-blue-500', 'text-white');
+                button.classList.remove('bg-gray-200', 'text-gray-800');
+                displayFaqs(button.dataset.category, searchInput.value);
+            });
+        });
+
+        // 初期表示
+        displayFaqs();
+    });
 </script>
 
 </body>
 </html>
+
 
 
 
