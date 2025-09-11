@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FAQ Article | Seed Planning</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: "Inter","Noto Sans","Noto Sans JP",system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      margin: 20px;
+      line-height: 1.7;
+      color: #21343b;
+    }
+    a { color: #2f6f7e; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    header { margin-bottom: 20px; }
+    h1 { margin: 0 0 6px; font-size: 26px; }
+    .meta { color: #5e7a85; font-size: 14px; display: flex; gap: 8px; flex-wrap: wrap; }
+    .tag { font-size: 12px; background: #edf7f7; border: 1px solid #d9ecec; padding: 2px 8px; border-radius: 999px; }
+    .content { margin-top: 18px; }
+    mark { background: #fff3b0; padding: 0 .2em; }
+    .related { margin-top: 36px; }
+    .related h2 { font-size: 18px; margin: 0 0 10px; border-bottom: 2px solid #5baaae; padding-bottom: 6px; }
+    .related ul { list-style: none; padding: 0; margin: 0; }
+    .related li { margin: 6px 0; }
+  </style>
+</head>
+<body>
+  <a href="index.html">← Back to FAQs</a>
+  <header>
+    <h1 id="title"></h1>
+    <div id="meta" class="meta"></div>
+  </header>
+  <section class="content">
+    <p id="answer"></p>
+  </section>
+  <section class="related" id="related" hidden>
+    <h2>Articles in this section</h2>
+    <ul id="relatedList"></ul>
+  </section>
+
+  <!-- Load FAQ data from data/faqs.js -->
+  <script src="data/faqs.js"></script>
+  <script>
+    // Extract id and optional search query from the URL
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    const q = params.get('q') || '';
+
+    // Retrieve the FAQ collection from the global scope
+    let allFaqs = [];
+    try { if (Array.isArray(window.FAQS)) allFaqs = window.FAQS; } catch(e){}
+    try { if (!allFaqs.length && typeof FAQS !== 'undefined' && Array.isArray(FAQS)) allFaqs = FAQS; } catch(e){}
+
+    // Index FAQs by id
+    const byId = new Map();
+    for (const it of allFaqs) byId.set(it.id, it);
+    const article = byId.get(id);
+
+    const titleEl = document.getElementById('title');
+    const metaEl = document.getElementById('meta');
+    const answerEl = document.getElementById('answer');
+    const relatedSection = document.getElementById('related');
+    const relatedList = document.getElementById('relatedList');
+
+    if (!article) {
+      titleEl.textContent = 'Article not found';
+      answerEl.innerHTML = 'The requested article does not exist. <a href="index.html">Back to index</a>';
+    } else {
+      titleEl.textContent = article.question;
+      // Render categories as tags
+      const cats = Array.isArray(article.categories) && article.categories.length ? article.categories : ['Uncategorized'];
+      metaEl.innerHTML = cats.map(c => `<span class="tag">#${c}</span>`).join(' ');
+
+      // Render the answer, highlighting query if present
+      const raw = String(article.answer || '');
+      if (!q) {
+        answerEl.textContent = raw;
+      } else {
+        // escape HTML
+        const esc = raw.replace(/[&<>\"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+        const patt = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'ig');
+        answerEl.innerHTML = esc.replace(patt, m => `<mark>${m}</mark>`);
+      }
+
+      // Find related articles in the same categories
+      const related = allFaqs.filter(x =>
+        x.id !== article.id &&
+        Array.isArray(x.categories) && Array.isArray(article.categories) &&
+        x.categories.some(c => article.categories.includes(c))
+      );
+      if (related.length) {
+        relatedSection.hidden = false;
+        // Limit to 10 related entries and escape HTML in the question text
+        relatedList.innerHTML = related.slice(0, 10).map(x => {
+          const safeQ = x.question.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
+          return `<li><a href="article.html?id=${encodeURIComponent(x.id)}">${safeQ}</a></li>`;
+        }).join('');
+      }
+    }
+  </script>
+</body>
+</html>
