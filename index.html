@@ -95,6 +95,11 @@
   <section id="Operations"><h2 class="section-title">Operations <span class="badge" id="count-Operations"></span></h2><div class="faq-grid" data-section="Operations"></div></section>
   <section id="Timeline"><h2 class="section-title">Timeline <span class="badge" id="count-Timeline"></span></h2><div class="faq-grid" data-section="Timeline"></div></section>
   <section id="Uncategorized"><h2 class="section-title">Uncategorized <span class="badge" id="count-Uncategorized"></span></h2><div class="faq-grid" data-section="Uncategorized"></div></section>
+  <!-- Category groups -->
+<section id="ByCategory">
+  <h2 class="section-title">By Category</h2>
+  <div id="category-groups"></div>
+</section>
   <footer class="site"><p>© <span id="year"></span> Seed Planning.</p></footer>
 </div>
 
@@ -104,84 +109,50 @@
 <script src="data/faqs.js"></script>
 
 <script>
-// ===== CSV + JS merge（CSV優先） =====
-async function fetchCSV(u){
-  const res = await fetch(u+(u.includes("?")?"&":"?")+"v="+Date.now(),{cache:"no-store"});
-  if(!res.ok) return []; const t=await res.text(); return parseCSV(t);
-}
-function parseCSV(text){
-  const rows=[], out=[]; let cur=[''], q=false; const s=String(text||'');
-  for(let i=0;i<s.length;i++){
-    const c=s[i];
-    if(q){ if(c=='"'){ if(s[i+1]=='"'){cur[cur.length-1]+='"'; i++;} else q=false; } else cur[cur.length-1]+=c; }
-    else { if(c=='"') q=true; else if(c==',') cur.push(''); else if(c=='\n'||c=='\r'){ if(cur.length>1||cur[0]!=='') rows.push(cur); cur=['']; } else cur[cur.length-1]+=c; }
-  }
-  if(cur.length>1||cur[0]!=='') rows.push(cur);
-  if(!rows.length) return [];
-  const head=rows[0].map(h=>h.trim());
-  for(let i=1;i<rows.length;i++){
-    const r=rows[i], o={}; head.forEach((h,k)=>o[h]=(r[k]??'').trim());
-    if(o.categories) o.categories=o.categories.split(/\s*[;|,]\s*/).filter(Boolean);
-    out.push(o);
-  }
-  return out;
-}
-function jsFAQs(){
-  try { if (Array.isArray(window.FAQS) && window.FAQS.length) return window.FAQS; } catch(_){}
-  try { if (typeof FAQS !== 'undefined' && Array.isArray(FAQS) && FAQS.length) return FAQS; } catch(_){}
-  return [];
-}
+// …既存の renderSections() 定義の後に追記…
 
-const SECTIONS = ["All","Patients","HCP","System","Compliance","Fieldwork","Operations","Timeline","Uncategorized"];
-const DATA_PROMISE = (async ()=>{
-  let csv=[]; try{ csv=await fetchCSV("data/index.csv"); }catch(_){}
-  const js = jsFAQs();
-  const m=new Map();
-  js.forEach(x=>x&&x.id&&m.set(String(x.id),x));
-  csv.forEach(x=>x&&x.id&&m.set(String(x.id),x)); // CSV優先
-  const arr=[...m.values()].map(x=>{
-    if(x.categories && !Array.isArray(x.categories)){
-      x.categories=String(x.categories).split(/\s*[;|,]\s*/).filter(Boolean);
-    }
-    return x;
-  });
-  return arr;
-})();
-
-function escapeHTML(s){return String(s||'').replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));}
-function cardHtml(f){
-  const link=`articles.html?id=${encodeURIComponent(f.id)}`;
-  const tags=(f.categories||[]).map(c=>`<span class="tag">#${escapeHTML(c)}</span>`).join(' ');
-  const a=String(f.answer||''); const preview=a.length>150?a.slice(0,150)+'…':a;
-  return `<article class="faq" tabindex="0">
-    <h3 class="q"><a href="${link}">${escapeHTML(f.question)}</a></h3>
-    <p class="a">${escapeHTML(preview)}</p>
-    <div class="meta">${tags} <a class="back" href="${link}" aria-label="Read: ${escapeHTML(f.question)}">Read</a></div>
-  </article>`;
-}
-async function renderSections(){
+async function renderByCategory() {
   const FAQS = await DATA_PROMISE;
-  const counts=Object.fromEntries(SECTIONS.map(s=>[s,0]));
-  SECTIONS.forEach(section=>{
-    const grid=document.querySelector(`.faq-grid[data-section="${section}"]`);
-    if(!grid) return;
-    let list=[];
-    if(section==="All"){
-      list=FAQS;
-    }else if(section==="Uncategorized"){
-      list=FAQS.filter(f=>!Array.isArray(f.categories) || f.categories.length===0);
-    }else{
-      list=FAQS.filter(f=>Array.isArray(f.categories) && f.categories.includes(section));
+
+  // カテゴリ名→FAQ配列のMap作成（未設定は "Uncategorized"）
+  const map = new Map();
+  for (const f of FAQS) {
+    const cats = (Array.isArray(f.categories) && f.categories.length) ? f.categories : ["Uncategorized"];
+    for (const c of cats) {
+      if (!map.has(c)) map.set(c, []);
+      map.get(c).push(f);
     }
-    grid.innerHTML=list.map(cardHtml).join('');
-    counts[section]=list.length;
-    const badge=document.getElementById('count-'+section);
-    if(badge) badge.textContent=String(list.length);
+  }
+
+  // カテゴリ名の配列（件数降順でソート）
+  const cats = [...map.keys()].sort((a, b) => {
+    const diff = map.get(b).length - map.get(a).length;
+    return diff !== 0 ? diff : a.localeCompare(b);
   });
+
+  // 描画
+  const wrap = document.getElementById("category-groups");
+  if (!wrap) return;
+  wrap.innerHTML = cats.map(cat => {
+    const list = map.get(cat).map(cardHtml).join("");
+    const count = map.get(cat).length;
+    return `
+      <div class="category-block" data-cat="${escapeHTML(cat)}">
+        <h3 class="section-subtitle">
+          ${escapeHTML(cat)} <span class="badge">${count}</span>
+        </h3>
+        <div class="faq-grid">${list}</div>
+      </div>
+    `;
+  }).join("");
 }
-document.getElementById('year').textContent=new Date().getFullYear();
+
+// 初期化時にカテゴリ別表示も呼び出す
+document.getElementById('year').textContent = new Date().getFullYear();
 renderSections();
+renderByCategory(); // ←追加
 </script>
 </body>
 </html>
+
 
