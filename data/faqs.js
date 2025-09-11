@@ -357,11 +357,12 @@
   ];
 
   // 既存の window.FAQS に結合（重複が嫌なら事前に削除ロジックを入れてもOK）
-  window.FAQS = window.FAQS.concat(FAQS);
-})();
 // 補完：カテゴリ未設定は Uncategorized に寄せる
-FAQS.forEach(e => {
+     FAQS.forEach(e => {
   if (!Array.isArray(e.categories) || e.categories.length === 0) e.categories = ["Uncategorized"];
-});
+});  window.FAQS = window.FAQS.concat(FAQS);
+})();
+
+
 
 
