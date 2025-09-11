@@ -1,283 +1,213 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Japan MR Resource Central</title>
-    <style>
-        /* General Styles */
-        body {
-            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
-            line-height: 1.7;
-            color: #333;
-            background-color: #f8f9fa;
-            margin: 0;
-            padding: 20px;
-        }
-        /* Container for centering content */
-        .container {
-            max-width: 980px;
-            margin: auto;
-            background: #fff;
-            padding: 25px 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        }
-        /* Header section */
-        header {
-            text-align: center;
-            border-bottom: 2px solid #e9ecef;
-            padding-bottom: 25px;
-            margin-bottom: 35px;
-        }
-        header h1 {
-            color: #1a237e; /* Dark blue */
-            margin: 0;
-            font-size: 2.2em;
-        }
-        header p {
-            font-size: 1.1em;
-            color: #555;
-        }
-        /* Section for each resource */
-        .resource-section {
-            display: flex;
-            flex-wrap: wrap;
-            border-bottom: 1px solid #f1f1f1;
-            padding: 30px 0;
-            margin-bottom: 30px;
-            align-items: flex-start;
-            gap: 30px; /* Space between image and details */
-        }
-        .resource-section:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-        }
-        /* Preview image */
-        .preview-image {
-            flex: 0 0 200px;
-        }
-        .preview-image img {
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-        /* Resource details */
-        .resource-details {
-            flex: 1;
-            min-width: 300px; /* Minimum width for wrapping */
-        }
-        .resource-details h2 {
-            margin-top: 0;
-            color: #0d47a1; /* Slightly lighter blue */
-            font-size: 1.5em;
-        }
-        .resource-details p {
-            margin: 0 0 15px 0;
-            color: #444;
-        }
-        .resource-details ul {
-            padding-left: 20px;
-            margin: 0 0 20px 0;
-            color: #555;
-        }
-        .resource-details li {
-            margin-bottom: 6px;
-        }
-        /* Download button */
-        .download-link {
-            display: inline-block;
-            background-color: #0d47a1;
-            color: #fff;
-            padding: 12px 22px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: background-color 0.3s, transform 0.2s;
-            border: none;
-            cursor: pointer;
-        }
-        .download-link:hover {
-            background-color: #0a337a;
-            transform: translateY(-2px);
-        }
-        /* Footer */
-        footer {
-            text-align: center;
-            margin-top: 50px;
-            font-size: 0.9em;
-            color: #888;
-        }
-
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
-            .resource-section {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
-            .preview-image {
-                margin-bottom: 20px;
-                max-width: 250px;
-            }
-            .resource-details ul {
-                display: inline-block;
-                text-align: left;
-            }
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Japan MR Resource Central | Seed Planning</title>
+  <meta name="description" content="Japan MR Resource Central — Curated resources for conducting healthcare market research in Japan" />
+  <style>
+    :root{
+      --bg:#0b0d10; --card:#12161b; --ink:#e9eef5; --sub:#a8b3c2; --hint:#7f8a99;
+      --brand:#45b7ff; --brand-2:#8ef6d2; --muted:#20252d; --ring:#2b323c;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, "Hiragino Kaku Gothic ProN", Meiryo, "Noto Sans JP", Noto Sans, sans-serif;
+      background: radial-gradient(1200px 800px at 10% -10%, #13202a 0%, #0b0d10 50%), var(--bg);
+      color:var(--ink);
+    }
+    header{
+      padding:48px 24px 24px; max-width:1100px; margin:0 auto;
+    }
+    .sup{color:var(--brand-2); letter-spacing:.08em; font-size:12px; text-transform:uppercase}
+    h1{margin:.2rem 0 0; font-weight:800; font-size: clamp(28px, 4vw, 40px);} 
+    .lead{color:var(--sub); margin:10px 0 0; max-width:850px; line-height:1.7}
+    .toolbar{ margin:24px 0 0; display:flex; gap:10px; flex-wrap:wrap; }
+    .search{ flex:1 1 380px; display:flex; align-items:center; gap:10px; background:var(--card); border:1px solid var(--ring); border-radius:14px; padding:10px 14px; }
+    .search input{ width:100%; background:transparent; border:none; outline:none; color:var(--ink); font-size:16px; }
+    .tagbar{display:flex; flex-wrap:wrap; gap:8px}
+    .chip{ font-size:12px; padding:6px 10px; border-radius:999px; background:var(--muted); color:var(--sub); border:1px solid var(--ring); cursor:pointer; }
+    .chip.active{background:#1a3641; color:#b9f1ff; border-color:#2a5566}
+    main{max-width:1100px; padding:12px 24px 120px; margin:0 auto;}
+    .grid{ display:grid; gap:16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .card{ background:linear-gradient(180deg, rgba(69,183,255,.08), rgba(0,0,0,0)) , var(--card);
+      border:1px solid var(--ring); border-radius:18px; padding:16px; display:flex; flex-direction:column; gap:10px;
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+    .card:hover{ transform: translateY(-2px); box-shadow: 0 10px 28px rgba(0,0,0,.35); border-color:#2b4452}
+    .title{font-weight:700; font-size:16px; line-height:1.4}
+    .category{font-size:12px; color:var(--hint)}
+    .summary{color:var(--sub); font-size:14px; line-height:1.75}
+    .actions{display:flex; gap:10px; margin-top:6px; flex-wrap:wrap}
+    .btn{ background:#163a46; color:#c8f2ff; border:1px solid #275968; border-radius:12px; padding:8px 12px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px; }
+    .btn.secondary{ background:var(--muted); color:var(--ink); border-color:var(--ring);} 
+    .meta{display:flex; gap:6px; flex-wrap:wrap}
+    .pill{font-size:11px; color:#bcd; background:#182028; border:1px solid var(--ring); padding:4px 8px; border-radius:999px}
+    .empty{display:none; text-align:center; color:var(--hint); padding:40px 0}
+    footer{max-width:1100px; margin:0 auto; padding:20px 24px 60px; color:var(--hint)}
+    .hidden{display:none}
+  </style>
 </head>
 <body>
-
-    <div class="container">
-        <header>
-            <h1>Japan MR Resource Central</h1>
-            <p>Download key resources related to medical market research in Japan.</p>
-        </header>
-
-        <!-- Resource 1: Japan insurance system summary -->
-        <section class="resource-section">
-            <div class="preview-image">
-                <img src="https://storage.googleapis.com/gemini-generative-ai-public/Japan_MR_resources/insurance_summary_preview.png" alt="Japan insurance system summary preview">
-            </div>
-            <div class="resource-details">
-                <h2>Japan's Drug Reimbursement Process and the Role of Chuikyo</h2>
-                <p><strong>Summary:</strong> This document explains the drug reimbursement pricing process in Japan and the role of the Central Social Insurance Medical Council (Chuikyo), based on an interview with a former member.</p>
-                <h4>Preview:</h4>
-                <ul>
-                    <li>Composition and decision-making process of Chuikyo</li>
-                    <li>Drug pricing formulas (Similar Efficacy Comparison and Cost Calculation methods) and premiums</li>
-                    <li>Introduction of Cost-Effectiveness Assessment and Optimal Use Promotion Guidelines</li>
-                    <li>The process from approval to reimbursement (with flowchart)</li>
-                </ul>
-                <a href="/pdf/Japan insurance system summary Pricing Process by Seed Planning.pdf" class="download-link" download>Download PDF</a>
-            </div>
-        </section>
-
-        <!-- Resource 2: Japan annual health check up insights -->
-        <section class="resource-section">
-            <div class="preview-image">
-                <img src="https://storage.googleapis.com/gemini-generative-ai-public/Japan_MR_resources/health_checkup_preview.png" alt="Japan annual health check up insights preview">
-            </div>
-            <div class="resource-details">
-                <h2>Japan's Annual Health Check-up System: Overview and Insights</h2>
-                <p><strong>Summary:</strong> An analysis of how Japan's legally mandated annual health check-up system influences early detection, public health awareness, and market opportunities for pharmaceutical companies.</p>
-                <h4>Preview:</h4>
-                <ul>
-                    <li>Typical components of general health check-ups and cancer screenings</li>
-                    <li>Employer obligations and the follow-up system for abnormal results</li>
-                    <li>The impact of early detection on healthcare economics</li>
-                    <li>Strategic implications for pharmaceutical companies</li>
-                </ul>
-                <a href="/pdf/Japan annual health check up insights v2 by Seed Planning.pdf" class="download-link" download>Download PDF</a>
-            </div>
-        </section>
-        
-        <!-- Resource 3: Japan medical research guide and tips -->
-        <section class="resource-section">
-            <div class="preview-image">
-                <img src="https://storage.googleapis.com/gemini-generative-ai-public/Japan_MR_resources/research_guide_preview.png" alt="Japan medical research guide and tips preview">
-            </div>
-            <div class="resource-details">
-                <h2>Comparison of Japanese and U.S. Healthcare Systems</h2>
-                <p><strong>Summary:</strong> This guide compares the healthcare systems of Japan and the U.S., detailing differences in physician/nurse roles, medical specialities, insurance systems, and cultural points for market research.</p>
-                <h4>Preview:</h4>
-                <ul>
-                    <li>Differences in roles of physicians and nurses (absence of NP/PA)</li>
-                    <li>Comparison of medical specialties and practice patterns</li>
-                    <li>The influence of Japan's universal health insurance on patient behavior</li>
-                    <li>Tips for conducting market research in Japan (e.g., hierarchy and group interviews)</li>
-                </ul>
-                <a href="/pdf/Japan medical research guide and tips by Seed Planning.pdf" class="download-link" download>Download PDF</a>
-            </div>
-        </section>
-
-        <!-- Resource 4: Navigating Privacy and Platforms in Japanese Patient Research -->
-        <section class="resource-section">
-            <div class="preview-image">
-                <img src="https://storage.googleapis.com/gemini-generative-ai-public/Japan_MR_resources/privacy_platform_preview.png" alt="Navigating Privacy and Platforms in Japanese Patient Research preview">
-            </div>
-            <div class="resource-details">
-                <h2>Privacy and Platform Considerations in Patient Research in Japan</h2>
-                <p><strong>Summary:</strong> A detailed look at Japan's Act on the Protection of Personal Information (APPI) and best practices for selecting research platforms, considering cultural and IT literacy factors for patient studies.</p>
-                <h4>Preview:</h4>
-                <ul>
-                    <li>Overview of the Act on the Protection of Personal Information (APPI)</li>
-                    <li>Consent for cross-border data transfers</li>
-                    <li>Technological and psychological barriers for Japanese participants</li>
-                    <li>Operational best practices for smooth research execution</li>
-                </ul>
-                <a href="/pdf/Navigating Privacy and Platforms in Japanese Patient Research by Seed Planning.pdf" class="download-link" download>Download PDF</a>
-            </div>
-        </section>
-
-        <!-- Resource 5: Insights into Japan’s Universal Health Insurance System -->
-        <section class="resource-section">
-            <div class="preview-image">
-                <img src="https://storage.googleapis.com/gemini-generative-ai-public/Japan_MR_resources/universal_insurance_preview.png" alt="Insights into Japan’s Universal Health Insurance System preview">
-            </div>
-            <div class="resource-details">
-                <h2>Insights into Japan’s Universal Health Insurance System</h2>
-                <p><strong>Summary:</strong> An in-depth analysis of how Japan's universal health insurance system realistically impacts patient and physician behavior, focusing on cost-sharing, free access, and the fee-for-service system.</p>
-                <h4>Preview:</h4>
-                <ul>
-                    <li>Patient behavior under the co-payment and high-cost medical expense benefit systems</li>
-                    <li>The pros and cons of the "free access" culture with no gatekeepers</li>
-                    <li>The fee schedule system behind the "3-minute consultation"</li>
-                    <li>Implications for market access and pricing</li>
-                </ul>
-                <a href="/pdf/Insights into Japan’s Universal Health Insurance System by Seed Planning.pdf" class="download-link" download>Download PDF</a>
-            </div>
-        </section>
-
-        <!-- Resource 6: Understanding Oncology Dynamics in Japan -->
-        <section class="resource-section">
-            <div class="preview-image">
-                 <img src="https://storage.googleapis.com/gemini-generative-ai-public/Japan_MR_resources/oncology_dynamics_preview.png" alt="Understanding Oncology Dynamics in Japan preview">
-            </div>
-            <div class="resource-details">
-                <h2>Understanding Oncology Dynamics in Japan</h2>
-                <p><strong>Summary:</strong> This document covers the unique "organ-specific" cancer care system in Japan, the role of medical oncologists, the new drug adoption process, and the importance of treatment guidelines.</p>
-                <h4>Preview:</h4>
-                <ul>
-                    <li>Japan's care system where organ-specific specialists also manage chemotherapy</li>
-                    <li>The current status and evolving role of Medical Oncology</li>
-                    <li>The importance of designated cancer care hospitals</li>
-                    <li>The cautious adoption process for new drugs and the culture of guideline adherence</li>
-                </ul>
-                <a href="/pdf/Understanding Oncology Dynamics in Japan by Seed Planning.pdf" class="download-link" download>Download PDF</a>
-            </div>
-        </section>
-        
-        <!-- Resource 7: Patient-Centered Market Research in Japan -->
-        <section class="resource-section">
-            <div class="preview-image">
-                 <img src="https://storage.googleapis.com/gemini-generative-ai-public/Japan_MR_resources/patient_research_preview.png" alt="Patient-Centered Market Research in Japan preview">
-            </div>
-            <div class="resource-details">
-                <h2>Patient-Centered Market Research in Japan: A Comprehensive Guide</h2>
-                <p><strong>Summary:</strong> A comprehensive guide to conducting successful patient-centered market research in Japan, covering cultural considerations, recruitment challenges, and best practices for improving insight quality.</p>
-                <h4>Preview:</h4>
-                <ul>
-                    <li>Building rapport with reserved Japanese patients who "read the air"</li>
-                    <li>Recruitment difficulties and how to leverage patient panels</li>
-                    <li>Addressing central tendency bias and eliciting candid feedback</li>
-                    <li>Notes on technology use and privacy protection</li>
-                </ul>
-                <a href="/pdf/Patient-Centered Market Research in Japan by Seed Planning.pdf" class="download-link" download>Download PDF</a>
-            </div>
-        </section>
-
-        <footer>
-            <p>&copy; 2025 Japan MR Resource Central by Seed Planning. All rights reserved.</p>
-        </footer>
+  <header>
+    <div class="sup">Seed Planning | Portal</div>
+    <h1>Japan MR Resource Central</h1>
+    <p class="lead">Fast, credible primers for conducting healthcare market research in Japan. Skimmable summaries, direct PDF downloads.</p>
+    <div class="toolbar">
+      <label class="search" aria-label="Search documents">
+        🔎
+        <input id="q" type="search" placeholder="Filter by keyword (e.g., reimbursement, oncology, privacy, recruitment)" />
+      </label>
+      <div class="tagbar" id="tagbar" aria-label="Filter by tag"></div>
     </div>
+  </header>
 
+  <main>
+    <div class="grid" id="grid" role="list"></div>
+    <div class="empty" id="empty">No matching resources found.</div>
+  </main>
+
+  <footer>
+    <small>© Seed Planning — Summaries are abbreviated previews. Please refer to the original PDFs for full detail.</small>
+  </footer>
+
+  <script>
+    // ---- Files are served from /pdf/ ----
+    const basePath = "/pdf/";
+
+    // ---- Document data (title / filename / category / tags / summary) ----
+    // Copy tuned for overseas clients — clear value, actionable implications
+    const docs = [
+      {
+        title: "Insights into Japan’s Universal Health Insurance System",
+        filename: "Insights into Japan’s Universal Health Insurance System by Seed Planning.pdf",
+        category: "Insurance & Access",
+        tags: ["universal coverage","free access","fee schedule"],
+        summary: "How Japan’s universal coverage, low co-pays, and nationwide fee schedule shape provider incentives and patient behavior. What this means for research access, HCP availability, and why non-reimbursed activities can be hard to drive without clear value or support."
+      },
+      {
+        title: "Japan Insurance System — Pricing & Reimbursement Basics",
+        filename: "Japan insurance system summary Pricing Process by Seed Planning.pdf",
+        category: "Pricing & Reimbursement",
+        tags: ["points system","biennial revision","drug pricing"],
+        summary: "A practical walkthrough of codes, points, and periodic price revisions. Explains why site-level price flexibility is limited, how to read codes correctly, and how to budget realistically for Japan-based activities."
+      },
+      {
+        title: "Navigating Privacy & Platforms in Japanese Patient Research",
+        filename: "Navigating Privacy and Platforms in Japanese Patient Research by Seed Planning.pdf",
+        category: "Privacy & Data",
+        tags: ["APPI","consent","cross-border transfer","UX"],
+        summary: "APPI requirements made usable: explicit consent, purpose limitation, and managing cross-border transfers. Platform choices that reduce friction for Japanese users, plus operational guardrails (pre-briefs, guides, test connections) to prevent drop-off and data loss."
+      },
+      {
+        title: "Patient‑Centered Market Research in Japan — A Practical Guide",
+        filename: "Patient-Centered Market Research in Japan by Seed Planning.pdf",
+        category: "Patient Research",
+        tags: ["recruitment","culture","informed consent","rare disease"],
+        summary: "Culturally aware recruitment and moderation for Japan. Rapport, silence, and respect matter. Tips for rare and stigmatized conditions, partnering with PAGs, and designing consent and incentives that feel appropriate and transparent."
+      },
+      {
+        title: "Understanding Oncology Dynamics in Japan",
+        filename: "Understanding Oncology Dynamics in Japan by Seed Planning.pdf",
+        category: "Oncology Landscape",
+        tags: ["organ‑based care","cancer centers","trials","KOL networks"],
+        summary: "Why organ‑based departments (incl. surgery) often lead systemic therapy, and how designated cancer centers anchor care and research. Implications for recruiting oncologists, mapping referral flows, and tapping into KOL ecosystems."
+      },
+      {
+        title: "Japan Annual Health Check‑Ups — What They Mean for Research (v2)",
+        filename: "Japan annual health check up insights v2 by Seed Planning.pdf",
+        category: "Screening & Checkups",
+        tags: ["annual checkups","corporate programs","sampling"],
+        summary: "High uptake of annual checkups and comprehensive screens. Useful for early‑detection and wellness topics, but be mindful of self‑report bias and limited continuity with primary care. Practical guidance for screener design and sample planning."
+      },
+      {
+        title: "Japan Medical Research — Fieldwork Guide & Tips",
+        filename: "Japan medical research guide and tips by Seed Planning.pdf",
+        category: "Fieldwork & Moderation",
+        tags: ["localization","moderation","screeners","translation"],
+        summary: "Everything we wish overseas teams knew before fieldwork in Japan: local moderators, Japan‑specific screeners, disclosure around recording/privacy, and the level of detail needed in Japanese study materials to build trust and reduce drop‑outs."
+      },
+    ];
+
+    // ---- Collect distinct tags ----
+    const distinctTags = Array.from(new Set(docs.flatMap(d => d.tags))).sort();
+
+    // ---- DOM refs ----
+    const grid = document.getElementById("grid");
+    const empty = document.getElementById("empty");
+    const q = document.getElementById("q");
+    const tagbar = document.getElementById("tagbar");
+
+    // ---- Utils ----
+    const fileUrl = (name) => basePath + encodeURIComponent(name);
+    const escapeHtml = (s) => s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m]));
+
+    // ---- Tag UI ----
+    const state = { query:"", tags: new Set() };
+
+    function renderTags(){
+      tagbar.innerHTML = "";
+      distinctTags.forEach(t=>{
+        const b = document.createElement("button");
+        b.className = "chip";
+        b.textContent = t;
+        b.onclick = () => {
+          if(state.tags.has(t)) state.tags.delete(t); else state.tags.add(t);
+          b.classList.toggle("active");
+          render();
+        };
+        tagbar.appendChild(b);
+      });
+    }
+
+    // ---- Cards ----
+    function render(){
+      const qv = state.query.trim().toLowerCase();
+      const activeTags = Array.from(state.tags);
+
+      const filtered = docs.filter(d=>{
+        const matchesText = !qv || (d.title + " " + d.category + " " + d.summary + " " + d.tags.join(" "))
+          .toLowerCase().includes(qv);
+        const matchesTags = activeTags.length === 0 || activeTags.every(t => d.tags.includes(t));
+        return matchesText && matchesTags;
+      });
+
+      grid.innerHTML = "";
+      filtered.forEach(d=>{
+        const card = document.createElement("article");
+        card.className = "card";
+        card.setAttribute("role","listitem");
+        card.innerHTML = `
+          <div class="meta">
+            <span class="pill">${escapeHtml(d.category)}</span>
+          </div>
+          <div class="title">${escapeHtml(d.title)}</div>
+          <div class="summary">${escapeHtml(d.summary)}</div>
+          <div class="actions">
+            <a class="btn" href="${fileUrl(d.filename)}" target="_blank" rel="noopener">⬇ Download (PDF)</a>
+            <button class="btn secondary" data-copy>Copy link</button>
+          </div>
+          <div class="category">${d.tags.map(t=>`#${escapeHtml(t)}`).join(" ")}</div>
+        `;
+        card.querySelector("[data-copy]").addEventListener("click", async ()=>{
+          try{
+            await navigator.clipboard.writeText(location.origin + fileUrl(d.filename));
+            const btn = card.querySelector("[data-copy]");
+            btn.textContent = "Copied";
+            setTimeout(()=>btn.textContent="Copy link", 1500);
+          }catch(e){ alert("Copy failed"); }
+        });
+        grid.appendChild(card);
+      });
+
+      empty.style.display = filtered.length ? "none" : "block";
+    }
+
+    // ---- Events ----
+    q.addEventListener("input", e=>{ state.query = e.target.value; render(); });
+
+    // ---- Init ----
+    renderTags();
+    render();
+  </script>
 </body>
 </html>
-
