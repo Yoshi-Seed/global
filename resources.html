@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Japan MR Resource Central</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            line-height: 1.7;
+            color: #333;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+        /* Container for centering content */
+        .container {
+            max-width: 980px;
+            margin: auto;
+            background: #fff;
+            padding: 25px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        /* Header section */
+        header {
+            text-align: center;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 25px;
+            margin-bottom: 35px;
+        }
+        header h1 {
+            color: #1a237e; /* Dark blue */
+            margin: 0;
+            font-size: 2.2em;
+        }
+        header p {
+            font-size: 1.1em;
+            color: #555;
+        }
+        /* Section for each resource */
+        .resource-section {
+            display: flex;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #f1f1f1;
+            padding: 30px 0;
+            margin-bottom: 30px;
+            align-items: flex-start;
+            gap: 30px; /* Space between image and details */
+        }
+        .resource-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        /* Preview image */
+        .preview-image {
+            flex: 0 0 200px;
+        }
+        .preview-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        /* Resource details */
+        .resource-details {
+            flex: 1;
+            min-width: 300px; /* Minimum width for wrapping */
+        }
+        .resource-details h2 {
+            margin-top: 0;
+            color: #0d47a1; /* Slightly lighter blue */
+            font-size: 1.5em;
+        }
+        .resource-details p {
+            margin: 0 0 15px 0;
+            color: #444;
+        }
+        .resource-details ul {
+            padding-left: 20px;
+            margin: 0 0 20px 0;
+            color: #555;
+        }
+        .resource-details li {
+            margin-bottom: 6px;
+        }
+        /* Download button */
+        .download-link {
+            display: inline-block;
+            background-color: #0d47a1;
+            color: #fff;
+            padding: 12px 22px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .download-link:hover {
+            background-color: #0a337a;
+            transform: translateY(-2px);
+        }
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 0.9em;
+            color: #888;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            .resource-section {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .preview-image {
+                margin-bottom: 20px;
+                max-width: 250px;
+            }
+            .resource-details ul {
+                display: inline-block;
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Japan MR Resource Central</h1>
+            <p>Download key resources related to medical market research in Japan.</p>
+        </header>
+
+        <!-- Resource 1: Japan insurance system summary -->
+        <section class="resource-section">
+            <div class="preview-image">
+                <img src="https://storage.googleapis.com/gemini-generative-ai-public/Japan_MR_resources/insurance_summary_preview.png" alt="Japan insurance system summary preview">
+            </div>
+            <div class="resource-details">
+                <h2>Japan's Drug Reimbursement Process and the Role of Chuikyo</h2>
+                <p><strong>Summary:</strong> This document explains the drug reimbursement pricing process in Japan and the role of the Central Social Insurance Medical Council (Chuikyo), based on an interview with a former member.</p>
+                <h4>Preview:</h4>
+                <ul>
+                    <li>Composition and decision-making process of Chuikyo</li>
+                    <li>Drug pricing formulas (Similar Efficacy Comparison and Cost Calculation methods) and premiums</li>
+                    <li>Introduction of Cost-Effectiveness Assessment and Optimal Use Promotion Guidelines</li>
+                    <li>The process from approval to reimbursement (with flowchart)</li>
+                </ul>
+                <a href="/pdf/Japan insurance system summary Pricing Process by Seed Planning.pdf" class="download-link" download>Download PDF</a>
+            </div>
+        </section>
+
+        <!-- Resource 2: Japan annual health check up insights -->
+        <section class="resource-section">
+            <div class="preview-image">
+                <img src="https://storage.googleapis.com/gemini-generative-ai-public/Japan_MR_resources/health_checkup_preview.png" alt="Japan annual health check up insights preview">
+            </div>
+            <div class="resource-details">
+                <h2>Japan's Annual Health Check-up System: Overview and Insights</h2>
+                <p><strong>Summary:</strong> An analysis of how Japan's legally mandated annual health check-up system influences early detection, public health awareness, and market opportunities for pharmaceutical companies.</p>
+                <h4>Preview:</h4>
+                <ul>
+                    <li>Typical components of general health check-ups and cancer screenings</li>
+                    <li>Employer obligations and the follow-up system for abnormal results</li>
+                    <li>The impact of early detection on healthcare economics</li>
+                    <li>Strategic implications for pharmaceutical companies</li>
+                </ul>
+                <a href="/pdf/Japan annual health check up insights v2 by Seed Planning.pdf" class="download-link" download>Download PDF</a>
+            </div>
+        </section>
+        
+        <!-- Resource 3: Japan medical research guide and tips -->
+        <section class="resource-section">
+            <div class="preview-image">
+                <img src="https://storage.googleapis.com/gemini-generative-ai-public/Japan_MR_resources/research_guide_preview.png" alt="Japan medical research guide and tips preview">
+            </div>
+            <div class="resource-details">
+                <h2>Comparison of Japanese and U.S. Healthcare Systems</h2>
+                <p><strong>Summary:</strong> This guide compares the healthcare systems of Japan and the U.S., detailing differences in physician/nurse roles, medical specialities, insurance systems, and cultural points for market research.</p>
+                <h4>Preview:</h4>
+                <ul>
+                    <li>Differences in roles of physicians and nurses (absence of NP/PA)</li>
+                    <li>Comparison of medical specialties and practice patterns</li>
+                    <li>The influence of Japan's universal health insurance on patient behavior</li>
+                    <li>Tips for conducting market research in Japan (e.g., hierarchy and group interviews)</li>
+                </ul>
+                <a href="/pdf/Japan medical research guide and tips by Seed Planning.pdf" class="download-link" download>Download PDF</a>
+            </div>
+        </section>
+
+        <!-- Resource 4: Navigating Privacy and Platforms in Japanese Patient Research -->
+        <section class="resource-section">
+            <div class="preview-image">
+                <img src="https://storage.googleapis.com/gemini-generative-ai-public/Japan_MR_resources/privacy_platform_preview.png" alt="Navigating Privacy and Platforms in Japanese Patient Research preview">
+            </div>
+            <div class="resource-details">
+                <h2>Privacy and Platform Considerations in Patient Research in Japan</h2>
+                <p><strong>Summary:</strong> A detailed look at Japan's Act on the Protection of Personal Information (APPI) and best practices for selecting research platforms, considering cultural and IT literacy factors for patient studies.</p>
+                <h4>Preview:</h4>
+                <ul>
+                    <li>Overview of the Act on the Protection of Personal Information (APPI)</li>
+                    <li>Consent for cross-border data transfers</li>
+                    <li>Technological and psychological barriers for Japanese participants</li>
+                    <li>Operational best practices for smooth research execution</li>
+                </ul>
+                <a href="/pdf/Navigating Privacy and Platforms in Japanese Patient Research by Seed Planning.pdf" class="download-link" download>Download PDF</a>
+            </div>
+        </section>
+
+        <!-- Resource 5: Insights into Japan’s Universal Health Insurance System -->
+        <section class="resource-section">
+            <div class="preview-image">
+                <img src="https://storage.googleapis.com/gemini-generative-ai-public/Japan_MR_resources/universal_insurance_preview.png" alt="Insights into Japan’s Universal Health Insurance System preview">
+            </div>
+            <div class="resource-details">
+                <h2>Insights into Japan’s Universal Health Insurance System</h2>
+                <p><strong>Summary:</strong> An in-depth analysis of how Japan's universal health insurance system realistically impacts patient and physician behavior, focusing on cost-sharing, free access, and the fee-for-service system.</p>
+                <h4>Preview:</h4>
+                <ul>
+                    <li>Patient behavior under the co-payment and high-cost medical expense benefit systems</li>
+                    <li>The pros and cons of the "free access" culture with no gatekeepers</li>
+                    <li>The fee schedule system behind the "3-minute consultation"</li>
+                    <li>Implications for market access and pricing</li>
+                </ul>
+                <a href="/pdf/Insights into Japan’s Universal Health Insurance System by Seed Planning.pdf" class="download-link" download>Download PDF</a>
+            </div>
+        </section>
+
+        <!-- Resource 6: Understanding Oncology Dynamics in Japan -->
+        <section class="resource-section">
+            <div class="preview-image">
+                 <img src="https://storage.googleapis.com/gemini-generative-ai-public/Japan_MR_resources/oncology_dynamics_preview.png" alt="Understanding Oncology Dynamics in Japan preview">
+            </div>
+            <div class="resource-details">
+                <h2>Understanding Oncology Dynamics in Japan</h2>
+                <p><strong>Summary:</strong> This document covers the unique "organ-specific" cancer care system in Japan, the role of medical oncologists, the new drug adoption process, and the importance of treatment guidelines.</p>
+                <h4>Preview:</h4>
+                <ul>
+                    <li>Japan's care system where organ-specific specialists also manage chemotherapy</li>
+                    <li>The current status and evolving role of Medical Oncology</li>
+                    <li>The importance of designated cancer care hospitals</li>
+                    <li>The cautious adoption process for new drugs and the culture of guideline adherence</li>
+                </ul>
+                <a href="/pdf/Understanding Oncology Dynamics in Japan by Seed Planning.pdf" class="download-link" download>Download PDF</a>
+            </div>
+        </section>
+        
+        <!-- Resource 7: Patient-Centered Market Research in Japan -->
+        <section class="resource-section">
+            <div class="preview-image">
+                 <img src="https://storage.googleapis.com/gemini-generative-ai-public/Japan_MR_resources/patient_research_preview.png" alt="Patient-Centered Market Research in Japan preview">
+            </div>
+            <div class="resource-details">
+                <h2>Patient-Centered Market Research in Japan: A Comprehensive Guide</h2>
+                <p><strong>Summary:</strong> A comprehensive guide to conducting successful patient-centered market research in Japan, covering cultural considerations, recruitment challenges, and best practices for improving insight quality.</p>
+                <h4>Preview:</h4>
+                <ul>
+                    <li>Building rapport with reserved Japanese patients who "read the air"</li>
+                    <li>Recruitment difficulties and how to leverage patient panels</li>
+                    <li>Addressing central tendency bias and eliciting candid feedback</li>
+                    <li>Notes on technology use and privacy protection</li>
+                </ul>
+                <a href="/pdf/Patient-Centered Market Research in Japan by Seed Planning.pdf" class="download-link" download>Download PDF</a>
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2025 Japan MR Resource Central by Seed Planning. All rights reserved.</p>
+        </footer>
+    </div>
+
+</body>
+</html>
+
