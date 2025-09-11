@@ -106,53 +106,144 @@
 <!-- Load data -->
 <script src="data/faqs.js"></script>
 
-<script src="data/faqs.js"></script>
-
 <script>
-// …既存の renderSections() 定義の後に追記…
+/* ===== Search / Highlight ===== */
+function norm(s){ // 全半角や長音の揺れを軽減（軽めの正規化）
+  return String(s||'')
+    .toLowerCase()
+    .replace(/[\u2010-\u2015\u2212]/g,'-')
+    .replace(/[Ａ-Ｚａ-ｚ０-９]/g,ch=>String.fromCharCode(ch.charCodeAt(0)-0xFEE0));
+}
+function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
 
-async function renderByCategory() {
-  const FAQS = await DATA_PROMISE;
-
-  // カテゴリ名→FAQ配列のMap作成（未設定は "Uncategorized"）
-  const map = new Map();
-  for (const f of FAQS) {
-    const cats = (Array.isArray(f.categories) && f.categories.length) ? f.categories : ["Uncategorized"];
-    for (const c of cats) {
-      if (!map.has(c)) map.set(c, []);
-      map.get(c).push(f);
-    }
+// 安全に <mark> を差し込む（先にエスケープ→正規表現マッチ）
+function highlightEscaped(text, query){
+  if(!query) return esc(text);
+  const q = norm(query).replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); // 正規表現エスケープ
+  if(!q) return esc(text);
+  const src = esc(text);
+  // 可視テキストでの検索なので、src側をノーマライズしたインデックスと同期させたい
+  // 簡易的に、位置ごとに比較して置換（小規模データ前提）
+  const lower = src.toLowerCase();
+  const idxs = [];
+  let i=0;
+  while(i < lower.length){
+    const j = lower.indexOf(q, i);
+    if(j === -1) break;
+    idxs.push([j, j+q.length]);
+    i = j + q.length;
   }
-
-  // カテゴリ名の配列（件数降順でソート）
-  const cats = [...map.keys()].sort((a, b) => {
-    const diff = map.get(b).length - map.get(a).length;
-    return diff !== 0 ? diff : a.localeCompare(b);
-  });
-
-  // 描画
-  const wrap = document.getElementById("category-groups");
-  if (!wrap) return;
-  wrap.innerHTML = cats.map(cat => {
-    const list = map.get(cat).map(cardHtml).join("");
-    const count = map.get(cat).length;
-    return `
-      <div class="category-block" data-cat="${escapeHTML(cat)}">
-        <h3 class="section-subtitle">
-          ${escapeHTML(cat)} <span class="badge">${count}</span>
-        </h3>
-        <div class="faq-grid">${list}</div>
-      </div>
-    `;
-  }).join("");
+  if(!idxs.length) return src;
+  let out='', pos=0;
+  for(const [a,b] of idxs){
+    out += src.slice(pos,a) + '<mark>' + src.slice(a,b) + '</mark>';
+    pos = b;
+  }
+  out += src.slice(pos);
+  return out;
 }
 
-// 初期化時にカテゴリ別表示も呼び出す
-document.getElementById('year').textContent = new Date().getFullYear();
-renderSections();
-renderByCategory(); // ←追加
+// 検索キーワードを使ってカードHTMLを生成（ハイライト版）
+function cardHtmlHighlighted(f, query){
+  const link=`articles.html?id=${encodeURIComponent(f.id)}${query?('&q='+encodeURIComponent(query)) : ''}`;
+  const tags=(f.categories||[]).map(c=>`<span class="tag">#${esc(c)}</span>`).join(' ');
+  const a = String(f.answer||'');
+  const preview = a.length>150 ? a.slice(0,150)+'…' : a;
+  const title = query ? highlightEscaped(f.question, query) : esc(f.question);
+  const prev  = query ? highlightEscaped(preview, query)  : esc(preview);
+  return `<article class="faq" tabindex="0">
+    <h3 class="q"><a href="${link}">${title}</a></h3>
+    <p class="a">${prev}</p>
+    <div class="meta">${tags} <a class="back" href="${link}" aria-label="Read: ${esc(f.question)}">Read</a></div>
+  </article>`;
+}
+
+async function renderSectionsWithSearch(query){
+  const FAQS = await DATA_PROMISE;
+  const qn = norm(query||'').trim();
+  const counts=Object.fromEntries(SECTIONS.map(s=>[s,0]));
+  SECTIONS.forEach(section=>{
+    const grid=document.querySelector(`.faq-grid[data-section="${section}"]`);
+    if(!grid) return;
+    let list=[];
+    if(section==="All"){
+      list=FAQS;
+    }else if(section==="Uncategorized"){
+      list=FAQS.filter(f=>!Array.isArray(f.categories) || f.categories.length===0);
+    }else{
+      list=FAQS.filter(f=>Array.isArray(f.categories) && f.categories.includes(section));
+    }
+    // フィルタはせず「常に表示」。ヒットがあればハイライトのみ行う。
+    grid.innerHTML=list.map(f=>cardHtmlHighlighted(f, qn)).join('');
+    counts[section]=list.length;
+    const badge=document.getElementById('count-'+section);
+    if(badge) badge.textContent=String(list.length);
+  });
+}
+
+// サジェスト表示（タイトルと冒頭スニペット）
+async function renderSuggest(query){
+  const box = document.getElementById('suggest');
+  if(!box) return;
+  const q = norm(query||'').trim();
+  if(!q){ box.classList.remove('visible'); box.innerHTML=''; return; }
+
+  const FAQS = await DATA_PROMISE;
+  const hits = FAQS.filter(f=>{
+    const hay = norm(f.question+' '+(f.answer||''));
+    return hay.includes(q);
+  }).slice(0,20);
+
+  if(!hits.length){ box.classList.remove('visible'); box.innerHTML=''; return; }
+
+  box.innerHTML = hits.map(f=>{
+    const title = highlightEscaped(f.question, query);
+    const snip  = highlightEscaped(String(f.answer||'').slice(0,120), query);
+    const href  = `articles.html?id=${encodeURIComponent(f.id)}&q=${encodeURIComponent(query)}`;
+    return `<div class="s-item" role="option" data-id="${esc(f.id)}" data-href="${href}">
+      <div class="s-title">${title}</div>
+      <div class="s-snippet">${snip}</div>
+    </div>`;
+  }).join('');
+  box.classList.add('visible');
+
+  // クリックで遷移
+  box.querySelectorAll('.s-item').forEach(it=>{
+    it.addEventListener('click', ()=>{ location.href = it.getAttribute('data-href'); });
+  });
+}
+
+// 入力イベント（1文字目から反応）
+(function wireSearch(){
+  const input = document.getElementById('search');
+  const suggest = document.getElementById('suggest');
+  if(!input) return;
+
+  // ショートカット： "/" でフォーカス
+  window.addEventListener('keydown', (e)=>{ if(e.key==='/'){ e.preventDefault(); input.focus(); } });
+
+  let t=null;
+  input.addEventListener('input', (e)=>{
+    const v = e.target.value;
+    clearTimeout(t);
+    // 軽いデバウンス（50ms）
+    t = setTimeout(()=>{
+      renderSectionsWithSearch(v);
+      renderSuggest(v);
+    }, 50);
+  });
+
+  // フォーカス外れたらサジェスト閉じる
+  document.addEventListener('click', (e)=>{
+    if(!suggest) return;
+    const within = e.target===suggest || suggest.contains(e.target) || e.target===input;
+    if(!within){ suggest.classList.remove('visible'); }
+  });
+})();
 </script>
+
 </body>
 </html>
+
 
 
