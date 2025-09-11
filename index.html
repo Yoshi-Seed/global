@@ -85,6 +85,8 @@
   </div>
 
   <!-- Sections (auto-populated) -->
+  <!-- 一番上に追加 -->
+  <section id="All"><h2 class="section-title">All <span class="badge" id="count-All"></span></h2><div class="faq-grid" data-section="All"></div></section>
   <section id="Patients"><h2 class="section-title">Patients <span class="badge" id="count-Patients"></span></h2><div class="faq-grid" data-section="Patients"></div></section>
   <section id="HCP"><h2 class="section-title">HCP <span class="badge" id="count-HCP"></span></h2><div class="faq-grid" data-section="HCP"></div></section>
   <section id="System"><h2 class="section-title">System <span class="badge" id="count-System"></span></h2><div class="faq-grid" data-section="System"></div></section>
@@ -92,101 +94,94 @@
   <section id="Fieldwork"><h2 class="section-title">Fieldwork <span class="badge" id="count-Fieldwork"></span></h2><div class="faq-grid" data-section="Fieldwork"></div></section>
   <section id="Operations"><h2 class="section-title">Operations <span class="badge" id="count-Operations"></span></h2><div class="faq-grid" data-section="Operations"></div></section>
   <section id="Timeline"><h2 class="section-title">Timeline <span class="badge" id="count-Timeline"></span></h2><div class="faq-grid" data-section="Timeline"></div></section>
-
+  <section id="Uncategorized"><h2 class="section-title">Uncategorized <span class="badge" id="count-Uncategorized"></span></h2><div class="faq-grid" data-section="Uncategorized"></div></section>
   <footer class="site"><p>© <span id="year"></span> Seed Planning.</p></footer>
 </div>
 
 <!-- Load data -->
 <script src="data/faqs.js"></script>
 
+<script src="data/faqs.js"></script>
+
 <script>
-function getAllFAQs(){
-  try {
-    if (Array.isArray(window.FAQS) && window.FAQS.length) return window.FAQS;
-  } catch(e){}
-  try {
-    // 別ファイルで `const FAQS = [...]` の場合でも拾う
-    if (typeof FAQS !== 'undefined' && Array.isArray(FAQS) && FAQS.length) return FAQS;
-  } catch(e){}
+// ===== CSV + JS merge（CSV優先） =====
+async function fetchCSV(u){
+  const res = await fetch(u+(u.includes("?")?"&":"?")+"v="+Date.now(),{cache:"no-store"});
+  if(!res.ok) return []; const t=await res.text(); return parseCSV(t);
+}
+function parseCSV(text){
+  const rows=[], out=[]; let cur=[''], q=false; const s=String(text||'');
+  for(let i=0;i<s.length;i++){
+    const c=s[i];
+    if(q){ if(c=='"'){ if(s[i+1]=='"'){cur[cur.length-1]+='"'; i++;} else q=false; } else cur[cur.length-1]+=c; }
+    else { if(c=='"') q=true; else if(c==',') cur.push(''); else if(c=='\n'||c=='\r'){ if(cur.length>1||cur[0]!=='') rows.push(cur); cur=['']; } else cur[cur.length-1]+=c; }
+  }
+  if(cur.length>1||cur[0]!=='') rows.push(cur);
+  if(!rows.length) return [];
+  const head=rows[0].map(h=>h.trim());
+  for(let i=1;i<rows.length;i++){
+    const r=rows[i], o={}; head.forEach((h,k)=>o[h]=(r[k]??'').trim());
+    if(o.categories) o.categories=o.categories.split(/\s*[;|,]\s*/).filter(Boolean);
+    out.push(o);
+  }
+  return out;
+}
+function jsFAQs(){
+  try { if (Array.isArray(window.FAQS) && window.FAQS.length) return window.FAQS; } catch(_){}
+  try { if (typeof FAQS !== 'undefined' && Array.isArray(FAQS) && FAQS.length) return FAQS; } catch(_){}
   return [];
 }
-  
-/* ====== UI logic (no external deps) ====== */
-function getAllFAQs(){
-  try { if (Array.isArray(window.FAQS) && window.FAQS.length) return window.FAQS; } catch(e){}
-  try { if (typeof FAQS !== 'undefined' && Array.isArray(FAQS) && FAQS.length) return FAQS; } catch(e){}
-  return [];
-}
-const SECTIONS = ["Patients","HCP","System","Compliance","Fieldwork","Operations","Timeline"];
-const ALL = getAllFAQs(); // ← ここが肝
-// de-dup by id, keep last
-const byId = new Map(); for (const it of ALL) { byId.set(it.id, it); }
-const FAQS = [...byId.values()];
 
+const SECTIONS = ["All","Patients","HCP","System","Compliance","Fieldwork","Operations","Timeline","Uncategorized"];
+const DATA_PROMISE = (async ()=>{
+  let csv=[]; try{ csv=await fetchCSV("data/index.csv"); }catch(_){}
+  const js = jsFAQs();
+  const m=new Map();
+  js.forEach(x=>x&&x.id&&m.set(String(x.id),x));
+  csv.forEach(x=>x&&x.id&&m.set(String(x.id),x)); // CSV優先
+  const arr=[...m.values()].map(x=>{
+    if(x.categories && !Array.isArray(x.categories)){
+      x.categories=String(x.categories).split(/\s*[;|,]\s*/).filter(Boolean);
+    }
+    return x;
+  });
+  return arr;
+})();
 
-function escapeHTML(s){return String(s||"").replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m]))}
+function escapeHTML(s){return String(s||'').replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));}
 function cardHtml(f){
   const link=`articles.html?id=${encodeURIComponent(f.id)}`;
   const tags=(f.categories||[]).map(c=>`<span class="tag">#${escapeHTML(c)}</span>`).join(' ');
-  const a = String(f.answer||'');
-  const preview = a.length>150 ? a.slice(0,150)+'…' : a;
+  const a=String(f.answer||''); const preview=a.length>150?a.slice(0,150)+'…':a;
   return `<article class="faq" tabindex="0">
     <h3 class="q"><a href="${link}">${escapeHTML(f.question)}</a></h3>
     <p class="a">${escapeHTML(preview)}</p>
     <div class="meta">${tags} <a class="back" href="${link}" aria-label="Read: ${escapeHTML(f.question)}">Read</a></div>
   </article>`;
 }
-function renderSections(){
+async function renderSections(){
+  const FAQS = await DATA_PROMISE;
   const counts=Object.fromEntries(SECTIONS.map(s=>[s,0]));
   SECTIONS.forEach(section=>{
     const grid=document.querySelector(`.faq-grid[data-section="${section}"]`);
-    const list=FAQS.filter(f=>Array.isArray(f.categories) && f.categories.includes(section));
+    if(!grid) return;
+    let list=[];
+    if(section==="All"){
+      list=FAQS;
+    }else if(section==="Uncategorized"){
+      list=FAQS.filter(f=>!Array.isArray(f.categories) || f.categories.length===0);
+    }else{
+      list=FAQS.filter(f=>Array.isArray(f.categories) && f.categories.includes(section));
+    }
     grid.innerHTML=list.map(cardHtml).join('');
     counts[section]=list.length;
     const badge=document.getElementById('count-'+section);
     if(badge) badge.textContent=String(list.length);
   });
 }
-function normalize(s){return String(s||'').toLowerCase()}
-function snippet(text,q){
-  const t=String(text||''),i=t.toLowerCase().indexOf(q.toLowerCase());
-  if(i<0) return escapeHTML(t.slice(0,140))+(t.length>140?'…':'');
-  const s=Math.max(0,i-60),e=Math.min(t.length,i+q.length+60);
-  return (s>0?'…':'')+escapeHTML(t.slice(s,i))+`<mark>${escapeHTML(t.slice(i,i+q.length))}</mark>`+escapeHTML(t.slice(i+q.length,e))+(e<t.length?'…':'');
-}
-function score(query,it){
-  const terms=normalize(query).split(/\s+/).filter(Boolean);
-  let sc=0;
-  terms.forEach(t=>{
-    const hay=(it.question+' '+(it.answer||'')).toLowerCase();
-    if(hay.includes(t)) sc+=2;
-    if((it.question||'').toLowerCase().includes(t)) sc+=2;
-  });
-  return sc;
-}
-
-// Search + suggest
-const search=document.getElementById('search'), suggest=document.getElementById('suggest');
-function updateSuggest(v){
-  const q=v.trim(); if(!q){suggest.classList.remove('visible'); suggest.innerHTML=''; return;}
-  const ranked=FAQS.map(it=>({it,score:score(q,it)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,12);
-  if(!ranked.length){suggest.classList.remove('visible'); suggest.innerHTML=''; return;}
-  suggest.innerHTML=ranked.map(({it})=>`<div class="s-item" data-id="${it.id}" tabindex="0"><div class="s-title">${escapeHTML(it.question)}</div><div class="s-snippet">${snippet(it.answer,q)}</div></div>`).join('');
-  suggest.classList.add('visible');
-}
-search.addEventListener('input',e=>updateSuggest(e.target.value));
-search.addEventListener('focus',e=>updateSuggest(e.target.value));
-suggest.addEventListener('click',e=>{
-  const it=e.target.closest('.s-item'); if(!it) return;
-  location.href=`articles.html?id=${encodeURIComponent(it.dataset.id)}`;
-});
-document.addEventListener('keydown',e=>{
-  if(e.key==='/'&&!/input|textarea/i.test(document.activeElement.tagName)){e.preventDefault();search.focus();}
-});
 document.getElementById('year').textContent=new Date().getFullYear();
-
-// Init
 renderSections();
 </script>
 </body>
 </html>
+
