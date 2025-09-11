@@ -1,43 +1,15 @@
 /* ============================================
-   faqs.js  (save to: data/faqs.js)
-   - Holds FAQ data only
-   - You can append new items (Q69, Q70…)
-   - Other JS reads from window.FAQS
+   faqs.js  （保存先：data/faqs.js）
+   ★ このファイルは「FAQデータだけ」を持つ
+   ★ ここに新しいFAQを追記していけばOK（Q69, Q70…）
+   ★ 他のJSからは window.FAQS を参照する
 ============================================ */
 (function () {
   // 既存があれば使う
   window.FAQS = window.FAQS || [];
 
-  // ===== Base FAQ data (Q1–Q68) =====
-  // ※ 元データをそのまま保持（ここはあなたの原稿）：
- var BASE = [
   // ここからFAQ本体（Q1〜Q68）。必要に応じて追記してOK。
-// ===== Category auto-tagging rules =====
-// 単純なキーワードマッチで categories を付与（既存 categories が無い場合のみ）
-const RULES = [
-  // 追加: checkup / screening / consent / telemedicine などを拾う
-  { cat: 'Patients',   keys: [/patient|out-of-pocket|ningen\s*dock|checkup|screening|caregiver|privacy|incentive/i] },
-  { cat: 'HCP',        keys: [/physician|doctor|hcp|guideline|honoraria|clinic|hospital physician|board/i] },
-  { cat: 'System',     keys: [/insurance|chuikyo|mhlw|pmda|reimbursement|high-?cost|pricing|beds|mri|free access|gatekeeper|telemedicine/i] },
-  { cat: 'Compliance', keys: [/esomar|jmra|privacy|personal information protection|pipa|ethic|pmd\s*act|consent/i] },
-  { cat: 'Fieldwork',  keys: [/interview|survey|recruit|panel|online|zoom|teams|idi|participate|dropout|translation/i] },
-  { cat: 'Operations', keys: [/timeline|schedule|scheduling|workflow|adoption|procurement|hospital management|budget/i] },
-  { cat: 'Timeline',   keys: [/every two years|biennial|eppv|period|annual|revisions?/i] },
-];
-
-function autoCategories(item){
-  if (Array.isArray(item.categories) && item.categories.length) return item; // keep manual tags
-  const q = (item.question || '');
-  const a = (item.answer   || '');
-  const text = (q + ' ' + a).toLowerCase(); // nullガードを明示
-  const cats = [];
-  for (const {cat, keys} of RULES){
-    if (keys.some(re => re.test(text))) cats.push(cat);
-  }
-  item.categories = cats.length ? cats : ['Uncategorized'];
-  return item;
-}
-
+  var FAQS = [
     {
       id: "Q1",
       question: "Is every citizen in Japan covered by health insurance?",
@@ -384,34 +356,35 @@ function autoCategories(item){
     }
   ];
 
-  // ===== Category auto-tagging rules =====
-  // 単純なキーワードマッチで categories を付与（既存 categories が無い場合のみ）
-  const RULES = [
-    {cat: 'Patients',   keys: [/patient|out-of-pocket|Ningen Dock|caregiver|privacy|incentive/i]},
-    {cat: 'HCP',        keys: [/physician|doctor|HCP|guideline|honoraria|clinic|hospital physician|board/i]},
-    {cat: 'System',     keys: [/insurance|Chuikyo|MHLW|PMDA|reimbursement|High-?Cost|pricing|beds|MRI|free access|gatekeeper/i]},
-    {cat: 'Compliance', keys: [/ESOMAR|JMRA|privacy|Personal Information Protection|PIPA|ethic|PMD Act/i]},
-    {cat: 'Fieldwork',  keys: [/interview|survey|recruit|panel|online|Zoom|Teams|IDI|participate|dropout|translation/i]},
-    {cat: 'Operations', keys: [/timeline|scheduling|workflow|adoption|procurement|hospital management|budget/i]},
-    {cat: 'Timeline',   keys: [/every two years|EPPV|period|annual|revisions/i]},
-  ];
+  // ===== Category auto-assignment =====
+  // Assign categories to each FAQ entry if none are defined.
+  // Categories are determined by matching keywords in the question and answer text.
+  (function assignCategories() {
+    // Define simple keyword rules for categories.
+    const RULES = [
+      {cat: 'Patients', keys: [/patient|caregiver|out-of-pocket|health checkup|respondent|patient research|health literacy|caregiver involvement/i]},
+      {cat: 'HCP', keys: [/physician|doctor|KOL|honoraria|clinic|hospital physician|medical oncologist|guideline|specialties|board certification|general practitioner/i]},
+      {cat: 'System', keys: [/insurance|reimbursement|Chuikyo|MHLW|PMDA|high\-cost|pricing|beds|MRI|free access|gatekeeper|private insurers/i]},
+      {cat: 'Compliance', keys: [/ESOMAR|JMRA|PMD Act|Personal Information Protection|ethics|privacy|consent/i]},
+      {cat: 'Fieldwork', keys: [/interview|survey|recruit|panel|online|participate|dropout|translation|format|questionnaire|study design/i]},
+      {cat: 'Operations', keys: [/timeline|honoraria|payment method|workload|budget|procurement|adoption|hospital management|care pathway/i]},
+      {cat: 'Timeline', keys: [/two years|every two years|annual|revisions|EPPV|period|schedule|deadline|time frame/i]}
+    ];
 
-  function autoCategories(item){
-    if (Array.isArray(item.categories) && item.categories.length) return item; // keep manual tags
-    const text = (item.question + ' ' + (item.answer||'')).toLowerCase();
-    const cats = [];
-    for (const {cat, keys} of RULES){
-      if (keys.some(re => re.test(text))) cats.push(cat);
+    function categorize(item) {
+      // If categories already exist and are non-empty, leave them untouched.
+      if (Array.isArray(item.categories) && item.categories.length > 0) return;
+      const text = ((item.question || '') + ' ' + (item.answer || '')).toLowerCase();
+      const cats = [];
+      for (const {cat, keys} of RULES) {
+        if (keys.some(re => re.test(text))) cats.push(cat);
+      }
+      if (cats.length === 0) cats.push('Uncategorized');
+      item.categories = cats;
     }
-    // フォールバック
-    item.categories = cats.length ? cats : ['Uncategorized'];
-    return item;
-  }
+    FAQS.forEach(categorize);
+  })();
 
-  // ===== Merge & export =====
-  // 既存 window.FAQS と合体 → 重複IDは後勝ち
-  const merged = [...window.FAQS, ...BASE];
-  const byId = new Map();
-  for (const it of merged){ byId.set(it.id, autoCategories({...it})); }
-  window.FAQS = [...byId.values()];
+  // 既存の window.FAQS に結合（重複が嫌なら事前に削除ロジックを入れてもOK）
+  window.FAQS = window.FAQS.concat(FAQS);
 })();
