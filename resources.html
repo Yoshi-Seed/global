@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Japan MR Resource Central | Seed Planning</title>
+  <title>Japan MR Resource Central for clients | Seed Planning</title>
   <meta name="description" content="Japan MR Resource Central — Curated resources for conducting healthcare market research in Japan" />
   <style>
     :root{
@@ -71,7 +71,7 @@
 
   <footer>
     <a class="brand" href="global/seed-planning-logo.png" target="_blank" rel="noopener" aria-label="Seed Planning logo (opens image)">
-      <img src="seed-planning-logo.png" alt="Seed Planning logo">
+      <img src="global/seed-planning-logo.png" alt="Seed Planning logo">
     </a>
     <small>© Seed Planning — Summaries are abbreviated previews. Please refer to the original PDFs for full detail.</small>
   </footer>
@@ -83,6 +83,14 @@
     // ---- Document data (title / filename / category / tags / summary) ----
     // Copy tuned for overseas clients — clear value, actionable implications
     const docs = [
+      {
+        title: "Guide to Japan Medical Research — FAQ (Full Version)",
+        filename: "Guide_to_Japan_Medical_Research_FAQ.pdf",
+        category: "FAQ & Playbook",
+        tags: ["FAQ","localization","recruitment","APPI","honoraria"],
+        summary: "68-question FAQ spanning insurance basics, access, HCP roles, oncology pathways, recruitment & incentives, privacy/APPI, and moderation culture—built as a one‑stop primer for overseas teams planning research in Japan. Includes do’s/don’ts and scheduling caveats.",
+        site: "https://yoshi-seed.github.io/global/index.html"
+      },
       {
         title: "Insights into Japan’s Universal Health Insurance System",
         filename: "Insights_into_Japan’s_Universal_Health_Insurance_System_by_Seed_Planning.pdf",
@@ -188,9 +196,10 @@
           </div>
           <div class="title">${escapeHtml(d.title)}</div>
           <div class="summary">${escapeHtml(d.summary)}</div>
-          <div class="actions">
-            <a class="btn" href="${fileUrl(d.filename)}" target="_blank" rel="noopener">⬇ Download (PDF)</a>
-            <button class="btn secondary" data-copy>Copy link</button>
+          <div class=\"actions\">
+            <a class=\"btn\" href=\"${fileUrl(d.filename)}\" target=\"_blank\" rel=\"noopener\">⬇ Download (PDF)</a>
+            ${d.site ? `<a class=\"btn secondary\" href=\"${d.site}\" target=\"_blank\" rel=\"noopener\">Open full site</a>` : ""}
+            <button class=\"btn secondary\" data-copy>Copy link</button>
           </div>
           <div class="category">${d.tags.map(t=>`#${escapeHtml(t)}`).join(" ")}</div>
         `;
