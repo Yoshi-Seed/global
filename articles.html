@@ -14,6 +14,7 @@
   header h1{margin:10px 0 6px}
   nav{margin:10px 0 16px}
   .notfound{color:var(--muted)}
+  details.debug{margin-top:18px; font-size:13px; color:#49606a}
 </style>
 </head>
 <body>
@@ -22,68 +23,62 @@
     <article id="article"></article>
   </main>
 
-  <!-- 同じデータソースを共有：CSV優先／JSフォールバック -->
-  <script src="data/faqs.js"></script>
+  <script src="data/faqs.js?v=<?ts?>"></script>
   <script>
-    // 軽量CSVパーサ（index.html と同等）
-    async function fetchCSV(url){
-      try{
-        const res = await fetch(url, {cache:'no-store'});
-        if(!res.ok) throw new Error('HTTP '+res.status);
-        const text = await res.text();
-        return parseCSV(text);
-      }catch(e){ return null; }
+    async function fetchCSV(u){
+      const res = await fetch(u+(u.includes("?")?"&":"?")+"v="+Date.now(),{cache:"no-store"});
+      if(!res.ok) return []; const t=await res.text(); return parseCSV(t);
     }
     function parseCSV(text){
-      const rows=[]; let cur=['']; let q=false; let i=0; const s=String(text||'');
-      for(; i<s.length; i++){
+      const rows=[], out=[]; let cur=[''], q=false; const s=String(text||'');
+      for(let i=0;i<s.length;i++){
         const c=s[i];
-        if(q){
-          if(c==='"'){ if(s[i+1]==='"'){ cur[cur.length-1]+='"'; i++; } else { q=false; } }
-          else { cur[cur.length-1]+=c; }
-        } else {
-          if(c==='"'){ q=true; }
-          else if(c===','){ cur.push(''); }
-          else if(c==='\n' || c==='\r'){ if(cur.length>1 || cur[0]!=='' ){ rows.push(cur); } cur=['']; }
-          else { cur[cur.length-1]+=c; }
-        }
+        if(q){ if(c=='"'){ if(s[i+1]=='"'){cur[cur.length-1]+='"'; i++;} else q=false; } else cur[cur.length-1]+=c; }
+        else { if(c=='"') q=true; else if(c==',') cur.push(''); else if(c=='\n'||c=='\r'){ if(cur.length>1||cur[0]!=='') rows.push(cur); cur=['']; } else cur[cur.length-1]+=c; }
       }
-      if(cur.length>1 || cur[0]!=='' ) rows.push(cur);
+      if(cur.length>1||cur[0]!=='') rows.push(cur);
       if(!rows.length) return [];
-      const header = rows[0].map(h=>h.trim());
-      return rows.slice(1).map(r=>{
-        const obj={}; header.forEach((h,idx)=> obj[h] = (r[idx]??'').trim());
-        if(obj.categories){ obj.categories = obj.categories.split(/\s*[;|,]\s*/).filter(Boolean); }
-        return obj;
-      });
+      const head=rows[0].map(h=>h.trim());
+      for(let i=1;i<rows.length;i++){
+        const r=rows[i], o={}; head.forEach((h,k)=>o[h]=(r[k]??'').trim());
+        if(o.categories) o.categories=o.categories.split(/\s*[;|,]\s*/).filter(Boolean);
+        out.push(o);
+      } return out;
     }
     function escapeHTML(s){return String(s||"").replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;','\'':'&#39;'}[m]))}
+    function param(n){ return new URL(location.href).searchParams.get(n); }
+    function mapById(a){ const m=new Map(); a.forEach(x=>{ if(x&&x.id) m.set(String(x.id),x); }); return m; }
+
     async function loadAll(){
-      const csv = await fetchCSV('data/index.csv');
-      if(Array.isArray(csv) && csv.length) return csv;
-      try{ if(Array.isArray(window.FAQS) && window.FAQS.length) return window.FAQS; }catch(e){}
-      try{ if(typeof FAQS!=='undefined' && Array.isArray(FAQS) && FAQS.length) return FAQS; }catch(e){}
-      return [];
+      let csv=[]; try{ csv=await fetchCSV("data/index.csv"); }catch(_){}
+      let js=[]; try{
+        if(Array.isArray(window.FAQS)&&window.FAQS.length) js=window.FAQS;
+        else if(typeof FAQS!=="undefined"&&Array.isArray(FAQS)&&FAQS.length) js=FAQS;
+      }catch(_){}
+      const m=new Map(); js.forEach(x=>x&&x.id&&m.set(String(x.id),x)); csv.forEach(x=>x&&x.id&&m.set(String(x.id),x)); // CSV優先
+      return [...m.values()];
     }
-    function byId(list){ const m=new Map(); list.forEach(it=>m.set(it.id,it)); return m; }
-    function param(name){ return new URL(location.href).searchParams.get(name); }
 
     (async function(){
-      const all = await loadAll();
-      const map = byId(all);
-      const id = param('id');
-      const art = document.getElementById('article');
-      if(!id){ art.innerHTML = '<p class="notfound">Article ID is missing.</p>'; return; }
-      const f = map.get(id);
-      if(!f){ art.innerHTML = '<p class="notfound">Article not found. It may have been updated or removed.</p>'; return; }
-
-      document.title = f.question + ' | Seed Planning';
-      art.innerHTML = `
-        <header><h1>${escapeHTML(f.question)}</h1>
-          <div class="meta">${(f.categories||[]).map(c=>`<span class="tag">#${escapeHTML(c)}</span>`).join(' ')}</div>
-        </header>
-        <section class="content"><p>${escapeHTML(String(f.answer||''))}</p></section>
-      `;
+      const all=await loadAll(), id=String(param('id')||''), art=document.getElementById('article');
+      const m=mapById(all);
+      // 厳密一致→正規化一致（全角/半角/ダッシュ違い）
+      let f=m.get(id);
+      if(!f){
+        const norm=s=>String(s||'').toLowerCase().replace(/[\u2010-\u2015\u2212]/g,'-').replace(/[Ａ-Ｚａ-ｚ０-９]/g,ch=>String.fromCharCode(ch.charCodeAt(0)-0xFEE0));
+        const nid=norm(id); for(const k of m.keys()){ if(norm(k)===nid){ f=m.get(k); break; } }
+      }
+      if(!f){
+        const ids=all.map(x=>x.id).filter(Boolean).slice(0,100);
+        art.innerHTML=`<p class="notfound">Article not found. It may have been updated or removed.</p>
+        <details class="debug"><summary>Debug: Available IDs (first 100)</summary><pre>${escapeHTML(ids.join("\\n"))}</pre></details>`;
+        return;
+      }
+      document.title=f.question+' | Seed Planning';
+      art.innerHTML=`<header><h1>${escapeHTML(f.question)}</h1>
+        <div class="meta">${(f.categories||[]).map(c=>`<span class="tag">#${escapeHTML(c)}</span>`).join(' ')}</div>
+      </header>
+      <section class="content"><p>${escapeHTML(String(f.answer||''))}</p></section>`;
     })();
   </script>
 </body>
