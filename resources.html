@@ -45,6 +45,9 @@
     .empty{display:none; text-align:center; color:var(--hint); padding:40px 0}
     footer{max-width:1100px; margin:0 auto; padding:20px 24px 60px; color:var(--hint)}
     .hidden{display:none}
+      /* brand logo in footer */
+    .brand{display:inline-flex; align-items:center; gap:10px; margin:8px 0 0;}
+    .brand img{height:28px; display:block; filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));}
   </style>
 </head>
 <body>
@@ -67,6 +70,9 @@
   </main>
 
   <footer>
+    <a class="brand" href="global/seed-planning-logo.png" target="_blank" rel="noopener" aria-label="Seed Planning logo (opens image)">
+      <img src="global/seed-planning-logo.png" alt="Seed Planning logo">
+    </a>
     <small>© Seed Planning — Summaries are abbreviated previews. Please refer to the original PDFs for full detail.</small>
   </footer>
 
@@ -79,49 +85,49 @@
     const docs = [
       {
         title: "Insights into Japan’s Universal Health Insurance System",
-        filename: "Insights into Japan’s Universal Health Insurance System by Seed Planning.pdf",
+        filename: "Insights_into_Japan’s_Universal_Health_Insurance_System_by_Seed_Planning.pdf",
         category: "Insurance & Access",
         tags: ["universal coverage","free access","fee schedule"],
         summary: "How Japan’s universal coverage, low co-pays, and nationwide fee schedule shape provider incentives and patient behavior. What this means for research access, HCP availability, and why non-reimbursed activities can be hard to drive without clear value or support."
       },
       {
         title: "Japan Insurance System — Pricing & Reimbursement Basics",
-        filename: "Japan insurance system summary Pricing Process by Seed Planning.pdf",
+        filename: "Japan_insurance_system_summary_Drug_Pricing_Process_by_Seed_Planning.pdf",
         category: "Pricing & Reimbursement",
         tags: ["points system","biennial revision","drug pricing"],
         summary: "A practical walkthrough of codes, points, and periodic price revisions. Explains why site-level price flexibility is limited, how to read codes correctly, and how to budget realistically for Japan-based activities."
       },
       {
         title: "Navigating Privacy & Platforms in Japanese Patient Research",
-        filename: "Navigating Privacy and Platforms in Japanese Patient Research by Seed Planning.pdf",
+        filename: "Navigating_Privacy_and_Platforms_in_Japanese_Patient_Research_by_Seed_Planning.pdf",
         category: "Privacy & Data",
         tags: ["APPI","consent","cross-border transfer","UX"],
         summary: "APPI requirements made usable: explicit consent, purpose limitation, and managing cross-border transfers. Platform choices that reduce friction for Japanese users, plus operational guardrails (pre-briefs, guides, test connections) to prevent drop-off and data loss."
       },
       {
         title: "Patient‑Centered Market Research in Japan — A Practical Guide",
-        filename: "Patient-Centered Market Research in Japan by Seed Planning.pdf",
+        filename: "Patient-Centered_Market_Research_in_Japan_by_Seed_Planning.pdf",
         category: "Patient Research",
         tags: ["recruitment","culture","informed consent","rare disease"],
         summary: "Culturally aware recruitment and moderation for Japan. Rapport, silence, and respect matter. Tips for rare and stigmatized conditions, partnering with PAGs, and designing consent and incentives that feel appropriate and transparent."
       },
       {
         title: "Understanding Oncology Dynamics in Japan",
-        filename: "Understanding Oncology Dynamics in Japan by Seed Planning.pdf",
+        filename: "Understanding_Oncology_Dynamics_in_Japan_by_Seed_Planning.pdf",
         category: "Oncology Landscape",
         tags: ["organ‑based care","cancer centers","trials","KOL networks"],
         summary: "Why organ‑based departments (incl. surgery) often lead systemic therapy, and how designated cancer centers anchor care and research. Implications for recruiting oncologists, mapping referral flows, and tapping into KOL ecosystems."
       },
       {
         title: "Japan Annual Health Check‑Ups — What They Mean for Research (v2)",
-        filename: "Japan annual health check up insights v2 by Seed Planning.pdf",
+        filename: "Japan_annual_health_check_up_insights_v2_by_Seed_Planning.pdf",
         category: "Screening & Checkups",
         tags: ["annual checkups","corporate programs","sampling"],
         summary: "High uptake of annual checkups and comprehensive screens. Useful for early‑detection and wellness topics, but be mindful of self‑report bias and limited continuity with primary care. Practical guidance for screener design and sample planning."
       },
       {
         title: "Japan Medical Research — Fieldwork Guide & Tips",
-        filename: "Japan medical research guide and tips by Seed Planning.pdf",
+        filename: "Japan_medical_research_guide_and_tips_by_Seed_Planning.pdf",
         category: "Fieldwork & Moderation",
         tags: ["localization","moderation","screeners","translation"],
         summary: "Everything we wish overseas teams knew before fieldwork in Japan: local moderators, Japan‑specific screeners, disclosure around recording/privacy, and the level of detail needed in Japanese study materials to build trust and reduce drop‑outs."
