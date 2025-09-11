@@ -1,62 +1,90 @@
-diff --git a//dev/null b/artical.html
-index 0000000000000000000000000000000000000000..5b31405c0a6ac59e63994df478a657a822a3a0d9 100644
---- a//dev/null
-+++ b/artical.html
-@@ -0,0 +1,57 @@
-+<!DOCTYPE html>
-+<html lang="en">
-+<head>
-+  <meta charset="UTF-8">
-+  <title>FAQ Article</title>
-+  <style>
-+    body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
-+    h1 { color: #2c3e50; }
-+    .category { font-size: 0.9em; color: #7f8c8d; margin-bottom: 20px; }
-+    .section-title { margin-top: 40px; font-size: 1.2em; color: #34495e; }
-+    .related { list-style: none; padding: 0; }
-+    .related li { margin: 6px 0; }
-+    .related a { text-decoration: none; color: #2980b9; }
-+    .related a:hover { text-decoration: underline; }
-+  </style>
-+</head>
-+<body>
-+  <div id="content"></div>
-+  <div id="related"></div>
-+
-+  <script src="faqs.js"></script>
-+  <script>
-+    // URLパラメータからidを取得
-+    const params = new URLSearchParams(window.location.search);
-+    const id = params.get("id");
-+    const article = FAQS.find(f => f.id === id);
-+
-+    const contentDiv = document.getElementById("content");
-+    const relatedDiv = document.getElementById("related");
-+
-+    if (article) {
-+      contentDiv.innerHTML = `
-+        <h1>${article.question}</h1>
-+        <div class="category">Category: ${article.categories.join(", ")}</div>
-+        <p>${article.answer}</p>
-+        <p><a href="index.html">Back to FAQs</a></p>
-+      `;
-+
-+      // 関連記事（同カテゴリ内、ただし自分は除外）
-+      const related = FAQS.filter(f => 
-+        f.id !== article.id && f.categories.some(c => article.categories.includes(c))
-+      );
-+
-+      if (related.length > 0) {
-+        relatedDiv.innerHTML = `
-+          <div class="section-title">Articles in this section</div>
-+          <ul class="related">
-+            ${related.map(f => `<li><a href="artical.html?id=${f.id}">${f.question}</a></li>`).join("")}
-+          </ul>
-+        `;
-+      }
-+    } else {
-+      contentDiv.innerHTML = '<p>Article not found. <a href="index.html">Back to index</a></p>';
-+    }
-+  </script>
-+</body>
-+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>FAQ Article | Seed Planning</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2248%22 fill=%22%235baaae%22/><text x=%2250%22 y=%2263%22 font-size=%2255%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22Arial%22>SP</text></svg>">
+<style>
+  :root{ --ink:#21343b; --muted:#5e7a85; --line:#e6eff1; --chip:#edf7f7; }
+  body{font-family: "Inter","Noto Sans","Noto Sans JP",system-ui; margin:0; color:var(--ink); line-height:1.7}
+  .wrap{max-width:860px; margin:0 auto; padding:20px}
+  a{color:#2f6f7e; text-decoration:none} a:hover{text-decoration:underline}
+  .tag{font-size:12px;color:var(--muted); background:var(--chip); border:1px solid #d9ecec; padding:2px 8px; border-radius:999px; margin-right:6px}
+  header h1{margin:10px 0 6px}
+  nav{margin:10px 0 16px}
+  .notfound{color:var(--muted)}
+</style>
+</head>
+<body>
+  <main class="wrap">
+    <nav><a href="index.html">← Back to FAQ</a></nav>
+    <article id="article"></article>
+  </main>
+
+  <!-- 同じデータソースを共有：CSV優先／JSフォールバック -->
+  <script src="data/faqs.js"></script>
+  <script>
+    // 軽量CSVパーサ（index.html と同等）
+    async function fetchCSV(url){
+      try{
+        const res = await fetch(url, {cache:'no-store'});
+        if(!res.ok) throw new Error('HTTP '+res.status);
+        const text = await res.text();
+        return parseCSV(text);
+      }catch(e){ return null; }
+    }
+    function parseCSV(text){
+      const rows=[]; let cur=['']; let q=false; let i=0; const s=String(text||'');
+      for(; i<s.length; i++){
+        const c=s[i];
+        if(q){
+          if(c==='"'){ if(s[i+1]==='"'){ cur[cur.length-1]+='"'; i++; } else { q=false; } }
+          else { cur[cur.length-1]+=c; }
+        } else {
+          if(c==='"'){ q=true; }
+          else if(c===','){ cur.push(''); }
+          else if(c==='\n' || c==='\r'){ if(cur.length>1 || cur[0]!=='' ){ rows.push(cur); } cur=['']; }
+          else { cur[cur.length-1]+=c; }
+        }
+      }
+      if(cur.length>1 || cur[0]!=='' ) rows.push(cur);
+      if(!rows.length) return [];
+      const header = rows[0].map(h=>h.trim());
+      return rows.slice(1).map(r=>{
+        const obj={}; header.forEach((h,idx)=> obj[h] = (r[idx]??'').trim());
+        if(obj.categories){ obj.categories = obj.categories.split(/\s*[;|,]\s*/).filter(Boolean); }
+        return obj;
+      });
+    }
+    function escapeHTML(s){return String(s||"").replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;','\'':'&#39;'}[m]))}
+    async function loadAll(){
+      const csv = await fetchCSV('data/index.csv');
+      if(Array.isArray(csv) && csv.length) return csv;
+      try{ if(Array.isArray(window.FAQS) && window.FAQS.length) return window.FAQS; }catch(e){}
+      try{ if(typeof FAQS!=='undefined' && Array.isArray(FAQS) && FAQS.length) return FAQS; }catch(e){}
+      return [];
+    }
+    function byId(list){ const m=new Map(); list.forEach(it=>m.set(it.id,it)); return m; }
+    function param(name){ return new URL(location.href).searchParams.get(name); }
+
+    (async function(){
+      const all = await loadAll();
+      const map = byId(all);
+      const id = param('id');
+      const art = document.getElementById('article');
+      if(!id){ art.innerHTML = '<p class="notfound">Article ID is missing.</p>'; return; }
+      const f = map.get(id);
+      if(!f){ art.innerHTML = '<p class="notfound">Article not found. It may have been updated or removed.</p>'; return; }
+
+      document.title = f.question + ' | Seed Planning';
+      art.innerHTML = `
+        <header><h1>${escapeHTML(f.question)}</h1>
+          <div class="meta">${(f.categories||[]).map(c=>`<span class="tag">#${escapeHTML(c)}</span>`).join(' ')}</div>
+        </header>
+        <section class="content"><p>${escapeHTML(String(f.answer||''))}</p></section>
+      `;
+    })();
+  </script>
+</body>
+</html>
