@@ -45,6 +45,111 @@
     .empty{display:none; text-align:center; color:var(--hint); padding:40px 0}
     footer{max-width:1100px; margin:0 auto; padding:20px 24px 60px; color:var(--hint)}
     .hidden{display:none}
+    
+    /* Guide Section Styles */
+    .guide-section{
+      background: linear-gradient(135deg, rgba(69,183,255,.12) 0%, rgba(142,246,210,.08) 100%);
+      border: 1px solid var(--ring);
+      border-radius: 20px;
+      padding: 24px;
+      margin: 32px 0;
+      position: relative;
+    }
+    .guide-title{
+      margin: 0 0 8px;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--brand-2);
+    }
+    .guide-subtitle{
+      margin: 0 0 24px;
+      color: var(--sub);
+      font-size: 14px;
+    }
+    .question{
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    .question.active{
+      display: block;
+    }
+    .question h3{
+      margin: 0 0 16px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .options{
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+    .option-btn{
+      background: var(--card);
+      border: 1px solid var(--ring);
+      border-radius: 12px;
+      padding: 14px 18px;
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 14px;
+      font-weight: 500;
+      text-align: left;
+    }
+    .option-btn:hover{
+      background: #1a2832;
+      border-color: #2b4452;
+      transform: translateY(-1px);
+    }
+    .recommendations{
+      animation: slideUp 0.4s ease;
+    }
+    .recommendations h3{
+      margin: 0 0 16px;
+      color: var(--brand-2);
+    }
+    .rec-cards{
+      display: grid;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .rec-card{
+      background: rgba(69,183,255,.08);
+      border: 1px solid #2b4452;
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+    .rec-info h4{
+      margin: 0 0 4px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .rec-info p{
+      margin: 0;
+      font-size: 13px;
+      color: var(--sub);
+    }
+    .guide-toggle{
+      position: absolute;
+      top: 16px;
+      right: 16px;
+    }
+    .reset-btn{
+      margin-top: 12px;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
       /* brand logo in footer */
     .brand{display:inline-flex; align-items:center; gap:10px; margin:8px 0 0;}
     .brand img{height:28px; display:block; filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));}
@@ -55,6 +160,68 @@
     <div class="sup">Seed Planning | Portal</div>
     <h1>Japan MR Resource Central</h1>
     <p class="lead">Fast, credible primers for conducting healthcare market research in Japan. Skimmable summaries, direct PDF downloads.</p>
+    
+    <!-- What would you like to know? Section -->
+    <div class="guide-section" id="guide">
+      <h2 class="guide-title">What would you like to know?</h2>
+      <p class="guide-subtitle">Answer a few questions to find the most relevant resources for your needs</p>
+      <div class="questions" id="questions">
+        <div class="question active" data-step="1">
+          <h3>What's your primary focus?</h3>
+          <div class="options">
+            <button class="option-btn" data-focus="patient-research" data-next="2">Patient Research</button>
+            <button class="option-btn" data-focus="hcp-research" data-next="2">Healthcare Professional Research</button>
+            <button class="option-btn" data-focus="system-overview" data-next="3">Understanding Japan's Healthcare System</button>
+            <button class="option-btn" data-focus="compliance" data-next="4">Compliance & Legal Requirements</button>
+          </div>
+        </div>
+        
+        <div class="question" data-step="2">
+          <h3>What specific aspect interests you most?</h3>
+          <div class="options patient-research-options">
+            <button class="option-btn" data-topic="recruitment" data-recommend="patient-guide,privacy-guide">Patient Recruitment</button>
+            <button class="option-btn" data-topic="rare-disease" data-recommend="patient-guide">Rare Disease Research</button>
+            <button class="option-btn" data-topic="privacy" data-recommend="privacy-guide">Privacy & Data Protection</button>
+            <button class="option-btn" data-topic="screening" data-recommend="checkup-guide">Health Screening & Check-ups</button>
+          </div>
+          <div class="options hcp-research-options">
+            <button class="option-btn" data-topic="oncology" data-recommend="oncology-guide">Oncology Specialists</button>
+            <button class="option-btn" data-topic="fieldwork" data-recommend="fieldwork-guide">Fieldwork & Moderation</button>
+            <button class="option-btn" data-topic="recruitment-hcp" data-recommend="fieldwork-guide,faq-guide">HCP Recruitment</button>
+            <button class="option-btn" data-topic="honoraria" data-recommend="faq-guide">Honoraria & Incentives</button>
+          </div>
+        </div>
+        
+        <div class="question" data-step="3">
+          <h3>Which aspect of the healthcare system?</h3>
+          <div class="options system-overview-options">
+            <button class="option-btn" data-topic="insurance" data-recommend="insurance-guide">Universal Health Insurance</button>
+            <button class="option-btn" data-topic="pricing" data-recommend="pricing-guide">Drug Pricing & Reimbursement</button>
+            <button class="option-btn" data-topic="overview" data-recommend="faq-guide,insurance-guide">General System Overview</button>
+          </div>
+        </div>
+        
+        <div class="question" data-step="4">
+          <h3>What compliance area?</h3>
+          <div class="options compliance-options">
+            <button class="option-btn" data-topic="appi" data-recommend="privacy-guide">APPI & Data Privacy</button>
+            <button class="option-btn" data-topic="consent" data-recommend="privacy-guide,patient-guide">Informed Consent</button>
+            <button class="option-btn" data-topic="general-compliance" data-recommend="faq-guide">General Compliance Guidelines</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="recommendations hidden" id="recommendations">
+        <h3>📋 Recommended Resources</h3>
+        <div class="rec-cards" id="rec-cards"></div>
+        <button class="btn secondary reset-btn" onclick="resetGuide()">Start Over</button>
+      </div>
+      
+      <div class="guide-toggle">
+        <button class="btn secondary" onclick="toggleGuide()" id="guide-toggle">Hide Guide</button>
+      </div>
+    </div>
+    
     <div class="toolbar">
       <label class="search" aria-label="Search documents">
         🔎
@@ -89,7 +256,8 @@
         category: "FAQ & Playbook",
         tags: ["FAQ","localization","recruitment","APPI","honoraria"],
         summary: "68-question FAQ spanning insurance basics, access, HCP roles, oncology pathways, recruitment & incentives, privacy/APPI, and moderation culture—built as a one‑stop primer for overseas teams planning research in Japan. Includes do’s/don’ts and scheduling caveats.",
-        site: "https://yoshi-seed.github.io/global/index.html"
+        site: "https://yoshi-seed.github.io/global/index.html",
+        id: "faq-guide"
       },
       {
         title: "Insights into Japan’s Universal Health Insurance System",
@@ -220,9 +388,125 @@
     // ---- Events ----
     q.addEventListener("input", e=>{ state.query = e.target.value; render(); });
 
+    // ---- Guide System ----
+    const docIdMap = {
+      "faq-guide": 0,
+      "insurance-guide": 1,
+      "pricing-guide": 2,
+      "privacy-guide": 3,
+      "patient-guide": 4,
+      "oncology-guide": 5,
+      "checkup-guide": 6,
+      "fieldwork-guide": 7
+    };
+
+    let currentStep = 1;
+    let selectedFocus = "";
+
+    function showQuestion(step) {
+      document.querySelectorAll('.question').forEach(q => q.classList.remove('active'));
+      const targetQuestion = document.querySelector(`[data-step="${step}"]`);
+      if (targetQuestion) {
+        targetQuestion.classList.add('active');
+        currentStep = step;
+      }
+    }
+
+    function showRecommendations(recommendIds) {
+      const recommendations = document.getElementById('recommendations');
+      const recCards = document.getElementById('rec-cards');
+      
+      // Hide questions
+      document.querySelectorAll('.question').forEach(q => q.classList.remove('active'));
+      
+      // Build recommendation cards
+      const recHtml = recommendIds.map(id => {
+        const docIndex = docIdMap[id];
+        if (docIndex === undefined) return "";
+        const doc = docs[docIndex];
+        return `
+          <div class="rec-card">
+            <div class="rec-info">
+              <h4>${escapeHtml(doc.title)}</h4>
+              <p>${escapeHtml(doc.summary.slice(0, 120))}...</p>
+            </div>
+            <a class="btn" href="${fileUrl(doc.filename)}" target="_blank" rel="noopener">⬇ Download</a>
+          </div>
+        `;
+      }).join('');
+      
+      recCards.innerHTML = recHtml;
+      recommendations.classList.remove('hidden');
+    }
+
+    function resetGuide() {
+      currentStep = 1;
+      selectedFocus = "";
+      document.getElementById('recommendations').classList.add('hidden');
+      showQuestion(1);
+      
+      // Reset option visibility
+      document.querySelectorAll('.options').forEach(opts => {
+        opts.style.display = 'grid';
+      });
+    }
+
+    function toggleGuide() {
+      const guide = document.getElementById('guide');
+      const toggleBtn = document.getElementById('guide-toggle');
+      
+      if (guide.style.display === 'none') {
+        guide.style.display = 'block';
+        toggleBtn.textContent = 'Hide Guide';
+      } else {
+        guide.style.display = 'none';
+        toggleBtn.textContent = 'Show Guide';
+      }
+    }
+
+    // Handle option clicks
+    document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('option-btn')) {
+        const btn = e.target;
+        const focus = btn.dataset.focus;
+        const topic = btn.dataset.topic;
+        const nextStep = btn.dataset.next;
+        const recommend = btn.dataset.recommend;
+
+        if (focus) {
+          selectedFocus = focus;
+          
+          // Show/hide relevant options for next step
+          document.querySelectorAll('.options').forEach(opts => {
+            opts.style.display = 'none';
+          });
+          
+          if (focus === 'patient-research') {
+            document.querySelector('.patient-research-options').style.display = 'grid';
+          } else if (focus === 'hcp-research') {
+            document.querySelector('.hcp-research-options').style.display = 'grid';
+          } else if (focus === 'system-overview') {
+            document.querySelector('.system-overview-options').style.display = 'grid';
+          } else if (focus === 'compliance') {
+            document.querySelector('.compliance-options').style.display = 'grid';
+          }
+        }
+
+        if (recommend) {
+          const recommendIds = recommend.split(',');
+          showRecommendations(recommendIds);
+        } else if (nextStep) {
+          showQuestion(parseInt(nextStep));
+        }
+      }
+    });
+
     // ---- Init ----
     renderTags();
     render();
+    
+    // Initialize guide
+    showQuestion(1);
   </script>
 </body>
 </html>
