@@ -370,19 +370,19 @@
   <!-- Resources Content -->
   <div class="content-area" id="resources-content">
     <h2 style="color: var(--accent-2); margin-bottom: 20px;">📚 Expert Resources</h2>
-    <div id="resources-grid"></div>
+    <div id="resources-grid" class="cards-grid"></div>
   </div>
 
   <!-- FAQ Content -->
   <div class="content-area" id="faq-content">
     <h2 style="color: var(--accent-2); margin-bottom: 20px;">❓ Frequently Asked Questions</h2>
-    <div id="faq-grid"></div>
+    <div id="faq-grid" class="cards-grid"></div>
   </div>
 
   <!-- All Content -->
   <div class="content-area" id="all-content">
     <h2 style="color: var(--accent-2); margin-bottom: 20px;">🔍 All Resources & FAQ</h2>
-    <div id="all-grid"></div>
+    <div id="all-grid" class="cards-grid"></div>
   </div>
 
 <!-- Load FAQ data -->
@@ -562,35 +562,43 @@ function renderCard(item) {
 
 function renderContent(items, containerId) {
   const container = document.getElementById(containerId);
-  if (!container) return;
-  
-  if (items.length === 0) {
-    container.innerHTML = '<div class="empty">No matching content found.</div>';
+  if (!container) {
+    console.error('Container not found:', containerId);
     return;
   }
   
-  container.innerHTML = '<div class="cards-grid">' + items.map(renderCard).join('') + '</div>';
+  if (items.length === 0) {
+    container.innerHTML = '<div style="text-align: center; color: var(--muted); padding: 40px;">No matching content found.</div>';
+    return;
+  }
+  
+  container.innerHTML = items.map(renderCard).join('');
 }
 
 // ---- Tab Management ----
 function showTab(tabName) {
   let content;
+  let containerId;
   
   switch(tabName) {
     case 'resources':
       content = docs;
+      containerId = 'resources-grid';
       break;
     case 'faq':
       content = FAQS;
+      containerId = 'faq-grid';
       break;
     case 'all':
       content = ALL_CONTENT;
+      containerId = 'all-grid';
       break;
     default:
       return;
   }
   
-  renderContent(content, tabName + '-content');
+  console.log(`Showing ${tabName} tab with ${content.length} items`);
+  renderContent(content, containerId);
 }
 
 // ---- Event Listeners ----
@@ -610,15 +618,32 @@ document.querySelectorAll('.nav-tab').forEach(tab => {
   });
 });
 
-// Unified search
-document.getElementById('unified-search').addEventListener('input', (e) => {
-  const query = e.target.value;
-  const results = searchContent(query);
+// Unified search with debugging
+document.addEventListener('DOMContentLoaded', () => {
+  const searchInput = document.getElementById('unified-search');
+  if (!searchInput) {
+    console.error('Search input not found!');
+    return;
+  }
   
-  // Update all tab contents with search results
-  renderContent(results.filter(item => item.type === 'pdf'), 'resources-content');
-  renderContent(results.filter(item => item.type === 'faq'), 'faq-content');
-  renderContent(results, 'all-content');
+  searchInput.addEventListener('input', (e) => {
+    const query = e.target.value;
+    console.log('Searching for:', query);
+    
+    const results = searchContent(query);
+    console.log('Search results:', results.length, 'items');
+    
+    // Update all tab contents with search results
+    const pdfResults = results.filter(item => item.type === 'pdf');
+    const faqResults = results.filter(item => item.type === 'faq');
+    
+    console.log('PDF results:', pdfResults.length);
+    console.log('FAQ results:', faqResults.length);
+    
+    renderContent(pdfResults, 'resources-grid');
+    renderContent(faqResults, 'faq-grid');
+    renderContent(results, 'all-grid');
+  });
 });
 
 // Focus area navigation
@@ -657,9 +682,14 @@ document.querySelectorAll('[data-focus]').forEach(card => {
 
 // ---- Initialize ----
 document.addEventListener('DOMContentLoaded', () => {
+  // Initialize all tabs with content
   showTab('resources');
-  showTab('faq');
+  showTab('faq'); 
   showTab('all');
+  
+  console.log('Hub initialized with', ALL_CONTENT.length, 'total items');
+  console.log('FAQ items:', FAQS.length);
+  console.log('PDF items:', docs.length);
 });
 </script>
 </body>
