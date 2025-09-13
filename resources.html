@@ -671,15 +671,17 @@
           <div class="title">${escapeHtml(d.title)}</div>
           <div class="summary">${escapeHtml(d.summary)}</div>
           <div class=\"actions\">
-            <a class=\"btn\" href=\"${fileUrl(d.filename)}\" target=\"_blank\" rel=\"noopener\">⬇ Download (PDF)</a>
-            ${d.site ? `<a class=\"btn secondary\" href=\"${d.site}\" target=\"_blank\" rel=\"noopener\">Open full site</a>` : ""}
+            ${d.site ? `<a class=\"btn\" href=\"${d.site}\" target=\"_blank\" rel=\"noopener\">📖 View Online</a>` : ""}
+            <span class=\"btn secondary\" style=\"opacity: 0.5; cursor: not-allowed;\" title=\"PDF file not available\">⬇ PDF Not Available</span>
             <button class=\"btn secondary\" data-copy>Copy link</button>
           </div>
           <div class="category">${d.tags.map(t=>`#${escapeHtml(t)}`).join(" ")}</div>
         `;
         card.querySelector("[data-copy]").addEventListener("click", async ()=>{
           try{
-            await navigator.clipboard.writeText(location.origin + fileUrl(d.filename));
+            // If there's a site link, copy that; otherwise copy the page URL
+            const linkToCopy = d.site || location.href;
+            await navigator.clipboard.writeText(linkToCopy);
             const btn = card.querySelector("[data-copy]");
             btn.textContent = "Copied";
             setTimeout(()=>btn.textContent="Copy link", 1500);

@@ -257,6 +257,77 @@
     display: none;
   }
   
+  /* Search suggestions dropdown */
+  .search-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-top: none;
+    border-radius: 0 0 var(--radius) var(--radius);
+    box-shadow: var(--shadow);
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 100;
+    display: none;
+  }
+  
+  .search-suggestions.show {
+    display: block;
+  }
+  
+  .suggestion-item {
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .suggestion-item:last-child {
+    border-bottom: none;
+  }
+  
+  .suggestion-item:hover,
+  .suggestion-item.selected {
+    background: var(--chip);
+  }
+  
+  .suggestion-title {
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+  
+  .suggestion-type {
+    font-size: 11px;
+    color: var(--accent);
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  
+  .suggestion-preview {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+  
+  /* Text highlighting */
+  .highlight {
+    background: var(--mark);
+    padding: 1px 2px;
+    border-radius: 3px;
+    font-weight: 500;
+  }
+  
+  /* Remove PDF highlighting */
+  .content-card[data-type="pdf"] .highlight {
+    background: transparent;
+    font-weight: normal;
+  }
+  
   /* Responsive */
   @media (max-width: 768px) {
     .nav-tabs {
@@ -291,6 +362,7 @@
         </svg>
         <input type="search" class="search-input" placeholder="Search FAQ and resources (e.g., APPI, recruitment, oncology)..." id="unified-search">
       </div>
+      <div class="search-suggestions" id="search-suggestions"></div>
     </div>
   </header>
 
@@ -476,12 +548,12 @@ const escapeHTML = (s) => String(s||"").replace(/[&<>"']/g,m=>({'&':'&amp;','<':
 const fileUrl = (name) => "/pdf/" + encodeURIComponent(name);
 
 // ---- Search Functionality ----
-function searchContent(query) {
+function searchContent(query, currentTab = null) {
   if (!query.trim()) return ALL_CONTENT;
   
   const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
   
-  return ALL_CONTENT.filter(item => {
+  const results = ALL_CONTENT.filter(item => {
     const searchText = [
       item.title || '',
       item.summary || '',
@@ -492,33 +564,150 @@ function searchContent(query) {
     ].join(' ').toLowerCase();
     
     return terms.some(term => searchText.includes(term));
-  }).sort((a, b) => {
-    // Priority: FAQ first, then PDFs
-    if (a.type !== b.type) {
-      return a.type === 'faq' ? -1 : 1;
+  });
+  
+  // Sort based on current tab
+  return results.sort((a, b) => {
+    // If we're in FAQ tab, prioritize FAQ items heavily
+    if (currentTab === 'faq') {
+      if (a.type !== b.type) {
+        return a.type === 'faq' ? -1 : 1;
+      }
+    } else {
+      // For other tabs, still prefer FAQ but less aggressively
+      if (a.type !== b.type) {
+        return a.type === 'faq' ? -1 : 1;
+      }
     }
     return 0;
   });
 }
 
+// ---- Text Highlighting ----
+function highlightText(text, terms) {
+  if (!text || !terms || terms.length === 0) return escapeHTML(text);
+  
+  let highlightedText = escapeHTML(text);
+  
+  terms.forEach(term => {
+    if (term.length > 1) { // Only highlight terms longer than 1 character
+      const regex = new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+      highlightedText = highlightedText.replace(regex, '<span class="highlight">$1</span>');
+    }
+  });
+  
+  return highlightedText;
+}
+
+// ---- Search Suggestions ----
+function showSearchSuggestions(query) {
+  const suggestionsContainer = document.getElementById('search-suggestions');
+  if (!suggestionsContainer) return;
+  
+  if (!query.trim()) {
+    suggestionsContainer.classList.remove('show');
+    return;
+  }
+  
+  const results = searchContent(query).slice(0, 8); // Show top 8 results
+  
+  if (results.length === 0) {
+    suggestionsContainer.classList.remove('show');
+    return;
+  }
+  
+  const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+  
+  suggestionsContainer.innerHTML = results.map((item, index) => {
+    const title = item.question || item.title || '';
+    const preview = (item.answer || item.summary || '').slice(0, 80) + (item.answer?.length > 80 ? '...' : '');
+    
+    return `
+      <div class="suggestion-item" data-index="${index}" data-id="${item.id}" data-type="${item.type}">
+        <div class="suggestion-type">${item.type.toUpperCase()}</div>
+        <div class="suggestion-title">${highlightText(title, terms)}</div>
+        <div class="suggestion-preview">${highlightText(preview, terms)}</div>
+      </div>
+    `;
+  }).join('');
+  
+  suggestionsContainer.classList.add('show');
+  
+  // Add click handlers to suggestions
+  suggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const itemId = item.dataset.id;
+      const itemType = item.dataset.type;
+      
+      // Navigate to appropriate tab and scroll to item
+      navigateToItem(itemId, itemType);
+      
+      // Hide suggestions
+      suggestionsContainer.classList.remove('show');
+    });
+  });
+}
+
+// ---- Navigation to specific items ----
+function navigateToItem(itemId, itemType) {
+  // Switch to appropriate tab
+  const targetTab = itemType === 'faq' ? 'faq' : itemType === 'pdf' ? 'resources' : 'all';
+  
+  // Update active tab
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`[data-tab="${targetTab}"]`).classList.add('active');
+  
+  // Control search box visibility
+  toggleSearchBox(true);
+  
+  // Show corresponding content
+  document.querySelectorAll('.content-area').forEach(area => area.classList.remove('active'));
+  const targetContent = document.getElementById(targetTab + '-content');
+  if (targetContent) {
+    targetContent.classList.add('active');
+    showTab(targetTab);
+  }
+  
+  // Scroll to the specific item after a brief delay
+  setTimeout(() => {
+    const itemElement = document.querySelector(`[data-item-id="${itemId}"]`);
+    if (itemElement) {
+      itemElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Briefly highlight the item
+      itemElement.style.borderColor = 'var(--accent)';
+      itemElement.style.borderWidth = '2px';
+      setTimeout(() => {
+        itemElement.style.borderColor = '';
+        itemElement.style.borderWidth = '';
+      }, 2000);
+    }
+  }, 100);
+}
+
 // ---- Render Functions ----
-function renderCard(item) {
+function renderCard(item, searchTerms = []) {
   const isOnline = item.site && item.site.includes('yoshi-seed.github.io');
   
   if (item.type === 'faq') {
     const crossRefs = CROSS_REFERENCES[item.id] || [];
     const crossRefLinks = crossRefs.map(ref => {
       const doc = docs.find(d => d.id === ref);
-      return doc ? `<a href="${fileUrl(doc.filename)}" class="cross-ref" target="_blank">${doc.title}</a>` : '';
+      if (!doc) return '';
+      // Use online site link if available, otherwise show title without link
+      if (doc.site) {
+        return `<a href="${doc.site}" class="cross-ref" target="_blank">${doc.title}</a>`;
+      } else {
+        return `<span class="cross-ref" style="background: var(--chip); cursor: default;">${doc.title}</span>`;
+      }
     }).filter(Boolean).join(', ');
     
     const answerPreview = item.answer.length > 200 ? item.answer.slice(0, 200) + '...' : item.answer;
     
     return `
-      <div class="content-card">
+      <div class="content-card" data-item-id="${item.id}" data-type="${item.type}">
         <div class="card-type">FAQ</div>
-        <h3 class="card-title">${escapeHTML(item.question)}</h3>
-        <p class="card-summary">${escapeHTML(answerPreview)}</p>
+        <h3 class="card-title">${highlightText(item.question, searchTerms)}</h3>
+        <p class="card-summary">${highlightText(answerPreview, searchTerms)}</p>
         ${crossRefLinks ? `<p style="font-size: 12px; color: var(--muted);"><strong>Related PDFs:</strong> ${crossRefLinks}</p>` : ''}
         <div class="card-actions">
           ${isOnline ? `<a href="${item.site}" class="btn" target="_blank">View Online</a>` : ''}
@@ -528,20 +717,20 @@ function renderCard(item) {
     `;
   } else {
     return `
-      <div class="content-card">
+      <div class="content-card" data-item-id="${item.id}" data-type="${item.type}">
         <div class="card-type">PDF</div>
         <h3 class="card-title">${escapeHTML(item.title)}</h3>
         <p class="card-summary">${escapeHTML(item.summary)}</p>
         <div class="card-actions">
-          <a href="${fileUrl(item.filename)}" class="btn" target="_blank">Download PDF</a>
-          ${item.site ? `<a href="${item.site}" class="btn secondary" target="_blank">View Online</a>` : ''}
+          ${item.site ? `<a href="${item.site}" class="btn" target="_blank">View Online</a>` : ''}
+          <span class="btn secondary" style="opacity: 0.5; cursor: not-allowed;" title="PDF file not available">PDF Not Available</span>
         </div>
       </div>
     `;
   }
 }
 
-function renderContent(items, containerId) {
+function renderContent(items, containerId, searchTerms = []) {
   const container = document.getElementById(containerId);
   if (!container) {
     console.error('Container not found:', containerId);
@@ -553,7 +742,7 @@ function renderContent(items, containerId) {
     return;
   }
   
-  container.innerHTML = items.map(renderCard).join('');
+  container.innerHTML = items.map(item => renderCard(item, searchTerms)).join('');
 }
 
 // ---- Tab Management ----
@@ -622,19 +811,30 @@ document.querySelectorAll('.nav-tab').forEach(tab => {
   });
 });
 
-// Unified search with debugging
+// Unified search with enhanced functionality
 document.addEventListener('DOMContentLoaded', () => {
   const searchInput = document.getElementById('unified-search');
+  const suggestionsContainer = document.getElementById('search-suggestions');
+  let selectedSuggestionIndex = -1;
+  
   if (!searchInput) {
     console.error('Search input not found!');
     return;
   }
   
+  // Input handler for search
   searchInput.addEventListener('input', (e) => {
     const query = e.target.value;
-    console.log('Searching for:', query);
+    const activeTab = document.querySelector('.nav-tab.active')?.dataset.tab;
     
-    const results = searchContent(query);
+    console.log('Searching for:', query, 'in tab:', activeTab);
+    
+    // Show suggestions
+    showSearchSuggestions(query);
+    
+    const results = searchContent(query, activeTab);
+    const searchTerms = query.toLowerCase().split(/\s+/).filter(Boolean);
+    
     console.log('Search results:', results.length, 'items');
     
     // Update all tab contents with search results
@@ -644,10 +844,52 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('PDF results:', pdfResults.length);
     console.log('FAQ results:', faqResults.length);
     
-    renderContent(pdfResults, 'resources-grid');
-    renderContent(faqResults, 'faq-grid');
-    renderContent(results, 'all-grid');
+    renderContent(pdfResults, 'resources-grid', searchTerms);
+    renderContent(faqResults, 'faq-grid', searchTerms);
+    renderContent(results, 'all-grid', searchTerms);
+    
+    selectedSuggestionIndex = -1; // Reset selection
   });
+  
+  // Keyboard navigation for suggestions
+  searchInput.addEventListener('keydown', (e) => {
+    const suggestions = suggestionsContainer.querySelectorAll('.suggestion-item');
+    
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      selectedSuggestionIndex = Math.min(selectedSuggestionIndex + 1, suggestions.length - 1);
+      updateSuggestionSelection(suggestions);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      selectedSuggestionIndex = Math.max(selectedSuggestionIndex - 1, -1);
+      updateSuggestionSelection(suggestions);
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (selectedSuggestionIndex >= 0 && suggestions[selectedSuggestionIndex]) {
+        suggestions[selectedSuggestionIndex].click();
+      }
+    } else if (e.key === 'Escape') {
+      suggestionsContainer.classList.remove('show');
+      selectedSuggestionIndex = -1;
+    }
+  });
+  
+  // Hide suggestions when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!searchInput.contains(e.target) && !suggestionsContainer.contains(e.target)) {
+      suggestionsContainer.classList.remove('show');
+    }
+  });
+  
+  function updateSuggestionSelection(suggestions) {
+    suggestions.forEach((item, index) => {
+      if (index === selectedSuggestionIndex) {
+        item.classList.add('selected');
+      } else {
+        item.classList.remove('selected');
+      }
+    });
+  }
 });
 
 // Focus area navigation
