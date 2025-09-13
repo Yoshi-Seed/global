@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Japan Healthcare Research Hub | Seed Planning</title>
+<meta name="description" content="Comprehensive hub for conducting healthcare market research in Japan. FAQ, guides, and expert resources in one place." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2248%22 fill=%22%235baaae%22/><text x=%2250%22 y=%2263%22 font-size=%2255%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22Arial%22>SP</text></svg>">
+<style>
+  :root{
+    /* Unified Medical Green Theme */
+    --bg: #ffffff;
+    --ink: #21343b;
+    --muted: #5e7a85;
+    --line: #e6eff1;
+    --accent: #2f6f7e;
+    --accent-2: #5baaae;
+    --chip: #edf7f7;
+    --mark: #fff3b0;
+    --radius: 14px;
+    --radius-sm: 10px;
+    --shadow: 0 6px 24px rgba(24,60,70,.08);
+    --shadow-light: 0 2px 8px rgba(24,60,70,.06);
+  }
+  
+  html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Inter", "Noto Sans", "Noto Sans JP", system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    line-height: 1.7;
+  }
+  
+  /* Header */
+  header {
+    padding: 48px 24px 32px;
+    max-width: 1120px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  .sup {
+    color: var(--accent-2);
+    letter-spacing: 0.08em;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  
+  h1 {
+    margin: 0.2rem 0 0;
+    font-weight: 800;
+    font-size: clamp(32px, 4vw, 48px);
+    color: var(--ink);
+    line-height: 1.2;
+  }
+  
+  .lead {
+    color: var(--muted);
+    margin: 10px auto 24px;
+    max-width: 850px;
+    line-height: 1.7;
+    font-size: 16px;
+  }
+  
+  /* Navigation Tabs */
+  .nav-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin: 32px 0;
+    background: var(--chip);
+    border-radius: var(--radius);
+    padding: 4px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .nav-tab {
+    flex: 1;
+    padding: 12px 20px;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .nav-tab.active {
+    background: var(--accent);
+    color: white;
+    box-shadow: var(--shadow-light);
+  }
+  
+  /* Unified Search */
+  .unified-search {
+    max-width: 600px;
+    margin: 0 auto 40px;
+    position: relative;
+  }
+  
+  .search-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    box-shadow: var(--shadow-light);
+  }
+  
+  .search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    background: transparent;
+    color: var(--ink);
+  }
+  
+  .search-input::placeholder {
+    color: var(--muted);
+  }
+  
+  /* Content Areas */
+  .content-area {
+    display: none;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+  
+  .content-area.active {
+    display: block;
+  }
+  
+  /* Guide Section (from resources.html) */
+  .guide-section {
+    background: var(--chip);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 40px;
+    box-shadow: var(--shadow-light);
+  }
+  
+  .guide-title {
+    margin: 0 0 8px;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--accent-2);
+  }
+  
+  .guide-subtitle {
+    margin: 0 0 24px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  
+  /* Cards Grid */
+  .cards-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+  
+  .content-card {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    box-shadow: var(--shadow-light);
+    transition: all 0.2s ease;
+  }
+  
+  .content-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+    border-color: var(--accent-2);
+  }
+  
+  .card-type {
+    font-size: 11px;
+    color: var(--accent);
+    background: var(--chip);
+    padding: 4px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  
+  .card-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 8px;
+    line-height: 1.3;
+  }
+  
+  .card-summary {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0 0 16px;
+  }
+  
+  .card-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  
+  .btn {
+    background: var(--accent);
+    color: white;
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.2s ease;
+  }
+  
+  .btn:hover {
+    background: var(--accent-2);
+    border-color: var(--accent-2);
+  }
+  
+  .btn.secondary {
+    background: var(--chip);
+    color: var(--ink);
+    border-color: var(--line);
+  }
+  
+  .btn.secondary:hover {
+    background: var(--line);
+  }
+  
+  /* Cross-reference highlights */
+  .cross-ref {
+    background: var(--mark);
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .nav-tabs {
+      flex-direction: column;
+      max-width: 300px;
+    }
+    
+    .cards-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+  <header>
+    <!-- Quick Navigation -->
+    <nav style="display: flex; justify-content: center; gap: 16px; margin-bottom: 32px; font-size: 14px;">
+      <span style="background: var(--accent); color: white; padding: 8px 16px; border-radius: 20px; font-weight: 600;">🏠 Hub</span>
+      <a href="index.html" style="color: var(--muted); text-decoration: none; font-weight: 500;">❓ FAQ Only</a>
+      <a href="resources.html" style="color: var(--muted); text-decoration: none; font-weight: 500;">📚 Resources Only</a>
+    </nav>
+    
+    <div class="sup">Seed Planning | Research Hub</div>
+    <h1>Japan Healthcare Research Hub</h1>
+    <p class="lead">Your comprehensive resource for conducting healthcare market research in Japan. FAQ answers, expert guides, and actionable insights in one integrated platform.</p>
+    
+    <!-- Unified Search -->
+    <div class="unified-search">
+      <div class="search-container">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M10 2a8 8 0 0 1 6.32 12.906l4.387 4.387l-1.414 1.414l-4.387-4.387A8 8 0 1 1 10 2m0 2a6 6 0 1 0 0 12a6 6 0 0 0 0-12"/>
+        </svg>
+        <input type="search" class="search-input" placeholder="Search FAQ and resources (e.g., APPI, recruitment, oncology)..." id="unified-search">
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <div class="nav-tabs">
+    <button class="nav-tab active" data-tab="guide">🎯 Guided Start</button>
+    <button class="nav-tab" data-tab="resources">📚 Resources</button>
+    <button class="nav-tab" data-tab="faq">❓ FAQ</button>
+    <button class="nav-tab" data-tab="all">🔍 All</button>
+  </div>
+
+  <!-- Guide Content -->
+  <div class="content-area active" id="guide-content">
+    <div class="guide-section">
+      <h2 class="guide-title">What would you like to know?</h2>
+      <p class="guide-subtitle">Choose your focus area, and we'll guide you to the most relevant FAQ and resources</p>
+      
+      <div class="cards-grid">
+        <div class="content-card" data-focus="patient">
+          <div class="card-type">Patient Research</div>
+          <h3 class="card-title">Patient Studies & Recruitment</h3>
+          <p class="card-summary">Learn about recruiting patients, cultural considerations, consent processes, and privacy requirements in Japan.</p>
+          <div class="card-actions">
+            <a href="#" class="btn">Start Here</a>
+          </div>
+        </div>
+        
+        <div class="content-card" data-focus="hcp">
+          <div class="card-type">HCP Research</div>
+          <h3 class="card-title">Healthcare Professional Studies</h3>
+          <p class="card-summary">Understand HCP roles, oncology pathways, fieldwork best practices, and honoraria guidelines.</p>
+          <div class="card-actions">
+            <a href="#" class="btn">Start Here</a>
+          </div>
+        </div>
+        
+        <div class="content-card" data-focus="system">
+          <div class="card-type">Healthcare System</div>
+          <h3 class="card-title">Japan Healthcare System</h3>
+          <p class="card-summary">Navigate insurance basics, pricing mechanisms, and systemic factors affecting research access.</p>
+          <div class="card-actions">
+            <a href="#" class="btn">Start Here</a>
+          </div>
+        </div>
+        
+        <div class="content-card" data-focus="compliance">
+          <div class="card-type">Compliance & Legal</div>
+          <h3 class="card-title">Regulatory Compliance</h3>
+          <p class="card-summary">Master APPI requirements, data protection, cross-border transfers, and legal frameworks.</p>
+          <div class="card-actions">
+            <a href="#" class="btn">Start Here</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Popular Starting Points -->
+    <h2 style="color: var(--accent-2); margin-bottom: 20px;">🚀 Popular Starting Points</h2>
+    <div class="cards-grid">
+      <div class="content-card">
+        <div class="card-type">FAQ + PDF</div>
+        <h3 class="card-title">APPI & Privacy Requirements</h3>
+        <p class="card-summary">Complete guide covering <span class="cross-ref">FAQ #12-18</span> plus detailed PDF implementation guide.</p>
+        <div class="card-actions">
+          <a href="#" class="btn">View FAQ</a>
+          <a href="#" class="btn secondary">Download PDF</a>
+        </div>
+      </div>
+      
+      <div class="content-card">
+        <div class="card-type">FAQ + PDF</div>
+        <h3 class="card-title">Patient Recruitment in Japan</h3>
+        <p class="card-summary">Cultural best practices from <span class="cross-ref">FAQ #25-31</span> with comprehensive recruitment playbook.</p>
+        <div class="card-actions">
+          <a href="#" class="btn">View FAQ</a>
+          <a href="#" class="btn secondary">Download PDF</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resources Content -->
+  <div class="content-area" id="resources-content">
+    <h2 style="color: var(--accent-2); margin-bottom: 20px;">📚 Expert Resources</h2>
+    <div id="resources-grid"></div>
+  </div>
+
+  <!-- FAQ Content -->
+  <div class="content-area" id="faq-content">
+    <h2 style="color: var(--accent-2); margin-bottom: 20px;">❓ Frequently Asked Questions</h2>
+    <div id="faq-grid"></div>
+  </div>
+
+  <!-- All Content -->
+  <div class="content-area" id="all-content">
+    <h2 style="color: var(--accent-2); margin-bottom: 20px;">🔍 All Resources & FAQ</h2>
+    <div id="all-grid"></div>
+  </div>
+
+<!-- Load FAQ data -->
+<script src="data/faqs.js"></script>
+
+<script>
+// ---- PDF Data (from resources.html) ----
+const docs = [
+  {
+    title: "Guide to Japan Medical Research — FAQ (Full Version)",
+    filename: "Guide_to_Japan_Medical_Research_FAQ.pdf",
+    category: "FAQ & Playbook",
+    tags: ["FAQ","localization","recruitment","APPI","honoraria"],
+    summary: "68-question FAQ spanning insurance basics, access, HCP roles, oncology pathways, recruitment & incentives, privacy/APPI, and moderation culture—built as a one‑stop primer for overseas teams planning research in Japan. Includes do's/don'ts and scheduling caveats.",
+    site: "https://yoshi-seed.github.io/global/index.html",
+    id: "faq-guide",
+    type: "pdf"
+  },
+  {
+    title: "Insights into Japan's Universal Health Insurance System",
+    filename: "Insights_into_Japan's_Universal_Health_Insurance_System_by_Seed_Planning.pdf",
+    category: "Insurance & Access",
+    tags: ["universal coverage","free access","fee schedule"],
+    summary: "How Japan's universal coverage, low co-pays, and nationwide fee schedule shape provider incentives and patient behavior. What this means for research access, HCP availability, and why non-reimbursed activities can be hard to drive without clear value or support.",
+    id: "insurance-guide",
+    type: "pdf"
+  },
+  {
+    title: "Japan Insurance System — Pricing & Reimbursement Basics",
+    filename: "Japan_insurance_system_summary_Drug_Pricing_Process_by_Seed_Planning.pdf",
+    category: "Pricing & Reimbursement",
+    tags: ["points system","biennial revision","drug pricing"],
+    summary: "A practical walkthrough of codes, points, and periodic price revisions. Explains why site-level price flexibility is limited, how to read codes correctly, and how to budget realistically for Japan-based activities.",
+    id: "pricing-guide",
+    type: "pdf"
+  },
+  {
+    title: "Navigating Privacy & Platforms in Japanese Patient Research",
+    filename: "Navigating_Privacy_and_Platforms_in_Japanese_Patient_Research_by_Seed_Planning.pdf",
+    category: "Privacy & Data",
+    tags: ["APPI","consent","cross-border transfer","UX"],
+    summary: "APPI requirements made usable: explicit consent, purpose limitation, and managing cross-border transfers. Platform choices that reduce friction for Japanese users, plus operational guardrails (pre-briefs, guides, test connections) to prevent drop-off and data loss.",
+    id: "privacy-guide",
+    type: "pdf"
+  },
+  {
+    title: "Patient‑Centered Market Research in Japan — A Practical Guide",
+    filename: "Patient-Centered_Market_Research_in_Japan_by_Seed_Planning.pdf",
+    category: "Patient Research",
+    tags: ["recruitment","culture","informed consent","rare disease"],
+    summary: "Culturally aware recruitment and moderation for Japan. Rapport, silence, and respect matter. Tips for rare and stigmatized conditions, partnering with PAGs, and designing consent and incentives that feel appropriate and transparent.",
+    id: "patient-guide",
+    type: "pdf"
+  },
+  {
+    title: "Understanding Oncology Dynamics in Japan",
+    filename: "Understanding_Oncology_Dynamics_in_Japan_by_Seed_Planning.pdf",
+    category: "Oncology Landscape",
+    tags: ["organ‑based care","cancer centers","trials","KOL networks"],
+    summary: "Why organ‑based departments (incl. surgery) often lead systemic therapy, and how designated cancer centers anchor care and research. Implications for recruiting oncologists, mapping referral flows, and tapping into KOL ecosystems.",
+    id: "oncology-guide",
+    type: "pdf"
+  },
+  {
+    title: "Japan Annual Health Check‑Ups — What They Mean for Research (v2)",
+    filename: "Japan_annual_health_check_up_insights_v2_by_Seed_Planning.pdf",
+    category: "Screening & Checkups",
+    tags: ["annual checkups","corporate programs","sampling"],
+    summary: "High uptake of annual checkups and comprehensive screens. Useful for early‑detection and wellness topics, but be mindful of self‑report bias and limited continuity with primary care. Practical guidance for screener design and sample planning.",
+    id: "checkup-guide",
+    type: "pdf"
+  },
+  {
+    title: "Japan Medical Research — Fieldwork Guide & Tips",
+    filename: "Japan_medical_research_guide_and_tips_by_Seed_Planning.pdf",
+    category: "Fieldwork & Moderation",
+    tags: ["localization","moderation","screeners","translation"],
+    summary: "Everything we wish overseas teams knew before fieldwork in Japan: local moderators, Japan‑specific screeners, disclosure around recording/privacy, and the level of detail needed in Japanese study materials to build trust and reduce drop‑outs.",
+    id: "fieldwork-guide",
+    type: "pdf"
+  }
+];
+
+// ---- Get FAQ Data ----
+function getAllFAQs(){
+  try { if (Array.isArray(window.FAQS) && window.FAQS.length) return window.FAQS; } catch(e){}
+  return [];
+}
+
+const FAQS = getAllFAQs().map(faq => ({...faq, type: 'faq'}));
+const ALL_CONTENT = [...docs, ...FAQS];
+
+// ---- Cross-reference mapping ----
+const CROSS_REFERENCES = {
+  "Q1": ["insurance-guide", "faq-guide"],
+  "Q2": ["insurance-guide", "pricing-guide"],
+  "Q3": ["insurance-guide"],
+  "Q12": ["privacy-guide"],
+  "Q13": ["privacy-guide"],
+  "Q14": ["privacy-guide"],
+  "Q25": ["patient-guide"],
+  "Q26": ["patient-guide"],
+  "Q27": ["patient-guide"],
+  "Q45": ["oncology-guide"],
+  "Q46": ["oncology-guide"]
+};
+
+// ---- Utility Functions ----
+const escapeHTML = (s) => String(s||"").replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m]));
+const fileUrl = (name) => "/pdf/" + encodeURIComponent(name);
+
+// ---- Search Functionality ----
+function searchContent(query) {
+  if (!query.trim()) return ALL_CONTENT;
+  
+  const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+  
+  return ALL_CONTENT.filter(item => {
+    const searchText = [
+      item.title || '',
+      item.summary || '',
+      item.question || '',
+      item.answer || '',
+      item.category || '',
+      (item.tags || []).join(' ')
+    ].join(' ').toLowerCase();
+    
+    return terms.some(term => searchText.includes(term));
+  }).sort((a, b) => {
+    // Priority: FAQ first, then PDFs
+    if (a.type !== b.type) {
+      return a.type === 'faq' ? -1 : 1;
+    }
+    return 0;
+  });
+}
+
+// ---- Render Functions ----
+function renderCard(item) {
+  const isOnline = item.site && item.site.includes('yoshi-seed.github.io');
+  
+  if (item.type === 'faq') {
+    const crossRefs = CROSS_REFERENCES[item.id] || [];
+    const crossRefLinks = crossRefs.map(ref => {
+      const doc = docs.find(d => d.id === ref);
+      return doc ? `<a href="${fileUrl(doc.filename)}" class="cross-ref" target="_blank">${doc.title}</a>` : '';
+    }).filter(Boolean).join(', ');
+    
+    const answerPreview = item.answer.length > 200 ? item.answer.slice(0, 200) + '...' : item.answer;
+    
+    return `
+      <div class="content-card">
+        <div class="card-type">FAQ</div>
+        <h3 class="card-title">${escapeHTML(item.question)}</h3>
+        <p class="card-summary">${escapeHTML(answerPreview)}</p>
+        ${crossRefLinks ? `<p style="font-size: 12px; color: var(--muted);"><strong>Related PDFs:</strong> ${crossRefLinks}</p>` : ''}
+        <div class="card-actions">
+          ${isOnline ? `<a href="${item.site}" class="btn" target="_blank">View Online</a>` : ''}
+          <a href="article.html?id=${encodeURIComponent(item.id)}" class="btn secondary">Full Answer</a>
+        </div>
+      </div>
+    `;
+  } else {
+    return `
+      <div class="content-card">
+        <div class="card-type">PDF</div>
+        <h3 class="card-title">${escapeHTML(item.title)}</h3>
+        <p class="card-summary">${escapeHTML(item.summary)}</p>
+        <div class="card-actions">
+          <a href="${fileUrl(item.filename)}" class="btn" target="_blank">Download PDF</a>
+          ${item.site ? `<a href="${item.site}" class="btn secondary" target="_blank">View Online</a>` : ''}
+        </div>
+      </div>
+    `;
+  }
+}
+
+function renderContent(items, containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  
+  if (items.length === 0) {
+    container.innerHTML = '<div class="empty">No matching content found.</div>';
+    return;
+  }
+  
+  container.innerHTML = '<div class="cards-grid">' + items.map(renderCard).join('') + '</div>';
+}
+
+// ---- Tab Management ----
+function showTab(tabName) {
+  let content;
+  
+  switch(tabName) {
+    case 'resources':
+      content = docs;
+      break;
+    case 'faq':
+      content = FAQS;
+      break;
+    case 'all':
+      content = ALL_CONTENT;
+      break;
+    default:
+      return;
+  }
+  
+  renderContent(content, tabName + '-content');
+}
+
+// ---- Event Listeners ----
+document.querySelectorAll('.nav-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    // Update active tab
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    
+    // Show corresponding content
+    document.querySelectorAll('.content-area').forEach(area => area.classList.remove('active'));
+    const targetContent = document.getElementById(tab.dataset.tab + '-content');
+    if (targetContent) {
+      targetContent.classList.add('active');
+      showTab(tab.dataset.tab);
+    }
+  });
+});
+
+// Unified search
+document.getElementById('unified-search').addEventListener('input', (e) => {
+  const query = e.target.value;
+  const results = searchContent(query);
+  
+  // Update all tab contents with search results
+  renderContent(results.filter(item => item.type === 'pdf'), 'resources-content');
+  renderContent(results.filter(item => item.type === 'faq'), 'faq-content');
+  renderContent(results, 'all-content');
+});
+
+// Focus area navigation
+document.querySelectorAll('[data-focus]').forEach(card => {
+  card.addEventListener('click', () => {
+    const focus = card.dataset.focus;
+    let searchTerms = '';
+    
+    switch(focus) {
+      case 'patient':
+        searchTerms = 'patient recruitment consent privacy';
+        break;
+      case 'hcp':
+        searchTerms = 'HCP oncology fieldwork moderation';
+        break;
+      case 'system':
+        searchTerms = 'insurance pricing healthcare system';
+        break;
+      case 'compliance':
+        searchTerms = 'APPI privacy compliance legal';
+        break;
+    }
+    
+    document.getElementById('unified-search').value = searchTerms;
+    const results = searchContent(searchTerms);
+    
+    // Switch to All tab and show results
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.querySelector('[data-tab="all"]').classList.add('active');
+    document.querySelectorAll('.content-area').forEach(area => area.classList.remove('active'));
+    document.getElementById('all-content').classList.add('active');
+    
+    renderContent(results, 'all-content');
+  });
+});
+
+// ---- Initialize ----
+document.addEventListener('DOMContentLoaded', () => {
+  showTab('resources');
+  showTab('faq');
+  showTab('all');
+});
+</script>
+</body>
+</html>
