@@ -252,6 +252,11 @@
     font-weight: 500;
   }
   
+  /* Search visibility control */
+  .unified-search.hidden {
+    display: none;
+  }
+  
   /* Responsive */
   @media (max-width: 768px) {
     .nav-tabs {
@@ -338,30 +343,6 @@
           <div class="card-actions">
             <a href="#" class="btn">Start Here</a>
           </div>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Popular Starting Points -->
-    <h2 style="color: var(--accent-2); margin-bottom: 20px;">🚀 Popular Starting Points</h2>
-    <div class="cards-grid">
-      <div class="content-card">
-        <div class="card-type">FAQ + PDF</div>
-        <h3 class="card-title">APPI & Privacy Requirements</h3>
-        <p class="card-summary">Complete guide covering <span class="cross-ref">FAQ #12-18</span> plus detailed PDF implementation guide.</p>
-        <div class="card-actions">
-          <a href="#" class="btn">View FAQ</a>
-          <a href="#" class="btn secondary">Download PDF</a>
-        </div>
-      </div>
-      
-      <div class="content-card">
-        <div class="card-type">FAQ + PDF</div>
-        <h3 class="card-title">Patient Recruitment in Japan</h3>
-        <p class="card-summary">Cultural best practices from <span class="cross-ref">FAQ #25-31</span> with comprehensive recruitment playbook.</p>
-        <div class="card-actions">
-          <a href="#" class="btn">View FAQ</a>
-          <a href="#" class="btn secondary">Download PDF</a>
         </div>
       </div>
     </div>
@@ -601,19 +582,42 @@ function showTab(tabName) {
   renderContent(content, containerId);
 }
 
+// ---- Search Box Visibility Control ----
+function toggleSearchBox(show) {
+  const searchBox = document.querySelector('.unified-search');
+  if (!searchBox) return;
+  
+  if (show) {
+    searchBox.classList.remove('hidden');
+  } else {
+    searchBox.classList.add('hidden');
+  }
+}
+
 // ---- Event Listeners ----
 document.querySelectorAll('.nav-tab').forEach(tab => {
   tab.addEventListener('click', () => {
+    const tabName = tab.dataset.tab;
+    
     // Update active tab
     document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
     
+    // Control search box visibility
+    if (tabName === 'guide') {
+      toggleSearchBox(false); // Hide search box for Guided Start
+    } else {
+      toggleSearchBox(true);  // Show search box for other tabs
+    }
+    
     // Show corresponding content
     document.querySelectorAll('.content-area').forEach(area => area.classList.remove('active'));
-    const targetContent = document.getElementById(tab.dataset.tab + '-content');
+    const targetContent = document.getElementById(tabName + '-content');
     if (targetContent) {
       targetContent.classList.add('active');
-      showTab(tab.dataset.tab);
+      if (tabName !== 'guide') {
+        showTab(tabName);
+      }
     }
   });
 });
@@ -686,6 +690,9 @@ document.addEventListener('DOMContentLoaded', () => {
   showTab('resources');
   showTab('faq'); 
   showTab('all');
+  
+  // Hide search box initially (Guided Start is active by default)
+  toggleSearchBox(false);
   
   console.log('Hub initialized with', ALL_CONTENT.length, 'total items');
   console.log('FAQ items:', FAQS.length);
