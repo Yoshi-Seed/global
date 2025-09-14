@@ -1,21 +1,8 @@
 {
-  "functions": {
-    "src/index.tsx": {
-      "runtime": "@vercel/node"
-    }
-  },
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "dest": "/src/index.tsx"
-    },
-    {
-      "src": "/static/(.*)",
-      "dest": "/public/static/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/src/index.tsx"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }

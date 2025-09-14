@@ -1,5 +1,5 @@
 // Vercel API Route for Health Check
-export default function handler(req, res) {
+module.exports = function handler(req, res) {
   // CORS headers
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
