@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize first message
     setTimeout(() => {
         if (agreeTerms.checked) {
-            addMessage('ai', 'こんにちは！医療系マーケットリサーチに関するご質問やお困りごとがございましたら、お気軽にお聞かせください。\n\n※このチャットでは医学的助言は提供できません。健康に関する具体的なご相談は医療従事者にお尋ねください。');
+            addMessage('ai', 'こんにちは！私はFeasibility Bot Yoshiです。医療系マーケットリサーチのフィージビリティスタディに関する専門的なご相談にお答えします。\n\n研究計画の実現可能性評価、規制要件の確認、被験者募集戦略、予算・タイムライン策定など、どのような点でもお気軽にご質問ください。');
         }
     }, 500);
 });

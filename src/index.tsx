@@ -5,6 +5,7 @@ import { serveStatic } from 'hono/cloudflare-workers'
 
 type Bindings = {
   OPENAI_API_KEY: string
+  ASSISTANT_ID?: string
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
@@ -68,7 +69,10 @@ const filterContent = (content: string): { safe: boolean; message?: string } => 
   return { safe: true }
 }
 
-// Chat API endpoint
+// Store for Assistant threads
+const threadStore = new Map<string, string>()
+
+// Chat API endpoint - Assistants API for Custom GPT Integration
 app.post('/api/chat', rateLimit(10, 60000), async (c) => {
   try {
     const { message, conversationId } = await c.req.json()
@@ -91,60 +95,186 @@ app.post('/api/chat', rateLimit(10, 60000), async (c) => {
       console.error('OpenAI API key not configured')
       return c.json({ error: 'サービスが一時的に利用できません' }, 500)
     }
+
+    // Create or get existing thread
+    let threadId = threadStore.get(conversationId || 'default')
     
-    // System prompt for medical research context
-    const systemPrompt = `あなたは医療系マーケットリサーチ会社のAIアシスタントです。
+    if (!threadId) {
+      // Create new thread
+      const threadResponse = await fetch('https://api.openai.com/v1/threads', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+          'OpenAI-Beta': 'assistants=v2'
+        },
+        body: JSON.stringify({})
+      })
+      
+      if (!threadResponse.ok) {
+        console.error('Failed to create thread')
+        return c.json({ error: 'スレッド作成に失敗しました' }, 500)
+      }
+      
+      const thread = await threadResponse.json()
+      threadId = thread.id
+      threadStore.set(conversationId || 'default', threadId)
+    }
 
-重要な制限事項：
-- 医療診断、治療法の推奨、薬の処方に関する質問には答えません
-- 緊急医療が必要と判断される場合は、直ちに医療機関受診を促します  
-- 一般的な健康情報の提供に留め、個別の医学的助言は行いません
-
-対応可能な内容：
-- 医療業界の一般的な情報提供
-- マーケットリサーチに関する質問
-- 会社や研究に関する一般的な案内
-
-すべての回答の最後に以下を追加してください：
-「※このチャットでは医学的助言は提供できません。健康に関する具体的なご相談は医療従事者にお尋ねください。」`
-
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    // Add message to thread
+    const messageResponse = await fetch(`https://api.openai.com/v1/threads/${threadId}/messages`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
+        'OpenAI-Beta': 'assistants=v2'
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: message }
-        ],
-        max_tokens: 1000,
-        temperature: 0.7,
-        stream: false
+        role: 'user',
+        content: message
       })
     })
-    
-    if (!response.ok) {
-      const error = await response.text()
-      console.error('OpenAI API error:', error)
-      return c.json({ error: '申し訳ございませんが、一時的にサービスが利用できません' }, 500)
+
+    if (!messageResponse.ok) {
+      console.error('Failed to add message')
+      return c.json({ error: 'メッセージ追加に失敗しました' }, 500)
     }
-    
-    const data = await response.json()
-    const aiResponse = data.choices[0]?.message?.content || 'すみません、回答を生成できませんでした。'
-    
-    return c.json({ 
-      response: aiResponse,
-      conversationId: conversationId || `conv_${Date.now()}_${Math.random().toString(36).substring(2)}`
+
+    // Create assistant if not exists (or use existing)
+    const assistantId = c.env.ASSISTANT_ID || await createFeasibilityAssistant(apiKey)
+
+    // Run the assistant
+    const runResponse = await fetch(`https://api.openai.com/v1/threads/${threadId}/runs`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'OpenAI-Beta': 'assistants=v2'
+      },
+      body: JSON.stringify({
+        assistant_id: assistantId
+      })
     })
+
+    if (!runResponse.ok) {
+      console.error('Failed to run assistant')
+      return c.json({ error: 'アシスタント実行に失敗しました' }, 500)
+    }
+
+    const run = await runResponse.json()
     
+    // Poll for completion
+    let runStatus = run.status
+    let attempts = 0
+    const maxAttempts = 30
+    
+    while (runStatus === 'in_progress' || runStatus === 'queued') {
+      if (attempts >= maxAttempts) {
+        return c.json({ error: 'タイムアウトしました' }, 500)
+      }
+      
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      const statusResponse = await fetch(`https://api.openai.com/v1/threads/${threadId}/runs/${run.id}`, {
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'OpenAI-Beta': 'assistants=v2'
+        }
+      })
+      
+      const statusData = await statusResponse.json()
+      runStatus = statusData.status
+      attempts++
+    }
+
+    if (runStatus !== 'completed') {
+      return c.json({ error: 'アシスタントの実行が失敗しました' }, 500)
+    }
+
+    // Get messages
+    const messagesResponse = await fetch(`https://api.openai.com/v1/threads/${threadId}/messages`, {
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'OpenAI-Beta': 'assistants=v2'
+      }
+    })
+
+    const messagesData = await messagesResponse.json()
+    const assistantMessage = messagesData.data[0]
+    
+    if (assistantMessage && assistantMessage.role === 'assistant') {
+      const content = assistantMessage.content[0]?.text?.value || 'すみません、回答を生成できませんでした。'
+      
+      return c.json({ 
+        response: content,
+        conversationId: conversationId || `conv_${Date.now()}_${Math.random().toString(36).substring(2)}`
+      })
+    }
+
+    return c.json({ error: 'レスポンスの取得に失敗しました' }, 500)
   } catch (error) {
     console.error('Chat API error:', error)
     return c.json({ error: '内部エラーが発生しました' }, 500)
   }
 })
+
+// Create Feasibility Assistant
+async function createFeasibilityAssistant(apiKey: string): Promise<string> {
+  const response = await fetch('https://api.openai.com/v1/assistants', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+      'OpenAI-Beta': 'assistants=v2'
+    },
+    body: JSON.stringify({
+      name: 'Feasibility Bot Yoshi',
+      instructions: `You are "Feasibility Bot Yoshi", a specialized AI assistant for medical market research feasibility studies.
+
+Your expertise includes:
+- Medical market research methodology and design
+- Regulatory compliance in healthcare research (FDA, EMA, PMDA)
+- Patient recruitment strategies and site selection
+- Clinical trial feasibility assessment
+- Medical device and pharmaceutical research operations
+- Healthcare data analysis and statistical insights
+- Research operations and project management
+- Budget planning and resource allocation
+- Timeline estimation and milestone planning
+
+Key capabilities:
+- Assess feasibility of research projects
+- Provide regulatory guidance
+- Recommend study methodologies
+- Analyze market potential
+- Evaluate operational challenges
+- Suggest risk mitigation strategies
+
+Communication style:
+- Always respond in Japanese unless specifically requested otherwise
+- Professional yet approachable tone
+- Detail-oriented with practical implementation focus
+- Provide actionable insights and specific recommendations
+- Consider ethical and regulatory requirements
+- Focus on real-world implementation challenges
+
+Medical research context:
+- Understand the complexity of healthcare regulations
+- Recognize cultural differences in medical practices
+- Consider patient safety and privacy requirements
+- Acknowledge limitations and recommend professional consultation when appropriate`,
+      model: 'gpt-4o-mini',
+      temperature: 0.7
+    })
+  })
+
+  if (!response.ok) {
+    throw new Error('Failed to create assistant')
+  }
+
+  const assistant = await response.json()
+  return assistant.id
+}
 
 // Health check
 app.get('/api/health', (c) => {
@@ -188,9 +318,13 @@ app.get('/', (c) => {
             <div class="bg-white rounded-lg shadow-md p-6 mb-6">
                 <h1 class="text-2xl font-bold text-gray-800 mb-2">
                     <i class="fas fa-stethoscope text-blue-600 mr-2"></i>
-                    医療系リサーチ AI チャット
+                    Feasibility Bot Yoshi
                 </h1>
-                <p class="text-gray-600">医療業界やマーケットリサーチに関するご質問にお答えします</p>
+                <p class="text-gray-600 mb-2">医療系マーケットリサーチのフィージビリティスタディ専門AIアシスタント</p>
+                <div class="text-sm text-blue-600 bg-blue-50 px-3 py-1 rounded-full inline-block">
+                    <i class="fas fa-robot mr-1"></i>
+                    カスタムGPT統合版
+                </div>
             </div>
 
             <!-- 利用規約・注意事項 -->
