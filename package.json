@@ -1,5 +1,6 @@
 {
-  "name": "feasibility",
+  "name": "feasibility-bot-yoshi",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -7,6 +8,7 @@
     "build": "vite build",
     "preview": "wrangler pages dev dist",
     "deploy": "npm run build && wrangler pages deploy dist",
+    "deploy:vercel": "vercel --prod",
     "deploy:prod": "npm run build && wrangler pages deploy dist --project-name feasibility-chat",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
     "clean-port": "fuser -k 3000/tcp 2>/dev/null || true",

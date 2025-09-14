@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feasibility Bot Yoshi - 医療系リサーチAIチャット</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+      .chat-container {
+        height: 500px;
+        overflow-y: auto;
+      }
+      .message {
+        animation: fadeIn 0.3s ease-in;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .typing-indicator {
+        display: none;
+      }
+      .typing-indicator.active {
+        display: block;
+      }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <!-- Header -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h1 class="text-2xl font-bold text-gray-800 mb-2">
+                <i class="fas fa-stethoscope text-blue-600 mr-2"></i>
+                Feasibility Bot Yoshi
+            </h1>
+            <p class="text-gray-600 mb-2">医療系マーケットリサーチのフィージビリティスタディ専門AIアシスタント</p>
+            <div class="text-sm text-blue-600 bg-blue-50 px-3 py-1 rounded-full inline-block">
+                <i class="fas fa-robot mr-1"></i>
+                カスタムGPT統合版 - Powered by Vercel
+            </div>
+        </div>
+
+        <!-- 利用規約・注意事項 -->
+        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6" id="disclaimer">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm text-yellow-800">
+                        <strong>重要な注意事項：</strong><br>
+                        • このチャットは情報提供のみを目的としており、医学的助言や診断は提供しません<br>
+                        • 健康に関する具体的なご相談は必ず医療従事者にお尋ねください<br>
+                        • 緊急時は119番または最寄りの医療機関にご連絡ください<br>
+                        • 会話ログは24時間後に自動削除されます
+                    </p>
+                    <div class="mt-3">
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" id="agreeTerms" class="form-checkbox">
+                            <span class="ml-2 text-sm text-yellow-800">上記の注意事項に同意してチャットを開始します</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Interface -->
+        <div class="bg-white rounded-lg shadow-md" id="chatInterface" style="display: none;">
+            <!-- Messages -->
+            <div class="chat-container p-4 border-b" id="chatMessages">
+                <div class="message text-center text-gray-500 text-sm">
+                    チャットを開始してください
+                </div>
+            </div>
+
+            <!-- Typing Indicator -->
+            <div class="typing-indicator p-4 border-b">
+                <div class="flex items-center text-gray-500">
+                    <div class="flex space-x-1">
+                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s;"></div>
+                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s;"></div>
+                    </div>
+                    <span class="ml-2">回答を生成中...</span>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="p-4">
+                <div class="flex space-x-2">
+                    <input 
+                        type="text" 
+                        id="messageInput" 
+                        placeholder="フィージビリティスタディに関するご質問をどうぞ..."
+                        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        maxlength="500"
+                    >
+                    <button 
+                        id="sendButton"
+                        class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400"
+                    >
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="text-xs text-gray-500 mt-2">
+                    <span id="charCount">0</span>/500文字 | 1分間に10回まで送信可能
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-6 text-center text-gray-500 text-sm">
+            <p>Powered by OpenAI Assistants API • Deployed on Vercel • 
+            <a href="https://github.com/Yoshi-Seed/global" target="_blank" class="text-blue-500 hover:underline">
+                <i class="fab fa-github mr-1"></i>GitHub
+            </a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Chat functionality for Vercel deployment
+        let conversationId = null;
+        let isLoading = false;
+
+        // DOM elements
+        const agreeTerms = document.getElementById('agreeTerms');
+        const disclaimer = document.getElementById('disclaimer');
+        const chatInterface = document.getElementById('chatInterface');
+        const chatMessages = document.getElementById('chatMessages');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const typingIndicator = document.querySelector('.typing-indicator');
+        const charCount = document.getElementById('charCount');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Terms agreement handler
+            agreeTerms.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                    disclaimer.style.display = 'none';
+                    chatInterface.style.display = 'block';
+                    messageInput.focus();
+                    // Add welcome message
+                    setTimeout(() => {
+                        addMessage('ai', 'こんにちは！私はFeasibility Bot Yoshiです。医療系マーケットリサーチのフィージビリティスタディに関する専門的なご相談にお答えします。\\n\\n研究計画の実現可能性評価、規制要件の確認、被験者募集戦略、予算・タイムライン策定など、どのような点でもお気軽にご質問ください。');
+                    }, 500);
+                } else {
+                    disclaimer.style.display = 'block';
+                    chatInterface.style.display = 'none';
+                }
+            });
+
+            // Character count
+            messageInput.addEventListener('input', (e) => {
+                charCount.textContent = e.target.value.length;
+                sendButton.disabled = isLoading || e.target.value.trim().length === 0;
+            });
+
+            // Send on Enter
+            messageInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            // Send button click
+            sendButton.addEventListener('click', sendMessage);
+        });
+
+        // Send message function
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            
+            if (!message || isLoading) return;
+
+            // Add user message
+            addMessage('user', message);
+            messageInput.value = '';
+            charCount.textContent = '0';
+            
+            // Show typing indicator
+            setLoading(true);
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        conversationId: conversationId
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'リクエストに失敗しました');
+                }
+
+                // Update conversation ID
+                if (data.conversationId) {
+                    conversationId = data.conversationId;
+                }
+
+                // Add AI response
+                addMessage('ai', data.response, data.filtered);
+
+            } catch (error) {
+                console.error('Chat error:', error);
+                addMessage('ai', 'すみません、一時的にサービスが利用できません。しばらく経ってから再度お試しください。', false, true);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        // Add message to chat
+        function addMessage(sender, content, filtered = false, isError = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message mb-4 ${sender === 'user' ? 'text-right' : 'text-left'}`;
+
+            const contentClass = sender === 'user' 
+                ? 'inline-block bg-blue-600 text-white px-4 py-2 rounded-lg max-w-xs lg:max-w-md'
+                : isError
+                ? 'inline-block bg-red-100 text-red-800 px-4 py-2 rounded-lg max-w-xs lg:max-w-md border border-red-200'
+                : filtered
+                ? 'inline-block bg-yellow-100 text-yellow-800 px-4 py-2 rounded-lg max-w-xs lg:max-w-md border border-yellow-200'
+                : 'inline-block bg-gray-200 text-gray-800 px-4 py-2 rounded-lg max-w-xs lg:max-w-md';
+
+            const icon = sender === 'user' 
+                ? '<i class="fas fa-user mr-2"></i>'
+                : isError
+                ? '<i class="fas fa-exclamation-triangle mr-2"></i>'
+                : filtered
+                ? '<i class="fas fa-shield-alt mr-2"></i>'
+                : '<i class="fas fa-robot mr-2"></i>';
+
+            messageDiv.innerHTML = `
+                <div class="${contentClass}">
+                    ${sender === 'ai' ? icon : ''}
+                    <span>${formatMessage(content)}</span>
+                    ${sender === 'user' ? icon : ''}
+                </div>
+                <div class="text-xs text-gray-500 mt-1">
+                    ${new Date().toLocaleTimeString('ja-JP')}
+                </div>
+            `;
+
+            // Clear initial message
+            if (chatMessages.children.length === 1 && chatMessages.children[0].textContent.includes('チャットを開始')) {
+                chatMessages.innerHTML = '';
+            }
+
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Format message content
+        function formatMessage(content) {
+            return content
+                .replace(/\\n/g, '<br>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>');
+        }
+
+        // Set loading state
+        function setLoading(loading) {
+            isLoading = loading;
+            sendButton.disabled = loading || messageInput.value.trim().length === 0;
+            
+            if (loading) {
+                typingIndicator.classList.add('active');
+                messageInput.disabled = true;
+            } else {
+                typingIndicator.classList.remove('active');
+                messageInput.disabled = false;
+                messageInput.focus();
+            }
+        }
+
+        // Auto-scroll on new messages
+        const observer = new MutationObserver(() => {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        });
+
+        observer.observe(chatMessages, { childList: true });
+    </script>
+</body>
+</html>
