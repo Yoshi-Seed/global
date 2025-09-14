@@ -7,8 +7,9 @@
 - **特徴**: OpenAI Assistants APIによるカスタムGPT機能の完全再現
 
 ## 🌐 アクセスURL
+- **GitHubリポジトリ**: https://github.com/Yoshi-Seed/global
+- **Vercelデプロイ準備完了**: 🚀 デプロイ手順は下記参照
 - **開発環境**: https://3000-i4g36odu0vp1yp88nd5yg-6532622b.e2b.dev
-- **APIヘルスチェック**: https://3000-i4g36odu0vp1yp88nd5yg-6532622b.e2b.dev/api/health
 
 ## 🏗️ アーキテクチャ
 
@@ -111,15 +112,42 @@ fetch('/api/chat', {
 ```
 
 ## 🔧 技術仕様
-- **Platform**: Cloudflare Pages + Workers
-- **Framework**: Hono (TypeScript)
-- **Frontend**: Vanilla JS + Tailwind CSS
-- **AI**: OpenAI GPT-4o-mini
-- **Build**: Vite
-- **Deployment**: Wrangler CLI
+- **Platform**: Vercel (Node.js Serverless Functions)
+- **Framework**: Pure JavaScript (Vercel Functions)
+- **Frontend**: Vanilla JS + Tailwind CSS + HTML
+- **AI**: OpenAI Assistants API + GPT-4o-mini
+- **API Routes**: `/api/chat`, `/api/health`
+- **Deployment**: Vercel
+
+## 🚀 Vercelデプロイ手順
+
+### 1. Vercelアカウント準備
+1. https://vercel.com にアクセス
+2. 「Continue with GitHub」でログイン
+3. GitHubアカウントで認証完了
+
+### 2. プロジェクトインポート
+1. Vercelダッシュボードで「New Project」クリック
+2. 「Import Git Repository」から `Yoshi-Seed/global` を選択
+3. プロジェクト名: `feasibility-bot-yoshi` 
+4. Framework: **Other** を選択
+5. Root Directory: **そのまま**（空欄）
+
+### 3. 環境変数設定（重要）
+**Environment Variables** セクションで以下を設定：
+```
+Name: OPENAI_API_KEY
+Value: [あなたのOpenAI APIキー]
+```
+
+### 4. デプロイ実行
+1. 「Deploy」ボタンをクリック
+2. 数分でデプロイ完了
+3. 生成されたURL（例：https://feasibility-bot-yoshi.vercel.app）でアクセス
 
 ## 📈 デプロイメント
-- **ステータス**: ✅ アクティブ（開発環境）
+- **ステータス**: 🚀 Vercel デプロイ準備完了
+- **GitHub**: ✅ プッシュ完了
 - **最終更新**: 2025-09-14
 
 ## 🤖 カスタムGPT統合仕様
