@@ -112,12 +112,12 @@ fetch('/api/chat', {
 ```
 
 ## 🔧 技術仕様
-- **Platform**: Vercel (Node.js Serverless Functions)
-- **Framework**: Pure JavaScript (Vercel Functions)
-- **Frontend**: Vanilla JS + Tailwind CSS + HTML
+- **Platform**: Vercel (静的サイト + Serverless Functions)
+- **Frontend**: Pure HTML + Vanilla JS + Tailwind CSS
+- **Backend**: Node.js Serverless Functions
 - **AI**: OpenAI Assistants API + GPT-4o-mini
-- **API Routes**: `/api/chat`, `/api/health`
-- **Deployment**: Vercel
+- **API Routes**: `/api/chat.js`, `/api/health.js`
+- **構成**: 依存関係なし（Pure JavaScript）
 
 ## 🚀 Vercelデプロイ手順
 

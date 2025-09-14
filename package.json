@@ -1,12 +1,16 @@
 {
   "name": "feasibility-bot-yoshi",
   "version": "1.0.0",
+  "description": "Feasibility Bot Yoshi - Medical Research AI Chat",
   "main": "index.html",
   "scripts": {
-    "start": "node --version"
+    "start": "vercel dev",
+    "deploy": "vercel --prod"
   },
-  "dependencies": {},
+  "keywords": ["ai", "chat", "medical", "research", "feasibility"],
+  "author": "Yoshi",
+  "license": "MIT",
   "engines": {
-    "node": "18.x"
+    "node": ">=18.0.0"
   }
 }

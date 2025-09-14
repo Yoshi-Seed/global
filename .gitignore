@@ -1,28 +1,18 @@
 # Dependencies
 node_modules/
+package-lock.json
 
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
-
-# Compiled binary addons (https://nodejs.org/api/addons.html)
-build
-dist
-
-# dotenv environment variables file
+# Environment variables
 .env
-.dev.vars
+.env.local
+.env.production
 
-# PM2
-.pm2/
-pids/
-logs/
+# Vercel
+.vercel
+
+# Logs
 *.log
-
-# Wrangler
-.wrangler/
+logs/
 
 # Backup files
 *.backup
@@ -30,8 +20,6 @@ logs/
 *.tar.gz
 *.zip
 
-# MacOS
+# OS
 .DS_Store
-
-# Windows
 Thumbs.db
