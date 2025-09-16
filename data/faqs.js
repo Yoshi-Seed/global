@@ -95,17 +95,17 @@
     {
       id: "Q17",
       question: "What types of medical institutions exist in Japan?",
-      answer: "In Japan, the healthcare system is primarily structured around a two-tier model consisting of hospitals (70%) and clinics (30%). Hospitals have 20+ beds; clinics have fewer than 20 and are often privately operated."
+      answer: "In Japan, the healthcare system is primarily structured around a two-tier model consisting of hospitals (70%) and clinics (30%, also referred to as \\\"shinryojo\\\").\\n• Hospitals: These are relatively large-scale medical institutions with inpatient facilities of 20 beds or more.\\n• Clinics/Shinryojo: These have fewer than 20 beds and are often privately operated by individual physicians. They are commonly found in local neighborhoods and provide primary care and routine medical services.\\nUnlike countries such as the United States or Germany, Japan has fewer mid-sized regional medical centers and a higher number of small-scale facilities. This decentralized distribution of medical functions across facilities is a unique characteristic of Japan's system, but it also presents challenges in terms of integrated healthcare management."
     },
     {
       id: "Q18",
       question: "How do patients in Japan choose medical institutions?",
-      answer: "Patients can freely choose and directly access clinics and hospitals without referral letters. There is no strong gatekeeper system, so patients often go straight to specialists or large hospitals."
+      answer: "Patients in Japan have the freedom to choose hospitals and clinics and can consult them directly without a referral letter. Clinics primarily handle primary care (initial consultations), but patients can also directly access hospitals for more serious conditions based on their own judgment. In some regions, university hospitals and similar institutions offer outpatient services, and many patients seek direct consultations with highly specialized physicians. Unlike in Western countries, Japan does not have a formal \\\"gatekeeper system\\\" where patients must sequentially consult a family doctor, then a specialist, and finally a large hospital."
     },
     {
       id: "Q19",
       question: "What is the number of hospital beds and the availability of medical equipment (such as MRI machines) in Japan?",
-      answer: "Japan has a very high number of hospital beds per capita and a high availability of MRI machines and usage frequency compared with many countries. These factors can matter in study design and targeting."
+      answer: "Japan has an exceptionally high number of hospital beds per capita—more than four times that of the United States. The number of installed MRI machines and the frequency of MRI examinations are also remarkable: approximately eight times higher than in the UK and 1.3 times higher than in the US, making Japan one of the world leaders in both the prevalence and utilization of medical equipment. When conducting research, factors such as hospital size (number of beds) and the availability of medical equipment may serve as important criteria in study design."
     },
     {
       id: "Q20",
@@ -125,7 +125,7 @@
     {
       id: "Q23",
       question: "Do physicians in Japan see a high number of patients or handle a large number of consultations per doctor?",
-      answer: "Yes. Physicians handle many outpatient visits annually and wear multiple hats (consults, paperwork, meetings). Scheduling research often requires flexibility due to limited free time."
+      answer: "Yes, the number is high even by international standards. In Japan, physicians typically handle a wide range of tasks themselves—including consultations, paperwork, meetings, teaching, and emergency care—without task specialization. This creates an environment where the workload tends to be highly concentrated.\\nAnnual number of outpatient visits per physician:\\n• USA: approx. 1,538 cases/physician\\n• Japan: approx. 5,333 cases/physician\\nNote: Japanese physicians often operate in a system where they must see many patients simultaneously. As a result, they often have limited availability to participate in research, so flexibility in scheduling is essential when engaging them in interviews or surveys."
     },
     {
       id: "Q24",
@@ -145,12 +145,12 @@
     {
       id: "Q27",
       question: "Which physicians are responsible for treating cancer patients in Japan?",
-      answer: "There are relatively few medical oncologists; organ-specific surgeons and specialists often manage from surgery through chemotherapy, providing continuity of care."
+      answer: "In Japan, there are relatively few medical oncologists. Instead, organ-specific surgeons (such as breast surgeons, gastrointestinal surgeons, or urologists) are often responsible for the entire treatment process, from surgery to chemotherapy. As a result, patients usually receive continuous care from the same specialist throughout their treatment, which is regarded as enhancing continuity of care and providing patients with a greater sense of reassurance."
     },
     {
       id: "Q28",
       question: "What is the current situation regarding the number and role of medical oncologists in Japan?",
-      answer: "Medical oncologist certification began in 2006; numbers remain limited. They tend to handle newer therapies and complex cases."
+      answer: "Certification for medical oncologists began in 2006, but as of 2020 there are only about 1,455 specialists nationwide, and many hospitals still do not have them. As a result, medical oncologists in Japan mainly handle new therapies (such as immunotherapy and molecular targeted agents) and complex cases."
     },
     {
       id: "Q29",
