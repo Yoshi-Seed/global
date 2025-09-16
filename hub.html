@@ -456,7 +456,7 @@ const docs = [
   },
   {
     title: "Insights into Japan's Universal Health Insurance System",
-    filename: "Insights_into_Japan's_Universal_Health_Insurance_System_by_Seed_Planning.pdf",
+    filename: "Japan_insurance_system_summary_Drug_Pricing_Process_by_Seed_Planning.pdf",
     category: "Insurance & Access",
     tags: ["universal coverage","free access","fee schedule"],
     summary: "How Japan's universal coverage, low co-pays, and nationwide fee schedule shape provider incentives and patient behavior. What this means for research access, HCP availability, and why non-reimbursed activities can be hard to drive without clear value or support.",
@@ -545,7 +545,7 @@ const CROSS_REFERENCES = {
 
 // ---- Utility Functions ----
 const escapeHTML = (s) => String(s||"").replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m]));
-const fileUrl = (name) => "/pdf/" + encodeURIComponent(name);
+const fileUrl = (name) => "https://yoshi-seed.github.io/pdf/" + encodeURIComponent(name);
 
 // ---- Search Functionality ----
 function searchContent(query, currentTab = null) {
@@ -693,12 +693,8 @@ function renderCard(item, searchTerms = []) {
     const crossRefLinks = crossRefs.map(ref => {
       const doc = docs.find(d => d.id === ref);
       if (!doc) return '';
-      // Use online site link if available, otherwise show title without link
-      if (doc.site) {
-        return `<a href="${doc.site}" class="cross-ref" target="_blank">${doc.title}</a>`;
-      } else {
-        return `<span class="cross-ref" style="background: var(--chip); cursor: default;">${doc.title}</span>`;
-      }
+      // Prefer PDF link, fallback to online site
+      return `<a href="${fileUrl(doc.filename)}" class="cross-ref" target="_blank">${doc.title}</a>`;
     }).filter(Boolean).join(', ');
     
     const answerPreview = item.answer.length > 200 ? item.answer.slice(0, 200) + '...' : item.answer;
@@ -722,8 +718,8 @@ function renderCard(item, searchTerms = []) {
         <h3 class="card-title">${escapeHTML(item.title)}</h3>
         <p class="card-summary">${escapeHTML(item.summary)}</p>
         <div class="card-actions">
-          ${item.site ? `<a href="${item.site}" class="btn" target="_blank">View Online</a>` : ''}
-          <span class="btn secondary" style="opacity: 0.5; cursor: not-allowed;" title="PDF file not available">PDF Not Available</span>
+          <a href="${fileUrl(item.filename)}" class="btn" target="_blank">📄 Download PDF</a>
+          ${item.site ? `<a href="${item.site}" class="btn secondary" target="_blank">View Online</a>` : ''}
         </div>
       </div>
     `;
