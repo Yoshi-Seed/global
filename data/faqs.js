@@ -452,13 +452,13 @@
   (function assignCategories() {
     // Define simple keyword rules for categories.
     const RULES = [
-      {cat: 'Patients', keys: [/patient|caregiver|out-of-pocket|health checkup|respondent|patient research|health literacy|caregiver involvement/i]},
-      {cat: 'HCP', keys: [/physician|doctor|KOL|honoraria|clinic|hospital physician|medical oncologist|guideline|specialties|board certification|general practitioner/i]},
-      {cat: 'System', keys: [/insurance|reimbursement|Chuikyo|MHLW|PMDA|high\-cost|pricing|beds|MRI|free access|gatekeeper|private insurers/i]},
-      {cat: 'Compliance', keys: [/ESOMAR|JMRA|PMD Act|Personal Information Protection|ethics|privacy|consent/i]},
-      {cat: 'Fieldwork', keys: [/interview|survey|recruit|panel|online|participate|dropout|translation|format|questionnaire|study design/i]},
-      {cat: 'Operations', keys: [/timeline|honoraria|payment method|workload|budget|procurement|adoption|hospital management|care pathway/i]},
-      {cat: 'Timeline', keys: [/two years|every two years|annual|revisions|EPPV|period|schedule|deadline|time frame/i]}
+      {cat: 'System', keys: [/universal.*insurance|health insurance|coverage|co-pay|reimbursement|Chuikyo|MHLW|PMDA|fee.*schedule|pricing|formulary|NHI|medical.*expense|public.*insurance|healthcare.*system|health.*system|japan.*insurance/i]},
+      {cat: 'Patients', keys: [/patient.*journey|patient.*decision|patient.*recruitment|patient.*research|patient.*engagement|patient.*experience|caregiver|family.*involvement|health.*literacy|patient.*pathway|treatment.*decision|patient.*preference/i]},
+      {cat: 'HCP', keys: [/physician|doctor|specialist|HCP|healthcare.*professional|medical.*professional|KOL|opinion.*leader|prescriber|oncologist|surgeon|nurse|pharmacist|medical.*society|clinical.*practice|referral|hierarchy/i]},
+      {cat: 'Compliance', keys: [/APPI|privacy|data.*protection|personal.*information|consent|ethics|IRB|adverse.*event|regulatory|compliance|ESOMAR|JMRA|PMD.*Act|cross-border|data.*transfer|confidential/i]},
+      {cat: 'Fieldwork', keys: [/interview|focus.*group|survey|questionnaire|recruitment|screening|moderation|translation|interpretation|fieldwork|qualitative|quantitative|methodology|research.*design|sample.*size|response.*rate/i]},
+      {cat: 'Operations', keys: [/honoraria|incentive|payment|budget|cost|timeline|schedule|logistics|project.*management|vendor|agency|quality.*control|training|monitoring|documentation/i]},
+      {cat: 'Timeline', keys: [/deadline|timeframe|duration|planning|milestone|phase|calendar|fiscal.*year|approval.*time|lead.*time|turnaround/i]}
     ];
 
     function categorize(item) {
