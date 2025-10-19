@@ -39,36 +39,83 @@
       <div class="bg-white rounded-lg shadow-md p-6 mb-6">
         <h2 class="text-2xl font-bold text-gray-800 flex items-center">
           <i class="fas fa-plus-circle mr-3 text-green-600"></i>
-          新規プロジェクト登録
+          新規案件登録
         </h2>
-        <p class="text-gray-600 mt-2">プロジェクト情報を入力してください。登録後は自動的に履歴に追加されます。</p>
+        <p class="text-gray-600 mt-2">医療系マーケットリサーチの案件情報を入力してください。</p>
       </div>
 
       <!-- 登録フォーム -->
       <form id="projectForm" class="bg-white rounded-lg shadow-md p-6 space-y-6">
         
-        <!-- Project ID -->
+        <!-- 疾患名 -->
         <div>
-          <label for="projectId" class="block text-sm font-medium text-gray-700 mb-2">
-            <i class="fas fa-fingerprint mr-2 text-blue-600"></i>
-            Project ID <span class="text-red-500">*</span>
+          <label for="diseaseName" class="block text-sm font-medium text-gray-700 mb-2">
+            <i class="fas fa-heartbeat mr-2 text-red-600"></i>
+            疾患名 <span class="text-red-500">*</span>
           </label>
           <input 
             type="text" 
-            id="projectId" 
-            name="projectId" 
+            id="diseaseName" 
+            name="diseaseName" 
             required
-            placeholder="例: PRJ-2025-001"
+            placeholder="例: アルツハイマー型認知症"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
-          <p class="text-xs text-gray-500 mt-1">プロジェクトを識別するための一意のIDを入力してください</p>
         </div>
 
-        <!-- 対象者タイプ -->
+        <!-- 疾患略語 -->
+        <div>
+          <label for="diseaseAbbr" class="block text-sm font-medium text-gray-700 mb-2">
+            <i class="fas fa-tag mr-2 text-purple-600"></i>
+            疾患略語
+          </label>
+          <input 
+            type="text" 
+            id="diseaseAbbr" 
+            name="diseaseAbbr" 
+            placeholder="例: AD, T2DM, COPD"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+        </div>
+
+        <!-- 2列レイアウト -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- 手法 -->
+          <div>
+            <label for="method" class="block text-sm font-medium text-gray-700 mb-2">
+              <i class="fas fa-clipboard-list mr-2 text-blue-600"></i>
+              手法
+            </label>
+            <input 
+              type="text" 
+              id="method" 
+              name="method" 
+              placeholder="例: IDI, 会場調査"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            >
+          </div>
+
+          <!-- 調査種別 -->
+          <div>
+            <label for="surveyType" class="block text-sm font-medium text-gray-700 mb-2">
+              <i class="fas fa-chart-bar mr-2 text-green-600"></i>
+              調査種別
+            </label>
+            <input 
+              type="text" 
+              id="surveyType" 
+              name="surveyType" 
+              placeholder="例: 定性, 定量"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            >
+          </div>
+        </div>
+
+        <!-- 対象者種別 -->
         <div>
           <label for="targetType" class="block text-sm font-medium text-gray-700 mb-2">
             <i class="fas fa-users mr-2 text-green-600"></i>
-            リサーチ対象者 <span class="text-red-500">*</span>
+            対象者種別 <span class="text-red-500">*</span>
           </label>
           <select 
             id="targetType" 
@@ -79,32 +126,32 @@
             <option value="">選択してください</option>
             <option value="医師">医師</option>
             <option value="患者">患者</option>
-            <option value="医師・患者">医師・患者（両方）</option>
+            <option value="介護者">介護者</option>
+            <option value="医師・患者">医師・患者</option>
           </select>
         </div>
 
-        <!-- 疾患・テーマ -->
+        <!-- 専門 -->
         <div>
-          <label for="diseaseTheme" class="block text-sm font-medium text-gray-700 mb-2">
-            <i class="fas fa-heartbeat mr-2 text-red-600"></i>
-            疾患・テーマ <span class="text-red-500">*</span>
+          <label for="specialty" class="block text-sm font-medium text-gray-700 mb-2">
+            <i class="fas fa-user-md mr-2 text-indigo-600"></i>
+            専門（診療科）
           </label>
           <input 
             type="text" 
-            id="diseaseTheme" 
-            name="diseaseTheme" 
-            required
-            placeholder="例: 糖尿病治療における新規薬剤の使用実態"
+            id="specialty" 
+            name="specialty" 
+            placeholder="例: 脳神経内科, 精神科, 糖尿病内科"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
-          <p class="text-xs text-gray-500 mt-1">リサーチのテーマや対象疾患を入力してください</p>
+          <p class="text-xs text-gray-500 mt-1">対象者が医師の場合、専門診療科を入力してください</p>
         </div>
 
-        <!-- リクルート人数 -->
+        <!-- 実績数 -->
         <div>
           <label for="recruitCount" class="block text-sm font-medium text-gray-700 mb-2">
             <i class="fas fa-user-plus mr-2 text-purple-600"></i>
-            リクルート人数 <span class="text-red-500">*</span>
+            実績数（リクルート人数） <span class="text-red-500">*</span>
           </label>
           <input 
             type="number" 
@@ -115,83 +162,87 @@
             placeholder="例: 50"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
-          <p class="text-xs text-gray-500 mt-1">目標リクルート人数を入力してください</p>
         </div>
 
-        <!-- スクリーニング条件 -->
-        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-          <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-            <i class="fas fa-filter mr-2 text-orange-600"></i>
-            スクリーニング条件 <span class="text-red-500">*</span>
-          </h3>
-          
-          <div id="screeningConditionsContainer" class="space-y-3">
-            <!-- 動的に条件を追加 -->
-            <div class="flex space-x-2 screening-condition-row">
-              <input 
-                type="text" 
-                placeholder="項目名（例: 診療科）" 
-                class="flex-1 px-3 py-2 border border-gray-300 rounded-lg condition-key"
-              >
-              <input 
-                type="text" 
-                placeholder="条件（例: 内科・糖尿病内科）" 
-                class="flex-1 px-3 py-2 border border-gray-300 rounded-lg condition-value"
-              >
-              <button 
-                type="button" 
-                onclick="removeConditionRow(this)" 
-                class="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
-              >
-                <i class="fas fa-trash"></i>
-              </button>
-            </div>
-          </div>
-
-          <button 
-            type="button" 
-            onclick="addConditionRow()" 
-            class="mt-3 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition flex items-center space-x-2"
-          >
-            <i class="fas fa-plus"></i>
-            <span>条件を追加</span>
-          </button>
-
-          <p class="text-xs text-gray-500 mt-3">
-            <i class="fas fa-info-circle mr-1"></i>
-            例: 「年齢」→「40-65歳」、「診療科」→「内科・糖尿病内科」など
-          </p>
-        </div>
-
-        <!-- フリーコメント -->
+        <!-- 対象条件 -->
         <div>
-          <label for="freeComment" class="block text-sm font-medium text-gray-700 mb-2">
-            <i class="fas fa-comment-alt mr-2 text-yellow-600"></i>
-            フリーコメント
+          <label for="targetConditions" class="block text-sm font-medium text-gray-700 mb-2">
+            <i class="fas fa-filter mr-2 text-orange-600"></i>
+            対象条件（スクリーニング条件）
           </label>
           <textarea 
-            id="freeComment" 
-            name="freeComment" 
-            rows="4"
-            placeholder="プロジェクトに関する補足情報や特記事項を入力してください"
+            id="targetConditions" 
+            name="targetConditions" 
+            rows="3"
+            placeholder="例: アルツハイマー型認知症患者を月に20人以上診療"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           ></textarea>
-          <p class="text-xs text-gray-500 mt-1">後で類似案件を検索する際の参考情報として活用されます</p>
+          <p class="text-xs text-gray-500 mt-1">リクルート対象の詳細条件を入力してください</p>
         </div>
 
-        <!-- 担当者名（任意） -->
+        <!-- 薬剤 -->
         <div>
-          <label for="createdBy" class="block text-sm font-medium text-gray-700 mb-2">
-            <i class="fas fa-user mr-2 text-indigo-600"></i>
-            担当者名
+          <label for="drug" class="block text-sm font-medium text-gray-700 mb-2">
+            <i class="fas fa-pills mr-2 text-pink-600"></i>
+            薬剤
           </label>
           <input 
             type="text" 
-            id="createdBy" 
-            name="createdBy" 
-            placeholder="例: 山田太郎"
+            id="drug" 
+            name="drug" 
+            placeholder="例: レカネマブ, レケンビ"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
+          <p class="text-xs text-gray-500 mt-1">調査対象の薬剤名を入力してください（複数の場合はカンマ区切り）</p>
+        </div>
+
+        <!-- 2列レイアウト -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- リクルート実施会社 -->
+          <div>
+            <label for="recruitCompany" class="block text-sm font-medium text-gray-700 mb-2">
+              <i class="fas fa-building mr-2 text-teal-600"></i>
+              リクルート実施会社
+            </label>
+            <input 
+              type="text" 
+              id="recruitCompany" 
+              name="recruitCompany" 
+              placeholder="例: キャンドゥ, アスマーク"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            >
+          </div>
+
+          <!-- クライアント -->
+          <div>
+            <label for="client" class="block text-sm font-medium text-gray-700 mb-2">
+              <i class="fas fa-handshake mr-2 text-yellow-600"></i>
+              クライアント
+            </label>
+            <input 
+              type="text" 
+              id="client" 
+              name="client" 
+              placeholder="例: The Link Group"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            >
+          </div>
+        </div>
+
+        <!-- Project ID（任意） -->
+        <div>
+          <label for="projectId" class="block text-sm font-medium text-gray-700 mb-2">
+            <i class="fas fa-fingerprint mr-2 text-gray-600"></i>
+            Project ID（任意・参照用）
+          </label>
+          <input 
+            type="text" 
+            id="projectId" 
+            name="projectId" 
+            placeholder="例: PRJ-2025-001"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+          <p class="text-xs text-gray-500 mt-1">社内管理用のプロジェクトIDがあれば入力してください（任意）</p>
         </div>
 
         <!-- 送信ボタン -->
@@ -201,7 +252,7 @@
             class="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition font-semibold flex items-center justify-center space-x-2"
           >
             <i class="fas fa-save"></i>
-            <span>プロジェクトを登録</span>
+            <span>案件を登録</span>
           </button>
           <button 
             type="button" 
@@ -218,7 +269,7 @@
       <div id="successMessage" class="hidden mt-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg flex items-center justify-between">
         <div class="flex items-center space-x-2">
           <i class="fas fa-check-circle text-xl"></i>
-          <span id="successText">プロジェクトが正常に登録されました！</span>
+          <span id="successText">案件が正常に登録されました！</span>
         </div>
         <button onclick="hideSuccessMessage()" class="text-green-700 hover:text-green-900">
           <i class="fas fa-times"></i>
@@ -248,102 +299,39 @@
       await db.init();
     }
 
-    // スクリーニング条件行を追加
-    function addConditionRow() {
-      const container = document.getElementById('screeningConditionsContainer');
-      const newRow = document.createElement('div');
-      newRow.className = 'flex space-x-2 screening-condition-row';
-      newRow.innerHTML = `
-        <input 
-          type="text" 
-          placeholder="項目名（例: 診療科）" 
-          class="flex-1 px-3 py-2 border border-gray-300 rounded-lg condition-key"
-        >
-        <input 
-          type="text" 
-          placeholder="条件（例: 内科・糖尿病内科）" 
-          class="flex-1 px-3 py-2 border border-gray-300 rounded-lg condition-value"
-        >
-        <button 
-          type="button" 
-          onclick="removeConditionRow(this)" 
-          class="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
-        >
-          <i class="fas fa-trash"></i>
-        </button>
-      `;
-      container.appendChild(newRow);
-    }
-
-    // スクリーニング条件行を削除
-    function removeConditionRow(button) {
-      const rows = document.querySelectorAll('.screening-condition-row');
-      if (rows.length > 1) {
-        button.parentElement.remove();
-      } else {
-        alert('少なくとも1つの条件は必要です');
-      }
-    }
-
-    // スクリーニング条件を収集
-    function collectScreeningConditions() {
-      const rows = document.querySelectorAll('.screening-condition-row');
-      const conditions = {};
-      
-      rows.forEach(row => {
-        const key = row.querySelector('.condition-key').value.trim();
-        const value = row.querySelector('.condition-value').value.trim();
-        
-        if (key && value) {
-          conditions[key] = value;
-        }
-      });
-
-      return conditions;
-    }
-
     // フォーム送信
     document.getElementById('projectForm').addEventListener('submit', async function(e) {
       e.preventDefault();
 
-      // スクリーニング条件を収集
-      const screeningConditions = collectScreeningConditions();
-      
-      if (Object.keys(screeningConditions).length === 0) {
-        showErrorMessage('少なくとも1つのスクリーニング条件を入力してください');
-        return;
-      }
-
       // フォームデータを収集
       const formData = {
         projectId: document.getElementById('projectId').value.trim(),
+        diseaseName: document.getElementById('diseaseName').value.trim(),
+        diseaseAbbr: document.getElementById('diseaseAbbr').value.trim(),
+        method: document.getElementById('method').value.trim(),
+        surveyType: document.getElementById('surveyType').value.trim(),
         targetType: document.getElementById('targetType').value,
-        diseaseTheme: document.getElementById('diseaseTheme').value.trim(),
+        specialty: document.getElementById('specialty').value.trim(),
         recruitCount: parseInt(document.getElementById('recruitCount').value),
-        screeningConditions: screeningConditions,
-        freeComment: document.getElementById('freeComment').value.trim(),
-        createdBy: document.getElementById('createdBy').value.trim() || 'anonymous'
+        targetConditions: document.getElementById('targetConditions').value.trim(),
+        drug: document.getElementById('drug').value.trim(),
+        recruitCompany: document.getElementById('recruitCompany').value.trim(),
+        client: document.getElementById('client').value.trim(),
+        createdBy: 'user'
       };
-
-      // Project IDの重複チェック
-      const existing = db.getProjectByProjectId(formData.projectId);
-      if (existing) {
-        showErrorMessage('このProject IDは既に登録されています: ' + formData.projectId);
-        return;
-      }
 
       // データベースに保存
       const result = db.createProject(formData);
 
       if (result.success) {
-        showSuccessMessage('プロジェクトが正常に登録されました！ ID: ' + formData.projectId);
+        showSuccessMessage('案件が正常に登録されました！ 疾患名: ' + formData.diseaseName);
         
         // フォームをリセット
         setTimeout(() => {
           resetForm();
           
           // オプション: 詳細ページにリダイレクト
-          if (confirm('登録したプロジェクトの詳細を確認しますか？')) {
+          if (confirm('登録した案件の詳細を確認しますか？')) {
             window.location.href = 'projects.html?id=' + result.project.id;
           }
         }, 2000);
@@ -355,30 +343,6 @@
     // フォームをリセット
     function resetForm() {
       document.getElementById('projectForm').reset();
-      
-      // スクリーニング条件を1行だけ残す
-      const container = document.getElementById('screeningConditionsContainer');
-      container.innerHTML = `
-        <div class="flex space-x-2 screening-condition-row">
-          <input 
-            type="text" 
-            placeholder="項目名（例: 診療科）" 
-            class="flex-1 px-3 py-2 border border-gray-300 rounded-lg condition-key"
-          >
-          <input 
-            type="text" 
-            placeholder="条件（例: 内科・糖尿病内科）" 
-            class="flex-1 px-3 py-2 border border-gray-300 rounded-lg condition-value"
-          >
-          <button 
-            type="button" 
-            onclick="removeConditionRow(this)" 
-            class="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
-          >
-            <i class="fas fa-trash"></i>
-          </button>
-        </div>
-      `;
     }
 
     // 成功メッセージ表示
@@ -387,11 +351,9 @@
       document.getElementById('successText').textContent = message;
       element.classList.remove('hidden');
       
-      // 5秒後に自動で非表示
       setTimeout(hideSuccessMessage, 5000);
     }
 
-    // 成功メッセージ非表示
     function hideSuccessMessage() {
       document.getElementById('successMessage').classList.add('hidden');
     }
@@ -402,11 +364,9 @@
       document.getElementById('errorText').textContent = message;
       element.classList.remove('hidden');
       
-      // 5秒後に自動で非表示
       setTimeout(hideErrorMessage, 5000);
     }
 
-    // エラーメッセージ非表示
     function hideErrorMessage() {
       document.getElementById('errorMessage').classList.add('hidden');
     }

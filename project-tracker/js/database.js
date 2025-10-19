@@ -1,11 +1,12 @@
 /**
- * プロジェクト履歴管理システム - データベース管理モジュール
+ * プロジェクト履歴管理システム - データベース管理モジュール (Seed Planning版)
  * JSONファイルベースのローカルストレージシステム
+ * 実際のSeed Planningデータ構造に対応
  */
 
 class ProjectDatabase {
   constructor() {
-    this.storageKey = 'project_tracker_data';
+    this.storageKey = 'project_tracker_data_v2';
     this.initialized = false;
   }
 
@@ -17,8 +18,8 @@ class ProjectDatabase {
       // ローカルストレージからデータを読み込み
       const stored = localStorage.getItem(this.storageKey);
       if (!stored) {
-        // 初回起動時はサンプルデータで初期化
-        await this.initializeSampleData();
+        // 初回起動時は空データで初期化
+        await this.initializeEmptyData();
       }
       this.initialized = true;
       return true;
@@ -29,70 +30,92 @@ class ProjectDatabase {
   }
 
   /**
-   * サンプルデータで初期化
+   * 空データで初期化
    */
-  async initializeSampleData() {
-    const sampleData = {
-      projects: [
-        {
-          id: this.generateId(),
-          projectId: 'PRJ-2025-001',
-          targetType: '医師',
-          diseaseTheme: '糖尿病治療における新規薬剤の使用実態',
-          recruitCount: 50,
-          screeningConditions: {
-            specialty: '内科・糖尿病内科',
-            experience: '5年以上',
-            patientCount: '月20名以上の糖尿病患者を診察',
-            region: '関東圏'
-          },
-          freeComment: '特に2型糖尿病の治療経験が豊富な医師を優先してリクルート',
-          createdAt: new Date('2025-01-15').toISOString(),
-          updatedAt: new Date('2025-01-15').toISOString(),
-          createdBy: 'admin'
-        },
-        {
-          id: this.generateId(),
-          projectId: 'PRJ-2025-002',
-          targetType: '患者',
-          diseaseTheme: '乳がん患者のQOL調査',
-          recruitCount: 100,
-          screeningConditions: {
-            age: '40-65歳',
-            diagnosis: '乳がんステージI-III',
-            treatment: '手術後6ヶ月以内',
-            status: '外来通院中'
-          },
-          freeComment: 'ホルモン療法を受けている患者を中心にリクルート。心理的サポートが必要な場合あり',
-          createdAt: new Date('2025-02-10').toISOString(),
-          updatedAt: new Date('2025-02-10').toISOString(),
-          createdBy: 'user01'
-        },
-        {
-          id: this.generateId(),
-          projectId: 'PRJ-2025-003',
-          targetType: '医師・患者',
-          diseaseTheme: 'アトピー性皮膚炎の治療満足度調査',
-          recruitCount: 80,
-          screeningConditions: {
-            doctorSpecialty: '皮膚科',
-            doctorExperience: '3年以上',
-            patientAge: '18-50歳',
-            patientSeverity: '中等症以上',
-            matchRequired: '同一医療機関での医師・患者ペア'
-          },
-          freeComment: '医師30名と患者50名をリクルート。可能な限り同じ医療機関でペアを作成',
-          createdAt: new Date('2025-03-05').toISOString(),
-          updatedAt: new Date('2025-03-05').toISOString(),
-          createdBy: 'user02'
-        }
-      ],
+  async initializeEmptyData() {
+    const emptyData = {
+      projects: [],
       lastUpdated: new Date().toISOString(),
-      version: '1.0.0'
+      version: '2.0.0'
     };
+    localStorage.setItem(this.storageKey, JSON.stringify(emptyData));
+    return emptyData;
+  }
 
-    localStorage.setItem(this.storageKey, JSON.stringify(sampleData));
-    return sampleData;
+  /**
+   * CSVデータをインポート
+   */
+  async importFromCSV(csvText) {
+    try {
+      const lines = csvText.split('\n').filter(line => line.trim());
+      const headers = lines[0].split(',');
+      
+      const projects = [];
+      
+      for (let i = 1; i < lines.length; i++) {
+        const values = this.parseCSVLine(lines[i]);
+        
+        if (values.length < headers.length) continue;
+        
+        const project = {
+          id: this.generateId(),
+          projectId: '', // 任意項目
+          diseaseName: values[0] || '', // 疾患名
+          diseaseAbbr: values[1] || '', // 疾患略語
+          method: values[2] || '', // 手法
+          surveyType: values[3] || '', // 調査種別
+          targetType: values[4] || '', // 対象者種別
+          specialty: values[5] || '', // 専門
+          recruitCount: parseInt(values[6]) || 0, // 実績数
+          targetConditions: values[7] || '', // 対象条件
+          drug: values[8] || '', // 薬剤
+          recruitCompany: values[9] || '', // リクルート実施
+          client: values[10] || '', // クライアント
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          createdBy: 'import'
+        };
+        
+        projects.push(project);
+      }
+      
+      const data = {
+        projects: projects,
+        lastUpdated: new Date().toISOString(),
+        version: '2.0.0'
+      };
+      
+      localStorage.setItem(this.storageKey, JSON.stringify(data));
+      return { success: true, count: projects.length };
+    } catch (error) {
+      console.error('CSV import failed:', error);
+      return { success: false, error: error.message };
+    }
+  }
+
+  /**
+   * CSV行をパース（カンマを含むフィールドに対応）
+   */
+  parseCSVLine(line) {
+    const result = [];
+    let current = '';
+    let inQuotes = false;
+    
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i];
+      
+      if (char === '"') {
+        inQuotes = !inQuotes;
+      } else if (char === ',' && !inQuotes) {
+        result.push(current.trim());
+        current = '';
+      } else {
+        current += char;
+      }
+    }
+    
+    result.push(current.trim());
+    return result;
   }
 
   /**
@@ -117,14 +140,6 @@ class ProjectDatabase {
   }
 
   /**
-   * プロジェクトIDで検索（Project ID文字列）
-   */
-  getProjectByProjectId(projectId) {
-    const projects = this.getAllProjects();
-    return projects.find(p => p.projectId === projectId);
-  }
-
-  /**
    * 新規プロジェクト作成
    */
   createProject(projectData) {
@@ -133,15 +148,21 @@ class ProjectDatabase {
       
       const newProject = {
         id: this.generateId(),
-        projectId: projectData.projectId,
+        projectId: projectData.projectId || '', // 任意
+        diseaseName: projectData.diseaseName,
+        diseaseAbbr: projectData.diseaseAbbr || '',
+        method: projectData.method || '',
+        surveyType: projectData.surveyType || '',
         targetType: projectData.targetType,
-        diseaseTheme: projectData.diseaseTheme,
+        specialty: projectData.specialty || '',
         recruitCount: parseInt(projectData.recruitCount),
-        screeningConditions: projectData.screeningConditions,
-        freeComment: projectData.freeComment || '',
+        targetConditions: projectData.targetConditions || '',
+        drug: projectData.drug || '',
+        recruitCompany: projectData.recruitCompany || '',
+        client: projectData.client || '',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        createdBy: projectData.createdBy || 'anonymous'
+        createdBy: projectData.createdBy || 'user'
       };
 
       data.projects.push(newProject);
@@ -206,7 +227,7 @@ class ProjectDatabase {
   }
 
   /**
-   * 検索機能
+   * 検索機能（疾患名、疾患略語、専門で検索）
    */
   searchProjects(query) {
     const projects = this.getAllProjects();
@@ -214,11 +235,14 @@ class ProjectDatabase {
 
     return projects.filter(p => {
       return (
-        p.projectId.toLowerCase().includes(lowerQuery) ||
-        p.diseaseTheme.toLowerCase().includes(lowerQuery) ||
-        p.targetType.toLowerCase().includes(lowerQuery) ||
-        p.freeComment.toLowerCase().includes(lowerQuery) ||
-        JSON.stringify(p.screeningConditions).toLowerCase().includes(lowerQuery)
+        (p.diseaseName && p.diseaseName.toLowerCase().includes(lowerQuery)) ||
+        (p.diseaseAbbr && p.diseaseAbbr.toLowerCase().includes(lowerQuery)) ||
+        (p.specialty && p.specialty.toLowerCase().includes(lowerQuery)) ||
+        (p.targetType && p.targetType.toLowerCase().includes(lowerQuery)) ||
+        (p.targetConditions && p.targetConditions.toLowerCase().includes(lowerQuery)) ||
+        (p.drug && p.drug.toLowerCase().includes(lowerQuery)) ||
+        (p.client && p.client.toLowerCase().includes(lowerQuery)) ||
+        (p.projectId && p.projectId.toLowerCase().includes(lowerQuery))
       );
     });
   }
@@ -233,9 +257,22 @@ class ProjectDatabase {
       projects = projects.filter(p => p.targetType === filters.targetType);
     }
 
-    if (filters.diseaseTheme) {
+    if (filters.diseaseName) {
       projects = projects.filter(p => 
-        p.diseaseTheme.toLowerCase().includes(filters.diseaseTheme.toLowerCase())
+        p.diseaseName.toLowerCase().includes(filters.diseaseName.toLowerCase()) ||
+        (p.diseaseAbbr && p.diseaseAbbr.toLowerCase().includes(filters.diseaseName.toLowerCase()))
+      );
+    }
+
+    if (filters.specialty) {
+      projects = projects.filter(p => 
+        p.specialty && p.specialty.toLowerCase().includes(filters.specialty.toLowerCase())
+      );
+    }
+
+    if (filters.client) {
+      projects = projects.filter(p => 
+        p.client && p.client.toLowerCase().includes(filters.client.toLowerCase())
       );
     }
 
@@ -259,10 +296,10 @@ class ProjectDatabase {
   }
 
   /**
-   * 類似案件検索（TF-IDF風の簡易実装）
+   * 類似案件検索（改良版）
    */
   findSimilarProjects(projectId, limit = 5) {
-    const target = this.getProjectByProjectId(projectId) || this.getProjectById(projectId);
+    const target = this.getProjectById(projectId);
     if (!target) return [];
 
     const allProjects = this.getAllProjects().filter(p => p.id !== target.id);
@@ -271,26 +308,51 @@ class ProjectDatabase {
     const scoredProjects = allProjects.map(p => {
       let score = 0;
 
+      // 疾患名の完全一致
+      if (p.diseaseName === target.diseaseName) score += 50;
+      
+      // 疾患略語の完全一致
+      if (p.diseaseAbbr && target.diseaseAbbr && p.diseaseAbbr === target.diseaseAbbr) score += 40;
+
       // 対象者タイプが同じ
       if (p.targetType === target.targetType) score += 30;
 
-      // 疾患・テーマの類似度（単語の一致）
-      const targetWords = this.tokenize(target.diseaseTheme);
-      const projectWords = this.tokenize(p.diseaseTheme);
-      const commonWords = targetWords.filter(w => projectWords.includes(w));
-      score += commonWords.length * 20;
+      // 専門が同じ
+      if (p.specialty && target.specialty && p.specialty === target.specialty) score += 25;
+
+      // 疾患名の部分一致
+      if (p.diseaseName !== target.diseaseName) {
+        const targetWords = this.tokenize(target.diseaseName);
+        const projectWords = this.tokenize(p.diseaseName);
+        const commonWords = targetWords.filter(w => projectWords.includes(w));
+        score += commonWords.length * 10;
+      }
 
       // リクルート人数の近さ
       const recruitDiff = Math.abs(p.recruitCount - target.recruitCount);
-      if (recruitDiff < 20) score += 15;
-      else if (recruitDiff < 50) score += 10;
+      if (recruitDiff < 5) score += 15;
+      else if (recruitDiff < 10) score += 10;
+      else if (recruitDiff < 20) score += 5;
 
-      // スクリーニング条件の類似度
-      const targetConditions = JSON.stringify(target.screeningConditions).toLowerCase();
-      const projectConditions = JSON.stringify(p.screeningConditions).toLowerCase();
-      const conditionWords = this.tokenize(targetConditions);
-      const matchingConditions = conditionWords.filter(w => projectConditions.includes(w));
-      score += matchingConditions.length * 5;
+      // 対象条件の類似度
+      if (target.targetConditions && p.targetConditions) {
+        const targetConditions = target.targetConditions.toLowerCase();
+        const projectConditions = p.targetConditions.toLowerCase();
+        const conditionWords = this.tokenize(targetConditions);
+        const matchingConditions = conditionWords.filter(w => projectConditions.includes(w));
+        score += matchingConditions.length * 3;
+      }
+
+      // 薬剤の類似度
+      if (target.drug && p.drug) {
+        const targetDrugs = this.tokenize(target.drug);
+        const projectDrugs = this.tokenize(p.drug);
+        const commonDrugs = targetDrugs.filter(d => projectDrugs.includes(d));
+        score += commonDrugs.length * 8;
+      }
+
+      // クライアントが同じ
+      if (p.client && target.client && p.client === target.client) score += 20;
 
       return { project: p, score };
     });
@@ -314,23 +376,40 @@ class ProjectDatabase {
       targetTypeDistribution: {},
       totalRecruits: 0,
       averageRecruits: 0,
-      diseaseThemes: {},
+      diseaseDistribution: {},
+      specialtyDistribution: {},
+      clientDistribution: {},
       recentProjects: projects
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .slice(0, 5),
       monthlyTrend: this.getMonthlyTrend(projects)
     };
 
-    // 対象者タイプ別集計
+    // 各種集計
     projects.forEach(p => {
+      // 対象者タイプ別
       stats.targetTypeDistribution[p.targetType] = 
         (stats.targetTypeDistribution[p.targetType] || 0) + 1;
       
       stats.totalRecruits += p.recruitCount;
 
-      // 疾患テーマ集計（簡易）
-      const theme = p.diseaseTheme.substring(0, 20); // 最初の20文字で分類
-      stats.diseaseThemes[theme] = (stats.diseaseThemes[theme] || 0) + 1;
+      // 疾患名集計
+      if (p.diseaseName) {
+        const key = p.diseaseName.substring(0, 30);
+        stats.diseaseDistribution[key] = (stats.diseaseDistribution[key] || 0) + 1;
+      }
+
+      // 専門別集計
+      if (p.specialty) {
+        stats.specialtyDistribution[p.specialty] = 
+          (stats.specialtyDistribution[p.specialty] || 0) + 1;
+      }
+
+      // クライアント別集計
+      if (p.client) {
+        stats.clientDistribution[p.client] = 
+          (stats.clientDistribution[p.client] || 0) + 1;
+      }
     });
 
     stats.averageRecruits = projects.length > 0 
@@ -346,10 +425,58 @@ class ProjectDatabase {
   getMonthlyTrend(projects) {
     const trend = {};
     projects.forEach(p => {
-      const month = new Date(p.createdAt).toISOString().substring(0, 7); // YYYY-MM
+      const month = new Date(p.createdAt).toISOString().substring(0, 7);
       trend[month] = (trend[month] || 0) + 1;
     });
     return trend;
+  }
+
+  /**
+   * CSVエクスポート
+   */
+  exportToCSV() {
+    const projects = this.getAllProjects();
+    
+    const headers = [
+      '疾患名',
+      '疾患略語',
+      '手法',
+      '調査種別',
+      '対象者種別',
+      '専門',
+      '実績数',
+      '対象条件',
+      '薬剤',
+      'リクルート実施',
+      'クライアント',
+      'Project ID',
+      '登録日',
+      '登録者'
+    ];
+
+    const rows = projects.map(p => [
+      p.diseaseName,
+      p.diseaseAbbr,
+      p.method,
+      p.surveyType,
+      p.targetType,
+      p.specialty,
+      p.recruitCount,
+      p.targetConditions,
+      p.drug,
+      p.recruitCompany,
+      p.client,
+      p.projectId || '',
+      new Date(p.createdAt).toLocaleString('ja-JP'),
+      p.createdBy
+    ]);
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n');
+
+    return csvContent;
   }
 
   /**
@@ -361,7 +488,7 @@ class ProjectDatabase {
   }
 
   /**
-   * データインポート
+   * データインポート（JSON）
    */
   importFromJSON(jsonString) {
     try {
@@ -378,42 +505,6 @@ class ProjectDatabase {
   }
 
   /**
-   * CSVエクスポート
-   */
-  exportToCSV() {
-    const projects = this.getAllProjects();
-    
-    const headers = [
-      'Project ID',
-      'Target Type',
-      'Disease/Theme',
-      'Recruit Count',
-      'Screening Conditions',
-      'Free Comment',
-      'Created At',
-      'Created By'
-    ];
-
-    const rows = projects.map(p => [
-      p.projectId,
-      p.targetType,
-      p.diseaseTheme,
-      p.recruitCount,
-      JSON.stringify(p.screeningConditions),
-      p.freeComment,
-      new Date(p.createdAt).toLocaleString('ja-JP'),
-      p.createdBy
-    ]);
-
-    const csvContent = [
-      headers.join(','),
-      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
-    ].join('\n');
-
-    return csvContent;
-  }
-
-  /**
    * ユーティリティ：ID生成
    */
   generateId() {
@@ -424,15 +515,16 @@ class ProjectDatabase {
    * ユーティリティ：テキストをトークン化
    */
   tokenize(text) {
+    if (!text) return [];
     return text
       .toLowerCase()
-      .replace(/[^\w\s]/g, ' ')
+      .replace(/[^\w\sぁ-んァ-ヶー一-龠]/g, ' ')
       .split(/\s+/)
       .filter(w => w.length > 1);
   }
 
   /**
-   * データベースクリア（開発用）
+   * データベースクリア
    */
   clearDatabase() {
     localStorage.removeItem(this.storageKey);
