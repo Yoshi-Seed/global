@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>プロジェクト一覧・検索 - プロジェクト履歴管理システム</title>
+  <title>案件一覧・検索 - プロジェクト履歴管理システム</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -19,6 +19,9 @@
         <div class="flex space-x-4">
           <a href="index.html" class="px-4 py-2 bg-blue-500 rounded hover:bg-blue-600 transition">
             <i class="fas fa-home mr-2"></i>ダッシュボード
+          </a>
+          <a href="import.html" class="px-4 py-2 bg-purple-500 rounded hover:bg-purple-600 transition">
+            <i class="fas fa-file-import mr-2"></i>CSVインポート
           </a>
           <a href="register.html" class="px-4 py-2 bg-green-500 rounded hover:bg-green-600 transition">
             <i class="fas fa-plus mr-2"></i>新規登録
@@ -44,13 +47,16 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <!-- フリーワード検索 -->
         <div class="lg:col-span-2">
-          <label class="block text-sm font-medium text-gray-700 mb-2">フリーワード検索</label>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            フリーワード検索
+          </label>
           <input 
             type="text" 
             id="searchQuery" 
-            placeholder="Project ID、疾患、コメントなどで検索..."
+            placeholder="疾患名、疾患略語、専門、薬剤、クライアントなどで検索..."
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
           >
+          <p class="text-xs text-gray-500 mt-1">例: 「アルツハイマー」「AD」「脳神経内科」「The Link Group」</p>
         </div>
 
         <!-- 対象者タイプフィルター -->
@@ -63,17 +69,40 @@
             <option value="all">すべて</option>
             <option value="医師">医師</option>
             <option value="患者">患者</option>
+            <option value="介護者">介護者</option>
             <option value="医師・患者">医師・患者</option>
           </select>
         </div>
 
-        <!-- 疾患テーマ -->
+        <!-- 疾患名 -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">疾患・テーマ</label>
+          <label class="block text-sm font-medium text-gray-700 mb-2">疾患名・疾患略語</label>
           <input 
             type="text" 
-            id="filterDiseaseTheme" 
-            placeholder="疾患名で絞り込み"
+            id="filterDiseaseName" 
+            placeholder="例: アルツハイマー, AD, T2DM"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          >
+        </div>
+
+        <!-- 専門（診療科） -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">専門（診療科）</label>
+          <input 
+            type="text" 
+            id="filterSpecialty" 
+            placeholder="例: 脳神経内科, 精神科"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          >
+        </div>
+
+        <!-- クライアント -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">クライアント</label>
+          <input 
+            type="text" 
+            id="filterClient" 
+            placeholder="例: The Link Group"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
           >
         </div>
@@ -119,12 +148,12 @@
       </div>
     </div>
 
-    <!-- プロジェクト一覧 -->
+    <!-- 案件一覧 -->
     <div class="bg-white rounded-lg shadow-md p-6">
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-xl font-bold flex items-center">
           <i class="fas fa-list mr-2 text-green-600"></i>
-          プロジェクト一覧 
+          案件一覧 
           <span id="projectCount" class="ml-2 text-sm font-normal text-gray-600">(0件)</span>
         </h2>
         <div class="flex space-x-2">
@@ -145,10 +174,12 @@
         <table class="min-w-full">
           <thead class="bg-gray-50">
             <tr>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Project ID</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">疾患名</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">疾患略語</th>
               <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">対象者</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">疾患・テーマ</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">リクルート数</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">専門</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">実績数</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">クライアント</th>
               <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">登録日</th>
               <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">アクション</th>
             </tr>
@@ -160,18 +191,18 @@
       </div>
     </div>
 
-    <!-- プロジェクト詳細モーダル -->
-    <div id="detailModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-screen overflow-y-auto">
+    <!-- 案件詳細モーダル -->
+    <div id="detailModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div class="bg-white rounded-lg shadow-xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
         <div class="p-6">
           <!-- モーダルヘッダー -->
-          <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center justify-between mb-6 border-b pb-4">
             <h2 class="text-2xl font-bold text-gray-800 flex items-center">
               <i class="fas fa-info-circle mr-2 text-blue-600"></i>
-              プロジェクト詳細
+              案件詳細
             </h2>
-            <button onclick="closeDetailModal()" class="text-gray-500 hover:text-gray-700">
-              <i class="fas fa-times text-2xl"></i>
+            <button onclick="closeDetailModal()" class="text-gray-500 hover:text-gray-700 text-2xl">
+              <i class="fas fa-times"></i>
             </button>
           </div>
 
@@ -181,10 +212,10 @@
           </div>
 
           <!-- 類似案件 -->
-          <div id="similarProjectsSection" class="mt-8">
+          <div id="similarProjectsSection" class="mt-8 border-t pt-6">
             <h3 class="text-xl font-bold mb-4 flex items-center">
               <i class="fas fa-sitemap mr-2 text-purple-600"></i>
-              類似プロジェクト
+              類似案件
             </h3>
             <div id="similarProjectsList" class="space-y-3">
               <!-- 動的に生成 -->
@@ -193,9 +224,6 @@
 
           <!-- アクションボタン -->
           <div class="flex space-x-4 mt-6 pt-6 border-t">
-            <button onclick="editProject()" class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">
-              <i class="fas fa-edit mr-2"></i>編集
-            </button>
             <button onclick="deleteProject()" class="flex-1 bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition">
               <i class="fas fa-trash mr-2"></i>削除
             </button>
@@ -211,7 +239,7 @@
   <!-- データベースJS -->
   <script src="js/database.js"></script>
 
-  <!-- プロジェクト一覧ロジック -->
+  <!-- 案件一覧ロジック -->
   <script>
     let currentProjects = [];
     let currentProjectId = null;
@@ -220,7 +248,7 @@
     async function initProjectsPage() {
       await db.init();
       
-      // URLパラメータから特定プロジェクトを開く
+      // URLパラメータから特定案件を開く
       const urlParams = new URLSearchParams(window.location.search);
       const projectId = urlParams.get('id');
       
@@ -231,13 +259,13 @@
       }
     }
 
-    // プロジェクト一覧を読み込み
+    // 案件一覧を読み込み
     function loadProjects() {
       currentProjects = db.getAllProjects();
       renderProjects(currentProjects);
     }
 
-    // プロジェクト一覧を表示
+    // 案件一覧を表示
     function renderProjects(projects) {
       const tbody = document.getElementById('projectsTableBody');
       tbody.innerHTML = '';
@@ -247,8 +275,8 @@
       if (projects.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="6" class="px-4 py-8 text-center text-gray-500">
-              該当するプロジェクトが見つかりませんでした
+            <td colspan="8" class="px-4 py-8 text-center text-gray-500">
+              該当する案件が見つかりませんでした
             </td>
           </tr>
         `;
@@ -260,14 +288,16 @@
         
         tbody.innerHTML += `
           <tr class="hover:bg-gray-50 transition cursor-pointer" onclick="showProjectDetail('${project.id}')">
-            <td class="px-4 py-3 text-sm font-medium text-blue-600">${project.projectId}</td>
+            <td class="px-4 py-3 text-sm text-gray-900">${truncate(project.diseaseName, 35)}</td>
+            <td class="px-4 py-3 text-sm text-gray-600">${project.diseaseAbbr || '-'}</td>
             <td class="px-4 py-3 text-sm">
               <span class="px-2 py-1 rounded-full text-xs font-semibold ${getTargetTypeBadgeClass(project.targetType)}">
                 ${project.targetType}
               </span>
             </td>
-            <td class="px-4 py-3 text-sm text-gray-900">${truncate(project.diseaseTheme, 50)}</td>
-            <td class="px-4 py-3 text-sm text-gray-900">${project.recruitCount}名</td>
+            <td class="px-4 py-3 text-sm text-gray-600">${truncate(project.specialty || '-', 15)}</td>
+            <td class="px-4 py-3 text-sm font-medium text-green-600">${project.recruitCount}名</td>
+            <td class="px-4 py-3 text-sm text-gray-600">${truncate(project.client || '-', 20)}</td>
             <td class="px-4 py-3 text-sm text-gray-500">${date}</td>
             <td class="px-4 py-3 text-sm">
               <button onclick="event.stopPropagation(); showProjectDetail('${project.id}')" class="text-blue-600 hover:text-blue-800">
@@ -284,7 +314,9 @@
       const query = document.getElementById('searchQuery').value.trim();
       const filters = {
         targetType: document.getElementById('filterTargetType').value,
-        diseaseTheme: document.getElementById('filterDiseaseTheme').value.trim(),
+        diseaseName: document.getElementById('filterDiseaseName').value.trim(),
+        specialty: document.getElementById('filterSpecialty').value.trim(),
+        client: document.getElementById('filterClient').value.trim(),
         minRecruitCount: document.getElementById('filterMinRecruits').value,
         maxRecruitCount: document.getElementById('filterMaxRecruits').value
       };
@@ -306,7 +338,9 @@
     function clearFilters() {
       document.getElementById('searchQuery').value = '';
       document.getElementById('filterTargetType').value = 'all';
-      document.getElementById('filterDiseaseTheme').value = '';
+      document.getElementById('filterDiseaseName').value = '';
+      document.getElementById('filterSpecialty').value = '';
+      document.getElementById('filterClient').value = '';
       document.getElementById('filterMinRecruits').value = '';
       document.getElementById('filterMaxRecruits').value = '';
       
@@ -335,13 +369,13 @@
       renderProjects(currentProjects);
     }
 
-    // プロジェクト詳細を表示
+    // 案件詳細を表示
     function showProjectDetail(id) {
       currentProjectId = id;
       const project = db.getProjectById(id);
       
       if (!project) {
-        alert('プロジェクトが見つかりません');
+        alert('案件が見つかりません');
         return;
       }
 
@@ -349,60 +383,90 @@
       detailContent.innerHTML = `
         <div class="grid grid-cols-2 gap-6">
           <div>
-            <label class="block text-sm font-medium text-gray-500 mb-1">Project ID</label>
-            <p class="text-lg font-semibold text-blue-600">${project.projectId}</p>
+            <label class="block text-sm font-medium text-gray-500 mb-1">疾患名</label>
+            <p class="text-lg font-semibold text-gray-900">${project.diseaseName}</p>
           </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-500 mb-1">疾患略語</label>
+            <p class="text-lg font-semibold text-blue-600">${project.diseaseAbbr || '-'}</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-6">
           <div>
             <label class="block text-sm font-medium text-gray-500 mb-1">対象者タイプ</label>
             <span class="inline-block px-3 py-1 rounded-full text-sm font-semibold ${getTargetTypeBadgeClass(project.targetType)}">
               ${project.targetType}
             </span>
           </div>
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-gray-500 mb-1">疾患・テーマ</label>
-          <p class="text-gray-900">${project.diseaseTheme}</p>
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-gray-500 mb-1">リクルート人数</label>
-          <p class="text-2xl font-bold text-green-600">${project.recruitCount}名</p>
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-gray-500 mb-2">スクリーニング条件</label>
-          <div class="bg-gray-50 rounded-lg p-4 space-y-2">
-            ${Object.entries(project.screeningConditions).map(([key, value]) => `
-              <div class="flex">
-                <span class="font-semibold text-gray-700 w-40">${key}:</span>
-                <span class="text-gray-900">${value}</span>
-              </div>
-            `).join('')}
+          <div>
+            <label class="block text-sm font-medium text-gray-500 mb-1">専門（診療科）</label>
+            <p class="text-gray-900">${project.specialty || '-'}</p>
           </div>
         </div>
 
-        ${project.freeComment ? `
+        <div class="grid grid-cols-2 gap-6">
           <div>
-            <label class="block text-sm font-medium text-gray-500 mb-1">フリーコメント</label>
-            <p class="text-gray-900 bg-yellow-50 p-4 rounded-lg border border-yellow-200">${project.freeComment}</p>
+            <label class="block text-sm font-medium text-gray-500 mb-1">手法</label>
+            <p class="text-gray-900">${project.method || '-'}</p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-500 mb-1">調査種別</label>
+            <p class="text-gray-900">${project.surveyType || '-'}</p>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-500 mb-1">実績数（リクルート人数）</label>
+          <p class="text-3xl font-bold text-green-600">${project.recruitCount}名</p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-500 mb-2">対象条件</label>
+          <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <p class="text-gray-900 whitespace-pre-wrap">${project.targetConditions || '-'}</p>
+          </div>
+        </div>
+
+        ${project.drug ? `
+          <div>
+            <label class="block text-sm font-medium text-gray-500 mb-1">薬剤</label>
+            <p class="text-gray-900">${project.drug}</p>
           </div>
         ` : ''}
 
-        <div class="grid grid-cols-2 gap-6 text-sm text-gray-500">
+        <div class="grid grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-500 mb-1">リクルート実施会社</label>
+            <p class="text-gray-900">${project.recruitCompany || '-'}</p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-500 mb-1">クライアント</label>
+            <p class="text-lg font-semibold text-yellow-700">${project.client || '-'}</p>
+          </div>
+        </div>
+
+        ${project.projectId ? `
+          <div>
+            <label class="block text-sm font-medium text-gray-500 mb-1">Project ID（参照用）</label>
+            <p class="text-gray-600">${project.projectId}</p>
+          </div>
+        ` : ''}
+
+        <div class="grid grid-cols-2 gap-6 text-sm text-gray-500 pt-4 border-t">
           <div>
             <label class="block font-medium mb-1">登録日時</label>
             <p>${new Date(project.createdAt).toLocaleString('ja-JP')}</p>
           </div>
           <div>
-            <label class="block font-medium mb-1">担当者</label>
+            <label class="block font-medium mb-1">登録者</label>
             <p>${project.createdBy}</p>
           </div>
         </div>
       `;
 
       // 類似案件を表示
-      loadSimilarProjects(project.projectId);
+      loadSimilarProjects(project.id);
 
       // モーダルを表示
       document.getElementById('detailModal').classList.remove('hidden');
@@ -414,22 +478,42 @@
       const container = document.getElementById('similarProjectsList');
 
       if (similar.length === 0) {
-        container.innerHTML = '<p class="text-gray-500 text-center py-4">類似プロジェクトが見つかりませんでした</p>';
+        container.innerHTML = '<p class="text-gray-500 text-center py-4">類似案件が見つかりませんでした</p>';
         return;
       }
 
       container.innerHTML = similar.map(project => `
-        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 hover:border-blue-400 transition cursor-pointer" 
+        <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border border-purple-200 hover:border-purple-400 transition cursor-pointer" 
              onclick="showProjectDetail('${project.id}')">
           <div class="flex items-center justify-between mb-2">
-            <span class="font-semibold text-blue-600">${project.projectId}</span>
-            <span class="text-xs text-gray-500">類似度: ${project.similarityScore}</span>
+            <div>
+              <span class="font-semibold text-gray-900">${truncate(project.diseaseName, 40)}</span>
+              ${project.diseaseAbbr ? `<span class="ml-2 text-sm text-gray-600">(${project.diseaseAbbr})</span>` : ''}
+            </div>
+            <span class="px-3 py-1 bg-purple-600 text-white text-xs font-bold rounded-full">
+              類似度: ${project.similarityScore}
+            </span>
           </div>
-          <p class="text-sm text-gray-700 mb-2">${truncate(project.diseaseTheme, 60)}</p>
-          <div class="flex items-center justify-between text-xs text-gray-500">
-            <span class="px-2 py-1 rounded-full ${getTargetTypeBadgeClass(project.targetType)}">${project.targetType}</span>
-            <span>${project.recruitCount}名</span>
+          <div class="grid grid-cols-3 gap-4 text-sm">
+            <div>
+              <span class="text-gray-600">対象者:</span>
+              <span class="font-medium ml-1">${project.targetType}</span>
+            </div>
+            <div>
+              <span class="text-gray-600">専門:</span>
+              <span class="font-medium ml-1">${project.specialty || '-'}</span>
+            </div>
+            <div>
+              <span class="text-gray-600">実績:</span>
+              <span class="font-medium ml-1 text-green-600">${project.recruitCount}名</span>
+            </div>
           </div>
+          ${project.client ? `
+            <div class="mt-2 text-sm">
+              <span class="text-gray-600">クライアント:</span>
+              <span class="font-medium ml-1 text-yellow-700">${project.client}</span>
+            </div>
+          ` : ''}
         </div>
       `).join('');
     }
@@ -440,24 +524,18 @@
       currentProjectId = null;
     }
 
-    // プロジェクト編集（簡易実装）
-    function editProject() {
-      alert('編集機能は今後実装予定です');
-      // TODO: 編集フォームの実装
-    }
-
-    // プロジェクト削除
+    // 案件削除
     function deleteProject() {
       if (!currentProjectId) return;
 
       const project = db.getProjectById(currentProjectId);
-      if (!confirm(`プロジェクト "${project.projectId}" を削除してもよろしいですか？`)) {
+      if (!confirm(`案件 "${project.diseaseName}" を削除してもよろしいですか？`)) {
         return;
       }
 
       const result = db.deleteProject(currentProjectId);
       if (result.success) {
-        alert('プロジェクトを削除しました');
+        alert('案件を削除しました');
         closeDetailModal();
         loadProjects();
       } else {
@@ -484,12 +562,14 @@
       const classes = {
         '医師': 'bg-blue-100 text-blue-800',
         '患者': 'bg-green-100 text-green-800',
+        '介護者': 'bg-yellow-100 text-yellow-800',
         '医師・患者': 'bg-purple-100 text-purple-800'
       };
       return classes[type] || 'bg-gray-100 text-gray-800';
     }
 
     function truncate(text, length) {
+      if (!text) return '';
       return text.length > length ? text.substring(0, length) + '...' : text;
     }
 
