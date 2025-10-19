@@ -45,7 +45,7 @@ export default {
       const GITHUB_TOKEN = env.GITHUB_TOKEN;
       const GITHUB_OWNER = env.GITHUB_OWNER || 'Yoshi-Seed';
       const GITHUB_REPO = env.GITHUB_REPO || 'global';
-      const CSV_PATH = 'project-tracker/seed_planning_data.csv';
+      const CSV_PATH = env.CSV_PATH || 'project-tracker/seed_planning_data.csv';
 
       // タイムスタンプとブランチ名生成
       const timestamp = new Date().toISOString();
@@ -161,8 +161,19 @@ async function createGitHubPR({ token, owner, repo, csvPath, branchName, project
 
   // 3. 既存のCSVファイル取得
   const fileResponse = await fetch(`${apiBase}/contents/${csvPath}?ref=main`, { headers });
+  
+  if (!fileResponse.ok) {
+    const errorData = await fileResponse.json();
+    throw new Error(`Failed to fetch CSV file: ${errorData.message || fileResponse.statusText}`);
+  }
+  
   const fileData = await fileResponse.json();
-  const currentContent = atob(fileData.content); // Base64デコード
+  
+  if (!fileData.content) {
+    throw new Error(`CSV file content is empty or undefined`);
+  }
+  
+  const currentContent = base64DecodeUTF8(fileData.content.replace(/\n/g, '')); // Base64デコード（UTF-8対応）
   const currentSha = fileData.sha;
 
   // 4. CSV行を生成
@@ -175,7 +186,7 @@ async function createGitHubPR({ token, owner, repo, csvPath, branchName, project
     headers,
     body: JSON.stringify({
       message: `Add project: ${projectData.diseaseName}`,
-      content: btoa(updatedContent), // Base64エンコード
+      content: base64EncodeUTF8(updatedContent), // Base64エンコード（UTF-8対応）
       sha: currentSha,
       branch: branchName,
     }),
@@ -229,6 +240,42 @@ function escapeCSV(field) {
     return `"${field.replace(/"/g, '""')}"`;
   }
   return field;
+}
+
+/**
+ * UTF-8文字列をBase64エンコード
+ */
+function base64EncodeUTF8(str) {
+  // UTF-8バイト配列に変換
+  const encoder = new TextEncoder();
+  const uint8Array = encoder.encode(str);
+  
+  // バイト配列をバイナリ文字列に変換
+  let binaryString = '';
+  for (let i = 0; i < uint8Array.length; i++) {
+    binaryString += String.fromCharCode(uint8Array[i]);
+  }
+  
+  // Base64エンコード
+  return btoa(binaryString);
+}
+
+/**
+ * Base64をUTF-8文字列にデコード
+ */
+function base64DecodeUTF8(base64) {
+  // Base64デコード
+  const binaryString = atob(base64);
+  
+  // バイナリ文字列をバイト配列に変換
+  const uint8Array = new Uint8Array(binaryString.length);
+  for (let i = 0; i < binaryString.length; i++) {
+    uint8Array[i] = binaryString.charCodeAt(i);
+  }
+  
+  // UTF-8文字列にデコード
+  const decoder = new TextDecoder();
+  return decoder.decode(uint8Array);
 }
 
 /**
