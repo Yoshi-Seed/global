@@ -250,14 +250,30 @@
           <p class="text-xs text-gray-500 mt-1">PJ番号が分かれば入力してください（任意）</p>
         </div>
 
+        <!-- 登録者名（任意） -->
+        <div>
+          <label for="createdBy" class="block text-sm font-medium text-gray-700 mb-2">
+            <i class="fas fa-user mr-2 text-purple-600"></i>
+            あなたの名前（任意）
+          </label>
+          <input 
+            type="text" 
+            id="createdBy" 
+            name="createdBy" 
+            placeholder="例: 山田太郎"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+          <p class="text-xs text-gray-500 mt-1">登録者名を記録したい場合に入力してください（任意）</p>
+        </div>
+
         <!-- 送信ボタン -->
         <div class="flex space-x-4 pt-4">
           <button 
             type="submit" 
             class="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition font-semibold flex items-center justify-center space-x-2"
           >
-            <i class="fas fa-save"></i>
-            <span>案件を登録</span>
+            <i class="fas fa-code-branch"></i>
+            <span>この内容でPRを作る</span>
           </button>
           <button 
             type="button" 
@@ -271,14 +287,23 @@
       </form>
 
       <!-- 成功メッセージ -->
-      <div id="successMessage" class="hidden mt-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg flex items-center justify-between">
-        <div class="flex items-center space-x-2">
-          <i class="fas fa-check-circle text-xl"></i>
-          <span id="successText">案件が正常に登録されました！</span>
+      <div id="successMessage" class="hidden mt-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg">
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center space-x-2">
+            <i class="fas fa-check-circle text-xl"></i>
+            <span class="font-semibold">PRを作成しました！</span>
+          </div>
+          <button onclick="hideSuccessMessage()" class="text-green-700 hover:text-green-900">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
-        <button onclick="hideSuccessMessage()" class="text-green-700 hover:text-green-900">
-          <i class="fas fa-times"></i>
-        </button>
+        <div id="prLinkContainer" class="ml-7">
+          <a id="prLink" href="#" target="_blank" class="text-blue-600 hover:text-blue-800 underline flex items-center space-x-2">
+            <i class="fab fa-github"></i>
+            <span>GitHubでPRを確認する</span>
+            <i class="fas fa-external-link-alt text-sm"></i>
+          </a>
+        </div>
       </div>
 
       <!-- エラーメッセージ -->
@@ -294,19 +319,21 @@
     </div>
   </div>
 
-  <!-- データベースJS -->
-  <script src="js/database.js"></script>
-
   <!-- フォームロジック -->
   <script>
-    // 初期化
-    async function initRegisterPage() {
-      await db.init();
-    }
+    // Cloudflare Worker API エンドポイント
+    // デプロイ後にこのURLを実際のWorker URLに変更してください
+    const API_ENDPOINT = 'https://project-tracker-api.your-subdomain.workers.dev';
 
     // フォーム送信
     document.getElementById('projectForm').addEventListener('submit', async function(e) {
       e.preventDefault();
+
+      // 送信ボタンを無効化
+      const submitButton = e.target.querySelector('button[type="submit"]');
+      const originalText = submitButton.innerHTML;
+      submitButton.disabled = true;
+      submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>送信中...</span>';
 
       // フォームデータを収集
       const formData = {
@@ -317,50 +344,105 @@
         surveyType: document.getElementById('surveyType').value.trim(),
         targetType: document.getElementById('targetType').value,
         specialty: document.getElementById('specialty').value.trim(),
-        recruitCount: parseInt(document.getElementById('recruitCount').value),
+        recruitCount: parseInt(document.getElementById('recruitCount').value) || 0,
         targetConditions: document.getElementById('targetConditions').value.trim(),
         drug: document.getElementById('drug').value.trim(),
         recruitCompany: document.getElementById('recruitCompany').value.trim(),
         client: document.getElementById('client').value.trim(),
-        createdBy: 'user'
+        createdBy: document.getElementById('createdBy').value.trim() || undefined
       };
 
-      // データベースに保存
-      const result = db.createProject(formData);
+      try {
+        // API にPOSTリクエスト
+        const response = await fetch(API_ENDPOINT, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
 
-      if (result.success) {
-        showSuccessMessage('案件が正常に登録されました！ 疾患名: ' + formData.diseaseName);
-        
-        // フォームをリセット
-        setTimeout(() => {
-          resetForm();
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          // 成功: PRリンクを表示
+          showSuccessMessage(result.prUrl);
           
-          // オプション: 詳細ページにリダイレクト
-          if (confirm('登録した案件の詳細を確認しますか？')) {
-            window.location.href = 'projects.html?id=' + result.project.id;
+          // フォームをリセット
+          setTimeout(() => {
+            resetForm();
+          }, 1000);
+        } else {
+          // エラー: バリデーションエラーを表示
+          if (result.details) {
+            showValidationErrors(result.details);
+          } else {
+            showErrorMessage(result.message || 'エラーが発生しました');
           }
-        }, 2000);
-      } else {
-        showErrorMessage('登録に失敗しました: ' + result.error);
+        }
+      } catch (error) {
+        console.error('API Error:', error);
+        showErrorMessage('通信エラーが発生しました: ' + error.message);
+      } finally {
+        // 送信ボタンを再度有効化
+        submitButton.disabled = false;
+        submitButton.innerHTML = originalText;
       }
     });
 
     // フォームをリセット
     function resetForm() {
       document.getElementById('projectForm').reset();
+      // バリデーションエラー表示をクリア
+      document.querySelectorAll('.error-text').forEach(el => el.remove());
+      document.querySelectorAll('.border-red-500').forEach(el => {
+        el.classList.remove('border-red-500');
+        el.classList.add('border-gray-300');
+      });
     }
 
-    // 成功メッセージ表示
-    function showSuccessMessage(message) {
+    // 成功メッセージ表示（PRリンク付き）
+    function showSuccessMessage(prUrl) {
       const element = document.getElementById('successMessage');
-      document.getElementById('successText').textContent = message;
+      const prLink = document.getElementById('prLink');
+      
+      prLink.href = prUrl;
       element.classList.remove('hidden');
       
-      setTimeout(hideSuccessMessage, 5000);
+      // 自動的に非表示にしない（ユーザーが確認するまで表示）
     }
 
     function hideSuccessMessage() {
       document.getElementById('successMessage').classList.add('hidden');
+    }
+
+    // バリデーションエラー表示
+    function showValidationErrors(errors) {
+      // 既存のエラー表示をクリア
+      document.querySelectorAll('.error-text').forEach(el => el.remove());
+      document.querySelectorAll('.border-red-500').forEach(el => {
+        el.classList.remove('border-red-500');
+        el.classList.add('border-gray-300');
+      });
+
+      // 各フィールドにエラーを表示
+      Object.entries(errors).forEach(([field, message]) => {
+        const input = document.getElementById(field);
+        if (input) {
+          // 入力欄を赤枠に
+          input.classList.remove('border-gray-300');
+          input.classList.add('border-red-500');
+          
+          // エラーメッセージを追加
+          const errorDiv = document.createElement('p');
+          errorDiv.className = 'error-text text-xs text-red-500 mt-1';
+          errorDiv.textContent = message;
+          input.parentElement.appendChild(errorDiv);
+        }
+      });
+
+      // 一般的なエラーメッセージも表示
+      showErrorMessage('入力内容に誤りがあります。赤字の項目を確認してください。');
     }
 
     // エラーメッセージ表示
@@ -376,8 +458,7 @@
       document.getElementById('errorMessage').classList.add('hidden');
     }
 
-    // ページ読み込み時に実行
-    window.addEventListener('DOMContentLoaded', initRegisterPage);
+    // データベースJSの読み込みを削除（もうLocalStorageを使わない）
   </script>
 </body>
 </html>
