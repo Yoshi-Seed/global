@@ -8,6 +8,36 @@ class ProjectDatabase {
   constructor() {
     this.storageKey = 'project_tracker_data_v2';
     this.initialized = false;
+    
+    // 専門科の略語マッピング
+    this.specialtyAbbreviations = {
+      'BAS': '肥満症専門医',
+      'CARD': '循環器科',
+      'DERM': '皮膚科',
+      'Endos': '内分泌科',
+      'Gastro': '消化器科',
+      'GI Surgeon': '消化器外科',
+      'GYN': '産婦人科医',
+      'HEM': '血液科・血液内科',
+      'HEPA': '肝臓専門医',
+      'IM': '内科（専門医）',
+      'NEPH': '腎臓内科医',
+      'NEURO': '神経内科',
+      'ONC': '腫瘍内科',
+      'Opht': '眼科',
+      'ORTHO': '整形外科医',
+      'PATH': '病理学医',
+      'PULMs': '呼吸器科',
+      'Psych': '精神科',
+      'Rheum': 'リウマチ科',
+      'URO': '泌尿器科'
+    };
+    
+    // 逆マッピング（日本語→略語）
+    this.specialtyReverse = {};
+    Object.entries(this.specialtyAbbreviations).forEach(([abbr, full]) => {
+      this.specialtyReverse[full.toLowerCase()] = abbr.toLowerCase();
+    });
   }
 
   /**
@@ -227,28 +257,80 @@ class ProjectDatabase {
   }
 
   /**
-   * 検索機能（疾患名、疾患略語、専門で検索）
+   * 専門科の略語を展開する
+   */
+  expandSpecialtyAbbreviation(query) {
+    const upperQuery = query.toUpperCase();
+    const lowerQuery = query.toLowerCase();
+    
+    // 略語から正式名称
+    if (this.specialtyAbbreviations[upperQuery]) {
+      return this.specialtyAbbreviations[upperQuery].toLowerCase();
+    }
+    
+    // 大文字小文字混在の略語チェック
+    for (const [abbr, full] of Object.entries(this.specialtyAbbreviations)) {
+      if (abbr.toLowerCase() === lowerQuery) {
+        return full.toLowerCase();
+      }
+    }
+    
+    return null;
+  }
+
+  /**
+   * 検索機能（疾患名、疾患略語、専門で優先的に検索）
+   * フリーワード検索では主要フィールドのみを対象とし、部分一致の精度を向上
    */
   searchProjects(query) {
     const projects = this.getAllProjects();
-    const lowerQuery = query.toLowerCase();
+    const lowerQuery = query.toLowerCase().trim();
+    
+    if (!lowerQuery) return projects;
+    
+    // 専門科略語の展開
+    const expandedSpecialty = this.expandSpecialtyAbbreviation(query);
 
     return projects.filter(p => {
-      return (
-        (p.diseaseName && p.diseaseName.toLowerCase().includes(lowerQuery)) ||
-        (p.diseaseAbbr && p.diseaseAbbr.toLowerCase().includes(lowerQuery)) ||
-        (p.specialty && p.specialty.toLowerCase().includes(lowerQuery)) ||
-        (p.targetType && p.targetType.toLowerCase().includes(lowerQuery)) ||
-        (p.targetConditions && p.targetConditions.toLowerCase().includes(lowerQuery)) ||
-        (p.drug && p.drug.toLowerCase().includes(lowerQuery)) ||
-        (p.client && p.client.toLowerCase().includes(lowerQuery)) ||
-        (p.projectId && p.projectId.toLowerCase().includes(lowerQuery))
-      );
+      // 1. 疾患名での完全一致または部分一致（最優先）
+      if (p.diseaseName && p.diseaseName.toLowerCase().includes(lowerQuery)) {
+        return true;
+      }
+      
+      // 2. 疾患略語での完全一致または部分一致（高優先）
+      if (p.diseaseAbbr && p.diseaseAbbr.toLowerCase().includes(lowerQuery)) {
+        return true;
+      }
+      
+      // 3. 専門科での検索（略語対応）
+      if (p.specialty) {
+        const specialtyLower = p.specialty.toLowerCase();
+        // 直接検索
+        if (specialtyLower.includes(lowerQuery)) {
+          return true;
+        }
+        // 略語展開後の検索
+        if (expandedSpecialty && specialtyLower.includes(expandedSpecialty)) {
+          return true;
+        }
+      }
+      
+      // 4. 対象者タイプ（医師/患者など）
+      if (p.targetType && p.targetType.toLowerCase() === lowerQuery) {
+        return true;
+      }
+      
+      // 5. クライアント名での検索
+      if (p.client && p.client.toLowerCase().includes(lowerQuery)) {
+        return true;
+      }
+      
+      return false;
     });
   }
 
   /**
-   * フィルター機能
+   * フィルター機能（専門科略語対応）
    */
   filterProjects(filters) {
     let projects = this.getAllProjects();
@@ -258,16 +340,29 @@ class ProjectDatabase {
     }
 
     if (filters.diseaseName) {
+      const lowerDisease = filters.diseaseName.toLowerCase();
       projects = projects.filter(p => 
-        p.diseaseName.toLowerCase().includes(filters.diseaseName.toLowerCase()) ||
-        (p.diseaseAbbr && p.diseaseAbbr.toLowerCase().includes(filters.diseaseName.toLowerCase()))
+        (p.diseaseName && p.diseaseName.toLowerCase().includes(lowerDisease)) ||
+        (p.diseaseAbbr && p.diseaseAbbr.toLowerCase().includes(lowerDisease))
       );
     }
 
     if (filters.specialty) {
-      projects = projects.filter(p => 
-        p.specialty && p.specialty.toLowerCase().includes(filters.specialty.toLowerCase())
-      );
+      const expandedSpecialty = this.expandSpecialtyAbbreviation(filters.specialty);
+      const lowerSpecialty = filters.specialty.toLowerCase();
+      
+      projects = projects.filter(p => {
+        if (!p.specialty) return false;
+        const specialtyLower = p.specialty.toLowerCase();
+        
+        // 直接マッチ
+        if (specialtyLower.includes(lowerSpecialty)) return true;
+        
+        // 略語展開後のマッチ
+        if (expandedSpecialty && specialtyLower.includes(expandedSpecialty)) return true;
+        
+        return false;
+      });
     }
 
     if (filters.client) {

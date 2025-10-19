@@ -47,16 +47,27 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <!-- フリーワード検索 -->
         <div class="lg:col-span-2">
-          <label class="block text-sm font-medium text-gray-700 mb-2">
-            フリーワード検索
+          <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center justify-between">
+            <span>フリーワード検索</span>
+            <button 
+              onclick="toggleSpecialtyGuide()" 
+              class="text-xs text-blue-600 hover:text-blue-800 flex items-center"
+            >
+              <i class="fas fa-info-circle mr-1"></i>専門科略語一覧
+            </button>
           </label>
           <input 
             type="text" 
             id="searchQuery" 
-            placeholder="疾患名、疾患略語、専門、薬剤、クライアントなどで検索..."
+            placeholder="疾患名、疾患略語、専門科（略語可）で検索..."
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
           >
-          <p class="text-xs text-gray-500 mt-1">例: 「アルツハイマー」「AD」「脳神経内科」「The Link Group」</p>
+          <p class="text-xs text-gray-500 mt-1">
+            💡 例: 「T2D」「AD」「NEURO」「Psych」「脳神経内科」「精神科」
+          </p>
+          <p class="text-xs text-blue-600 mt-1">
+            ✨ 専門科は略語でも検索可能です（例: NEURO → 神経内科、CARD → 循環器科）
+          </p>
         </div>
 
         <!-- 対象者タイプフィルター -->
@@ -91,9 +102,10 @@
           <input 
             type="text" 
             id="filterSpecialty" 
-            placeholder="例: 脳神経内科, 精神科"
+            placeholder="例: NEURO, Psych, 脳神経内科"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
           >
+          <p class="text-xs text-gray-500 mt-1">略語でも検索可能</p>
         </div>
 
         <!-- クライアント -->
@@ -145,6 +157,79 @@
           <i class="fas fa-times"></i>
           <span>クリア</span>
         </button>
+      </div>
+
+      <!-- 専門科略語ガイド（折りたたみ） -->
+      <div id="specialtyGuide" class="hidden mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <h3 class="font-bold text-blue-900 mb-3 flex items-center">
+          <i class="fas fa-book-medical mr-2"></i>
+          専門科略語対応表
+        </h3>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 text-sm">
+          <div class="bg-white p-2 rounded border border-blue-100">
+            <span class="font-bold text-blue-700">BAS</span> → 肥満症専門医
+          </div>
+          <div class="bg-white p-2 rounded border border-blue-100">
+            <span class="font-bold text-blue-700">CARD</span> → 循環器科
+          </div>
+          <div class="bg-white p-2 rounded border border-blue-100">
+            <span class="font-bold text-blue-700">DERM</span> → 皮膚科
+          </div>
+          <div class="bg-white p-2 rounded border border-blue-100">
+            <span class="font-bold text-blue-700">Endos</span> → 内分泌科
+          </div>
+          <div class="bg-white p-2 rounded border border-blue-100">
+            <span class="font-bold text-blue-700">Gastro</span> → 消化器科
+          </div>
+          <div class="bg-white p-2 rounded border border-blue-100">
+            <span class="font-bold text-blue-700">GI Surgeon</span> → 消化器外科
+          </div>
+          <div class="bg-white p-2 rounded border border-blue-100">
+            <span class="font-bold text-blue-700">GYN</span> → 産婦人科医
+          </div>
+          <div class="bg-white p-2 rounded border border-blue-100">
+            <span class="font-bold text-blue-700">HEM</span> → 血液科・血液内科
+          </div>
+          <div class="bg-white p-2 rounded border border-blue-100">
+            <span class="font-bold text-blue-700">HEPA</span> → 肝臓専門医
+          </div>
+          <div class="bg-white p-2 rounded border border-blue-100">
+            <span class="font-bold text-blue-700">IM</span> → 内科（専門医）
+          </div>
+          <div class="bg-white p-2 rounded border border-blue-100">
+            <span class="font-bold text-blue-700">NEPH</span> → 腎臓内科医
+          </div>
+          <div class="bg-white p-2 rounded border border-blue-100">
+            <span class="font-bold text-blue-700">NEURO</span> → 神経内科
+          </div>
+          <div class="bg-white p-2 rounded border border-blue-100">
+            <span class="font-bold text-blue-700">ONC</span> → 腫瘍内科
+          </div>
+          <div class="bg-white p-2 rounded border border-blue-100">
+            <span class="font-bold text-blue-700">Opht</span> → 眼科
+          </div>
+          <div class="bg-white p-2 rounded border border-blue-100">
+            <span class="font-bold text-blue-700">ORTHO</span> → 整形外科医
+          </div>
+          <div class="bg-white p-2 rounded border border-blue-100">
+            <span class="font-bold text-blue-700">PATH</span> → 病理学医
+          </div>
+          <div class="bg-white p-2 rounded border border-blue-100">
+            <span class="font-bold text-blue-700">PULMs</span> → 呼吸器科
+          </div>
+          <div class="bg-white p-2 rounded border border-blue-100">
+            <span class="font-bold text-blue-700">Psych</span> → 精神科
+          </div>
+          <div class="bg-white p-2 rounded border border-blue-100">
+            <span class="font-bold text-blue-700">Rheum</span> → リウマチ科
+          </div>
+          <div class="bg-white p-2 rounded border border-blue-100">
+            <span class="font-bold text-blue-700">URO</span> → 泌尿器科
+          </div>
+        </div>
+        <p class="text-xs text-gray-600 mt-3">
+          💡 検索時に略語を入力すると、自動的に対応する専門科で検索されます
+        </p>
       </div>
     </div>
 
@@ -243,6 +328,16 @@
   <script>
     let currentProjects = [];
     let currentProjectId = null;
+
+    // 専門科略語ガイドの表示切り替え
+    function toggleSpecialtyGuide() {
+      const guide = document.getElementById('specialtyGuide');
+      if (guide.classList.contains('hidden')) {
+        guide.classList.remove('hidden');
+      } else {
+        guide.classList.add('hidden');
+      }
+    }
 
     // 初期化
     async function initProjectsPage() {
