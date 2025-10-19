@@ -416,15 +416,16 @@
         maxRecruitCount: document.getElementById('filterMaxRecruits').value
       };
 
-      // フリーワード検索
+      // フリーワード検索を先に実行
+      let baseProjects;
       if (query) {
-        currentProjects = db.searchProjects(query);
+        baseProjects = db.searchProjects(query);
       } else {
-        currentProjects = db.getAllProjects();
+        baseProjects = db.getAllProjects();
       }
 
-      // フィルター適用
-      currentProjects = db.filterProjects(filters);
+      // フィルター適用（フリーワード検索結果を引数として渡す）
+      currentProjects = db.filterProjects(filters, baseProjects);
 
       renderProjects(currentProjects);
     }

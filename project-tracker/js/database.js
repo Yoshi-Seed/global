@@ -279,8 +279,8 @@ class ProjectDatabase {
   }
 
   /**
-   * 検索機能（疾患名、疾患略語、専門で優先的に検索）
-   * フリーワード検索では主要フィールドのみを対象とし、部分一致の精度を向上
+   * 検索機能（全フィールド対象の包括的検索）
+   * フリーワード検索で全てのデータ項目から部分一致で検索
    */
   searchProjects(query) {
     const projects = this.getAllProjects();
@@ -292,17 +292,32 @@ class ProjectDatabase {
     const expandedSpecialty = this.expandSpecialtyAbbreviation(query);
 
     return projects.filter(p => {
-      // 1. 疾患名での完全一致または部分一致（最優先）
+      // 1. 疾患名
       if (p.diseaseName && p.diseaseName.toLowerCase().includes(lowerQuery)) {
         return true;
       }
       
-      // 2. 疾患略語での完全一致または部分一致（高優先）
+      // 2. 疾患略語
       if (p.diseaseAbbr && p.diseaseAbbr.toLowerCase().includes(lowerQuery)) {
         return true;
       }
       
-      // 3. 専門科での検索（略語対応）
+      // 3. 手法
+      if (p.method && p.method.toLowerCase().includes(lowerQuery)) {
+        return true;
+      }
+      
+      // 4. 調査種別
+      if (p.surveyType && p.surveyType.toLowerCase().includes(lowerQuery)) {
+        return true;
+      }
+      
+      // 5. 対象者タイプ
+      if (p.targetType && p.targetType.toLowerCase().includes(lowerQuery)) {
+        return true;
+      }
+      
+      // 6. 専門科（略語対応）
       if (p.specialty) {
         const specialtyLower = p.specialty.toLowerCase();
         // 直接検索
@@ -315,13 +330,28 @@ class ProjectDatabase {
         }
       }
       
-      // 4. 対象者タイプ（医師/患者など）
-      if (p.targetType && p.targetType.toLowerCase() === lowerQuery) {
+      // 7. 対象条件
+      if (p.targetConditions && p.targetConditions.toLowerCase().includes(lowerQuery)) {
         return true;
       }
       
-      // 5. クライアント名での検索
+      // 8. 薬剤
+      if (p.drug && p.drug.toLowerCase().includes(lowerQuery)) {
+        return true;
+      }
+      
+      // 9. リクルート実施企業
+      if (p.recruitCompany && p.recruitCompany.toLowerCase().includes(lowerQuery)) {
+        return true;
+      }
+      
+      // 10. クライアント名
       if (p.client && p.client.toLowerCase().includes(lowerQuery)) {
+        return true;
+      }
+      
+      // 11. プロジェクトID（任意項目）
+      if (p.projectId && p.projectId.toLowerCase().includes(lowerQuery)) {
         return true;
       }
       
@@ -331,17 +361,18 @@ class ProjectDatabase {
 
   /**
    * フィルター機能（専門科略語対応）
+   * 引数でプロジェクトリストを受け取り、そのリストに対してフィルターを適用
    */
-  filterProjects(filters) {
-    let projects = this.getAllProjects();
+  filterProjects(filters, projects = null) {
+    let projectsList = projects || this.getAllProjects();
 
     if (filters.targetType && filters.targetType !== 'all') {
-      projects = projects.filter(p => p.targetType === filters.targetType);
+      projectsList = projectsList.filter(p => p.targetType === filters.targetType);
     }
 
     if (filters.diseaseName) {
       const lowerDisease = filters.diseaseName.toLowerCase();
-      projects = projects.filter(p => 
+      projectsList = projectsList.filter(p => 
         (p.diseaseName && p.diseaseName.toLowerCase().includes(lowerDisease)) ||
         (p.diseaseAbbr && p.diseaseAbbr.toLowerCase().includes(lowerDisease))
       );
@@ -351,7 +382,7 @@ class ProjectDatabase {
       const expandedSpecialty = this.expandSpecialtyAbbreviation(filters.specialty);
       const lowerSpecialty = filters.specialty.toLowerCase();
       
-      projects = projects.filter(p => {
+      projectsList = projectsList.filter(p => {
         if (!p.specialty) return false;
         const specialtyLower = p.specialty.toLowerCase();
         
@@ -366,28 +397,28 @@ class ProjectDatabase {
     }
 
     if (filters.client) {
-      projects = projects.filter(p => 
+      projectsList = projectsList.filter(p => 
         p.client && p.client.toLowerCase().includes(filters.client.toLowerCase())
       );
     }
 
     if (filters.minRecruitCount) {
-      projects = projects.filter(p => p.recruitCount >= parseInt(filters.minRecruitCount));
+      projectsList = projectsList.filter(p => p.recruitCount >= parseInt(filters.minRecruitCount));
     }
 
     if (filters.maxRecruitCount) {
-      projects = projects.filter(p => p.recruitCount <= parseInt(filters.maxRecruitCount));
+      projectsList = projectsList.filter(p => p.recruitCount <= parseInt(filters.maxRecruitCount));
     }
 
     if (filters.dateFrom) {
-      projects = projects.filter(p => new Date(p.createdAt) >= new Date(filters.dateFrom));
+      projectsList = projectsList.filter(p => new Date(p.createdAt) >= new Date(filters.dateFrom));
     }
 
     if (filters.dateTo) {
-      projects = projects.filter(p => new Date(p.createdAt) <= new Date(filters.dateTo));
+      projectsList = projectsList.filter(p => new Date(p.createdAt) <= new Date(filters.dateTo));
     }
 
-    return projects;
+    return projectsList;
   }
 
   /**
