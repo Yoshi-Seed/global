@@ -1,11 +1,13 @@
 name = "project-tracker-api"
 main = "add-project.js"
 compatibility_date = "2024-01-01"
+account_id = "c6fb268cb2e7d61c7e441d425401e88e"
 
 # Environment variables (set via wrangler secret put)
 # GITHUB_TOKEN = "your-github-token"
 # GITHUB_OWNER = "Yoshi-Seed"
 # GITHUB_REPO = "global"
+# CSV_PATH = "project-tracker/seed_planning_data.csv"
 
 [env.production]
 name = "project-tracker-api"
