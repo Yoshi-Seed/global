@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>新規プロジェクト登録 - プロジェクト履歴管理システム</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50">
+  <!-- ナビゲーション -->
+  <nav class="bg-blue-600 text-white shadow-lg">
+    <div class="container mx-auto px-4 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <i class="fas fa-project-diagram text-2xl"></i>
+          <h1 class="text-xl font-bold">プロジェクト履歴管理システム</h1>
+        </div>
+        <div class="flex space-x-4">
+          <a href="index.html" class="px-4 py-2 bg-blue-500 rounded hover:bg-blue-600 transition">
+            <i class="fas fa-home mr-2"></i>ダッシュボード
+          </a>
+          <a href="register.html" class="px-4 py-2 bg-green-600 rounded hover:bg-green-700 transition">
+            <i class="fas fa-plus mr-2"></i>新規登録
+          </a>
+          <a href="projects.html" class="px-4 py-2 bg-blue-500 rounded hover:bg-blue-600 transition">
+            <i class="fas fa-list mr-2"></i>一覧表示
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- メインコンテンツ -->
+  <div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+      
+      <!-- ヘッダー -->
+      <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-2xl font-bold text-gray-800 flex items-center">
+          <i class="fas fa-plus-circle mr-3 text-green-600"></i>
+          新規プロジェクト登録
+        </h2>
+        <p class="text-gray-600 mt-2">プロジェクト情報を入力してください。登録後は自動的に履歴に追加されます。</p>
+      </div>
+
+      <!-- 登録フォーム -->
+      <form id="projectForm" class="bg-white rounded-lg shadow-md p-6 space-y-6">
+        
+        <!-- Project ID -->
+        <div>
+          <label for="projectId" class="block text-sm font-medium text-gray-700 mb-2">
+            <i class="fas fa-fingerprint mr-2 text-blue-600"></i>
+            Project ID <span class="text-red-500">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="projectId" 
+            name="projectId" 
+            required
+            placeholder="例: PRJ-2025-001"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+          <p class="text-xs text-gray-500 mt-1">プロジェクトを識別するための一意のIDを入力してください</p>
+        </div>
+
+        <!-- 対象者タイプ -->
+        <div>
+          <label for="targetType" class="block text-sm font-medium text-gray-700 mb-2">
+            <i class="fas fa-users mr-2 text-green-600"></i>
+            リサーチ対象者 <span class="text-red-500">*</span>
+          </label>
+          <select 
+            id="targetType" 
+            name="targetType" 
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+            <option value="">選択してください</option>
+            <option value="医師">医師</option>
+            <option value="患者">患者</option>
+            <option value="医師・患者">医師・患者（両方）</option>
+          </select>
+        </div>
+
+        <!-- 疾患・テーマ -->
+        <div>
+          <label for="diseaseTheme" class="block text-sm font-medium text-gray-700 mb-2">
+            <i class="fas fa-heartbeat mr-2 text-red-600"></i>
+            疾患・テーマ <span class="text-red-500">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="diseaseTheme" 
+            name="diseaseTheme" 
+            required
+            placeholder="例: 糖尿病治療における新規薬剤の使用実態"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+          <p class="text-xs text-gray-500 mt-1">リサーチのテーマや対象疾患を入力してください</p>
+        </div>
+
+        <!-- リクルート人数 -->
+        <div>
+          <label for="recruitCount" class="block text-sm font-medium text-gray-700 mb-2">
+            <i class="fas fa-user-plus mr-2 text-purple-600"></i>
+            リクルート人数 <span class="text-red-500">*</span>
+          </label>
+          <input 
+            type="number" 
+            id="recruitCount" 
+            name="recruitCount" 
+            required
+            min="1"
+            placeholder="例: 50"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+          <p class="text-xs text-gray-500 mt-1">目標リクルート人数を入力してください</p>
+        </div>
+
+        <!-- スクリーニング条件 -->
+        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+            <i class="fas fa-filter mr-2 text-orange-600"></i>
+            スクリーニング条件 <span class="text-red-500">*</span>
+          </h3>
+          
+          <div id="screeningConditionsContainer" class="space-y-3">
+            <!-- 動的に条件を追加 -->
+            <div class="flex space-x-2 screening-condition-row">
+              <input 
+                type="text" 
+                placeholder="項目名（例: 診療科）" 
+                class="flex-1 px-3 py-2 border border-gray-300 rounded-lg condition-key"
+              >
+              <input 
+                type="text" 
+                placeholder="条件（例: 内科・糖尿病内科）" 
+                class="flex-1 px-3 py-2 border border-gray-300 rounded-lg condition-value"
+              >
+              <button 
+                type="button" 
+                onclick="removeConditionRow(this)" 
+                class="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+
+          <button 
+            type="button" 
+            onclick="addConditionRow()" 
+            class="mt-3 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition flex items-center space-x-2"
+          >
+            <i class="fas fa-plus"></i>
+            <span>条件を追加</span>
+          </button>
+
+          <p class="text-xs text-gray-500 mt-3">
+            <i class="fas fa-info-circle mr-1"></i>
+            例: 「年齢」→「40-65歳」、「診療科」→「内科・糖尿病内科」など
+          </p>
+        </div>
+
+        <!-- フリーコメント -->
+        <div>
+          <label for="freeComment" class="block text-sm font-medium text-gray-700 mb-2">
+            <i class="fas fa-comment-alt mr-2 text-yellow-600"></i>
+            フリーコメント
+          </label>
+          <textarea 
+            id="freeComment" 
+            name="freeComment" 
+            rows="4"
+            placeholder="プロジェクトに関する補足情報や特記事項を入力してください"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          ></textarea>
+          <p class="text-xs text-gray-500 mt-1">後で類似案件を検索する際の参考情報として活用されます</p>
+        </div>
+
+        <!-- 担当者名（任意） -->
+        <div>
+          <label for="createdBy" class="block text-sm font-medium text-gray-700 mb-2">
+            <i class="fas fa-user mr-2 text-indigo-600"></i>
+            担当者名
+          </label>
+          <input 
+            type="text" 
+            id="createdBy" 
+            name="createdBy" 
+            placeholder="例: 山田太郎"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+        </div>
+
+        <!-- 送信ボタン -->
+        <div class="flex space-x-4 pt-4">
+          <button 
+            type="submit" 
+            class="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition font-semibold flex items-center justify-center space-x-2"
+          >
+            <i class="fas fa-save"></i>
+            <span>プロジェクトを登録</span>
+          </button>
+          <button 
+            type="button" 
+            onclick="resetForm()" 
+            class="px-6 py-3 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition font-semibold"
+          >
+            <i class="fas fa-redo mr-2"></i>
+            リセット
+          </button>
+        </div>
+      </form>
+
+      <!-- 成功メッセージ -->
+      <div id="successMessage" class="hidden mt-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <i class="fas fa-check-circle text-xl"></i>
+          <span id="successText">プロジェクトが正常に登録されました！</span>
+        </div>
+        <button onclick="hideSuccessMessage()" class="text-green-700 hover:text-green-900">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <!-- エラーメッセージ -->
+      <div id="errorMessage" class="hidden mt-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <i class="fas fa-exclamation-circle text-xl"></i>
+          <span id="errorText">エラーが発生しました</span>
+        </div>
+        <button onclick="hideErrorMessage()" class="text-red-700 hover:text-red-900">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- データベースJS -->
+  <script src="js/database.js"></script>
+
+  <!-- フォームロジック -->
+  <script>
+    // 初期化
+    async function initRegisterPage() {
+      await db.init();
+    }
+
+    // スクリーニング条件行を追加
+    function addConditionRow() {
+      const container = document.getElementById('screeningConditionsContainer');
+      const newRow = document.createElement('div');
+      newRow.className = 'flex space-x-2 screening-condition-row';
+      newRow.innerHTML = `
+        <input 
+          type="text" 
+          placeholder="項目名（例: 診療科）" 
+          class="flex-1 px-3 py-2 border border-gray-300 rounded-lg condition-key"
+        >
+        <input 
+          type="text" 
+          placeholder="条件（例: 内科・糖尿病内科）" 
+          class="flex-1 px-3 py-2 border border-gray-300 rounded-lg condition-value"
+        >
+        <button 
+          type="button" 
+          onclick="removeConditionRow(this)" 
+          class="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+        >
+          <i class="fas fa-trash"></i>
+        </button>
+      `;
+      container.appendChild(newRow);
+    }
+
+    // スクリーニング条件行を削除
+    function removeConditionRow(button) {
+      const rows = document.querySelectorAll('.screening-condition-row');
+      if (rows.length > 1) {
+        button.parentElement.remove();
+      } else {
+        alert('少なくとも1つの条件は必要です');
+      }
+    }
+
+    // スクリーニング条件を収集
+    function collectScreeningConditions() {
+      const rows = document.querySelectorAll('.screening-condition-row');
+      const conditions = {};
+      
+      rows.forEach(row => {
+        const key = row.querySelector('.condition-key').value.trim();
+        const value = row.querySelector('.condition-value').value.trim();
+        
+        if (key && value) {
+          conditions[key] = value;
+        }
+      });
+
+      return conditions;
+    }
+
+    // フォーム送信
+    document.getElementById('projectForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      // スクリーニング条件を収集
+      const screeningConditions = collectScreeningConditions();
+      
+      if (Object.keys(screeningConditions).length === 0) {
+        showErrorMessage('少なくとも1つのスクリーニング条件を入力してください');
+        return;
+      }
+
+      // フォームデータを収集
+      const formData = {
+        projectId: document.getElementById('projectId').value.trim(),
+        targetType: document.getElementById('targetType').value,
+        diseaseTheme: document.getElementById('diseaseTheme').value.trim(),
+        recruitCount: parseInt(document.getElementById('recruitCount').value),
+        screeningConditions: screeningConditions,
+        freeComment: document.getElementById('freeComment').value.trim(),
+        createdBy: document.getElementById('createdBy').value.trim() || 'anonymous'
+      };
+
+      // Project IDの重複チェック
+      const existing = db.getProjectByProjectId(formData.projectId);
+      if (existing) {
+        showErrorMessage('このProject IDは既に登録されています: ' + formData.projectId);
+        return;
+      }
+
+      // データベースに保存
+      const result = db.createProject(formData);
+
+      if (result.success) {
+        showSuccessMessage('プロジェクトが正常に登録されました！ ID: ' + formData.projectId);
+        
+        // フォームをリセット
+        setTimeout(() => {
+          resetForm();
+          
+          // オプション: 詳細ページにリダイレクト
+          if (confirm('登録したプロジェクトの詳細を確認しますか？')) {
+            window.location.href = 'projects.html?id=' + result.project.id;
+          }
+        }, 2000);
+      } else {
+        showErrorMessage('登録に失敗しました: ' + result.error);
+      }
+    });
+
+    // フォームをリセット
+    function resetForm() {
+      document.getElementById('projectForm').reset();
+      
+      // スクリーニング条件を1行だけ残す
+      const container = document.getElementById('screeningConditionsContainer');
+      container.innerHTML = `
+        <div class="flex space-x-2 screening-condition-row">
+          <input 
+            type="text" 
+            placeholder="項目名（例: 診療科）" 
+            class="flex-1 px-3 py-2 border border-gray-300 rounded-lg condition-key"
+          >
+          <input 
+            type="text" 
+            placeholder="条件（例: 内科・糖尿病内科）" 
+            class="flex-1 px-3 py-2 border border-gray-300 rounded-lg condition-value"
+          >
+          <button 
+            type="button" 
+            onclick="removeConditionRow(this)" 
+            class="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+          >
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      `;
+    }
+
+    // 成功メッセージ表示
+    function showSuccessMessage(message) {
+      const element = document.getElementById('successMessage');
+      document.getElementById('successText').textContent = message;
+      element.classList.remove('hidden');
+      
+      // 5秒後に自動で非表示
+      setTimeout(hideSuccessMessage, 5000);
+    }
+
+    // 成功メッセージ非表示
+    function hideSuccessMessage() {
+      document.getElementById('successMessage').classList.add('hidden');
+    }
+
+    // エラーメッセージ表示
+    function showErrorMessage(message) {
+      const element = document.getElementById('errorMessage');
+      document.getElementById('errorText').textContent = message;
+      element.classList.remove('hidden');
+      
+      // 5秒後に自動で非表示
+      setTimeout(hideErrorMessage, 5000);
+    }
+
+    // エラーメッセージ非表示
+    function hideErrorMessage() {
+      document.getElementById('errorMessage').classList.add('hidden');
+    }
+
+    // ページ読み込み時に実行
+    window.addEventListener('DOMContentLoaded', initRegisterPage);
+  </script>
+</body>
+</html>
