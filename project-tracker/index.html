@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>プロジェクト履歴管理システム - ダッシュボード</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50">
+  <!-- ナビゲーション -->
+  <nav class="bg-blue-600 text-white shadow-lg">
+    <div class="container mx-auto px-4 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <i class="fas fa-project-diagram text-2xl"></i>
+          <h1 class="text-xl font-bold">プロジェクト履歴管理システム</h1>
+        </div>
+        <div class="flex space-x-4">
+          <a href="index.html" class="px-4 py-2 bg-blue-700 rounded hover:bg-blue-800 transition">
+            <i class="fas fa-home mr-2"></i>ダッシュボード
+          </a>
+          <a href="register.html" class="px-4 py-2 bg-green-500 rounded hover:bg-green-600 transition">
+            <i class="fas fa-plus mr-2"></i>新規登録
+          </a>
+          <a href="projects.html" class="px-4 py-2 bg-blue-500 rounded hover:bg-blue-600 transition">
+            <i class="fas fa-list mr-2"></i>一覧表示
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- メインコンテンツ -->
+  <div class="container mx-auto px-4 py-8">
+    
+    <!-- 統計カード -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <!-- 総プロジェクト数 -->
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-500 text-sm">総プロジェクト数</p>
+            <p id="totalProjects" class="text-3xl font-bold text-blue-600">0</p>
+          </div>
+          <div class="bg-blue-100 rounded-full p-3">
+            <i class="fas fa-folder-open text-blue-600 text-2xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 総リクルート人数 -->
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-500 text-sm">総リクルート人数</p>
+            <p id="totalRecruits" class="text-3xl font-bold text-green-600">0</p>
+          </div>
+          <div class="bg-green-100 rounded-full p-3">
+            <i class="fas fa-users text-green-600 text-2xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 平均リクルート人数 -->
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-500 text-sm">平均リクルート人数</p>
+            <p id="avgRecruits" class="text-3xl font-bold text-purple-600">0</p>
+          </div>
+          <div class="bg-purple-100 rounded-full p-3">
+            <i class="fas fa-chart-line text-purple-600 text-2xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 今月の新規プロジェクト -->
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-500 text-sm">今月の新規</p>
+            <p id="thisMonthProjects" class="text-3xl font-bold text-orange-600">0</p>
+          </div>
+          <div class="bg-orange-100 rounded-full p-3">
+            <i class="fas fa-calendar-plus text-orange-600 text-2xl"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2カラムレイアウト -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      
+      <!-- 対象者タイプ別分布 -->
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-bold mb-4 flex items-center">
+          <i class="fas fa-chart-pie mr-2 text-blue-600"></i>
+          対象者タイプ別分布
+        </h2>
+        <div id="targetTypeChart" class="space-y-3">
+          <!-- 動的に生成 -->
+        </div>
+      </div>
+
+      <!-- 疾患テーマTop5 -->
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-bold mb-4 flex items-center">
+          <i class="fas fa-list-ol mr-2 text-green-600"></i>
+          疾患テーマ Top 5
+        </h2>
+        <div id="diseaseThemeChart" class="space-y-3">
+          <!-- 動的に生成 -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 最近のプロジェクト -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h2 class="text-xl font-bold mb-4 flex items-center">
+        <i class="fas fa-clock mr-2 text-purple-600"></i>
+        最近のプロジェクト（5件）
+      </h2>
+      <div class="overflow-x-auto">
+        <table class="min-w-full">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Project ID</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">対象者</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">疾患・テーマ</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">リクルート人数</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">登録日</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">アクション</th>
+            </tr>
+          </thead>
+          <tbody id="recentProjectsTable" class="bg-white divide-y divide-gray-200">
+            <!-- 動的に生成 -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- クイックアクション -->
+    <div class="mt-8 flex justify-center space-x-4">
+      <a href="register.html" class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition flex items-center space-x-2">
+        <i class="fas fa-plus-circle"></i>
+        <span>新規プロジェクト登録</span>
+      </a>
+      <a href="projects.html" class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition flex items-center space-x-2">
+        <i class="fas fa-search"></i>
+        <span>プロジェクト検索</span>
+      </a>
+      <button onclick="exportData()" class="bg-purple-500 text-white px-6 py-3 rounded-lg hover:bg-purple-600 transition flex items-center space-x-2">
+        <i class="fas fa-download"></i>
+        <span>データエクスポート</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- データベースJS -->
+  <script src="js/database.js"></script>
+
+  <!-- ダッシュボードロジック -->
+  <script>
+    // 初期化
+    async function initDashboard() {
+      await db.init();
+      loadStatistics();
+    }
+
+    // 統計情報を読み込み
+    function loadStatistics() {
+      const stats = db.getStatistics();
+
+      // 基本統計
+      document.getElementById('totalProjects').textContent = stats.totalProjects;
+      document.getElementById('totalRecruits').textContent = stats.totalRecruits.toLocaleString();
+      document.getElementById('avgRecruits').textContent = stats.averageRecruits;
+
+      // 今月のプロジェクト数
+      const thisMonth = new Date().toISOString().substring(0, 7);
+      document.getElementById('thisMonthProjects').textContent = stats.monthlyTrend[thisMonth] || 0;
+
+      // 対象者タイプ別分布
+      renderTargetTypeChart(stats.targetTypeDistribution);
+
+      // 疾患テーマTop5
+      renderDiseaseThemeChart(stats.diseaseThemes);
+
+      // 最近のプロジェクト
+      renderRecentProjects(stats.recentProjects);
+    }
+
+    // 対象者タイプ別分布グラフ
+    function renderTargetTypeChart(distribution) {
+      const container = document.getElementById('targetTypeChart');
+      container.innerHTML = '';
+
+      const total = Object.values(distribution).reduce((sum, val) => sum + val, 0);
+      
+      const colors = {
+        '医師': 'bg-blue-500',
+        '患者': 'bg-green-500',
+        '医師・患者': 'bg-purple-500'
+      };
+
+      Object.entries(distribution).forEach(([type, count]) => {
+        const percentage = ((count / total) * 100).toFixed(1);
+        const colorClass = colors[type] || 'bg-gray-500';
+
+        container.innerHTML += `
+          <div>
+            <div class="flex justify-between mb-1">
+              <span class="text-sm font-medium text-gray-700">${type}</span>
+              <span class="text-sm text-gray-600">${count}件 (${percentage}%)</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+              <div class="${colorClass} h-2 rounded-full" style="width: ${percentage}%"></div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    // 疾患テーマTop5
+    function renderDiseaseThemeChart(themes) {
+      const container = document.getElementById('diseaseThemeChart');
+      container.innerHTML = '';
+
+      const sorted = Object.entries(themes)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+
+      if (sorted.length === 0) {
+        container.innerHTML = '<p class="text-gray-500 text-center">データがありません</p>';
+        return;
+      }
+
+      const maxCount = sorted[0][1];
+
+      sorted.forEach(([theme, count], index) => {
+        const percentage = (count / maxCount) * 100;
+        const colors = ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-green-500', 'bg-blue-500'];
+
+        container.innerHTML += `
+          <div>
+            <div class="flex justify-between mb-1">
+              <span class="text-sm font-medium text-gray-700">${theme}...</span>
+              <span class="text-sm text-gray-600">${count}件</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+              <div class="${colors[index]} h-2 rounded-full transition-all duration-500" style="width: ${percentage}%"></div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    // 最近のプロジェクト一覧
+    function renderRecentProjects(projects) {
+      const tbody = document.getElementById('recentProjectsTable');
+      tbody.innerHTML = '';
+
+      if (projects.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="px-4 py-8 text-center text-gray-500">
+              プロジェクトがまだ登録されていません
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      projects.forEach(project => {
+        const date = new Date(project.createdAt).toLocaleDateString('ja-JP');
+        
+        tbody.innerHTML += `
+          <tr class="hover:bg-gray-50 transition">
+            <td class="px-4 py-3 text-sm font-medium text-blue-600">${project.projectId}</td>
+            <td class="px-4 py-3 text-sm">
+              <span class="px-2 py-1 rounded-full text-xs font-semibold ${getTargetTypeBadgeClass(project.targetType)}">
+                ${project.targetType}
+              </span>
+            </td>
+            <td class="px-4 py-3 text-sm text-gray-900">${project.diseaseTheme.substring(0, 40)}${project.diseaseTheme.length > 40 ? '...' : ''}</td>
+            <td class="px-4 py-3 text-sm text-gray-900">${project.recruitCount}名</td>
+            <td class="px-4 py-3 text-sm text-gray-500">${date}</td>
+            <td class="px-4 py-3 text-sm">
+              <a href="projects.html?id=${project.id}" class="text-blue-600 hover:text-blue-800">
+                <i class="fas fa-eye mr-1"></i>詳細
+              </a>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    // 対象者タイプバッジのクラス
+    function getTargetTypeBadgeClass(type) {
+      const classes = {
+        '医師': 'bg-blue-100 text-blue-800',
+        '患者': 'bg-green-100 text-green-800',
+        '医師・患者': 'bg-purple-100 text-purple-800'
+      };
+      return classes[type] || 'bg-gray-100 text-gray-800';
+    }
+
+    // データエクスポート
+    function exportData() {
+      const format = confirm('CSVでエクスポートしますか？（キャンセルするとJSONでエクスポートします）');
+      
+      if (format) {
+        // CSV
+        const csv = db.exportToCSV();
+        downloadFile(csv, 'projects_export.csv', 'text/csv');
+      } else {
+        // JSON
+        const json = db.exportToJSON();
+        downloadFile(json, 'projects_export.json', 'application/json');
+      }
+    }
+
+    // ファイルダウンロード
+    function downloadFile(content, filename, mimeType) {
+      const blob = new Blob([content], { type: mimeType });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // ページ読み込み時に実行
+    window.addEventListener('DOMContentLoaded', initDashboard);
+  </script>
+</body>
+</html>
