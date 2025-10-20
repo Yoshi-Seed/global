@@ -64,7 +64,8 @@ class ProjectAPI {
    * CSVテキストをパース
    */
   parseCSV(csvText) {
-    const lines = csvText.trim().split('\n');
+    // CRLF (\r\n) と LF (\n) の両方に対応
+    const lines = csvText.trim().split(/\r?\n/);
     if (lines.length < 2) {
       return [];
     }
@@ -73,7 +74,7 @@ class ProjectAPI {
     const dataLines = lines.slice(1);
     
     return dataLines.map((line, index) => {
-      const fields = this.parseCSVLine(line);
+      const fields = this.parseCSVLine(line.trim());
       
       return {
         id: index + 1,
@@ -116,16 +117,16 @@ class ProjectAPI {
           inQuotes = !inQuotes;
         }
       } else if (char === ',' && !inQuotes) {
-        // フィールド区切り
-        fields.push(current);
+        // フィールド区切り（引用符なしのフィールドはトリム）
+        fields.push(current.trim());
         current = '';
       } else {
         current += char;
       }
     }
     
-    // 最後のフィールドを追加
-    fields.push(current);
+    // 最後のフィールドを追加（引用符なしのフィールドはトリム）
+    fields.push(current.trim());
     
     return fields;
   }
