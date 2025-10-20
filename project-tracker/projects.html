@@ -660,8 +660,8 @@
     async function exportCSV() {
       const projects = await api.getAllProjects();
       
-      // CSVヘッダー
-      const headers = ['疾患名', '疾患略語', '手法', '調査種別', '対象者種別', '専門', '実績数', '対象条件', '薬剤', 'リクルート実施', 'クライアント'];
+      // CSVヘッダー（登録日を追加）
+      const headers = ['疾患名', '疾患略語', '手法', '調査種別', '対象者種別', '専門', '実績数', '対象条件', '薬剤', 'リクルート実施', 'クライアント', '登録日'];
       const csvLines = [headers.join(',')];
       
       // データ行
@@ -678,11 +678,15 @@
           escapeCSVField(project.drug || ''),
           escapeCSVField(project.recruitCompany || ''),
           escapeCSVField(project.client || ''),
+          project.registeredDate || '',  // 登録日を追加
         ];
         csvLines.push(row.join(','));
       });
       
-      const csv = csvLines.join('\n');
+      // UTF-8 BOMを追加して文字化け防止
+      const BOM = '\uFEFF';
+      const csv = BOM + csvLines.join('\n');
+      
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');

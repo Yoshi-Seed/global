@@ -117,9 +117,13 @@ async function handlePostProject(request, env) {
     const GITHUB_REPO = env.GITHUB_REPO || 'global';
     const CSV_PATH = env.CSV_PATH || 'project-tracker/seed_planning_data.csv';
 
-    // タイムスタンプとブランチ名生成
-    const timestamp = new Date().toISOString();
-    const branchName = `pr/add-record-${timestamp.replace(/[:.]/g, '-')}`;
+    // タイムスタンプとブランチ名生成（ミリ秒 + ランダム値で一意性を確保）
+    const timestamp = Date.now(); // Unix timestamp in milliseconds
+    const randomSuffix = Math.random().toString(36).substring(2, 8); // 6文字のランダム文字列
+    const branchName = `pr/add-record-${timestamp}-${randomSuffix}`;
+    
+    // ISO形式のタイムスタンプ
+    const isoTimestamp = new Date(timestamp).toISOString();
 
     // GitHub REST APIでPR作成フロー実行
     const result = await createGitHubPR({
@@ -130,7 +134,7 @@ async function handlePostProject(request, env) {
       branchName,
       projectData: {
         ...projectData,
-        createdAt: timestamp,
+        createdAt: isoTimestamp,
       },
     });
 
