@@ -277,6 +277,61 @@ class ProjectAPI {
   }
 
   /**
+   * 類似案件を検索
+   */
+  async findSimilarProjects(projectId, limit = 5) {
+    const projects = await this.getAllProjects();
+    const targetProject = projects.find(p => p.id === parseInt(projectId));
+    
+    if (!targetProject) {
+      return [];
+    }
+    
+    // 類似度を計算
+    const scoredProjects = projects
+      .filter(p => p.id !== targetProject.id)
+      .map(project => {
+        let score = 0;
+        
+        // 疾患名が同じ
+        if (project.diseaseName === targetProject.diseaseName) {
+          score += 50;
+        }
+        
+        // 対象者種別が同じ
+        if (project.targetType === targetProject.targetType) {
+          score += 20;
+        }
+        
+        // 手法が同じ
+        if (project.method === targetProject.method) {
+          score += 15;
+        }
+        
+        // 調査種別が同じ
+        if (project.surveyType === targetProject.surveyType) {
+          score += 10;
+        }
+        
+        // 専門科が同じ
+        if (project.specialty && targetProject.specialty && 
+            project.specialty === targetProject.specialty) {
+          score += 5;
+        }
+        
+        return {
+          ...project,
+          similarityScore: score
+        };
+      })
+      .filter(p => p.similarityScore > 0)
+      .sort((a, b) => b.similarityScore - a.similarityScore)
+      .slice(0, limit);
+    
+    return scoredProjects;
+  }
+
+  /**
    * キャッシュをクリア（強制リフレッシュ用）
    */
   clearCache() {
