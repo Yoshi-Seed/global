@@ -299,8 +299,10 @@
     </div>
   </div>
 
-  <!-- データベースJS -->
-  <script src="js/database.js"></script>
+  <!-- 共通設定 -->
+  <script src="js/config.js"></script>
+  <!-- API Client -->
+  <script src="js/api.js"></script>
 
   <!-- 案件一覧ロジック -->
   <script>
@@ -319,13 +321,11 @@
 
     // 初期化
     async function initProjectsPage() {
-      await db.init();
-      
       // URLパラメータから特定案件を開く
       const urlParams = new URLSearchParams(window.location.search);
       const projectId = urlParams.get('id');
       
-      loadProjects();
+      await loadProjects();
       
       if (projectId) {
         showProjectDetail(projectId);
@@ -333,9 +333,14 @@
     }
 
     // 案件一覧を読み込み
-    function loadProjects() {
-      currentProjects = db.getAllProjects();
-      renderProjects(currentProjects);
+    async function loadProjects() {
+      try {
+        currentProjects = await api.getAllProjects();
+        renderProjects(currentProjects);
+      } catch (error) {
+        console.error('Failed to load projects:', error);
+        alert('データの読み込みに失敗しました。ページを再読み込みしてください。');
+      }
     }
 
     // 案件一覧を表示
@@ -357,7 +362,7 @@
       }
 
       projects.forEach(project => {
-        const date = new Date(project.createdAt).toLocaleDateString('ja-JP');
+        const date = '-'; // CSVにはcreatedAtがないため
         
         tbody.innerHTML += `
           <tr class="hover:bg-gray-50 transition cursor-pointer" onclick="showProjectDetail('${project.id}')">
@@ -383,7 +388,7 @@
     }
 
     // フィルター適用
-    function applyFilters() {
+    async function applyFilters() {
       const query = document.getElementById('searchQuery').value.trim();
       const filters = {
         targetType: document.getElementById('filterTargetType').value,
@@ -392,18 +397,53 @@
         client: document.getElementById('filterClient').value.trim()
       };
 
-      // フリーワード検索を先に実行
-      let baseProjects;
-      if (query) {
-        baseProjects = db.searchProjects(query);
-      } else {
-        baseProjects = db.getAllProjects();
+      try {
+        // フリーワード検索を先に実行
+        let baseProjects;
+        if (query) {
+          baseProjects = await api.searchProjects(query);
+        } else {
+          baseProjects = await api.getAllProjects();
+        }
+
+        // フィルター適用
+        currentProjects = baseProjects.filter(project => {
+          // 対象者種別フィルター
+          if (filters.targetType !== 'all' && project.targetType !== filters.targetType) {
+            return false;
+          }
+          
+          // 疾患名フィルター
+          if (filters.diseaseName) {
+            const diseaseName = (project.diseaseName || '').toLowerCase();
+            if (!diseaseName.includes(filters.diseaseName.toLowerCase())) {
+              return false;
+            }
+          }
+          
+          // 専門科フィルター
+          if (filters.specialty) {
+            const specialty = (project.specialty || '').toLowerCase();
+            if (!specialty.includes(filters.specialty.toLowerCase())) {
+              return false;
+            }
+          }
+          
+          // クライアントフィルター
+          if (filters.client) {
+            const client = (project.client || '').toLowerCase();
+            if (!client.includes(filters.client.toLowerCase())) {
+              return false;
+            }
+          }
+          
+          return true;
+        });
+
+        renderProjects(currentProjects);
+      } catch (error) {
+        console.error('Filter error:', error);
       }
-
-      // フィルター適用（フリーワード検索結果を引数として渡す）
-      currentProjects = db.filterProjects(filters, baseProjects);
-
-      renderProjects(currentProjects);
     }
 
     // フィルタークリア
@@ -440,9 +480,9 @@
     }
 
     // 案件詳細を表示
-    function showProjectDetail(id) {
+    async function showProjectDetail(id) {
       currentProjectId = id;
-      const project = db.getProjectById(id);
+      const project = await api.getProjectById(id);
       
       if (!project) {
         alert('案件が見つかりません');
@@ -523,16 +563,12 @@
           </div>
         ` : ''}
 
-        <div class="grid grid-cols-2 gap-6 text-sm text-gray-500 pt-4 border-t">
-          <div>
-            <label class="block font-medium mb-1">登録日時</label>
-            <p>${new Date(project.createdAt).toLocaleString('ja-JP')}</p>
+        ${project.projectId ? `
+          <div class="text-sm text-gray-500 pt-4 border-t">
+            <label class="block font-medium mb-1">備考</label>
+            <p>GitHub経由でデータを取得しています</p>
           </div>
-          <div>
-            <label class="block font-medium mb-1">登録者</label>
-            <p>${project.createdBy}</p>
-          </div>
-        </div>
+        ` : ''}
       `;
 
       // 類似案件を表示
@@ -550,8 +586,8 @@
     }
 
     // 類似案件を読み込み
-    function loadSimilarProjects(projectId) {
-      const similar = db.findSimilarProjects(projectId, 5);
+    async function loadSimilarProjects(projectId) {
+      const similar = await api.findSimilarProjects(projectId, 5);
       const container = document.getElementById('similarProjectsList');
 
       if (similar.length === 0) {
@@ -602,27 +638,51 @@
     }
 
     // 案件削除
-    function deleteProject() {
+    async function deleteProject() {
       if (!currentProjectId) return;
 
-      const project = db.getProjectById(currentProjectId);
-      if (!confirm(`案件 "${project.diseaseName}" を削除してもよろしいですか？`)) {
-        return;
-      }
+      alert('削除機能は現在無効です。\n\nGitHub PR経由でデータを管理しているため、\n削除する場合はGitHub上でCSVを編集してPRを作成してください。');
+      return;
+    }
 
-      const result = db.deleteProject(currentProjectId);
-      if (result.success) {
-        alert('案件を削除しました');
-        closeDetailModal();
-        loadProjects();
-      } else {
-        alert('削除に失敗しました: ' + result.error);
+    // CSVフィールドのエスケープ
+    function escapeCSVField(field) {
+      if (typeof field !== 'string') {
+        return field;
       }
+      if (field.includes(',') || field.includes('"') || field.includes('\n')) {
+        return `"${field.replace(/"/g, '""')}"`;
+      }
+      return field;
     }
 
     // CSV出力
-    function exportCSV() {
-      const csv = db.exportToCSV();
+    async function exportCSV() {
+      const projects = await api.getAllProjects();
+      
+      // CSVヘッダー
+      const headers = ['疾患名', '疾患略語', '手法', '調査種別', '対象者種別', '専門', '実績数', '対象条件', '薬剤', 'リクルート実施', 'クライアント'];
+      const csvLines = [headers.join(',')];
+      
+      // データ行
+      projects.forEach(project => {
+        const row = [
+          escapeCSVField(project.diseaseName || ''),
+          escapeCSVField(project.diseaseAbbr || ''),
+          escapeCSVField(project.method || ''),
+          escapeCSVField(project.surveyType || ''),
+          escapeCSVField(project.targetType || ''),
+          escapeCSVField(project.specialty || ''),
+          project.recruitCount || 0,
+          escapeCSVField(project.targetConditions || ''),
+          escapeCSVField(project.drug || ''),
+          escapeCSVField(project.recruitCompany || ''),
+          escapeCSVField(project.client || ''),
+        ];
+        csvLines.push(row.join(','));
+      });
+      
+      const csv = csvLines.join('\n');
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
