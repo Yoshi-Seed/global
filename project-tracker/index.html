@@ -205,20 +205,20 @@
     </div>
   </div>
 
-  <!-- データベースJS -->
-  <script src="js/database.js"></script>
+  <!-- API Client -->
+  <script src="js/api.js"></script>
 
   <!-- ダッシュボードロジック -->
   <script>
     // 初期化
     async function initDashboard() {
-      await db.init();
-      loadStatistics();
+      await loadStatistics();
     }
 
     // 統計情報を読み込み
-    function loadStatistics() {
-      const stats = db.getStatistics();
+    async function loadStatistics() {
+      try {
+        const stats = await api.getStats();
 
       // データがない場合はインポートバナーを表示
       if (stats.totalProjects === 0) {
@@ -248,6 +248,11 @@
 
       // 最近のプロジェクト
       renderRecentProjects(stats.recentProjects);
+      
+      } catch (error) {
+        console.error('Failed to load statistics:', error);
+        alert('データの読み込みに失敗しました。ページを再読み込みしてください。');
+      }
     }
 
     // 対象者タイプ別分布グラフ

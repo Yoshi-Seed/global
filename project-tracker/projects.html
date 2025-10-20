@@ -299,8 +299,8 @@
     </div>
   </div>
 
-  <!-- データベースJS -->
-  <script src="js/database.js"></script>
+  <!-- API Client -->
+  <script src="js/api.js"></script>
 
   <!-- 案件一覧ロジック -->
   <script>
@@ -319,13 +319,11 @@
 
     // 初期化
     async function initProjectsPage() {
-      await db.init();
-      
       // URLパラメータから特定案件を開く
       const urlParams = new URLSearchParams(window.location.search);
       const projectId = urlParams.get('id');
       
-      loadProjects();
+      await loadProjects();
       
       if (projectId) {
         showProjectDetail(projectId);
@@ -333,9 +331,14 @@
     }
 
     // 案件一覧を読み込み
-    function loadProjects() {
-      currentProjects = db.getAllProjects();
-      renderProjects(currentProjects);
+    async function loadProjects() {
+      try {
+        currentProjects = await api.getAllProjects();
+        renderProjects(currentProjects);
+      } catch (error) {
+        console.error('Failed to load projects:', error);
+        alert('データの読み込みに失敗しました。ページを再読み込みしてください。');
+      }
     }
 
     // 案件一覧を表示
@@ -383,7 +386,7 @@
     }
 
     // フィルター適用
-    function applyFilters() {
+    async function applyFilters() {
       const query = document.getElementById('searchQuery').value.trim();
       const filters = {
         targetType: document.getElementById('filterTargetType').value,
@@ -392,18 +395,36 @@
         client: document.getElementById('filterClient').value.trim()
       };
 
-      // フリーワード検索を先に実行
-      let baseProjects;
-      if (query) {
-        baseProjects = db.searchProjects(query);
-      } else {
-        baseProjects = db.getAllProjects();
+      try {
+        // フリーワード検索を先に実行
+        let baseProjects;
+        if (query) {
+          baseProjects = await api.searchProjects(query);
+        } else {
+          baseProjects = await api.getAllProjects();
+        }
+
+        // フィルター適用
+        currentProjects = baseProjects.filter(project => {
+          if (filters.targetType !== 'all' && project.targetType !== filters.targetType) {
+            return false;
+          }
+          if (filters.diseaseName && !project.diseaseName.includes(filters.diseaseName)) {
+            return false;
+          }
+          if (filters.specialty && !project.specialty.includes(filters.specialty)) {
+            return false;
+          }
+          if (filters.client && !project.client.includes(filters.client)) {
+            return false;
+          }
+          return true;
+        });
+
+        renderProjects(currentProjects);
+      } catch (error) {
+        console.error('Filter error:', error);
       }
-
-      // フィルター適用（フリーワード検索結果を引数として渡す）
-      currentProjects = db.filterProjects(filters, baseProjects);
-
-      renderProjects(currentProjects);
     }
 
     // フィルタークリア
@@ -440,9 +461,9 @@
     }
 
     // 案件詳細を表示
-    function showProjectDetail(id) {
+    async function showProjectDetail(id) {
       currentProjectId = id;
-      const project = db.getProjectById(id);
+      const project = await api.getProjectById(id);
       
       if (!project) {
         alert('案件が見つかりません');

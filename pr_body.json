@@ -1,0 +1,6 @@
+{
+  "title": "feat: GitHub PR自動作成機能を実装 - Cloudflare Workers連携",
+  "head": "feature/github-pr-automation",
+  "base": "main",
+  "body": "## 概要\n\nフォームから案件登録時に自動的にGitHub PRを作成する機能を実装しました。Cloudflare Workersを使用してバックエンドAPIを構築し、GitHub REST API経由でCSVファイルの更新とPR作成を行います。\n\n## 主な変更点\n\n### 1. Cloudflare Workers API実装 (workers/)\n\n- add-project.js: GitHub REST API経由でCSVファイルへの追記処理\n- wrangler.toml: Cloudflare Workers設定ファイル\n- UTF-8対応のBase64エンコード/デコード実装\n- サーバーサイドバリデーション機能\n\n### 2. 登録フォーム更新 (register.html)\n\n- LocalStorageからAPI連携へ移行\n- API エンドポイント: https://project-tracker-api.y-honda.workers.dev\n- バリデーションエラーの詳細表示\n- PR URL リンクの自動表示\n\n### 3. デプロイ状況\n\n✅ Cloudflare Worker デプロイ済み\n✅ テストPR作成成功 (#16)\n✅ UTF-8日本語対応確認済み\n\n## 使用方法\n\n1. register.htmlで案件登録フォームを入力\n2. 「この内容でPRを作る」ボタンをクリック\n3. 自動的にGitHub PRが作成される\n4. PR URLが画面に表示される\n5. GitHub上でPRをレビュー・マージ\n\n## テスト結果\n\nWorker URL: https://project-tracker-api.y-honda.workers.dev\n\nテストリクエスト成功: PRが正常に作成されることを確認"
+}
