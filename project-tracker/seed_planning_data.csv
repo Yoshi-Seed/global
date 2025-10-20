@@ -421,3 +421,6 @@ IgA腎症,"IgA nephropathy, IgAN",IDI,定性,患者,,1,IgA腎症の診断確定�
 慢性閉塞性肺疾患,COPD,IDI,定性,患者,,11,"40～85歳で慢性閉塞性肺疾患(COPD)、慢性気管支炎、肺気腫と診断され、現在治療薬を使用/服用している患者	または、患者を介護している18歳以上の介護者																	",,3Hメディソリューションズ,Fieldcats
 慢性閉塞性肺疾患,COPD,IDI,定性,介護者,,3,"40～85歳で慢性閉塞性肺疾患(COPD)、慢性気管支炎、肺気腫と診断され、現在治療薬を使用/服用している患者	または、患者を介護している18歳以上の介護者																	",,3Hメディソリューションズ,Fieldcats
 TEST,,TEST,TEST,医師,,1,,,,
+ATTRアミロイドーシス,"ATTR, ATTR-CM",IDI,定性,医師,循環器科,7,"過去12ヵ月で3人以上のATTR-CMまたはhATTR-PNの患者を診ている
+次のATTRの薬剤についてある程度の知識があること
+VYNDAQEL (tafamidis)、Onpattro(patisiran)、Amvuttra(vutisiran)、WAINZUA (eplontersen)	BEYONTTRA(acoramidis)。",,キャンドゥ,MarketVision
