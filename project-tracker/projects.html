@@ -408,18 +408,35 @@
 
         // フィルター適用
         currentProjects = baseProjects.filter(project => {
+          // 対象者種別フィルター
           if (filters.targetType !== 'all' && project.targetType !== filters.targetType) {
             return false;
           }
-          if (filters.diseaseName && !project.diseaseName.includes(filters.diseaseName)) {
-            return false;
+          
+          // 疾患名フィルター
+          if (filters.diseaseName) {
+            const diseaseName = (project.diseaseName || '').toLowerCase();
+            if (!diseaseName.includes(filters.diseaseName.toLowerCase())) {
+              return false;
+            }
           }
-          if (filters.specialty && !project.specialty.includes(filters.specialty)) {
-            return false;
+          
+          // 専門科フィルター
+          if (filters.specialty) {
+            const specialty = (project.specialty || '').toLowerCase();
+            if (!specialty.includes(filters.specialty.toLowerCase())) {
+              return false;
+            }
           }
-          if (filters.client && !project.client.includes(filters.client)) {
-            return false;
+          
+          // クライアントフィルター
+          if (filters.client) {
+            const client = (project.client || '').toLowerCase();
+            if (!client.includes(filters.client.toLowerCase())) {
+              return false;
+            }
           }
+          
           return true;
         });
 

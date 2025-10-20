@@ -285,6 +285,11 @@ async function createGitHubPR({ token, owner, repo, csvPath, branchName, project
  * CSV行を生成
  */
 function generateCSVRow(data) {
+  // 登録日（YYYY-MM-DD形式）
+  const registeredDate = data.createdAt 
+    ? new Date(data.createdAt).toISOString().split('T')[0] 
+    : new Date().toISOString().split('T')[0];
+  
   const fields = [
     escapeCSV(data.diseaseName || ''),
     escapeCSV(data.diseaseAbbr || ''),
@@ -297,6 +302,7 @@ function generateCSVRow(data) {
     escapeCSV(data.drug || ''),
     escapeCSV(data.recruitCompany || ''),
     escapeCSV(data.client || ''),
+    registeredDate,  // 12列目に登録日を追加
   ];
   return fields.join(',');
 }

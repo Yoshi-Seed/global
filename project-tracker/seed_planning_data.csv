@@ -424,3 +424,5 @@ TEST,,TEST,TEST,医師,,1,,,,
 ATTRアミロイドーシス,"ATTR, ATTR-CM",IDI,定性,医師,循環器科,7,"過去12ヵ月で3人以上のATTR-CMまたはhATTR-PNの患者を診ている
 次のATTRの薬剤についてある程度の知識があること
 VYNDAQEL (tafamidis)、Onpattro(patisiran)、Amvuttra(vutisiran)、WAINZUA (eplontersen)	BEYONTTRA(acoramidis)。",,キャンドゥ,MarketVision
+ATTRアミロイドーシス,"ATTR, ATTR-CM",IDI,定性,医師,神経内科,7,過去12ヵ月で3人以上のATTR-CMまたはhATTR-PN の患者を診ていること,,キャンドゥ,MarketVision
+ATTR-CM アミロイドーシス,"ATTR, ATTR-CM",IDI,定性,医師,循環器科,7,過去12ヵ月で3人以上のATTR-CMまたはhATTR-PNの患者を診ていること,,キャンドゥ,MarketVision
