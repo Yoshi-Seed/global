@@ -88,7 +88,8 @@ class ProjectAPI {
         drug: fields[8] || '',
         recruitCompany: fields[9] || '',
         client: fields[10] || '',
-        projectId: fields[11] || '', // 追加フィールド（もしあれば）
+        registeredDate: fields[11] || '', // 登録日（YYYY-MM-DD）
+        createdAt: fields[11] ? new Date(fields[11]).toISOString() : null, // ISO形式に変換
       };
     }).filter(project => project.diseaseName); // 空行を除外
   }
@@ -151,16 +152,16 @@ class ProjectAPI {
     
     return projects.filter(project => {
       return (
-        project.diseaseName.toLowerCase().includes(searchTerm) ||
-        project.diseaseAbbr.toLowerCase().includes(searchTerm) ||
-        project.method.toLowerCase().includes(searchTerm) ||
-        project.surveyType.toLowerCase().includes(searchTerm) ||
-        project.targetType.toLowerCase().includes(searchTerm) ||
-        project.specialty.toLowerCase().includes(searchTerm) ||
-        project.targetConditions.toLowerCase().includes(searchTerm) ||
-        project.drug.toLowerCase().includes(searchTerm) ||
-        project.recruitCompany.toLowerCase().includes(searchTerm) ||
-        project.client.toLowerCase().includes(searchTerm) ||
+        (project.diseaseName || '').toLowerCase().includes(searchTerm) ||
+        (project.diseaseAbbr || '').toLowerCase().includes(searchTerm) ||
+        (project.method || '').toLowerCase().includes(searchTerm) ||
+        (project.surveyType || '').toLowerCase().includes(searchTerm) ||
+        (project.targetType || '').toLowerCase().includes(searchTerm) ||
+        (project.specialty || '').toLowerCase().includes(searchTerm) ||
+        (project.targetConditions || '').toLowerCase().includes(searchTerm) ||
+        (project.drug || '').toLowerCase().includes(searchTerm) ||
+        (project.recruitCompany || '').toLowerCase().includes(searchTerm) ||
+        (project.client || '').toLowerCase().includes(searchTerm) ||
         (project.projectId && project.projectId.toLowerCase().includes(searchTerm))
       );
     });
@@ -261,8 +262,15 @@ class ProjectAPI {
       ? Math.round(stats.totalRecruits / stats.totalProjects) 
       : 0;
     
-    // 最近のプロジェクト（最新10件）
-    stats.recentProjects = projects.slice(0, 10);
+    // 最近のプロジェクト（日付でソート、最新10件）
+    const projectsWithDate = projects.filter(p => p.createdAt);
+    const projectsWithoutDate = projects.filter(p => !p.createdAt);
+    
+    // 日付があるものを新しい順にソート
+    projectsWithDate.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    
+    // 日付があるもの優先、残りは先頭から
+    stats.recentProjects = [...projectsWithDate, ...projectsWithoutDate].slice(0, 10);
     
     return stats;
   }

@@ -434,7 +434,9 @@
       }
 
       projects.forEach(project => {
-        const date = new Date(project.createdAt).toLocaleDateString('ja-JP');
+        const date = project.createdAt 
+          ? new Date(project.createdAt).toLocaleDateString('ja-JP')
+          : '-';
         
         tbody.innerHTML += `
           <tr class="hover:bg-gray-50 transition">
