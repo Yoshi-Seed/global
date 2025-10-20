@@ -1,13 +1,18 @@
 # Vercel デプロイから除外するファイル/ディレクトリ
 
 # プロジェクトトラッカー（別プロジェクトとして管理）
-project-tracker/
+project-tracker
 
 # ドキュメント・レポート
 *.md
 !README.md
 
 # Git 関連
-.git/
+.git
 .gitignore
 .gitattributes
+
+# その他
+.DS_Store
+node_modules
+*.log
