@@ -3,14 +3,18 @@
 # プロジェクトトラッカー（別プロジェクトとして管理）
 project-tracker
 
-# ドキュメント・レポート
-*.md
-!README.md
+# ドキュメント・レポート（README以外）
+VERCEL_*.md
+BUG_*.md
+CSV_*.md
 
 # Git 関連
 .git
 .gitignore
 .gitattributes
+
+# 開発関連
+.dev.vars
 
 # その他
 .DS_Store
