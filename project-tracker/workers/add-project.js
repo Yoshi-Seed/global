@@ -6,87 +6,156 @@
 // CORS対応
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
+// キャッシュTTL（秒）
+const CACHE_TTL = 300; // 5分
+
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
+    const url = new URL(request.url);
+    
     // OPTIONSリクエスト（CORS preflight）
     if (request.method === 'OPTIONS') {
       return new Response(null, { headers: corsHeaders });
     }
 
-    // POSTメソッドのみ許可
-    if (request.method !== 'POST') {
-      return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-        status: 405,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+    // ルーティング
+    if (url.pathname === '/data' && request.method === 'GET') {
+      return handleGetData(request, env, ctx);
+    }
+    
+    if (request.method === 'POST') {
+      return handlePostProject(request, env);
     }
 
-    try {
-      // リクエストボディを取得
-      const projectData = await request.json();
+    // その他のメソッド・パスは405
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
+      status: 405,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+};
 
-      // バリデーション
-      const validation = validateProject(projectData);
-      if (!validation.valid) {
-        return new Response(JSON.stringify({ 
-          error: 'Validation failed', 
-          details: validation.errors 
-        }), {
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
-      }
-
-      // GitHub API設定
-      const GITHUB_TOKEN = env.GITHUB_TOKEN;
-      const GITHUB_OWNER = env.GITHUB_OWNER || 'Yoshi-Seed';
-      const GITHUB_REPO = env.GITHUB_REPO || 'global';
-      const CSV_PATH = env.CSV_PATH || 'project-tracker/seed_planning_data.csv';
-
-      // タイムスタンプとブランチ名生成
-      const timestamp = new Date().toISOString();
-      const branchName = `pr/add-record-${timestamp.replace(/[:.]/g, '-')}`;
-
-      // GitHub REST APIでPR作成フロー実行
-      const result = await createGitHubPR({
-        token: GITHUB_TOKEN,
-        owner: GITHUB_OWNER,
-        repo: GITHUB_REPO,
-        csvPath: CSV_PATH,
-        branchName,
-        projectData: {
-          ...projectData,
-          createdAt: timestamp,
-        },
-      });
-
-      // 成功レスポンス
-      return new Response(JSON.stringify({
-        success: true,
-        prUrl: result.prUrl,
-        prNumber: result.prNumber,
-        message: 'PRを作成しました',
-      }), {
-        status: 200,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
-
-    } catch (error) {
-      console.error('Error:', error);
+/**
+ * GET /data - GitHub mainブランチのCSVデータを取得（キャッシュ付き）
+ */
+async function handleGetData(request, env, ctx) {
+  const GITHUB_OWNER = env.GITHUB_OWNER || 'Yoshi-Seed';
+  const GITHUB_REPO = env.GITHUB_REPO || 'global';
+  const CSV_PATH = env.CSV_PATH || 'project-tracker/seed_planning_data.csv';
+  
+  // GitHub RawコンテンツURL（Public リポジトリの場合）
+  const rawUrl = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/main/${CSV_PATH}`;
+  
+  // キャッシュキー
+  const cacheKey = new Request(rawUrl, { method: 'GET' });
+  const cache = caches.default;
+  
+  // キャッシュチェック
+  let response = await cache.match(cacheKey);
+  
+  if (!response) {
+    // キャッシュミス: GitHubから取得
+    response = await fetch(rawUrl);
+    
+    if (!response.ok) {
       return new Response(JSON.stringify({ 
-        error: 'Internal server error', 
-        message: error.message 
+        error: 'Failed to fetch CSV from GitHub',
+        status: response.status 
       }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
+    
+    // レスポンスをクローンしてキャッシュに保存
+    const csvText = await response.text();
+    
+    // キャッシュ可能なレスポンスを作成
+    response = new Response(csvText, {
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'text/csv; charset=utf-8',
+        'Cache-Control': `public, max-age=${CACHE_TTL}`,
+      },
+    });
+    
+    // キャッシュに保存（非同期）
+    ctx.waitUntil(cache.put(cacheKey, response.clone()));
   }
-};
+  
+  return response;
+}
+
+/**
+ * POST / - プロジェクト追加（PR作成）
+ */
+async function handlePostProject(request, env) {
+
+  try {
+    // リクエストボディを取得
+    const projectData = await request.json();
+
+    // バリデーション
+    const validation = validateProject(projectData);
+    if (!validation.valid) {
+      return new Response(JSON.stringify({ 
+        error: 'Validation failed', 
+        details: validation.errors 
+      }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // GitHub API設定
+    const GITHUB_TOKEN = env.GITHUB_TOKEN;
+    const GITHUB_OWNER = env.GITHUB_OWNER || 'Yoshi-Seed';
+    const GITHUB_REPO = env.GITHUB_REPO || 'global';
+    const CSV_PATH = env.CSV_PATH || 'project-tracker/seed_planning_data.csv';
+
+    // タイムスタンプとブランチ名生成
+    const timestamp = new Date().toISOString();
+    const branchName = `pr/add-record-${timestamp.replace(/[:.]/g, '-')}`;
+
+    // GitHub REST APIでPR作成フロー実行
+    const result = await createGitHubPR({
+      token: GITHUB_TOKEN,
+      owner: GITHUB_OWNER,
+      repo: GITHUB_REPO,
+      csvPath: CSV_PATH,
+      branchName,
+      projectData: {
+        ...projectData,
+        createdAt: timestamp,
+      },
+    });
+
+    // 成功レスポンス
+    return new Response(JSON.stringify({
+      success: true,
+      prUrl: result.prUrl,
+      prNumber: result.prNumber,
+      message: 'PRを作成しました',
+    }), {
+      status: 200,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+
+  } catch (error) {
+    console.error('Error:', error);
+    return new Response(JSON.stringify({ 
+      error: 'Internal server error', 
+      message: error.message 
+    }), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+}
 
 /**
  * プロジェクトデータのバリデーション
