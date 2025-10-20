@@ -319,10 +319,13 @@
     </div>
   </div>
 
+  <!-- 共通設定 -->
+  <script src="js/config.js"></script>
+
   <!-- フォームロジック -->
   <script>
-    // Cloudflare Worker API エンドポイント
-    const API_ENDPOINT = 'https://project-tracker-api.y-honda.workers.dev';
+    // Cloudflare Worker API エンドポイント（config.jsから取得）
+    const API_ENDPOINT = API.getSubmitUrl();
 
     // フォーム送信
     document.getElementById('projectForm').addEventListener('submit', async function(e) {

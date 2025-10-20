@@ -205,6 +205,8 @@
     </div>
   </div>
 
+  <!-- 共通設定 -->
+  <script src="js/config.js"></script>
   <!-- API Client -->
   <script src="js/api.js"></script>
 
@@ -212,7 +214,27 @@
   <script>
     // 初期化
     async function initDashboard() {
+      // データ存在確認＆自動取得
+      await ensureDataLoaded();
       await loadStatistics();
+    }
+    
+    // データが取得されているか確認（初回起動時の自動同期）
+    async function ensureDataLoaded() {
+      try {
+        const projects = await api.getAllProjects();
+        if (projects.length === 0) {
+          console.log('データが空です。GitHubから取得しています...');
+          // 強制リフレッシュ
+          api.clearCache();
+          await api.getAllProjects(true);
+        } else {
+          console.log(`${projects.length}件のデータを確認しました`);
+        }
+      } catch (error) {
+        console.error('データ確認エラー:', error);
+        // エラーでもダッシュボード表示は続行
+      }
     }
 
     // 統計情報を読み込み
