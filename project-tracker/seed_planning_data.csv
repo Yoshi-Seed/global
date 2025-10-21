@@ -424,3 +424,4 @@ TEST,,TEST,TEST,医師,,1,,,,
 ATTRアミロイドーシス,"ATTR, ATTR-CM",IDI,定性,医師,神経内科,7,過去12ヵ月で3人以上のATTR-CMまたはhATTR-PN の患者を診ていること,,キャンドゥ,MarketVision
 ATTR-CM アミロイドーシス,"ATTR, ATTR-CM",IDI,定性,医師,循環器科,7,過去12ヵ月で3人以上のATTR-CMまたはhATTR-PNの患者を診ていること,,キャンドゥ,MarketVision
 ASCVD,ASCVD,IDI,定性,医師,神経内科,6,直近3か月のASCVD患者＞30名、除外条件＝ 直近3か月の主要イベント既往ASCVD患者＞20名,,キャンドゥ,Holden,2025-10-21
+ASCVD,ASCVD,IDI,定性,医師,腎臓内科,8,直近3か月のASCVD患者＞30名、直近3か月の主要イベント既往ASCVD患者＞20名,,キャンドゥ,Holden,2025-10-21
