@@ -23,3 +23,6 @@ logs/
 # OS
 .DS_Store
 Thumbs.db
+# CSV fix script and backups
+project-tracker/fix_csv_quotes.py
+project-tracker/*.csv.backup

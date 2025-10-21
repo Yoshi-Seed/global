@@ -295,24 +295,27 @@ function generateCSVRow(data) {
     : new Date().toISOString().split('T')[0];
   
   const fields = [
-    escapeCSV(data.diseaseName || ''),
-    escapeCSV(data.diseaseAbbr || ''),
-    escapeCSV(data.method || ''),
-    escapeCSV(data.surveyType || ''),
-    escapeCSV(data.targetType || ''),
-    escapeCSV(data.specialty || ''),
-    data.recruitCount || '0',
-    escapeCSV(data.targetConditions || ''),
-    escapeCSV(data.drug || ''),
-    escapeCSV(data.recruitCompany || ''),
-    escapeCSV(data.client || ''),
+    data.diseaseName || '',
+    data.diseaseAbbr || '',
+    data.method || '',
+    data.surveyType || '',
+    data.targetType || '',
+    data.specialty || '',
+    String(data.recruitCount || '0'),
+    data.targetConditions || '',
+    data.drug || '',
+    data.recruitCompany || '',
+    data.client || '',
     registeredDate,  // 12列目に登録日を追加
   ];
-  return fields.join(',');
+  
+  // すべてのフィールドを引用符で囲み、内部の引用符をエスケープ
+  return fields.map(field => `"${String(field).replace(/"/g, '""')}"`).join(',');
 }
 
 /**
- * CSVフィールドのエスケープ
+ * CSVフィールドのエスケープ（後方互換性のため保持、未使用）
+ * @deprecated generateCSVRow で直接処理するため不要
  */
 function escapeCSV(field) {
   if (field.includes(',') || field.includes('"') || field.includes('\n')) {
