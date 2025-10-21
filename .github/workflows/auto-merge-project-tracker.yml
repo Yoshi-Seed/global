@@ -1,0 +1,24 @@
+name: Auto-merge Project Tracker PRs
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled]
+    branches: [main]
+    paths:
+      - "project-tracker/seed_planning_data.csv"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  gate-and-automerge:
+    if: startsWith(github.head_ref, 'pr/add-record-')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enable auto-merge
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pull-request-number: ${{ github.event.pull_request.number }}
+          merge-method: squash
