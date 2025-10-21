@@ -1,0 +1,45 @@
+name: Auto-merge Project Tracker PRs
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled]
+    branches: [main]
+    # WorkerがCSVに1行追記するPRだけを対象にする
+    paths:
+      - "project-tracker/seed_planning_data.csv"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  gate-and-automerge:
+    # Worker生成ブランチだけを対象（pr/add-record-...）
+    if: startsWith(github.head_ref, 'pr/add-record-')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Detect changed files
+        id: changes
+        uses: tj-actions/changed-files@v45
+        with:
+          since_last_remote_commit: true
+
+      - name: Fail if files other than the CSV changed
+        run: |
+          files="${{ steps.changes.outputs.all_changed_files }}"
+          allow="project-tracker/seed_planning_data.csv"
+          if [ "$(echo "$files" | wc -w)" -ne 1 ] || [ "$files" != "$allow" ]; then
+            echo "Unexpected file changes: $files"
+            exit 1
+          fi
+
+      # ここで必要ならCSVスキーマ検証やLintなどを挟む
+      # - run: node scripts/validate-csv.js
+
+      - name: Enable auto-merge (squash)
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pull-request-number: ${{ github.event.pull_request.number }}
+          merge-method: squash
