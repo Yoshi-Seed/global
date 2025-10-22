@@ -249,11 +249,18 @@ async function createGitHubPR({ token, owner, repo, csvPath, branchName, project
   const currentContent = base64DecodeUTF8(fileData.content.replace(/\n/g, '')); // Base64デコード（UTF-8対応）
   const currentSha = fileData.sha;
 
-  // 4. CSV行を生成
-  const newRow = generateCSVRow(projectData);
+  // 4. 既存CSVから最大IDを取得して新IDを採番
+  const maxId = getMaxIdFromCSV(currentContent);
+  const newId = maxId + 1;
+  
+  // 4.5. registrationIdを生成（YYYYMMDD-XXXX形式）
+  const registrationId = generateRegistrationId(projectData.createdAt, newId);
+  
+  // 5. CSV行を生成
+  const newRow = generateCSVRow(projectData, newId, registrationId);
   const updatedContent = currentContent.trim() + '\n' + newRow;
 
-  // 5. CSVファイルを更新（新しいブランチにコミット）
+  // 6. CSVファイルを更新（新しいブランチにコミット）
   await fetch(`${apiBase}/contents/${csvPath}`, {
     method: 'PUT',
     headers,
@@ -265,7 +272,7 @@ async function createGitHubPR({ token, owner, repo, csvPath, branchName, project
     }),
   });
 
-  // 6. PR作成
+  // 7. PR作成
   const prResponse = await fetch(`${apiBase}/pulls`, {
     method: 'POST',
     headers,
@@ -286,15 +293,64 @@ async function createGitHubPR({ token, owner, repo, csvPath, branchName, project
 }
 
 /**
+ * CSVから最大IDを取得
+ */
+function getMaxIdFromCSV(csvContent) {
+  const lines = csvContent.trim().split('\n');
+  
+  // ヘッダー行をスキップ
+  if (lines.length <= 1) {
+    return 0; // データがない場合は0を返す
+  }
+  
+  let maxId = 0;
+  
+  // 各データ行から最初のカラム（id）を取得
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line) continue;
+    
+    // CSVの最初のカラム（id）を取得
+    const match = line.match(/^(\d+),/);
+    if (match) {
+      const id = parseInt(match[1], 10);
+      if (!isNaN(id) && id > maxId) {
+        maxId = id;
+      }
+    }
+  }
+  
+  return maxId;
+}
+
+/**
+ * registrationIdを生成（YYYYMMDD-XXXX形式）
+ */
+function generateRegistrationId(createdAt, id) {
+  const date = createdAt ? new Date(createdAt) : new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const dateStr = `${year}${month}${day}`;
+  
+  // 4桁にゼロパディング
+  const idStr = String(id).padStart(4, '0');
+  
+  return `${dateStr}-${idStr}`;
+}
+
+/**
  * CSV行を生成
  */
-function generateCSVRow(data) {
+function generateCSVRow(data, id, registrationId) {
   // 登録日（YYYY-MM-DD形式）
   const registeredDate = data.createdAt 
     ? new Date(data.createdAt).toISOString().split('T')[0] 
     : new Date().toISOString().split('T')[0];
   
   const fields = [
+    String(id),              // 1列目: id
+    registrationId,          // 2列目: registrationId
     data.diseaseName || '',
     data.diseaseAbbr || '',
     data.method || '',
@@ -306,7 +362,7 @@ function generateCSVRow(data) {
     data.drug || '',
     data.recruitCompany || '',
     data.client || '',
-    registeredDate,  // 12列目に登録日を追加
+    registeredDate,          // 14列目に登録日
   ];
   
   // すべてのフィールドを引用符で囲み、内部の引用符をエスケープ

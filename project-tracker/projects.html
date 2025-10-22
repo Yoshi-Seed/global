@@ -689,12 +689,20 @@
           </div>
         </div>
 
-        ${project.registeredDate ? `
-          <div>
-            <label class="block text-xs font-medium text-gray-500 mb-1">登録日</label>
-            <p class="text-sm text-gray-600">${formatDateString(project.registeredDate)}</p>
-          </div>
-        ` : ''}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          ${project.registeredDate ? `
+            <div>
+              <label class="block text-xs font-medium text-gray-500 mb-1">登録日</label>
+              <p class="text-sm text-gray-600">${formatDateString(project.registeredDate)}</p>
+            </div>
+          ` : ''}
+          ${project.registrationId ? `
+            <div>
+              <label class="block text-xs font-medium text-gray-500 mb-1">登録ID</label>
+              <p class="text-sm font-mono font-bold" style="color: #1F7A85;">${project.registrationId}</p>
+            </div>
+          ` : ''}
+        </div>
       `;
 
       // 類似案件を表示

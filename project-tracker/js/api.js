@@ -81,27 +81,31 @@ class ProjectAPI {
     return dataLines.map((line, index) => {
       const fields = this.parseCSVLine(line.trim());
 
-      const specialtyName = fields[5] || '';
+      // CSVカラム順：id, registrationId, 疾患名, 疾患略語, 手法, 調査種別, 対象者種別, 専門, 実績数, 対象条件, 薬剤, リクルート実施, クライアント, 登録日
+      const id = parseInt(fields[0]) || (index + 1);
+      const registrationId = fields[1] || '';
+      const specialtyName = fields[7] || '';
       const specialtyCode = this.specialtyDictionary
         ? this.specialtyDictionary.deriveCodeFromName(specialtyName)
         : null;
-      const registeredDate = fields[11] || '';
+      const registeredDate = fields[13] || '';
       const createdAt = registeredDate ? new Date(registeredDate).toISOString() : null;
 
       return {
-        id: index + 1,
-        diseaseName: fields[0] || '',
-        diseaseAbbr: fields[1] || '',
-        method: fields[2] || '',
-        surveyType: fields[3] || '',
-        targetType: fields[4] || '',
+        id: id,
+        registrationId: registrationId,
+        diseaseName: fields[2] || '',
+        diseaseAbbr: fields[3] || '',
+        method: fields[4] || '',
+        surveyType: fields[5] || '',
+        targetType: fields[6] || '',
         specialty: specialtyName,
         specialtyCode: specialtyCode,
-        recruitCount: parseInt(fields[6]) || 0,
-        targetConditions: fields[7] || '',
-        drug: fields[8] || '',
-        recruitCompany: fields[9] || '',
-        client: fields[10] || '',
+        recruitCount: parseInt(fields[8]) || 0,
+        targetConditions: fields[9] || '',
+        drug: fields[10] || '',
+        recruitCompany: fields[11] || '',
+        client: fields[12] || '',
         registeredDate: registeredDate, // 登録日（YYYY-MM-DD）
         createdAt: createdAt, // ISO形式に変換
       };
