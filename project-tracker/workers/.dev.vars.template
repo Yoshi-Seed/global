@@ -1,0 +1,7 @@
+# Cloudflare Worker ローカル開発環境変数テンプレート
+# 実際の値を入れて .dev.vars として保存してください
+
+GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+GITHUB_OWNER=Yoshi-Seed
+GITHUB_REPO=global
+CSV_PATH=project-tracker/seed_planning_data.csv
