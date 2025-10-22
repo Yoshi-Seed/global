@@ -364,7 +364,19 @@
         btn.style.color = '#1F7A85';
         btn.style.border = '1px solid #1F7A85';
       }
-      btn.textContent = label;
+      
+      // 専門科フィルターの場合、略語コードも表示
+      if (typeof SpecialtyDictionary !== 'undefined' && value !== 'all') {
+        const code = SpecialtyDictionary.deriveCodeFromName(label);
+        if (code) {
+          btn.innerHTML = `${label} <span style="opacity: 0.6; font-size: 0.85em;">(${code})</span>`;
+        } else {
+          btn.textContent = label;
+        }
+      } else {
+        btn.textContent = label;
+      }
+      
       btn.dataset.value = value;
       btn.onclick = () => selectSpecialtyFilter(btn);
       return btn;
@@ -464,15 +476,28 @@
         }
       }
 
-      // 専門科フィルター
+      // 専門科フィルター（SpecialtyDictionary活用で略語検索対応）
       if (currentFilters.specialty !== 'all') {
-        projects = projects.filter(p => p.specialty === currentFilters.specialty);
+        if (typeof SpecialtyDictionary !== 'undefined') {
+          // SpecialtyDictionaryを使用して略語検索も対応
+          projects = projects.filter(p => 
+            SpecialtyDictionary.matchesProject(p, currentFilters.specialty)
+          );
+        } else {
+          // フォールバック：完全一致
+          projects = projects.filter(p => p.specialty === currentFilters.specialty);
+        }
       }
 
-      // フリーワード検索
+      // フリーワード検索（専門科の略語検索にも対応）
       if (currentFilters.freeword) {
         const term = currentFilters.freeword.toLowerCase();
         projects = projects.filter(p => {
+          // 専門科の略語検索（SpecialtyDictionary活用）
+          const specialtyMatch = (typeof SpecialtyDictionary !== 'undefined')
+            ? SpecialtyDictionary.matchesProject(p, term)
+            : (p.specialty || '').toLowerCase().includes(term);
+          
           return (
             (p.diseaseName || '').toLowerCase().includes(term) ||
             (p.diseaseAbbr || '').toLowerCase().includes(term) ||
@@ -480,7 +505,7 @@
             (p.client || '').toLowerCase().includes(term) ||
             (p.drug || '').toLowerCase().includes(term) ||
             (p.method || '').toLowerCase().includes(term) ||
-            (p.specialty || '').toLowerCase().includes(term) ||
+            specialtyMatch ||  // 専門科の略語検索対応
             (p.recruitCompany || '').toLowerCase().includes(term) ||
             (p.targetConditions || '').toLowerCase().includes(term)
           );
