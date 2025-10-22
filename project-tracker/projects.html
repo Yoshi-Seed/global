@@ -309,6 +309,17 @@
         // ローディング非表示
         document.getElementById('loadingIndicator').classList.add('hidden');
         
+        // URLパラメータから特定案件を開く
+        const urlParams = new URLSearchParams(window.location.search);
+        const projectId = urlParams.get('id');
+        
+        if (projectId) {
+          // 少し遅延してモーダルを開く（データ読み込み完了を確実にするため）
+          setTimeout(() => {
+            showProjectDetail(parseInt(projectId));
+          }, 300);
+        }
+        
       } catch (error) {
         console.error('初期化エラー:', error);
         alert('データの読み込みに失敗しました');
