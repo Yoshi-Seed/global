@@ -253,8 +253,18 @@ class ProjectAPI {
       
       // クライアントカウント
       if (project.client) {
-        stats.clientDistribution[project.client] = 
+        stats.clientDistribution[project.client] =
           (stats.clientDistribution[project.client] || 0) + 1;
+      }
+
+      // 月次トレンド
+      const registeredDate = project.createdAt || project.registeredDate;
+      if (registeredDate) {
+        const date = new Date(registeredDate);
+        if (!Number.isNaN(date.getTime())) {
+          const month = date.toISOString().substring(0, 7);
+          stats.monthlyTrend[month] = (stats.monthlyTrend[month] || 0) + 1;
+        }
       }
     });
     
@@ -263,7 +273,7 @@ class ProjectAPI {
       ? Math.round(stats.totalRecruits / stats.totalProjects) 
       : 0;
     
-    // 最近のプロジェクト（日付でソート、最新10件）
+    // 最近のプロジェクト（日付でソート、最新5件）
     const projectsWithDate = projects.filter(p => p.createdAt);
     const projectsWithoutDate = projects.filter(p => !p.createdAt);
     
@@ -271,7 +281,7 @@ class ProjectAPI {
     projectsWithDate.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     
     // 日付があるもの優先、残りは先頭から
-    stats.recentProjects = [...projectsWithDate, ...projectsWithoutDate].slice(0, 10);
+    stats.recentProjects = [...projectsWithDate, ...projectsWithoutDate].slice(0, 5);
     
     return stats;
   }
