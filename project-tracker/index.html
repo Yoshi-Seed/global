@@ -105,29 +105,30 @@
       </div>
     </div>
 
-    <!-- 2カラムレイアウト -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-      
-      <!-- 対象者タイプ別分布 -->
-      <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-xl font-bold mb-4 flex items-center">
-          <i class="fas fa-chart-pie mr-2 text-blue-600"></i>
-          対象者タイプ別分布
-        </h2>
-        <div id="targetTypeChart" class="space-y-3">
-          <!-- 動的に生成 -->
-        </div>
-      </div>
-
-      <!-- クライアント Top 5 -->
-      <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-xl font-bold mb-4 flex items-center">
-          <i class="fas fa-handshake mr-2 text-yellow-600"></i>
-          クライアント Top 5
-        </h2>
-        <div id="clientChart" class="space-y-3">
-          <!-- 動的に生成 -->
-        </div>
+    <!-- 最近の案件 -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+      <h2 class="text-xl font-bold mb-4 flex items-center">
+        <i class="fas fa-clock mr-2 text-purple-600"></i>
+        最近の案件（5件）
+      </h2>
+      <div class="overflow-x-auto">
+        <table class="min-w-full">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">疾患名</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">疾患略語</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">対象者</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">専門</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">実績数</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">クライアント</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">登録日</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">アクション</th>
+            </tr>
+          </thead>
+          <tbody id="recentProjectsTable" class="bg-white divide-y divide-gray-200">
+            <!-- 動的に生成 -->
+          </tbody>
+        </table>
       </div>
     </div>
 
@@ -157,30 +158,29 @@
       </div>
     </div>
 
-    <!-- 最近の案件 -->
-    <div class="bg-white rounded-lg shadow-md p-6">
-      <h2 class="text-xl font-bold mb-4 flex items-center">
-        <i class="fas fa-clock mr-2 text-purple-600"></i>
-        最近の案件（5件）
-      </h2>
-      <div class="overflow-x-auto">
-        <table class="min-w-full">
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">疾患名</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">疾患略語</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">対象者</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">専門</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">実績数</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">クライアント</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">登録日</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">アクション</th>
-            </tr>
-          </thead>
-          <tbody id="recentProjectsTable" class="bg-white divide-y divide-gray-200">
-            <!-- 動的に生成 -->
-          </tbody>
-        </table>
+    <!-- 2カラムレイアウト -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      
+      <!-- 対象者タイプ別分布 Top 5 -->
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-bold mb-4 flex items-center">
+          <i class="fas fa-chart-pie mr-2 text-blue-600"></i>
+          対象者タイプ別分布 Top 5
+        </h2>
+        <div id="targetTypeChart" class="space-y-3">
+          <!-- 動的に生成 -->
+        </div>
+      </div>
+
+      <!-- クライアント Top 5 -->
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-bold mb-4 flex items-center">
+          <i class="fas fa-handshake mr-2 text-yellow-600"></i>
+          クライアント Top 5
+        </h2>
+        <div id="clientChart" class="space-y-3">
+          <!-- 動的に生成 -->
+        </div>
       </div>
     </div>
 
@@ -276,7 +276,7 @@
       }
     }
 
-    // 対象者タイプ別分布グラフ
+    // 対象者タイプ別分布グラフ（Top 5）
     function renderTargetTypeChart(distribution) {
       const container = document.getElementById('targetTypeChart');
       container.innerHTML = '';
@@ -292,10 +292,14 @@
         '医師': 'bg-blue-500',
         '患者': 'bg-green-500',
         '介護者': 'bg-yellow-500',
-        '医師・患者': 'bg-purple-500'
+        '医師・患者': 'bg-purple-500',
+        'KOL': 'bg-red-500',
+        '看護師': 'bg-pink-500',
+        '薬剤師': 'bg-indigo-500'
       };
 
-      Object.entries(distribution).sort((a, b) => b[1] - a[1]).forEach(([type, count]) => {
+      // Top 5に絞る
+      Object.entries(distribution).sort((a, b) => b[1] - a[1]).slice(0, 5).forEach(([type, count]) => {
         const percentage = ((count / total) * 100).toFixed(1);
         const colorClass = colors[type] || 'bg-gray-500';
 
