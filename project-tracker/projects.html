@@ -140,6 +140,9 @@
           <button class="filter-btn px-4 py-2 rounded-lg font-semibold" data-value="看護師" style="background: rgba(31, 122, 133, 0.15); color: #1F7A85; border: 1px solid #1F7A85;">
             👩‍⚕️ 看護師
           </button>
+          <button class="filter-btn px-4 py-2 rounded-lg font-semibold" data-value="KOL" style="background: rgba(31, 122, 133, 0.15); color: #1F7A85; border: 1px solid #1F7A85;">
+            🎓 KOL
+          </button>
           <button class="filter-btn px-4 py-2 rounded-lg font-semibold" data-value="医師・患者" style="background: rgba(31, 122, 133, 0.15); color: #1F7A85; border: 1px solid #1F7A85;">
             👨‍⚕️🧑 医師・患者
           </button>
@@ -453,8 +456,8 @@
       // 対象者種別フィルター
       if (currentFilters.targetType !== 'all') {
         if (currentFilters.targetType === 'その他') {
-          // 「その他」の場合：医師、患者、介護者、看護師以外
-          const standardTypes = ['医師', '患者', '介護者', '看護師', '医師・患者'];
+          // 「その他」の場合：医師、患者、介護者、看護師、KOL、医師・患者以外
+          const standardTypes = ['医師', '患者', '介護者', '看護師', 'KOL', '医師・患者'];
           projects = projects.filter(p => !standardTypes.includes(p.targetType));
         } else {
           projects = projects.filter(p => p.targetType === currentFilters.targetType);
@@ -473,10 +476,12 @@
           return (
             (p.diseaseName || '').toLowerCase().includes(term) ||
             (p.diseaseAbbr || '').toLowerCase().includes(term) ||
+            (p.targetType || '').toLowerCase().includes(term) ||
             (p.client || '').toLowerCase().includes(term) ||
             (p.drug || '').toLowerCase().includes(term) ||
             (p.method || '').toLowerCase().includes(term) ||
             (p.specialty || '').toLowerCase().includes(term) ||
+            (p.recruitCompany || '').toLowerCase().includes(term) ||
             (p.targetConditions || '').toLowerCase().includes(term)
           );
         });
@@ -801,6 +806,8 @@
         '医師': 'bg-blue-100 text-blue-800',
         '患者': 'bg-green-100 text-green-800',
         '介護者': 'bg-yellow-100 text-yellow-800',
+        '看護師': 'bg-pink-100 text-pink-800',
+        'KOL': 'bg-indigo-100 text-indigo-800',
         '医師・患者': 'bg-purple-100 text-purple-800'
       };
       return classes[type] || 'bg-gray-100 text-gray-800';
