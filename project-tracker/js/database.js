@@ -9,35 +9,47 @@ class ProjectDatabase {
     this.storageKey = 'project_tracker_data_v2';
     this.initialized = false;
     
-    // 専門科の略語マッピング
-    this.specialtyAbbreviations = {
-      'BAS': '肥満症専門医',
-      'CARD': '循環器科',
-      'DERM': '皮膚科',
-      'Endos': '内分泌科',
-      'Gastro': '消化器科',
-      'GI Surgeon': '消化器外科',
-      'GYN': '産婦人科医',
-      'HEM': '血液科・血液内科',
-      'HEPA': '肝臓専門医',
-      'IM': '内科（専門医）',
-      'NEPH': '腎臓内科医',
-      'NEURO': '神経内科',
-      'ONC': '腫瘍内科',
-      'Opht': '眼科',
-      'ORTHO': '整形外科医',
-      'PATH': '病理学医',
-      'PULMs': '呼吸器科',
-      'Psych': '精神科',
-      'Rheum': 'リウマチ科',
-      'URO': '泌尿器科'
-    };
-    
-    // 逆マッピング（日本語→略語）
-    this.specialtyReverse = {};
-    Object.entries(this.specialtyAbbreviations).forEach(([abbr, full]) => {
-      this.specialtyReverse[full.toLowerCase()] = abbr.toLowerCase();
-    });
+    // 専門科の略語マッピング（共通辞書を使用）
+    if (typeof SpecialtyDictionary !== 'undefined') {
+      this.specialtyAbbreviations = SpecialtyDictionary.getAbbreviationMap();
+      this.specialtyReverse = {};
+      Object.entries(SpecialtyDictionary.getSynonymMap()).forEach(([code, synonyms]) => {
+        synonyms.forEach(name => {
+          const normalized = SpecialtyDictionary.normalize(name);
+          if (normalized) {
+            this.specialtyReverse[normalized] = code.toLowerCase();
+          }
+        });
+      });
+    } else {
+      this.specialtyAbbreviations = {
+        'BAS': '肥満症専門医',
+        'CARD': '循環器科',
+        'DERM': '皮膚科',
+        'Endos': '内分泌科',
+        'Gastro': '消化器科',
+        'GI Surgeon': '消化器外科',
+        'GYN': '産婦人科医',
+        'HEM': '血液科・血液内科',
+        'HEPA': '肝臓専門医',
+        'IM': '内科（専門医）',
+        'NEPH': '腎臓内科医',
+        'NEURO': '神経内科',
+        'ONC': '腫瘍内科',
+        'Opht': '眼科',
+        'ORTHO': '整形外科医',
+        'PATH': '病理学医',
+        'PULMs': '呼吸器科',
+        'Psych': '精神科',
+        'Rheum': 'リウマチ科',
+        'URO': '泌尿器科'
+      };
+
+      this.specialtyReverse = {};
+      Object.entries(this.specialtyAbbreviations).forEach(([abbr, full]) => {
+        this.specialtyReverse[full.toLowerCase()] = abbr.toLowerCase();
+      });
+    }
   }
 
   /**

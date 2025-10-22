@@ -143,68 +143,7 @@
           <i class="fas fa-book-medical mr-2"></i>
           専門科略語対応表
         </h3>
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 text-sm">
-          <div class="bg-white p-2 rounded border border-blue-100">
-            <span class="font-bold text-blue-700">BAS</span> → 肥満症専門医
-          </div>
-          <div class="bg-white p-2 rounded border border-blue-100">
-            <span class="font-bold text-blue-700">CARD</span> → 循環器科
-          </div>
-          <div class="bg-white p-2 rounded border border-blue-100">
-            <span class="font-bold text-blue-700">DERM</span> → 皮膚科
-          </div>
-          <div class="bg-white p-2 rounded border border-blue-100">
-            <span class="font-bold text-blue-700">Endos</span> → 内分泌科
-          </div>
-          <div class="bg-white p-2 rounded border border-blue-100">
-            <span class="font-bold text-blue-700">Gastro</span> → 消化器科
-          </div>
-          <div class="bg-white p-2 rounded border border-blue-100">
-            <span class="font-bold text-blue-700">GI Surgeon</span> → 消化器外科
-          </div>
-          <div class="bg-white p-2 rounded border border-blue-100">
-            <span class="font-bold text-blue-700">GYN</span> → 産婦人科医
-          </div>
-          <div class="bg-white p-2 rounded border border-blue-100">
-            <span class="font-bold text-blue-700">HEM</span> → 血液科・血液内科
-          </div>
-          <div class="bg-white p-2 rounded border border-blue-100">
-            <span class="font-bold text-blue-700">HEPA</span> → 肝臓専門医
-          </div>
-          <div class="bg-white p-2 rounded border border-blue-100">
-            <span class="font-bold text-blue-700">IM</span> → 内科（専門医）
-          </div>
-          <div class="bg-white p-2 rounded border border-blue-100">
-            <span class="font-bold text-blue-700">NEPH</span> → 腎臓内科医
-          </div>
-          <div class="bg-white p-2 rounded border border-blue-100">
-            <span class="font-bold text-blue-700">NEURO</span> → 神経内科
-          </div>
-          <div class="bg-white p-2 rounded border border-blue-100">
-            <span class="font-bold text-blue-700">ONC</span> → 腫瘍内科
-          </div>
-          <div class="bg-white p-2 rounded border border-blue-100">
-            <span class="font-bold text-blue-700">Opht</span> → 眼科
-          </div>
-          <div class="bg-white p-2 rounded border border-blue-100">
-            <span class="font-bold text-blue-700">ORTHO</span> → 整形外科医
-          </div>
-          <div class="bg-white p-2 rounded border border-blue-100">
-            <span class="font-bold text-blue-700">PATH</span> → 病理学医
-          </div>
-          <div class="bg-white p-2 rounded border border-blue-100">
-            <span class="font-bold text-blue-700">PULMs</span> → 呼吸器科
-          </div>
-          <div class="bg-white p-2 rounded border border-blue-100">
-            <span class="font-bold text-blue-700">Psych</span> → 精神科
-          </div>
-          <div class="bg-white p-2 rounded border border-blue-100">
-            <span class="font-bold text-blue-700">Rheum</span> → リウマチ科
-          </div>
-          <div class="bg-white p-2 rounded border border-blue-100">
-            <span class="font-bold text-blue-700">URO</span> → 泌尿器科
-          </div>
-        </div>
+        <div id="specialtyGuideList" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 text-sm"></div>
         <p class="text-xs text-gray-600 mt-3">
           💡 検索時に略語を入力すると、自動的に対応する専門科で検索されます
         </p>
@@ -301,6 +240,7 @@
 
   <!-- 共通設定 -->
   <script src="js/config.js"></script>
+  <script src="js/specialties.js"></script>
   <!-- API Client -->
   <script src="js/api.js"></script>
 
@@ -308,15 +248,50 @@
   <script>
     let currentProjects = [];
     let currentProjectId = null;
+    let specialtyGuideInitialized = false;
 
     // 専門科略語ガイドの表示切り替え
     function toggleSpecialtyGuide() {
       const guide = document.getElementById('specialtyGuide');
       if (guide.classList.contains('hidden')) {
         guide.classList.remove('hidden');
+        if (!specialtyGuideInitialized) {
+          renderSpecialtyGuide();
+        }
       } else {
         guide.classList.add('hidden');
       }
+    }
+
+    function renderSpecialtyGuide() {
+      const container = document.getElementById('specialtyGuideList');
+      if (!container) {
+        return;
+      }
+
+      if (typeof SpecialtyDictionary === 'undefined') {
+        container.innerHTML = '<div class="col-span-full text-sm text-red-600">略語辞書の読み込みに失敗しました。</div>';
+        specialtyGuideInitialized = true;
+        return;
+      }
+
+      const entries = [...SpecialtyDictionary.data].sort((a, b) => a.code.localeCompare(b.code));
+      container.innerHTML = entries.map(entry => {
+        const primary = entry.name || '';
+        const extras = (entry.synonyms || []).filter(name => name && name !== primary);
+        const extraMarkup = extras.length
+          ? `<div class="text-xs text-gray-500 mt-1">${extras.join(' / ')}</div>`
+          : '';
+
+        return `
+          <div class="bg-white p-2 rounded border border-blue-100">
+            <span class="font-bold text-blue-700">${entry.code}</span> → ${primary}
+            ${extraMarkup}
+          </div>
+        `;
+      }).join('');
+
+      specialtyGuideInitialized = true;
     }
 
     // 初期化
@@ -336,7 +311,7 @@
     async function loadProjects() {
       try {
         currentProjects = await api.getAllProjects();
-        renderProjects(currentProjects);
+        sortProjects();
       } catch (error) {
         console.error('Failed to load projects:', error);
         alert('データの読み込みに失敗しました。ページを再読み込みしてください。');
@@ -362,8 +337,8 @@
       }
 
       projects.forEach(project => {
-        const date = '-'; // CSVにはcreatedAtがないため
-        
+        const date = formatProjectDate(project);
+
         tbody.innerHTML += `
           <tr class="hover:bg-gray-50 transition cursor-pointer" onclick="showProjectDetail('${project.id}')">
             <td class="px-4 py-3 text-sm text-gray-900">${truncate(project.diseaseName, 35)}</td>
@@ -412,7 +387,7 @@
           if (filters.targetType !== 'all' && project.targetType !== filters.targetType) {
             return false;
           }
-          
+
           // 疾患名フィルター
           if (filters.diseaseName) {
             const diseaseName = (project.diseaseName || '').toLowerCase();
@@ -421,14 +396,11 @@
             }
           }
           
-          // 専門科フィルター
-          if (filters.specialty) {
-            const specialty = (project.specialty || '').toLowerCase();
-            if (!specialty.includes(filters.specialty.toLowerCase())) {
-              return false;
-            }
+          // 専門科フィルター（略語対応）
+          if (filters.specialty && !api.matchesSpecialty(project, filters.specialty)) {
+            return false;
           }
-          
+
           // クライアントフィルター
           if (filters.client) {
             const client = (project.client || '').toLowerCase();
@@ -440,7 +412,7 @@
           return true;
         });
 
-        renderProjects(currentProjects);
+        sortProjects();
       } catch (error) {
         console.error('Filter error:', error);
       }
@@ -460,13 +432,13 @@
     // ソート
     function sortProjects() {
       const sortBy = document.getElementById('sortBy').value;
-      
+
       switch(sortBy) {
         case 'newest':
-          currentProjects.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+          currentProjects.sort((a, b) => compareProjectDates(b, a));
           break;
         case 'oldest':
-          currentProjects.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+          currentProjects.sort((a, b) => compareProjectDates(a, b));
           break;
         case 'recruits-desc':
           currentProjects.sort((a, b) => b.recruitCount - a.recruitCount);
@@ -477,6 +449,46 @@
       }
       
       renderProjects(currentProjects);
+    }
+
+    function compareProjectDates(first, second) {
+      const firstDate = getProjectDateValue(first);
+      const secondDate = getProjectDateValue(second);
+
+      if (firstDate === null && secondDate === null) return 0;
+      if (firstDate === null) return 1;
+      if (secondDate === null) return -1;
+      return firstDate - secondDate;
+    }
+
+    function getProjectDateValue(project) {
+      const candidates = [project.createdAt, project.registeredDate];
+      for (const value of candidates) {
+        if (!value) continue;
+        const timestamp = new Date(value).getTime();
+        if (!Number.isNaN(timestamp)) {
+          return timestamp;
+        }
+      }
+      return null;
+    }
+
+    function formatProjectDate(project) {
+      if (project.registeredDate) {
+        return formatDateString(project.registeredDate);
+      }
+      if (project.createdAt) {
+        return formatDateString(project.createdAt);
+      }
+      return '-';
+    }
+
+    function formatDateString(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) {
+        return value;
+      }
+      return date.toLocaleDateString('ja-JP');
     }
 
     // 案件詳細を表示

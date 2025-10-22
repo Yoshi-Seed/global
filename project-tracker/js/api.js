@@ -7,13 +7,18 @@ class ProjectAPI {
   constructor() {
     // Cloudflare Worker エンドポイント
     this.API_BASE = 'https://project-tracker-api.y-honda.workers.dev';
-    
+
     // キャッシュ（メモリ）
     this.cache = {
       projects: null,
       timestamp: null,
       ttl: 60000, // 1分（Worker側で5分キャッシュしているので、クライアント側は短くてOK）
     };
+
+    // 専門科の略語マッピング
+    this.specialtyDictionary = typeof SpecialtyDictionary !== 'undefined'
+      ? SpecialtyDictionary
+      : null;
   }
 
   /**
@@ -75,7 +80,14 @@ class ProjectAPI {
     
     return dataLines.map((line, index) => {
       const fields = this.parseCSVLine(line.trim());
-      
+
+      const specialtyName = fields[5] || '';
+      const specialtyCode = this.specialtyDictionary
+        ? this.specialtyDictionary.deriveCodeFromName(specialtyName)
+        : null;
+      const registeredDate = fields[11] || '';
+      const createdAt = registeredDate ? new Date(registeredDate).toISOString() : null;
+
       return {
         id: index + 1,
         diseaseName: fields[0] || '',
@@ -83,14 +95,15 @@ class ProjectAPI {
         method: fields[2] || '',
         surveyType: fields[3] || '',
         targetType: fields[4] || '',
-        specialty: fields[5] || '',
+        specialty: specialtyName,
+        specialtyCode: specialtyCode,
         recruitCount: parseInt(fields[6]) || 0,
         targetConditions: fields[7] || '',
         drug: fields[8] || '',
         recruitCompany: fields[9] || '',
         client: fields[10] || '',
-        registeredDate: fields[11] || '', // 登録日（YYYY-MM-DD）
-        createdAt: fields[11] ? new Date(fields[11]).toISOString() : null, // ISO形式に変換
+        registeredDate: registeredDate, // 登録日（YYYY-MM-DD）
+        createdAt: createdAt, // ISO形式に変換
       };
     }).filter(project => project.diseaseName); // 空行を除外
   }
@@ -144,21 +157,25 @@ class ProjectAPI {
    */
   async searchProjects(query) {
     const projects = await this.getAllProjects();
-    
+
     if (!query || query.trim() === '') {
       return projects;
     }
-    
+
     const searchTerm = query.toLowerCase();
-    
+
     return projects.filter(project => {
+      const specialtyMatch = this.matchesSpecialty(project, query, {
+        searchTerm,
+      });
+
       return (
         (project.diseaseName || '').toLowerCase().includes(searchTerm) ||
         (project.diseaseAbbr || '').toLowerCase().includes(searchTerm) ||
         (project.method || '').toLowerCase().includes(searchTerm) ||
         (project.surveyType || '').toLowerCase().includes(searchTerm) ||
         (project.targetType || '').toLowerCase().includes(searchTerm) ||
-        (project.specialty || '').toLowerCase().includes(searchTerm) ||
+        specialtyMatch ||
         (project.targetConditions || '').toLowerCase().includes(searchTerm) ||
         (project.drug || '').toLowerCase().includes(searchTerm) ||
         (project.recruitCompany || '').toLowerCase().includes(searchTerm) ||
@@ -166,6 +183,33 @@ class ProjectAPI {
         (project.projectId && project.projectId.toLowerCase().includes(searchTerm))
       );
     });
+  }
+
+  /**
+   * 専門科のフィルタ一致判定
+   */
+  matchesSpecialty(project, term, options = {}) {
+    if (!term || !term.trim()) {
+      return true;
+    }
+
+    if (this.specialtyDictionary) {
+      return this.specialtyDictionary.matchesProject(project, term);
+    }
+
+    const specialty = (project.specialty || '').toLowerCase();
+    const specialtyCode = (project.specialtyCode || '').toLowerCase();
+    const normalizedTerm = (options.searchTerm || term).trim().toLowerCase();
+
+    if (specialty && specialty.includes(normalizedTerm)) {
+      return true;
+    }
+
+    if (specialtyCode && specialtyCode.includes(normalizedTerm)) {
+      return true;
+    }
+
+    return false;
   }
 
   /**
