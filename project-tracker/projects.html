@@ -3,28 +3,100 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>案件一覧・検索 - プロジェクト履歴管理システム</title>
+  <title>案件検索 - プロジェクト履歴管理システム</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-size: 13px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .card-enter {
+      animation: fadeIn 0.3s ease-out forwards;
+    }
+
+    .filter-btn {
+      transition: all 0.2s ease;
+      font-size: 13px;
+    }
+
+    .filter-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .filter-btn.active {
+      box-shadow: 0 4px 12px rgba(31, 122, 133, 0.4);
+    }
+
+    .project-card {
+      transition: all 0.3s ease;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .project-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    .badge {
+      animation: slideIn 0.2s ease-out;
+    }
+
+    .step-number {
+      background: linear-gradient(135deg, #1F7A85 0%, #1a6770 100%);
+      width: 24px;
+      height: 24px;
+      font-size: 12px;
+    }
+
+    .search-container {
+      background: linear-gradient(135deg, #E8F0F1 0%, #d5e5e7 100%);
+      color: #2c3e50;
+    }
+
+    .search-container h2 {
+      color: #1F7A85;
+      font-size: 1.5rem;
+    }
+
+    .search-container h3 {
+      color: #1F7A85;
+      font-size: 1rem;
+    }
+
+    .search-container p {
+      color: #5a6c7d;
+      font-size: 0.8rem;
+    }
+  </style>
 </head>
 <body class="bg-gray-50">
   <!-- ナビゲーション -->
-  <nav class="bg-blue-600 text-white shadow-lg">
-    <div class="container mx-auto px-4 py-4">
+  <nav class="bg-white shadow-md sticky top-0 z-40">
+    <div class="container mx-auto px-4 py-3">
       <div class="flex items-center justify-between">
         <div class="flex items-center space-x-4">
-          <img src="Seed_Planning_Logo_Original.jpg" alt="SEED PLANNING" class="h-12">
-          <h1 class="text-xl font-bold">プロジェクト履歴管理システム</h1>
+          <img src="Seed_Planning_Logo_Original.jpg" alt="SEED PLANNING" class="h-10">
+          <h1 class="text-lg font-bold text-gray-800">プロジェクト履歴管理システム</h1>
         </div>
-        <div class="flex space-x-4">
-          <a href="index.html" class="px-4 py-2 bg-blue-500 rounded hover:bg-blue-600 transition">
+        <div class="flex space-x-3">
+          <a href="index.html" class="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
             <i class="fas fa-home mr-2"></i>ダッシュボード
           </a>
-          <a href="register.html" class="px-4 py-2 bg-green-500 rounded hover:bg-green-600 transition">
-            <i class="fas fa-plus mr-2"></i>新規案件登録
-          </a>
-          <a href="projects.html" class="px-4 py-2 bg-blue-700 rounded hover:bg-blue-800 transition">
-            <i class="fas fa-search mr-2"></i>案件検索
+          <a href="register.html" class="px-4 py-2 text-sm bg-green-500 text-white rounded-lg hover:bg-green-600 transition">
+            <i class="fas fa-plus mr-2"></i>新規登録
           </a>
         </div>
       </div>
@@ -34,205 +106,169 @@
   <!-- メインコンテンツ -->
   <div class="container mx-auto px-4 py-8">
     
-    <!-- 検索・フィルターエリア -->
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-      <h2 class="text-xl font-bold mb-4 flex items-center">
-        <i class="fas fa-search mr-2 text-blue-600"></i>
-        検索・フィルター
-      </h2>
+    <!-- 検索ヘッダー -->
+    <div class="search-container text-white rounded-xl shadow-lg p-5 mb-6">
+      <div class="text-center mb-4">
+        <h2 class="font-bold mb-1 flex items-center justify-center">
+          <i class="fas fa-search mr-2" style="font-size: 1.2rem;"></i>
+          プロジェクト検索
+        </h2>
+        <p class="subtitle-text">3つのステップで過去案件を絞り込み</p>
+      </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <!-- フリーワード検索 -->
-        <div class="lg:col-span-2">
-          <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center justify-between">
-            <span>フリーワード検索</span>
-            <button 
-              onclick="toggleSpecialtyGuide()" 
-              class="text-xs text-blue-600 hover:text-blue-800 flex items-center"
-            >
-              <i class="fas fa-info-circle mr-1"></i>専門科略語一覧
-            </button>
-          </label>
-          <input 
-            type="text" 
-            id="searchQuery" 
-            placeholder="疾患名、疾患略語、専門科（略語可）で検索..."
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-          >
-          <p class="text-xs text-gray-500 mt-1">
-            💡 例: 「T2D」「AD」「NEURO」「Psych」「脳神経内科」「精神科」
-          </p>
-          <p class="text-xs text-blue-600 mt-1">
-            ✨ 専門科は略語でも検索可能です（例: NEURO → 神経内科、CARD → 循環器科）
-          </p>
+      <!-- Step 1: 対象者フィルター -->
+      <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 mb-4">
+        <div class="flex items-center mb-3">
+          <div class="step-number rounded-full flex items-center justify-center font-bold mr-2">
+            1
+          </div>
+          <h3 class="font-bold">対象者で絞り込む</h3>
         </div>
-
-        <!-- 対象者タイプフィルター -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">対象者タイプ</label>
-          <select 
-            id="filterTargetType" 
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="all">すべて</option>
-            <option value="医師">医師</option>
-            <option value="患者">患者</option>
-            <option value="介護者">介護者</option>
-            <option value="医師・患者">医師・患者</option>
-            <option value="KOL">KOL</option>
-            <option value="看護師">看護師</option>
-            <option value="薬剤師">薬剤師</option>
-          </select>
-        </div>
-
-        <!-- 疾患名 -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">疾患名・疾患略語</label>
-          <input 
-            type="text" 
-            id="filterDiseaseName" 
-            placeholder="例: アルツハイマー, AD, T2DM"
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-          >
-        </div>
-
-        <!-- 専門（診療科） -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">専門（診療科）</label>
-          <input 
-            type="text" 
-            id="filterSpecialty" 
-            placeholder="例: NEURO, Psych, 脳神経内科"
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-          >
-          <p class="text-xs text-gray-500 mt-1">略語でも検索可能</p>
-        </div>
-
-        <!-- クライアント -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">クライアント</label>
-          <input 
-            type="text" 
-            id="filterClient" 
-            placeholder="例: The Link Group"
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-          >
+        <div class="flex flex-wrap gap-2" id="targetTypeFilters">
+          <button class="filter-btn active bg-white px-4 py-2 rounded-lg font-semibold shadow-sm" data-value="all" style="color: #1F7A85;">
+            すべて
+          </button>
+          <button class="filter-btn px-4 py-2 rounded-lg font-semibold" data-value="医師" style="background: rgba(31, 122, 133, 0.15); color: #1F7A85; border: 1px solid #1F7A85;">
+            👨‍⚕️ 医師
+          </button>
+          <button class="filter-btn px-4 py-2 rounded-lg font-semibold" data-value="患者" style="background: rgba(31, 122, 133, 0.15); color: #1F7A85; border: 1px solid #1F7A85;">
+            🧑 患者
+          </button>
+          <button class="filter-btn px-4 py-2 rounded-lg font-semibold" data-value="介護者" style="background: rgba(31, 122, 133, 0.15); color: #1F7A85; border: 1px solid #1F7A85;">
+            👥 介護者
+          </button>
+          <button class="filter-btn px-4 py-2 rounded-lg font-semibold" data-value="看護師" style="background: rgba(31, 122, 133, 0.15); color: #1F7A85; border: 1px solid #1F7A85;">
+            👩‍⚕️ 看護師
+          </button>
+          <button class="filter-btn px-4 py-2 rounded-lg font-semibold" data-value="医師・患者" style="background: rgba(31, 122, 133, 0.15); color: #1F7A85; border: 1px solid #1F7A85;">
+            👨‍⚕️🧑 医師・患者
+          </button>
+          <button class="filter-btn px-4 py-2 rounded-lg font-semibold" data-value="その他" style="background: rgba(31, 122, 133, 0.15); color: #1F7A85; border: 1px solid #1F7A85;">
+            📋 その他
+          </button>
         </div>
       </div>
 
-      <div class="flex space-x-4 mt-4">
-        <button 
-          onclick="applyFilters()" 
-          class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center space-x-2"
-        >
-          <i class="fas fa-filter"></i>
-          <span>フィルター適用</span>
-        </button>
-        <button 
-          onclick="clearFilters()" 
-          class="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition flex items-center space-x-2"
-        >
-          <i class="fas fa-times"></i>
-          <span>クリア</span>
+      <!-- Step 2: 専門科フィルター -->
+      <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 mb-4">
+        <div class="flex items-center mb-3">
+          <div class="step-number rounded-full flex items-center justify-center font-bold mr-2">
+            2
+          </div>
+          <h3 class="font-bold">専門科で絞り込む（任意）</h3>
+        </div>
+        <div class="flex flex-wrap gap-2" id="specialtyFilters">
+          <!-- 動的に生成 -->
+        </div>
+        <button onclick="toggleAllSpecialties()" class="mt-2 text-xs underline" style="color: #1F7A85;">
+          <i class="fas fa-ellipsis-h mr-1"></i>すべて表示
         </button>
       </div>
 
-      <!-- 専門科略語ガイド（折りたたみ） -->
-      <div id="specialtyGuide" class="hidden mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-        <h3 class="font-bold text-blue-900 mb-3 flex items-center">
-          <i class="fas fa-book-medical mr-2"></i>
-          専門科略語対応表
-        </h3>
-        <div id="specialtyGuideList" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 text-sm"></div>
-        <p class="text-xs text-gray-600 mt-3">
-          💡 検索時に略語を入力すると、自動的に対応する専門科で検索されます
+      <!-- Step 3: フリーワード検索 -->
+      <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+        <div class="flex items-center mb-3">
+          <div class="step-number rounded-full flex items-center justify-center font-bold mr-2">
+            3
+          </div>
+          <h3 class="font-bold">フリーワード検索</h3>
+        </div>
+        <div class="relative">
+          <input 
+            type="text" 
+            id="freewordSearch" 
+            placeholder="疾患名、疾患略語、クライアント、薬剤名などで検索..."
+            class="w-full px-4 py-2 pr-10 rounded-lg text-gray-800 shadow-md focus:outline-none" style="border: 2px solid #1F7A85; font-size: 14px;"
+          >
+          <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" style="font-size: 14px;"></i>
+        </div>
+        <p class="text-xs mt-1" style="color: #5a6c7d;">
+          💡 例: 「アルツハイマー」「AD」「T2DM」「The Link Group」
         </p>
       </div>
-    </div>
 
-    <!-- 案件一覧 -->
-    <div class="bg-white rounded-lg shadow-md p-6">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-xl font-bold flex items-center">
-          <i class="fas fa-list mr-2 text-green-600"></i>
-          案件一覧 
-          <span id="projectCount" class="ml-2 text-sm font-normal text-gray-600">(0件)</span>
-        </h2>
-        <div class="flex space-x-2">
-          <button onclick="exportCSV()" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">
-            <i class="fas fa-file-csv mr-2"></i>CSV出力
-          </button>
-          <select id="sortBy" onchange="sortProjects()" class="px-4 py-2 border border-gray-300 rounded-lg">
-            <option value="newest">新しい順</option>
-            <option value="oldest">古い順</option>
-            <option value="recruits-desc">リクルート人数（多い順）</option>
-            <option value="recruits-asc">リクルート人数（少ない順）</option>
-          </select>
+      <!-- 結果カウント -->
+      <div class="mt-4 text-center">
+        <div class="inline-block bg-white/20 backdrop-blur-sm rounded-full px-5 py-2">
+          <span class="text-xs font-medium" style="color: #1F7A85;">該当件数: </span>
+          <span id="resultCount" class="text-xl font-bold" style="color: #1F7A85;">0</span>
+          <span class="text-xs font-medium" style="color: #1F7A85;">件</span>
         </div>
       </div>
-
-      <!-- テーブル -->
-      <div class="overflow-x-auto">
-        <table class="min-w-full">
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">疾患名</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">疾患略語</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">対象者</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">専門</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">実績数</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">クライアント</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">登録日</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">アクション</th>
-            </tr>
-          </thead>
-          <tbody id="projectsTableBody" class="bg-white divide-y divide-gray-200">
-            <!-- 動的に生成 -->
-          </tbody>
-        </table>
-      </div>
     </div>
 
-    <!-- 案件詳細モーダル -->
-    <div id="detailModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div class="bg-white rounded-lg shadow-xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
-        <div class="p-6">
-          <!-- モーダルヘッダー -->
-          <div class="flex items-center justify-between mb-6 border-b pb-4">
-            <h2 class="text-2xl font-bold text-gray-800 flex items-center">
-              <i class="fas fa-info-circle mr-2 text-blue-600"></i>
-              案件詳細
-            </h2>
-            <button onclick="closeDetailModal()" class="text-gray-500 hover:text-gray-700 text-2xl">
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
+    <!-- ソート・エクスポート -->
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center space-x-3">
+        <label class="text-xs font-medium text-gray-700">並び替え:</label>
+        <select id="sortBy" onchange="sortAndRender()" class="px-3 py-1.5 border-2 rounded-lg text-xs" style="border-color: #1F7A85;">
+          <option value="newest">新しい順</option>
+          <option value="oldest">古い順</option>
+          <option value="recruits-desc">実績数（多い順）</option>
+          <option value="recruits-asc">実績数（少ない順）</option>
+          <option value="disease-asc">疾患名（あいうえお順）</option>
+        </select>
+      </div>
+      <button onclick="exportFilteredCSV()" class="px-4 py-1.5 bg-green-500 text-white rounded-lg hover:bg-green-600 transition shadow-md text-xs">
+        <i class="fas fa-file-csv mr-1"></i>CSV出力
+      </button>
+    </div>
 
-          <!-- 詳細コンテンツ -->
-          <div id="detailContent" class="space-y-6">
+    <!-- 案件カード一覧 -->
+    <div id="projectCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- 動的に生成 -->
+    </div>
+
+    <!-- ローディング -->
+    <div id="loadingIndicator" class="text-center py-8">
+      <i class="fas fa-spinner fa-spin text-2xl" style="color: #1F7A85;"></i>
+      <p class="text-gray-600 mt-3 text-sm">データを読み込み中...</p>
+    </div>
+
+    <!-- 結果なし -->
+    <div id="noResults" class="hidden text-center py-8">
+      <i class="fas fa-search text-4xl text-gray-300 mb-3"></i>
+      <p class="text-base text-gray-600 font-medium">該当する案件が見つかりませんでした</p>
+      <p class="text-gray-500 mt-1 text-sm">別の条件で検索してください</p>
+    </div>
+  </div>
+
+  <!-- 案件詳細モーダル -->
+  <div id="detailModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
+      <div class="p-8">
+        <!-- モーダルヘッダー -->
+        <div class="flex items-center justify-between mb-4 border-b pb-3">
+          <h2 class="text-xl font-bold text-gray-800 flex items-center">
+            <i class="fas fa-file-alt mr-2 text-lg" style="color: #1F7A85;"></i>
+            案件詳細
+          </h2>
+          <button onclick="closeDetailModal()" class="text-gray-400 hover:text-gray-600 text-2xl transition">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <!-- 詳細コンテンツ -->
+        <div id="detailContent" class="space-y-6">
+          <!-- 動的に生成 -->
+        </div>
+
+        <!-- 類似案件 -->
+        <div id="similarProjectsSection" class="mt-6 border-t pt-4">
+          <h3 class="text-lg font-bold mb-3 flex items-center">
+            <i class="fas fa-sitemap mr-2 text-base" style="color: #1F7A85;"></i>
+            類似案件
+          </h3>
+          <div id="similarProjectsList" class="space-y-3">
             <!-- 動的に生成 -->
           </div>
+        </div>
 
-          <!-- 類似案件 -->
-          <div id="similarProjectsSection" class="mt-8 border-t pt-6">
-            <h3 class="text-xl font-bold mb-4 flex items-center">
-              <i class="fas fa-sitemap mr-2 text-purple-600"></i>
-              類似案件
-            </h3>
-            <div id="similarProjectsList" class="space-y-3">
-              <!-- 動的に生成 -->
-            </div>
-          </div>
-
-          <!-- アクションボタン -->
-          <div class="flex space-x-4 mt-6 pt-6 border-t">
-            <button onclick="deleteProject()" class="flex-1 bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition">
-              <i class="fas fa-trash mr-2"></i>削除
-            </button>
-            <button onclick="closeDetailModal()" class="px-6 py-3 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition">
-              閉じる
-            </button>
-          </div>
+        <!-- アクションボタン -->
+        <div class="flex space-x-3 mt-6 pt-4 border-t">
+          <button onclick="closeDetailModal()" class="flex-1 px-5 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm font-medium">
+            閉じる
+          </button>
         </div>
       </div>
     </div>
@@ -244,254 +280,321 @@
   <!-- API Client -->
   <script src="js/api.js"></script>
 
-  <!-- 案件一覧ロジック -->
+  <!-- 案件検索ロジック -->
   <script>
-    let currentProjects = [];
+    let allProjects = [];
+    let filteredProjects = [];
+    let currentFilters = {
+      targetType: 'all',
+      specialty: 'all',
+      freeword: ''
+    };
     let currentProjectId = null;
-    let specialtyGuideInitialized = false;
-
-    // 専門科略語ガイドの表示切り替え
-    function toggleSpecialtyGuide() {
-      const guide = document.getElementById('specialtyGuide');
-      if (guide.classList.contains('hidden')) {
-        guide.classList.remove('hidden');
-        if (!specialtyGuideInitialized) {
-          renderSpecialtyGuide();
-        }
-      } else {
-        guide.classList.add('hidden');
-      }
-    }
-
-    function renderSpecialtyGuide() {
-      const container = document.getElementById('specialtyGuideList');
-      if (!container) {
-        return;
-      }
-
-      if (typeof SpecialtyDictionary === 'undefined') {
-        container.innerHTML = '<div class="col-span-full text-sm text-red-600">略語辞書の読み込みに失敗しました。</div>';
-        specialtyGuideInitialized = true;
-        return;
-      }
-
-      const entries = [...SpecialtyDictionary.data].sort((a, b) => a.code.localeCompare(b.code));
-      container.innerHTML = entries.map(entry => {
-        const primary = entry.name || '';
-        const extras = (entry.synonyms || []).filter(name => name && name !== primary);
-        const extraMarkup = extras.length
-          ? `<div class="text-xs text-gray-500 mt-1">${extras.join(' / ')}</div>`
-          : '';
-
-        return `
-          <div class="bg-white p-2 rounded border border-blue-100">
-            <span class="font-bold text-blue-700">${entry.code}</span> → ${primary}
-            ${extraMarkup}
-          </div>
-        `;
-      }).join('');
-
-      specialtyGuideInitialized = true;
-    }
 
     // 初期化
-    async function initProjectsPage() {
-      // URLパラメータから特定案件を開く
-      const urlParams = new URLSearchParams(window.location.search);
-      const projectId = urlParams.get('id');
-      
-      await loadProjects();
-      
-      if (projectId) {
-        showProjectDetail(projectId);
-      }
-    }
-
-    // 案件一覧を読み込み
-    async function loadProjects() {
+    async function init() {
       try {
-        currentProjects = await api.getAllProjects();
-        sortProjects();
+        // データ読み込み
+        allProjects = await api.getAllProjects();
+        
+        // 専門科フィルターを生成
+        generateSpecialtyFilters();
+        
+        // フィルターイベントリスナー設定
+        setupFilterListeners();
+        
+        // 初期表示
+        applyFilters();
+        
+        // ローディング非表示
+        document.getElementById('loadingIndicator').classList.add('hidden');
+        
       } catch (error) {
-        console.error('Failed to load projects:', error);
-        alert('データの読み込みに失敗しました。ページを再読み込みしてください。');
+        console.error('初期化エラー:', error);
+        alert('データの読み込みに失敗しました');
       }
     }
 
-    // 案件一覧を表示
-    function renderProjects(projects) {
-      const tbody = document.getElementById('projectsTableBody');
-      tbody.innerHTML = '';
-
-      document.getElementById('projectCount').textContent = `(${projects.length}件)`;
-
-      if (projects.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="8" class="px-4 py-8 text-center text-gray-500">
-              該当する案件が見つかりませんでした
-            </td>
-          </tr>
-        `;
-        return;
-      }
-
-      projects.forEach(project => {
-        const date = formatProjectDate(project);
-
-        tbody.innerHTML += `
-          <tr class="hover:bg-gray-50 transition cursor-pointer" onclick="showProjectDetail('${project.id}')">
-            <td class="px-4 py-3 text-sm text-gray-900">${truncate(project.diseaseName, 35)}</td>
-            <td class="px-4 py-3 text-sm text-gray-600">${project.diseaseAbbr || '-'}</td>
-            <td class="px-4 py-3 text-sm">
-              <span class="px-2 py-1 rounded-full text-xs font-semibold ${getTargetTypeBadgeClass(project.targetType)}">
-                ${project.targetType}
-              </span>
-            </td>
-            <td class="px-4 py-3 text-sm text-gray-600">${truncate(project.specialty || '-', 15)}</td>
-            <td class="px-4 py-3 text-sm font-medium text-green-600">${project.recruitCount}名</td>
-            <td class="px-4 py-3 text-sm text-gray-600">${truncate(project.client || '-', 20)}</td>
-            <td class="px-4 py-3 text-sm text-gray-500">${date}</td>
-            <td class="px-4 py-3 text-sm">
-              <button onclick="event.stopPropagation(); showProjectDetail('${project.id}')" class="text-blue-600 hover:text-blue-800">
-                <i class="fas fa-eye mr-1"></i>案件詳細
-              </button>
-            </td>
-          </tr>
-        `;
+    // 専門科フィルターボタンを生成
+    function generateSpecialtyFilters() {
+      const container = document.getElementById('specialtyFilters');
+      const specialties = [...new Set(allProjects.map(p => p.specialty).filter(s => s))];
+      
+      // 「すべて」ボタン
+      const allBtn = createFilterButton('すべて', 'all', true);
+      container.appendChild(allBtn);
+      
+      // 頻出専門科を優先表示（最大8個）
+      const topSpecialties = specialties
+        .map(s => ({
+          name: s,
+          count: allProjects.filter(p => p.specialty === s).length
+        }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 8);
+      
+      topSpecialties.forEach(({name}) => {
+        const btn = createFilterButton(name, name);
+        container.appendChild(btn);
       });
+    }
+
+    function createFilterButton(label, value, isActive = false) {
+      const btn = document.createElement('button');
+      btn.className = `filter-btn px-4 py-2 rounded-lg text-sm font-semibold`;
+      if (isActive) {
+        btn.classList.add('active', 'bg-white');
+        btn.style.color = '#1F7A85';
+      } else {
+        btn.style.background = 'rgba(31, 122, 133, 0.15)';
+        btn.style.color = '#1F7A85';
+        btn.style.border = '1px solid #1F7A85';
+      }
+      btn.textContent = label;
+      btn.dataset.value = value;
+      btn.onclick = () => selectSpecialtyFilter(btn);
+      return btn;
+    }
+
+    function toggleAllSpecialties() {
+      const container = document.getElementById('specialtyFilters');
+      const allSpecialties = [...new Set(allProjects.map(p => p.specialty).filter(s => s))];
+      
+      // 現在の表示数をチェック
+      const currentCount = container.children.length;
+      
+      if (currentCount <= 9) {
+        // すべて表示
+        container.innerHTML = '';
+        const allBtn = createFilterButton('すべて', 'all', currentFilters.specialty === 'all');
+        container.appendChild(allBtn);
+        
+        allSpecialties.forEach(name => {
+          const btn = createFilterButton(name, name, currentFilters.specialty === name);
+          container.appendChild(btn);
+        });
+      } else {
+        // 元に戻す
+        container.innerHTML = '';
+        generateSpecialtyFilters();
+      }
+    }
+
+    // フィルターイベントリスナー設定
+    function setupFilterListeners() {
+      // 対象者フィルター
+      document.querySelectorAll('#targetTypeFilters .filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => selectTargetTypeFilter(btn));
+      });
+
+      // フリーワード検索（リアルタイム）
+      const freewordInput = document.getElementById('freewordSearch');
+      let searchTimeout;
+      freewordInput.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          currentFilters.freeword = e.target.value.trim();
+          applyFilters();
+        }, 300); // 300ms後に検索実行
+      });
+    }
+
+    // 対象者フィルター選択
+    function selectTargetTypeFilter(btn) {
+      document.querySelectorAll('#targetTypeFilters .filter-btn').forEach(b => {
+        b.classList.remove('active', 'bg-white');
+        b.style.background = 'rgba(31, 122, 133, 0.15)';
+        b.style.color = '#1F7A85';
+        b.style.border = '1px solid #1F7A85';
+      });
+      
+      btn.classList.add('active', 'bg-white');
+      btn.style.color = '#1F7A85';
+      btn.style.border = 'none';
+      btn.classList.remove('bg-white/20', 'hover:bg-white/30', 'text-white');
+      
+      currentFilters.targetType = btn.dataset.value;
+      applyFilters();
+    }
+
+    // 専門科フィルター選択
+    function selectSpecialtyFilter(btn) {
+      document.querySelectorAll('#specialtyFilters .filter-btn').forEach(b => {
+        b.classList.remove('active', 'bg-white');
+        b.style.background = 'rgba(31, 122, 133, 0.15)';
+        b.style.color = '#1F7A85';
+        b.style.border = '1px solid #1F7A85';
+      });
+      
+      btn.classList.add('active', 'bg-white');
+      btn.style.color = '#1F7A85';
+      btn.style.border = 'none';
+      btn.classList.remove('bg-white/20', 'hover:bg-white/30', 'text-white');
+      
+      currentFilters.specialty = btn.dataset.value;
+      applyFilters();
     }
 
     // フィルター適用
     async function applyFilters() {
-      const query = document.getElementById('searchQuery').value.trim();
-      const filters = {
-        targetType: document.getElementById('filterTargetType').value,
-        diseaseName: document.getElementById('filterDiseaseName').value.trim(),
-        specialty: document.getElementById('filterSpecialty').value.trim(),
-        client: document.getElementById('filterClient').value.trim()
-      };
+      let projects = [...allProjects];
 
-      try {
-        // フリーワード検索を先に実行
-        let baseProjects;
-        if (query) {
-          baseProjects = await api.searchProjects(query);
+      // 対象者種別フィルター
+      if (currentFilters.targetType !== 'all') {
+        if (currentFilters.targetType === 'その他') {
+          // 「その他」の場合：医師、患者、介護者、看護師以外
+          const standardTypes = ['医師', '患者', '介護者', '看護師', '医師・患者'];
+          projects = projects.filter(p => !standardTypes.includes(p.targetType));
         } else {
-          baseProjects = await api.getAllProjects();
+          projects = projects.filter(p => p.targetType === currentFilters.targetType);
         }
-
-        // フィルター適用
-        currentProjects = baseProjects.filter(project => {
-          // 対象者種別フィルター
-          if (filters.targetType !== 'all' && project.targetType !== filters.targetType) {
-            return false;
-          }
-
-          // 疾患名フィルター
-          if (filters.diseaseName) {
-            const diseaseName = (project.diseaseName || '').toLowerCase();
-            if (!diseaseName.includes(filters.diseaseName.toLowerCase())) {
-              return false;
-            }
-          }
-          
-          // 専門科フィルター（略語対応）
-          if (filters.specialty && !api.matchesSpecialty(project, filters.specialty)) {
-            return false;
-          }
-
-          // クライアントフィルター
-          if (filters.client) {
-            const client = (project.client || '').toLowerCase();
-            if (!client.includes(filters.client.toLowerCase())) {
-              return false;
-            }
-          }
-          
-          return true;
-        });
-
-        sortProjects();
-      } catch (error) {
-        console.error('Filter error:', error);
       }
-    }
 
-    // フィルタークリア
-    function clearFilters() {
-      document.getElementById('searchQuery').value = '';
-      document.getElementById('filterTargetType').value = 'all';
-      document.getElementById('filterDiseaseName').value = '';
-      document.getElementById('filterSpecialty').value = '';
-      document.getElementById('filterClient').value = '';
+      // 専門科フィルター
+      if (currentFilters.specialty !== 'all') {
+        projects = projects.filter(p => p.specialty === currentFilters.specialty);
+      }
+
+      // フリーワード検索
+      if (currentFilters.freeword) {
+        const term = currentFilters.freeword.toLowerCase();
+        projects = projects.filter(p => {
+          return (
+            (p.diseaseName || '').toLowerCase().includes(term) ||
+            (p.diseaseAbbr || '').toLowerCase().includes(term) ||
+            (p.client || '').toLowerCase().includes(term) ||
+            (p.drug || '').toLowerCase().includes(term) ||
+            (p.method || '').toLowerCase().includes(term) ||
+            (p.specialty || '').toLowerCase().includes(term) ||
+            (p.targetConditions || '').toLowerCase().includes(term)
+          );
+        });
+      }
+
+      filteredProjects = projects;
       
-      loadProjects();
+      // 結果カウント更新
+      document.getElementById('resultCount').textContent = projects.length;
+      
+      // ソートして表示
+      sortAndRender();
     }
 
-    // ソート
-    function sortProjects() {
+    // ソート＆レンダリング
+    function sortAndRender() {
       const sortBy = document.getElementById('sortBy').value;
+      let sorted = [...filteredProjects];
 
       switch(sortBy) {
         case 'newest':
-          currentProjects.sort((a, b) => compareProjectDates(b, a));
+          sorted.sort((a, b) => compareProjectDates(b, a));
           break;
         case 'oldest':
-          currentProjects.sort((a, b) => compareProjectDates(a, b));
+          sorted.sort((a, b) => compareProjectDates(a, b));
           break;
         case 'recruits-desc':
-          currentProjects.sort((a, b) => b.recruitCount - a.recruitCount);
+          sorted.sort((a, b) => b.recruitCount - a.recruitCount);
           break;
         case 'recruits-asc':
-          currentProjects.sort((a, b) => a.recruitCount - b.recruitCount);
+          sorted.sort((a, b) => a.recruitCount - b.recruitCount);
+          break;
+        case 'disease-asc':
+          sorted.sort((a, b) => (a.diseaseName || '').localeCompare(b.diseaseName || '', 'ja'));
           break;
       }
+
+      renderProjectCards(sorted);
+    }
+
+    // 案件カード表示
+    function renderProjectCards(projects) {
+      const container = document.getElementById('projectCards');
+      const noResults = document.getElementById('noResults');
       
-      renderProjects(currentProjects);
-    }
+      container.innerHTML = '';
 
-    function compareProjectDates(first, second) {
-      const firstDate = getProjectDateValue(first);
-      const secondDate = getProjectDateValue(second);
-
-      if (firstDate === null && secondDate === null) return 0;
-      if (firstDate === null) return 1;
-      if (secondDate === null) return -1;
-      return firstDate - secondDate;
-    }
-
-    function getProjectDateValue(project) {
-      const candidates = [project.createdAt, project.registeredDate];
-      for (const value of candidates) {
-        if (!value) continue;
-        const timestamp = new Date(value).getTime();
-        if (!Number.isNaN(timestamp)) {
-          return timestamp;
-        }
+      if (projects.length === 0) {
+        container.classList.add('hidden');
+        noResults.classList.remove('hidden');
+        return;
       }
-      return null;
+
+      container.classList.remove('hidden');
+      noResults.classList.add('hidden');
+
+      projects.forEach((project, index) => {
+        const card = createProjectCard(project, index);
+        container.appendChild(card);
+      });
     }
 
-    function formatProjectDate(project) {
-      if (project.registeredDate) {
-        return formatDateString(project.registeredDate);
-      }
-      if (project.createdAt) {
-        return formatDateString(project.createdAt);
-      }
-      return '-';
+    // プロジェクトカード作成
+    function createProjectCard(project, index) {
+      const card = document.createElement('div');
+      card.className = 'project-card card-enter bg-white rounded-xl shadow-md overflow-hidden border border-gray-200';
+      card.style.animationDelay = `${index * 0.05}s`;
+      card.onclick = () => showProjectDetail(project.id);
+
+      const targetTypeBadgeClass = getTargetTypeBadgeClass(project.targetType);
+      
+      card.innerHTML = `
+        <div class="p-4">
+          <!-- 疾患名 -->
+          <h3 class="text-sm font-bold text-gray-900 mb-1 line-clamp-2" style="line-height: 1.3;">
+            ${project.diseaseName}
+          </h3>
+          
+          <!-- 疾患略語 -->
+          ${project.diseaseAbbr ? `
+            <p class="text-xs font-medium mb-2" style="color: #1F7A85;">${project.diseaseAbbr}</p>
+          ` : '<div class="mb-2"></div>'}
+          
+          <div class="h-px bg-gray-200 mb-2"></div>
+          
+          <!-- 詳細情報 -->
+          <div class="space-y-2">
+            <!-- 対象者 -->
+            <div class="flex items-center">
+              <i class="fas fa-user-circle w-4 text-gray-400 mr-1.5" style="font-size: 11px;"></i>
+              <span class="badge ${targetTypeBadgeClass} px-2 py-0.5 rounded-full font-semibold" style="font-size: 10px;">
+                ${project.targetType}
+              </span>
+            </div>
+            
+            <!-- 専門科 -->
+            ${project.specialty ? `
+              <div class="flex items-center">
+                <i class="fas fa-hospital w-4 text-gray-400 mr-1.5" style="font-size: 11px;"></i>
+                <span class="text-xs text-gray-700">${truncate(project.specialty, 18)}</span>
+              </div>
+            ` : ''}
+            
+            <!-- 実績数 -->
+            <div class="flex items-center">
+              <i class="fas fa-users w-4 text-gray-400 mr-1.5" style="font-size: 11px;"></i>
+              <span class="text-xs font-bold text-green-600">実績: ${project.recruitCount}名</span>
+            </div>
+            
+            <!-- クライアント -->
+            ${project.client ? `
+              <div class="flex items-center">
+                <i class="fas fa-building w-4 text-gray-400 mr-1.5" style="font-size: 11px;"></i>
+                <span class="text-xs text-gray-700">${truncate(project.client, 20)}</span>
+              </div>
+            ` : ''}
+          </div>
+          
+          <!-- 詳細ボタン -->
+          <button class="mt-3 w-full text-white py-1.5 rounded-lg transition text-xs font-medium" style="background-color: #1F7A85;" onmouseover="this.style.backgroundColor='#1a6770'" onmouseout="this.style.backgroundColor='#1F7A85'">
+            <i class="fas fa-eye mr-1" style="font-size: 10px;"></i>詳細を見る
+          </button>
+        </div>
+      `;
+
+      return card;
     }
 
-    function formatDateString(value) {
-      const date = new Date(value);
-      if (Number.isNaN(date.getTime())) {
-        return value;
-      }
-      return date.toLocaleDateString('ja-JP');
-    }
-
-    // 案件詳細を表示
+    // 案件詳細モーダル表示
     async function showProjectDetail(id) {
       currentProjectId = id;
       const project = await api.getProjectById(id);
@@ -502,89 +605,84 @@
       }
 
       const detailContent = document.getElementById('detailContent');
+      const targetTypeBadgeClass = getTargetTypeBadgeClass(project.targetType);
+      
       detailContent.innerHTML = `
-        <div class="grid grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label class="block text-sm font-medium text-gray-500 mb-1">疾患名</label>
-            <p class="text-lg font-semibold text-gray-900">${project.diseaseName}</p>
+            <label class="block text-xs font-medium text-gray-500 mb-1">疾患名</label>
+            <p class="text-base font-bold text-gray-900">${project.diseaseName}</p>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-500 mb-1">疾患略語</label>
-            <p class="text-lg font-semibold text-blue-600">${project.diseaseAbbr || '-'}</p>
+            <label class="block text-xs font-medium text-gray-500 mb-1">疾患略語</label>
+            <p class="text-base font-semibold" style="color: #1F7A85;">${project.diseaseAbbr || '-'}</p>
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label class="block text-sm font-medium text-gray-500 mb-1">対象者タイプ</label>
-            <span class="inline-block px-3 py-1 rounded-full text-sm font-semibold ${getTargetTypeBadgeClass(project.targetType)}">
+            <label class="block text-xs font-medium text-gray-500 mb-1">対象者タイプ</label>
+            <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold ${targetTypeBadgeClass}">
               ${project.targetType}
             </span>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-500 mb-1">専門（診療科）</label>
-            <p class="text-gray-900">${project.specialty || '-'}</p>
+            <label class="block text-xs font-medium text-gray-500 mb-1">専門（診療科）</label>
+            <p class="text-sm text-gray-900">${project.specialty || '-'}</p>
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label class="block text-sm font-medium text-gray-500 mb-1">手法</label>
-            <p class="text-gray-900">${project.method || '-'}</p>
+            <label class="block text-xs font-medium text-gray-500 mb-1">手法</label>
+            <p class="text-sm text-gray-900">${project.method || '-'}</p>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-500 mb-1">調査種別</label>
-            <p class="text-gray-900">${project.surveyType || '-'}</p>
+            <label class="block text-xs font-medium text-gray-500 mb-1">調査種別</label>
+            <p class="text-sm text-gray-900">${project.surveyType || '-'}</p>
           </div>
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-500 mb-1">実績数（リクルート人数）</label>
-          <p class="text-3xl font-bold text-green-600">${project.recruitCount}名</p>
+          <label class="block text-xs font-medium text-gray-500 mb-1">実績数（リクルート人数）</label>
+          <p class="text-2xl font-bold text-green-600">${project.recruitCount}名</p>
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-500 mb-2">対象条件</label>
-          <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-            <p class="text-gray-900 whitespace-pre-wrap">${project.targetConditions || '-'}</p>
+          <label class="block text-xs font-medium text-gray-500 mb-1">対象条件</label>
+          <div class="bg-gray-50 rounded-lg p-3 border border-gray-200">
+            <p class="text-sm text-gray-900 whitespace-pre-wrap">${project.targetConditions || '-'}</p>
           </div>
         </div>
 
         ${project.drug ? `
           <div>
-            <label class="block text-sm font-medium text-gray-500 mb-1">薬剤</label>
-            <p class="text-gray-900">${project.drug}</p>
+            <label class="block text-xs font-medium text-gray-500 mb-1">薬剤</label>
+            <p class="text-sm text-gray-900">${project.drug}</p>
           </div>
         ` : ''}
 
-        <div class="grid grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label class="block text-sm font-medium text-gray-500 mb-1">リクルート実施会社</label>
-            <p class="text-gray-900">${project.recruitCompany || '-'}</p>
+            <label class="block text-xs font-medium text-gray-500 mb-1">リクルート実施会社</label>
+            <p class="text-sm text-gray-900">${project.recruitCompany || '-'}</p>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-500 mb-1">クライアント</label>
-            <p class="text-lg font-semibold text-yellow-700">${project.client || '-'}</p>
+            <label class="block text-xs font-medium text-gray-500 mb-1">クライアント</label>
+            <p class="text-sm font-semibold" style="color: #1F7A85;">${project.client || '-'}</p>
           </div>
         </div>
 
-        ${project.projectId ? `
+        ${project.registeredDate ? `
           <div>
-            <label class="block text-sm font-medium text-gray-500 mb-1">Project ID（参照用）</label>
-            <p class="text-gray-600">${project.projectId}</p>
-          </div>
-        ` : ''}
-
-        ${project.projectId ? `
-          <div class="text-sm text-gray-500 pt-4 border-t">
-            <label class="block font-medium mb-1">備考</label>
-            <p>GitHub経由でデータを取得しています</p>
+            <label class="block text-xs font-medium text-gray-500 mb-1">登録日</label>
+            <p class="text-sm text-gray-600">${formatDateString(project.registeredDate)}</p>
           </div>
         ` : ''}
       `;
 
       // 類似案件を表示
-      loadSimilarProjects(project.id);
+      await loadSimilarProjects(project.id);
 
       // モーダルを表示
       const modal = document.getElementById('detailModal');
@@ -608,35 +706,35 @@
       }
 
       container.innerHTML = similar.map(project => `
-        <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border border-purple-200 hover:border-purple-400 transition cursor-pointer" 
-             onclick="showProjectDetail('${project.id}')">
+        <div class="p-3 rounded-lg border-2 transition cursor-pointer shadow-sm hover:shadow-md" style="background: linear-gradient(to right, #E8F0F1, #d5e5e7); border-color: #1F7A85;" onmouseover="this.style.borderColor='#1a6770'" onmouseout="this.style.borderColor='#1F7A85'" 
+             onclick="showProjectDetail(${project.id})">
           <div class="flex items-center justify-between mb-2">
-            <div>
-              <span class="font-semibold text-gray-900">${truncate(project.diseaseName, 40)}</span>
-              ${project.diseaseAbbr ? `<span class="ml-2 text-sm text-gray-600">(${project.diseaseAbbr})</span>` : ''}
+            <div class="flex-1">
+              <span class="font-bold text-gray-900 text-sm">${truncate(project.diseaseName, 40)}</span>
+              ${project.diseaseAbbr ? `<span class="ml-1 text-xs text-gray-600">(${project.diseaseAbbr})</span>` : ''}
             </div>
-            <span class="px-3 py-1 bg-purple-600 text-white text-xs font-bold rounded-full">
+            <span class="px-3 py-1 text-white text-xs font-bold rounded-full ml-2" style="background-color: #1F7A85;">
               類似度: ${project.similarityScore}
             </span>
           </div>
-          <div class="grid grid-cols-3 gap-4 text-sm">
+          <div class="grid grid-cols-3 gap-3 text-xs">
             <div>
               <span class="text-gray-600">対象者:</span>
-              <span class="font-medium ml-1">${project.targetType}</span>
+              <span class="font-medium ml-0.5">${project.targetType}</span>
             </div>
             <div>
               <span class="text-gray-600">専門:</span>
-              <span class="font-medium ml-1">${project.specialty || '-'}</span>
+              <span class="font-medium ml-0.5">${project.specialty || '-'}</span>
             </div>
             <div>
               <span class="text-gray-600">実績:</span>
-              <span class="font-medium ml-1 text-green-600">${project.recruitCount}名</span>
+              <span class="font-medium ml-0.5 text-green-600">${project.recruitCount}名</span>
             </div>
           </div>
           ${project.client ? `
-            <div class="mt-2 text-sm">
+            <div class="mt-1.5 text-xs">
               <span class="text-gray-600">クライアント:</span>
-              <span class="font-medium ml-1 text-yellow-700">${project.client}</span>
+              <span class="font-medium ml-0.5" style="color: #1F7A85;">${project.client}</span>
             </div>
           ` : ''}
         </div>
@@ -649,35 +747,12 @@
       currentProjectId = null;
     }
 
-    // 案件削除
-    async function deleteProject() {
-      if (!currentProjectId) return;
-
-      alert('削除機能は現在無効です。\n\nGitHub PR経由でデータを管理しているため、\n削除する場合はGitHub上でCSVを編集してPRを作成してください。');
-      return;
-    }
-
-    // CSVフィールドのエスケープ
-    function escapeCSVField(field) {
-      if (typeof field !== 'string') {
-        return field;
-      }
-      if (field.includes(',') || field.includes('"') || field.includes('\n')) {
-        return `"${field.replace(/"/g, '""')}"`;
-      }
-      return field;
-    }
-
-    // CSV出力
-    async function exportCSV() {
-      const projects = await api.getAllProjects();
-      
-      // CSVヘッダー（登録日を追加）
+    // CSVエクスポート（フィルター適用済み）
+    function exportFilteredCSV() {
       const headers = ['疾患名', '疾患略語', '手法', '調査種別', '対象者種別', '専門', '実績数', '対象条件', '薬剤', 'リクルート実施', 'クライアント', '登録日'];
       const csvLines = [headers.join(',')];
       
-      // データ行
-      projects.forEach(project => {
+      filteredProjects.forEach(project => {
         const row = [
           escapeCSVField(project.diseaseName || ''),
           escapeCSVField(project.diseaseAbbr || ''),
@@ -690,12 +765,11 @@
           escapeCSVField(project.drug || ''),
           escapeCSVField(project.recruitCompany || ''),
           escapeCSVField(project.client || ''),
-          project.registeredDate || '',  // 登録日を追加
+          project.registeredDate || '',
         ];
         csvLines.push(row.join(','));
       });
       
-      // UTF-8 BOMを追加して文字化け防止
       const BOM = '\uFEFF';
       const csv = BOM + csvLines.join('\n');
       
@@ -703,7 +777,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'projects_' + new Date().toISOString().split('T')[0] + '.csv';
+      a.download = `filtered_projects_${new Date().toISOString().split('T')[0]}.csv`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -726,8 +800,41 @@
       return text.length > length ? text.substring(0, length) + '...' : text;
     }
 
+    function escapeCSVField(field) {
+      if (typeof field !== 'string') return field;
+      if (field.includes(',') || field.includes('"') || field.includes('\n')) {
+        return `"${field.replace(/"/g, '""')}"`;
+      }
+      return field;
+    }
+
+    function compareProjectDates(first, second) {
+      const firstDate = getProjectDateValue(first);
+      const secondDate = getProjectDateValue(second);
+      if (firstDate === null && secondDate === null) return 0;
+      if (firstDate === null) return 1;
+      if (secondDate === null) return -1;
+      return firstDate - secondDate;
+    }
+
+    function getProjectDateValue(project) {
+      const candidates = [project.createdAt, project.registeredDate];
+      for (const value of candidates) {
+        if (!value) continue;
+        const timestamp = new Date(value).getTime();
+        if (!Number.isNaN(timestamp)) return timestamp;
+      }
+      return null;
+    }
+
+    function formatDateString(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return value;
+      return date.toLocaleDateString('ja-JP');
+    }
+
     // ページ読み込み時に実行
-    window.addEventListener('DOMContentLoaded', initProjectsPage);
+    window.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
 </html>
