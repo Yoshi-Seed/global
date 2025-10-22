@@ -209,6 +209,8 @@
   <script src="js/config.js"></script>
   <!-- API Client -->
   <script src="js/api.js"></script>
+  <!-- Export helpers -->
+  <script src="js/export.js"></script>
 
   <!-- ダッシュボードロジック -->
   <script>
@@ -242,35 +244,35 @@
       try {
         const stats = await api.getStats();
 
-      // データがない場合はインポートバナーを表示
-      if (stats.totalProjects === 0) {
-        document.getElementById('importBanner').classList.remove('hidden');
-      }
+        // データがない場合はインポートバナーを表示
+        if (stats.totalProjects === 0) {
+          document.getElementById('importBanner').classList.remove('hidden');
+        }
 
-      // 基本統計
-      document.getElementById('totalProjects').textContent = stats.totalProjects;
-      document.getElementById('totalRecruits').textContent = stats.totalRecruits.toLocaleString();
-      document.getElementById('avgRecruits').textContent = stats.averageRecruits;
+        // 基本統計
+        document.getElementById('totalProjects').textContent = stats.totalProjects;
+        document.getElementById('totalRecruits').textContent = stats.totalRecruits.toLocaleString();
+        document.getElementById('avgRecruits').textContent = stats.averageRecruits;
 
-      // 今月のプロジェクト数
-      const thisMonth = new Date().toISOString().substring(0, 7);
-      document.getElementById('thisMonthProjects').textContent = stats.monthlyTrend[thisMonth] || 0;
+        // 今月のプロジェクト数
+        const thisMonth = new Date().toISOString().substring(0, 7);
+        document.getElementById('thisMonthProjects').textContent = stats.monthlyTrend[thisMonth] || 0;
 
-      // 対象者タイプ別分布
-      renderTargetTypeChart(stats.targetTypeDistribution);
+        // 対象者タイプ別分布
+        renderTargetTypeChart(stats.targetTypeDistribution);
 
-      // クライアント Top 5
-      renderClientChart(stats.clientDistribution);
+        // クライアント Top 5
+        renderClientChart(stats.clientDistribution);
 
-      // 疾患カテゴリー Top 5
-      renderDiseaseChart(stats.diseaseDistribution);
+        // 疾患カテゴリー Top 5
+        renderDiseaseChart(stats.diseaseDistribution);
 
-      // 専門（診療科）Top 5
-      renderSpecialtyChart(stats.specialtyDistribution);
+        // 専門（診療科）Top 5
+        renderSpecialtyChart(stats.specialtyDistribution);
 
-      // 最近のプロジェクト
-      renderRecentProjects(stats.recentProjects);
-      
+        // 最近のプロジェクト
+        renderRecentProjects(stats.recentProjects);
+
       } catch (error) {
         console.error('Failed to load statistics:', error);
         alert('データの読み込みに失敗しました。ページを再読み込みしてください。');
@@ -476,34 +478,6 @@
     function truncate(text, length) {
       if (!text) return '';
       return text.length > length ? text.substring(0, length) + '...' : text;
-    }
-
-    // データエクスポート
-    function exportData() {
-      const format = confirm('CSVでエクスポートしますか？（キャンセルするとJSONでエクスポートします）');
-      
-      if (format) {
-        // CSV
-        const csv = db.exportToCSV();
-        downloadFile(csv, 'projects_export.csv', 'text/csv');
-      } else {
-        // JSON
-        const json = db.exportToJSON();
-        downloadFile(json, 'projects_export.json', 'application/json');
-      }
-    }
-
-    // ファイルダウンロード
-    function downloadFile(content, filename, mimeType) {
-      const blob = new Blob([content], { type: mimeType });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
     }
 
     // ページ読み込み時に実行
