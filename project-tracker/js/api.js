@@ -81,14 +81,14 @@ class ProjectAPI {
     return dataLines.map((line, index) => {
       const fields = this.parseCSVLine(line.trim());
 
-      // CSVカラム順：id, registrationId, 疾患名, 疾患略語, 手法, 調査種別, 対象者種別, 専門, 実績数, 対象条件, 薬剤, リクルート実施, クライアント, 登録日
+      // CSVカラム順（19列）：id, registrationId, 疾患名, 疾患略語, 手法, 調査種別, 対象者種別, 専門, 実績数, 対象条件, 薬剤, リクルート実施, モデレーター, クライアント, エンドクライアント, PJ番号, 実施年月, 登録担当, 登録日
       const id = parseInt(fields[0]) || (index + 1);
       const registrationId = fields[1] || '';
       const specialtyName = fields[7] || '';
       const specialtyCode = this.specialtyDictionary
         ? this.specialtyDictionary.deriveCodeFromName(specialtyName)
         : null;
-      const registeredDate = fields[13] || '';
+      const registeredDate = fields[18] || '';
       const createdAt = registeredDate ? new Date(registeredDate).toISOString() : null;
 
       return {
@@ -105,7 +105,12 @@ class ProjectAPI {
         targetConditions: fields[9] || '',
         drug: fields[10] || '',
         recruitCompany: fields[11] || '',
-        client: fields[12] || '',
+        moderator: fields[12] || '',
+        client: fields[13] || '',
+        endClient: fields[14] || '',
+        projectNumber: fields[15] || '',
+        implementationDate: fields[16] || '',
+        registrant: fields[17] || '',
         registeredDate: registeredDate, // 登録日（YYYY-MM-DD）
         createdAt: createdAt, // ISO形式に変換
       };
@@ -183,7 +188,12 @@ class ProjectAPI {
         (project.targetConditions || '').toLowerCase().includes(searchTerm) ||
         (project.drug || '').toLowerCase().includes(searchTerm) ||
         (project.recruitCompany || '').toLowerCase().includes(searchTerm) ||
+        (project.moderator || '').toLowerCase().includes(searchTerm) ||
         (project.client || '').toLowerCase().includes(searchTerm) ||
+        (project.endClient || '').toLowerCase().includes(searchTerm) ||
+        (project.projectNumber || '').toLowerCase().includes(searchTerm) ||
+        (project.implementationDate || '').toLowerCase().includes(searchTerm) ||
+        (project.registrant || '').toLowerCase().includes(searchTerm) ||
         (project.projectId && project.projectId.toLowerCase().includes(searchTerm))
       );
     });
