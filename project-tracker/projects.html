@@ -715,6 +715,46 @@
           </div>
         </div>
 
+        <!-- 新規追加項目 -->
+        <div class="border-t pt-4 mt-2">
+          <h4 class="text-sm font-semibold text-gray-700 mb-3 flex items-center">
+            <i class="fas fa-info-circle mr-2" style="color: #1F7A85;"></i>
+            追加情報
+          </h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            ${project.moderator ? `
+              <div>
+                <label class="block text-xs font-medium text-gray-500 mb-1">モデレーター</label>
+                <p class="text-sm text-gray-900">${project.moderator}</p>
+              </div>
+            ` : ''}
+            ${project.endClient ? `
+              <div>
+                <label class="block text-xs font-medium text-gray-500 mb-1">エンドクライアント</label>
+                <p class="text-sm text-gray-900">${project.endClient}</p>
+              </div>
+            ` : ''}
+            ${project.projectNumber ? `
+              <div>
+                <label class="block text-xs font-medium text-gray-500 mb-1">PJ番号</label>
+                <p class="text-sm font-mono text-gray-900">${project.projectNumber}</p>
+              </div>
+            ` : ''}
+            ${project.implementationDate ? `
+              <div>
+                <label class="block text-xs font-medium text-gray-500 mb-1">実施年月</label>
+                <p class="text-sm text-gray-900">${project.implementationDate}</p>
+              </div>
+            ` : ''}
+            ${project.registrant ? `
+              <div>
+                <label class="block text-xs font-medium text-gray-500 mb-1">登録担当</label>
+                <p class="text-sm text-gray-900">${project.registrant}</p>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           ${project.registeredDate ? `
             <div>
@@ -747,7 +787,7 @@
 
     // 類似案件を読み込み
     async function loadSimilarProjects(projectId) {
-      const similar = await api.findSimilarProjects(projectId, 5);
+      const similar = await api.findSimilarProjects(projectId, 3);
       const container = document.getElementById('similarProjectsList');
 
       if (similar.length === 0) {
@@ -799,7 +839,7 @@
 
     // CSVエクスポート（フィルター適用済み）
     function exportFilteredCSV() {
-      const headers = ['疾患名', '疾患略語', '手法', '調査種別', '対象者種別', '専門', '実績数', '対象条件', '薬剤', 'リクルート実施', 'クライアント', '登録日'];
+      const headers = ['疾患名', '疾患略語', '手法', '調査種別', '対象者種別', '専門', '実績数', '対象条件', '薬剤', 'リクルート実施', 'モデレーター', 'クライアント', 'エンドクライアント', 'PJ番号', '実施年月', '登録担当', '登録日'];
       const csvLines = [headers.join(',')];
       
       filteredProjects.forEach(project => {
@@ -814,7 +854,12 @@
           escapeCSVField(project.targetConditions || ''),
           escapeCSVField(project.drug || ''),
           escapeCSVField(project.recruitCompany || ''),
+          escapeCSVField(project.moderator || ''),
           escapeCSVField(project.client || ''),
+          escapeCSVField(project.endClient || ''),
+          escapeCSVField(project.projectNumber || ''),
+          escapeCSVField(project.implementationDate || ''),
+          escapeCSVField(project.registrant || ''),
           project.registeredDate || '',
         ];
         csvLines.push(row.join(','));

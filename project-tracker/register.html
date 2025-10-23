@@ -235,6 +235,87 @@
           </div>
         </div>
 
+        <!-- 新規追加項目 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- モデレーター -->
+          <div>
+            <label for="moderator" class="block text-sm font-medium text-gray-700 mb-2">
+              <i class="fas fa-user-tie mr-2 text-purple-600"></i>
+              モデレーター
+            </label>
+            <input 
+              type="text" 
+              id="moderator" 
+              name="moderator" 
+              placeholder="例: 山本駿人"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            >
+          </div>
+
+          <!-- エンドクライアント -->
+          <div>
+            <label for="endClient" class="block text-sm font-medium text-gray-700 mb-2">
+              <i class="fas fa-building mr-2 text-blue-600"></i>
+              エンドクライアント
+            </label>
+            <input 
+              type="text" 
+              id="endClient" 
+              name="endClient" 
+              placeholder="例: エーザイ"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            >
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- PJ番号 -->
+          <div>
+            <label for="projectNumber" class="block text-sm font-medium text-gray-700 mb-2">
+              <i class="fas fa-hashtag mr-2 text-indigo-600"></i>
+              PJ番号
+            </label>
+            <input 
+              type="text" 
+              id="projectNumber" 
+              name="projectNumber" 
+              placeholder="例: Y10034163"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            >
+          </div>
+
+          <!-- 実施年月 -->
+          <div>
+            <label for="implementationDate" class="block text-sm font-medium text-gray-700 mb-2">
+              <i class="fas fa-calendar mr-2 text-red-600"></i>
+              実施年月
+            </label>
+            <input 
+              type="text" 
+              id="implementationDate" 
+              name="implementationDate" 
+              placeholder="例: 2024/11"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            >
+            <p class="text-xs text-gray-500 mt-1">YYYY/MM形式で入力</p>
+          </div>
+
+          <!-- 登録担当 -->
+          <div>
+            <label for="registrant" class="block text-sm font-medium text-gray-700 mb-2">
+              <i class="fas fa-user-check mr-2 text-teal-600"></i>
+              登録担当
+            </label>
+            <input 
+              type="text" 
+              id="registrant" 
+              name="registrant" 
+              placeholder="例: 飯島"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            >
+          </div>
+        </div>
+
         <!-- Project ID（任意） -->
         <div>
           <label for="projectId" class="block text-sm font-medium text-gray-700 mb-2">
@@ -351,7 +432,12 @@
         targetConditions: document.getElementById('targetConditions').value.trim(),
         drug: document.getElementById('drug').value.trim(),
         recruitCompany: document.getElementById('recruitCompany').value.trim(),
+        moderator: document.getElementById('moderator').value.trim(),
         client: document.getElementById('client').value.trim(),
+        endClient: document.getElementById('endClient').value.trim(),
+        projectNumber: document.getElementById('projectNumber').value.trim(),
+        implementationDate: document.getElementById('implementationDate').value.trim(),
+        registrant: document.getElementById('registrant').value.trim(),
         createdBy: document.getElementById('createdBy').value.trim() || undefined
       };
 

@@ -351,18 +351,23 @@ function generateCSVRow(data, id, registrationId) {
   const fields = [
     String(id),              // 1列目: id
     registrationId,          // 2列目: registrationId
-    data.diseaseName || '',
-    data.diseaseAbbr || '',
-    data.method || '',
-    data.surveyType || '',
-    data.targetType || '',
-    data.specialty || '',
-    String(data.recruitCount || '0'),
-    data.targetConditions || '',
-    data.drug || '',
-    data.recruitCompany || '',
-    data.client || '',
-    registeredDate,          // 14列目に登録日
+    data.diseaseName || '',  // 3列目: 疾患名
+    data.diseaseAbbr || '',  // 4列目: 疾患略語
+    data.method || '',       // 5列目: 手法
+    data.surveyType || '',   // 6列目: 調査種別
+    data.targetType || '',   // 7列目: 対象者種別
+    data.specialty || '',    // 8列目: 専門
+    String(data.recruitCount || '0'), // 9列目: 実績数
+    data.targetConditions || '', // 10列目: 対象条件
+    data.drug || '',         // 11列目: 薬剤
+    data.recruitCompany || '', // 12列目: リクルート実施
+    data.moderator || '',    // 13列目: モデレーター
+    data.client || '',       // 14列目: クライアント
+    data.endClient || '',    // 15列目: エンドクライアント
+    data.projectNumber || '', // 16列目: PJ番号
+    data.implementationDate || '', // 17列目: 実施年月
+    data.registrant || '',   // 18列目: 登録担当
+    registeredDate,          // 19列目: 登録日
   ];
   
   // すべてのフィールドを引用符で囲み、内部の引用符をエスケープ
@@ -422,7 +427,7 @@ function base64DecodeUTF8(base64) {
 function generatePRBody(data) {
   return `## 新規案件追加
 
-### 案件情報
+### 基本情報
 - **疾患名:** ${data.diseaseName}
 - **疾患略語:** ${data.diseaseAbbr || '-'}
 - **手法:** ${data.method}
@@ -432,8 +437,15 @@ function generatePRBody(data) {
 - **実績数:** ${data.recruitCount}名
 - **対象条件:** ${data.targetConditions || '-'}
 - **薬剤:** ${data.drug || '-'}
+
+### プロジェクト情報
 - **リクルート実施:** ${data.recruitCompany || '-'}
+- **モデレーター:** ${data.moderator || '-'}
 - **クライアント:** ${data.client || '-'}
+- **エンドクライアント:** ${data.endClient || '-'}
+- **PJ番号:** ${data.projectNumber || '-'}
+- **実施年月:** ${data.implementationDate || '-'}
+- **登録担当:** ${data.registrant || '-'}
 
 ${data.createdBy ? `\n**登録者:** ${data.createdBy}` : ''}
 

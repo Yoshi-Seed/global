@@ -112,7 +112,12 @@ class ProjectDatabase {
           targetConditions: values[7] || '', // 対象条件
           drug: values[8] || '', // 薬剤
           recruitCompany: values[9] || '', // リクルート実施
-          client: values[10] || '', // クライアント
+          moderator: values[10] || '', // モデレーター
+          client: values[11] || '', // クライアント
+          endClient: values[12] || '', // エンドクライアント
+          projectNumber: values[13] || '', // PJ番号
+          implementationDate: values[14] || '', // 実施年月
+          registrant: values[15] || '', // 登録担当
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           createdBy: 'import'
@@ -201,7 +206,12 @@ class ProjectDatabase {
         targetConditions: projectData.targetConditions || '',
         drug: projectData.drug || '',
         recruitCompany: projectData.recruitCompany || '',
+        moderator: projectData.moderator || '',
         client: projectData.client || '',
+        endClient: projectData.endClient || '',
+        projectNumber: projectData.projectNumber || '',
+        implementationDate: projectData.implementationDate || '',
+        registrant: projectData.registrant || '',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         createdBy: projectData.createdBy || 'user'
