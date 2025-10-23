@@ -297,8 +297,13 @@ async function createGitHubPR({ token, owner, repo, csvPath, branchName, project
   const maxId = getMaxIdFromCSV(currentContent);
   const newId = maxId + 1;
   
-  // 4.5. registrationIdを生成（YYYYMMDD-XXXX形式）
-  const registrationId = generateRegistrationId(projectData.createdAt, newId);
+  // 4.5. registrationIdを生成（YYYYMMDD-XXXX形式、日付ごとの連番）
+  const registrationId = generateRegistrationId(currentContent, projectData.createdAt);
+  
+  // 4.6. registrationIDの重複チェック（念のため）
+  if (registrationIdExists(currentContent, registrationId)) {
+    throw new Error(`Registration ID ${registrationId} already exists. This may be caused by concurrent requests. Please retry.`);
+  }
   
   // 5. CSV行を生成
   const newRow = generateCSVRow(projectData, newId, registrationId);
@@ -388,19 +393,64 @@ function getMaxIdFromCSV(csvContent) {
 }
 
 /**
- * registrationIdを生成（YYYYMMDD-XXXX形式）
+ * registrationIdを生成（YYYYMMDD-XXXX形式、日付ごとの連番）
  */
-function generateRegistrationId(createdAt, id) {
+function generateRegistrationId(csvContent, createdAt) {
   const date = createdAt ? new Date(createdAt) : new Date();
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
   const dateStr = `${year}${month}${day}`;
   
-  // 4桁にゼロパディング
-  const idStr = String(id).padStart(4, '0');
+  // 同じ日付のregistrationIDを全て取得して最大連番を見つける
+  const lines = csvContent.trim().split('\n');
+  let maxSeq = 0;
+  const prefix = `${dateStr}-`;
   
-  return `${dateStr}-${idStr}`;
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line) continue;
+    
+    // CSVの2列目（registrationId）を取得
+    // フォーマット: "id","registrationId",...
+    const match = line.match(/^"?\d+"?\s*,\s*"?([^",]+)"?/);
+    if (match && match[1].startsWith(prefix)) {
+      // YYYYMMDD-XXXX から XXXX部分を抽出
+      const parts = match[1].split('-');
+      if (parts.length === 2) {
+        const seq = parseInt(parts[1], 10);
+        if (!isNaN(seq) && seq > maxSeq) {
+          maxSeq = seq;
+        }
+      }
+    }
+  }
+  
+  // 次の連番を生成
+  const newSeq = maxSeq + 1;
+  const seqStr = String(newSeq).padStart(4, '0');
+  
+  return `${dateStr}-${seqStr}`;
+}
+
+/**
+ * registrationIDが既に存在するかチェック
+ */
+function registrationIdExists(csvContent, registrationId) {
+  const lines = csvContent.trim().split('\n');
+  
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line) continue;
+    
+    // CSVの2列目（registrationId）を取得
+    const match = line.match(/^"?\d+"?\s*,\s*"?([^",]+)"?/);
+    if (match && match[1] === registrationId) {
+      return true;
+    }
+  }
+  
+  return false;
 }
 
 /**

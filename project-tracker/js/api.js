@@ -332,15 +332,18 @@ class ProjectAPI {
       ? Math.round(stats.totalRecruits / stats.totalProjects) 
       : 0;
     
-    // 最近のプロジェクト（日付でソート、最新5件）
-    const projectsWithDate = projects.filter(p => p.createdAt);
-    const projectsWithoutDate = projects.filter(p => !p.createdAt);
+    // 最近のプロジェクト（登録番号でソート、最新5件）
+    const projectsWithRegId = projects.filter(p => p.registrationId);
+    const projectsWithoutRegId = projects.filter(p => !p.registrationId);
     
-    // 日付があるものを新しい順にソート
-    projectsWithDate.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    // 登録番号があるものを新しい順にソート（YYYYMMDD-XXXX形式）
+    projectsWithRegId.sort((a, b) => {
+      // registrationId を比較（文字列として降順）
+      return b.registrationId.localeCompare(a.registrationId);
+    });
     
-    // 日付があるもの優先、残りは先頭から
-    stats.recentProjects = [...projectsWithDate, ...projectsWithoutDate].slice(0, 5);
+    // 登録番号があるもの優先、残りは先頭から
+    stats.recentProjects = [...projectsWithRegId, ...projectsWithoutRegId].slice(0, 5);
     
     return stats;
   }
