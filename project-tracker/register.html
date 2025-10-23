@@ -92,7 +92,7 @@
               id="method" 
               name="method" 
               required
-              placeholder="例: IDI, 会場調査"
+              placeholder="例: IDI, アンケート, 会場調査"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             >
           </div>
@@ -103,14 +103,16 @@
               <i class="fas fa-chart-bar mr-2 text-green-600"></i>
               調査種別 <span class="text-red-500">*</span>
             </label>
-            <input 
-              type="text" 
+            <select 
               id="surveyType" 
               name="surveyType" 
               required
-              placeholder="例: 定性, 定量"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             >
+              <option value="定性" selected>定性</option>
+              <option value="定量">定量</option>
+              <option value="その他">その他</option>
+            </select>
           </div>
         </div>
 
@@ -188,12 +190,13 @@
         <div>
           <label for="targetConditions" class="block text-sm font-medium text-gray-700 mb-2">
             <i class="fas fa-filter mr-2 text-orange-600"></i>
-            対象条件（スクリーニング条件）
+            対象条件（スクリーニング条件） <span class="text-red-500">*</span>
           </label>
           <textarea 
             id="targetConditions" 
             name="targetConditions" 
             rows="3"
+            required
             placeholder="例: アルツハイマー型認知症患者を月に20人以上診療"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           ></textarea>
@@ -204,7 +207,7 @@
         <div>
           <label for="drug" class="block text-sm font-medium text-gray-700 mb-2">
             <i class="fas fa-pills mr-2 text-pink-600"></i>
-            薬剤
+            薬剤（任意）
           </label>
           <input 
             type="text" 
@@ -222,7 +225,7 @@
           <div>
             <label for="recruitCompany" class="block text-sm font-medium text-gray-700 mb-2">
               <i class="fas fa-building mr-2 text-teal-600"></i>
-              リクルート実施会社
+              リクルート実施（問合せ先）
             </label>
             <input 
               type="text" 
@@ -255,7 +258,7 @@
           <div>
             <label for="moderator" class="block text-sm font-medium text-gray-700 mb-2">
               <i class="fas fa-user-tie mr-2 text-purple-600"></i>
-              モデレーター
+              モデレーター（任意）
             </label>
             <input 
               type="text" 
@@ -270,7 +273,7 @@
           <div>
             <label for="endClient" class="block text-sm font-medium text-gray-700 mb-2">
               <i class="fas fa-building mr-2 text-blue-600"></i>
-              エンドクライアント
+              エンドクライアント（任意）
             </label>
             <input 
               type="text" 
@@ -287,7 +290,7 @@
           <div>
             <label for="projectNumber" class="block text-sm font-medium text-gray-700 mb-2">
               <i class="fas fa-hashtag mr-2 text-indigo-600"></i>
-              PJ番号
+              PJ番号（任意）
             </label>
             <input 
               type="text" 
@@ -302,7 +305,7 @@
           <div>
             <label for="implementationDate" class="block text-sm font-medium text-gray-700 mb-2">
               <i class="fas fa-calendar mr-2 text-red-600"></i>
-              実施年月
+              実施年月（問合せ年月）
             </label>
             <input 
               type="text" 
@@ -328,6 +331,14 @@
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             >
           </div>
+        </div>
+
+        <!-- 登録メッセージ -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+          <p class="text-sm text-gray-700 text-center">
+            <i class="fas fa-info-circle mr-2 text-blue-600"></i>
+            登録ありがとうございます。以下のボタンから登録(PR)を作ってください。
+          </p>
         </div>
 
         <!-- 送信ボタン -->

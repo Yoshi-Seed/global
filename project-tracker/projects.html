@@ -923,12 +923,17 @@
     }
 
     function compareProjectDates(first, second) {
-      const firstDate = getProjectDateValue(first);
-      const secondDate = getProjectDateValue(second);
-      if (firstDate === null && secondDate === null) return 0;
-      if (firstDate === null) return 1;
-      if (secondDate === null) return -1;
-      return firstDate - secondDate;
+      // registrationIdで比較（YYYYMMDD-XXXX形式）
+      const firstId = first.registrationId;
+      const secondId = second.registrationId;
+      
+      // registrationIdがない場合は日付で比較
+      if (!firstId && !secondId) return 0;
+      if (!firstId) return 1;
+      if (!secondId) return -1;
+      
+      // registrationIdで文字列比較（降順用）
+      return firstId.localeCompare(secondId);
     }
 
     function getProjectDateValue(project) {
