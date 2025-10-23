@@ -452,7 +452,9 @@
               </span>
             </td>
             <td class="px-4 py-3 text-sm text-gray-600">${project.specialty || '-'}</td>
-            <td class="px-4 py-3 text-sm font-medium text-green-600">${project.recruitCount}名</td>
+            <td class="px-4 py-3 text-sm font-medium ${project.inquiryOnly === 'TRUE' || project.inquiryOnly === true ? 'text-red-600' : 'text-green-600'}">
+              ${project.inquiryOnly === 'TRUE' || project.inquiryOnly === true ? '問合せ: ' : ''}${project.recruitCount}名
+            </td>
             <td class="px-4 py-3 text-sm text-gray-600">${truncate(project.client || '-', 20)}</td>
             <td class="px-4 py-3 text-sm text-gray-500">${date}</td>
             <td class="px-4 py-3 text-sm">
