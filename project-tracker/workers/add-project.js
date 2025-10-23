@@ -219,11 +219,27 @@ async function createGitHubPR({ token, owner, repo, csvPath, branchName, project
 
   // 1. mainブランチの最新SHA取得
   const refResponse = await fetch(`${apiBase}/git/refs/heads/main`, { headers });
+  
+  if (!refResponse.ok) {
+    let errorData;
+    try {
+      errorData = await refResponse.json();
+    } catch (e) {
+      errorData = { message: refResponse.statusText };
+    }
+    throw new Error(`Failed to fetch main branch ref (${refResponse.status}): ${errorData.message || refResponse.statusText}`);
+  }
+  
   const refData = await refResponse.json();
+  
+  if (!refData || !refData.object || !refData.object.sha) {
+    throw new Error(`Invalid main branch ref data: ${JSON.stringify(refData)}`);
+  }
+  
   const mainSha = refData.object.sha;
 
   // 2. 新しいブランチ作成
-  await fetch(`${apiBase}/git/refs`, {
+  const createBranchResponse = await fetch(`${apiBase}/git/refs`, {
     method: 'POST',
     headers,
     body: JSON.stringify({
@@ -231,19 +247,47 @@ async function createGitHubPR({ token, owner, repo, csvPath, branchName, project
       sha: mainSha,
     }),
   });
+  
+  if (!createBranchResponse.ok) {
+    let errorData;
+    try {
+      errorData = await createBranchResponse.json();
+    } catch (e) {
+      errorData = { message: createBranchResponse.statusText };
+    }
+    throw new Error(`Failed to create branch ${branchName} (${createBranchResponse.status}): ${errorData.message || createBranchResponse.statusText}`);
+  }
 
   // 3. 既存のCSVファイル取得
   const fileResponse = await fetch(`${apiBase}/contents/${csvPath}?ref=main`, { headers });
   
   if (!fileResponse.ok) {
-    const errorData = await fileResponse.json();
-    throw new Error(`Failed to fetch CSV file: ${errorData.message || fileResponse.statusText}`);
+    let errorData;
+    try {
+      errorData = await fileResponse.json();
+    } catch (e) {
+      errorData = { message: fileResponse.statusText };
+    }
+    throw new Error(`Failed to fetch CSV file (${fileResponse.status}): ${errorData.message || fileResponse.statusText}. Path: ${csvPath}`);
   }
   
-  const fileData = await fileResponse.json();
+  let fileData;
+  try {
+    fileData = await fileResponse.json();
+  } catch (e) {
+    throw new Error(`Failed to parse GitHub API response: ${e.message}`);
+  }
+  
+  if (!fileData) {
+    throw new Error(`GitHub API returned undefined fileData. Response status: ${fileResponse.status}`);
+  }
   
   if (!fileData.content) {
-    throw new Error(`CSV file content is empty or undefined`);
+    throw new Error(`CSV file content is empty or undefined. FileData keys: ${Object.keys(fileData).join(', ')}`);
+  }
+  
+  if (!fileData.sha) {
+    throw new Error(`CSV file SHA is missing. FileData keys: ${Object.keys(fileData).join(', ')}`);
   }
   
   const currentContent = base64DecodeUTF8(fileData.content.replace(/\n/g, '')); // Base64デコード（UTF-8対応）
@@ -261,7 +305,7 @@ async function createGitHubPR({ token, owner, repo, csvPath, branchName, project
   const updatedContent = currentContent.trim() + '\n' + newRow;
 
   // 6. CSVファイルを更新（新しいブランチにコミット）
-  await fetch(`${apiBase}/contents/${csvPath}`, {
+  const updateFileResponse = await fetch(`${apiBase}/contents/${csvPath}`, {
     method: 'PUT',
     headers,
     body: JSON.stringify({
@@ -271,6 +315,16 @@ async function createGitHubPR({ token, owner, repo, csvPath, branchName, project
       branch: branchName,
     }),
   });
+  
+  if (!updateFileResponse.ok) {
+    let errorData;
+    try {
+      errorData = await updateFileResponse.json();
+    } catch (e) {
+      errorData = { message: updateFileResponse.statusText };
+    }
+    throw new Error(`Failed to update CSV file (${updateFileResponse.status}): ${errorData.message || updateFileResponse.statusText}`);
+  }
 
   // 7. PR作成
   const prResponse = await fetch(`${apiBase}/pulls`, {
@@ -283,6 +337,16 @@ async function createGitHubPR({ token, owner, repo, csvPath, branchName, project
       body: generatePRBody(projectData),
     }),
   });
+
+  if (!prResponse.ok) {
+    let errorData;
+    try {
+      errorData = await prResponse.json();
+    } catch (e) {
+      errorData = { message: prResponse.statusText };
+    }
+    throw new Error(`Failed to create PR (${prResponse.status}): ${errorData.message || prResponse.statusText}`);
+  }
 
   const prData = await prResponse.json();
 
