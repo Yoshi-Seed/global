@@ -176,12 +176,21 @@
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 16px;
+      min-height: 350px;
+      max-height: 400px;
+      display: flex;
+      flex-direction: column;
     }
     
     .chart-card h4 {
       margin: 0 0 12px;
       font-size: 15px;
       font-weight: 600;
+    }
+    
+    .chart-card canvas {
+      flex: 1;
+      max-height: 320px;
     }
     
     .table-wrapper {
@@ -434,11 +443,15 @@
       <div class="charts-grid">
         <div class="chart-card">
           <h4>疾患別 件数</h4>
-          <canvas id="chartDisease" height="200"></canvas>
+          <div style="position: relative; height: 300px;">
+            <canvas id="chartDisease"></canvas>
+          </div>
         </div>
         <div class="chart-card">
           <h4 id="shareTitle">リクルーター別 構成比</h4>
-          <canvas id="chartRecruiter" height="200"></canvas>
+          <div style="position: relative; height: 300px;">
+            <canvas id="chartRecruiter"></canvas>
+          </div>
         </div>
       </div>
 
