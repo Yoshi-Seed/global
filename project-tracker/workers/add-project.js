@@ -358,16 +358,17 @@ function generateCSVRow(data, id, registrationId) {
     data.targetType || '',   // 7列目: 対象者種別
     data.specialty || '',    // 8列目: 専門
     String(data.recruitCount || '0'), // 9列目: 実績数
-    data.targetConditions || '', // 10列目: 対象条件
-    data.drug || '',         // 11列目: 薬剤
-    data.recruitCompany || '', // 12列目: リクルート実施
-    data.moderator || '',    // 13列目: モデレーター
-    data.client || '',       // 14列目: クライアント
-    data.endClient || '',    // 15列目: エンドクライアント
-    data.projectNumber || '', // 16列目: PJ番号
-    data.implementationDate || '', // 17列目: 実施年月
-    data.registrant || '',   // 18列目: 登録担当
-    registeredDate,          // 19列目: 登録日
+    data.inquiryOnly ? 'TRUE' : 'FALSE', // 10列目: 問合せのみ
+    data.targetConditions || '', // 11列目: 対象条件
+    data.drug || '',         // 12列目: 薬剤
+    data.recruitCompany || '', // 13列目: リクルート実施
+    data.moderator || '',    // 14列目: モデレーター
+    data.client || '',       // 15列目: クライアント
+    data.endClient || '',    // 16列目: エンドクライアント
+    data.projectNumber || '', // 17列目: PJ番号
+    data.implementationDate || '', // 18列目: 実施年月
+    data.registrant || '',   // 19列目: 登録担当
+    registeredDate,          // 20列目: 登録日
   ];
   
   // すべてのフィールドを引用符で囲み、内部の引用符をエスケープ
@@ -434,7 +435,7 @@ function generatePRBody(data) {
 - **調査種別:** ${data.surveyType}
 - **対象者種別:** ${data.targetType}
 - **専門:** ${data.specialty || '-'}
-- **実績数:** ${data.recruitCount}名
+- **実績数:** ${data.recruitCount}名${data.inquiryOnly ? ' ⚠️ **問合せのみ（推定回収数）**' : ''}
 - **対象条件:** ${data.targetConditions || '-'}
 - **薬剤:** ${data.drug || '-'}
 

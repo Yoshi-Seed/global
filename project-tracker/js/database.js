@@ -109,15 +109,16 @@ class ProjectDatabase {
           targetType: values[4] || '', // 対象者種別
           specialty: values[5] || '', // 専門
           recruitCount: parseInt(values[6]) || 0, // 実績数
-          targetConditions: values[7] || '', // 対象条件
-          drug: values[8] || '', // 薬剤
-          recruitCompany: values[9] || '', // リクルート実施
-          moderator: values[10] || '', // モデレーター
-          client: values[11] || '', // クライアント
-          endClient: values[12] || '', // エンドクライアント
-          projectNumber: values[13] || '', // PJ番号
-          implementationDate: values[14] || '', // 実施年月
-          registrant: values[15] || '', // 登録担当
+          inquiryOnly: values[7] || 'FALSE', // 問合せのみ
+          targetConditions: values[8] || '', // 対象条件
+          drug: values[9] || '', // 薬剤
+          recruitCompany: values[10] || '', // リクルート実施
+          moderator: values[11] || '', // モデレーター
+          client: values[12] || '', // クライアント
+          endClient: values[13] || '', // エンドクライアント
+          projectNumber: values[14] || '', // PJ番号
+          implementationDate: values[15] || '', // 実施年月
+          registrant: values[16] || '', // 登録担当
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           createdBy: 'import'
@@ -203,6 +204,7 @@ class ProjectDatabase {
         targetType: projectData.targetType,
         specialty: projectData.specialty || '',
         recruitCount: parseInt(projectData.recruitCount),
+        inquiryOnly: projectData.inquiryOnly ? 'TRUE' : 'FALSE',
         targetConditions: projectData.targetConditions || '',
         drug: projectData.drug || '',
         recruitCompany: projectData.recruitCompany || '',
