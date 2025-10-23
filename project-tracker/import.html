@@ -810,7 +810,22 @@
     
     const mapped = Object.keys(state.mapping).map(k => state.mapping[k]).filter(Boolean);
     const others = state.headers.filter(h => mapped.indexOf(h) === -1);
-    const cols = Array.from(new Set(mapped.concat(others)));
+    const allCols = Array.from(new Set(mapped.concat(others)));
+    
+    // 表示する列を限定
+    const displayColumns = [
+      'クライアント',
+      'リクルート実施',
+      '疾患名',
+      '専門',
+      '疾患略語',
+      '調査種別',
+      '対象条件',
+      '実施年月'
+    ];
+    
+    // 指定された列のみをフィルタリング（存在する列のみ）
+    const cols = displayColumns.filter(col => allCols.includes(col));
     
     let sorted = rows.slice();
     if (state.sort.key) {
