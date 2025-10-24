@@ -139,20 +139,40 @@
           </select>
         </div>
 
-        <!-- 専門 -->
-        <div>
-          <label for="specialty" class="block text-sm font-medium text-gray-700 mb-2">
+        <!-- 専門（コンボボックス） -->
+        <div class="relative" id="specialty-combobox">
+          <label for="specialtyInput" class="block text-sm font-medium text-gray-700 mb-2">
             <i class="fas fa-user-md mr-2 text-indigo-600"></i>
             専門（診療科）
           </label>
-          <input 
-            type="text" 
-            id="specialty" 
-            name="specialty" 
-            placeholder="例: 脳神経内科, 精神科, 糖尿病内科"
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-          <p class="text-xs text-gray-500 mt-1">対象者が医師の場合、専門診療科を入力してください</p>
+
+          <input
+            id="specialtyInput"
+            name="specialty"
+            type="text"
+            autocomplete="off"
+            role="combobox"
+            aria-autocomplete="list"
+            aria-expanded="false"
+            aria-controls="specialtyList"
+            aria-activedescendant=""
+            placeholder="先頭2〜3文字で候補表示（例：消化 / 循環 / 皮膚…）"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          />
+
+          <!-- 候補ドロップダウン -->
+          <ul
+            id="specialtyList"
+            role="listbox"
+            class="absolute z-10 w-full mt-1 border border-gray-200 bg-white rounded-md shadow hidden max-h-56 overflow-auto"
+          ></ul>
+
+          <!-- 送信用の正規化データ（将来の拡張用） -->
+          <input type="hidden" id="specialtyCode" name="specialty_code">
+          <input type="hidden" id="specialtyEn"   name="specialty_en">
+
+          <p class="text-xs text-gray-500 mt-1">候補から選択してください。対象者が医師の場合のみ入力（任意）</p>
+          <p id="specialtyError" class="mt-2 text-sm text-red-600 hidden">候補の中から選んでください。</p>
         </div>
 
         <!-- 実績数 -->
@@ -397,6 +417,250 @@
   <!-- 共通設定 -->
   <script src="js/config.js"></script>
 
+  <!-- 専門フィールド オートコンプリート -->
+  <script>
+    // ---- 1) 正式マスタ（診療科一覧） ----
+    const SPECIALTIES_MASTER = [
+      { code: "リウマチ科", ja: "リウマチ科", en: "Rheumatology" },
+      { code: "100", ja: "小児科", en: "Pediatrics" },
+      { code: "110", ja: "外科", en: "Surgery" },
+      { code: "120", ja: "整形外科", en: "Orthopaedic Surgery" },
+      { code: "130", ja: "形成外科", en: "Plastic Surgery" },
+      { code: "140", ja: "美容外科", en: "Cosmetic Surgery" },
+      { code: "150", ja: "脳神経外科", en: "Neurosurgery" },
+      { code: "160", ja: "呼吸器外科", en: "Thoracic Surgery" },
+      { code: "170", ja: "心臓血管外科", en: "Cardiovascular Surgery" },
+      { code: "180", ja: "小児外科", en: "Pediatric Surgery" },
+      { code: "190", ja: "皮膚泌尿器科", en: "Dermatology & Urology" },
+      { code: "200", ja: "性病科", en: "Sexually Transmitted Disease Medicine" },
+      { code: "210", ja: "肛門科", en: "Proctology" },
+      { code: "220", ja: "産婦人科", en: "Obstetrics & Gynecology" },
+      { code: "230", ja: "眼科", en: "Ophthalmology" },
+      { code: "240", ja: "耳鼻咽喉科", en: "Otorhinolaryngology (ENT)" },
+      { code: "250", ja: "気管食道科", en: "Tracheo-Esophageal Medicine" },
+      { code: "260", ja: "リハビリテーション科", en: "Rehabilitation Medicine" },
+      { code: "270", ja: "放射線科", en: "Radiology" },
+      { code: "280", ja: "神経内科", en: "Neurology (Internal)" },
+      { code: "290", ja: "胃腸科", en: "Gastroenterology" },
+      { code: "300", ja: "皮膚科", en: "Dermatology" },
+      { code: "310", ja: "泌尿器科", en: "Urology" },
+      { code: "320", ja: "産科", en: "Obstetrics" },
+      { code: "330", ja: "婦人科", en: "Gynecology" },
+      { code: "340", ja: "呼吸器内科", en: "Respiratory Medicine (Internal)" },
+      { code: "350", ja: "循環器内科", en: "Cardiovascular Medicine (Internal)" },
+      { code: "400", ja: "糖尿病科", en: "Diabetology" },
+      { code: "410", ja: "腎臓内科", en: "Nephrology" },
+      { code: "420", ja: "腎移植科", en: "Kidney Transplantation" },
+      { code: "430", ja: "血液透析科", en: "Dialysis Medicine" },
+      { code: "440", ja: "代謝内科", en: "Metabolic Medicine" },
+      { code: "450", ja: "内分泌内科", en: "Endocrinology" },
+      { code: "460", ja: "救急医学科", en: "Emergency Medicine" },
+      { code: "470", ja: "血液科", en: "Hematology" },
+      { code: "480", ja: "血液内科", en: "Hematology (Internal)" },
+      { code: "490", ja: "麻酔科", en: "Anesthesiology" },
+      { code: "500", ja: "消化器内科", en: "Gastroenterology (Internal)" },
+      { code: "510", ja: "消化器外科", en: "Gastroenterological Surgery" },
+      { code: "540", ja: "大腸肛門科", en: "Colorectal Surgery" },
+      { code: "590", ja: "腫瘍治療科", en: "Oncology (Treatment)" },
+      { code: "600", ja: "総合診療科", en: "General Practice" },
+      { code: "610", ja: "乳腺甲状腺外科", en: "Breast & Thyroid Surgery" },
+      { code: "620", ja: "新生児科", en: "Neonatology" },
+      { code: "630", ja: "小児循環器科", en: "Pediatric Cardiology" },
+    ];
+
+    // ---- 2) よくある表記の「別名 → 正式名」マップ ----
+    const SPECIALTY_ALIASES = {
+      "消化器科": "消化器内科",
+      "消化器": "消化器内科",
+      "GI": "消化器内科",
+      "循環器科": "循環器内科",
+      "呼吸器科": "呼吸器内科",
+      "血液": "血液内科",
+      "脳外": "脳神経外科",
+      "耳鼻科": "耳鼻咽喉科",
+      "整形": "整形外科",
+      "形成": "形成外科",
+      "麻酔": "麻酔科",
+      "小児循環器": "小児循環器科",
+      "皮泌": "皮膚泌尿器科",
+      "内分泌科": "内分泌内科",
+      "代謝科": "代謝内科",
+      "腎臓科": "腎臓内科",
+      "血液透析": "血液透析科",
+      "総合診療": "総合診療科",
+    };
+
+    // ---- 3) 正規化関数 ----
+    const normalizeKey = (s) => (s || "").toString().trim().toLowerCase()
+                 .replace(/\s+/g, "").normalize("NFKC");
+
+    // 検索キーを増やす（日本語・英名・コード）
+    const SPECIALTIES_INDEX = SPECIALTIES_MASTER.map(r => ({
+      ...r,
+      key_ja: normalizeKey(r.ja),
+      key_en: normalizeKey(r.en),
+      key_code: normalizeKey(r.code),
+    }));
+
+    // ---- 4) UI ロジック ----
+    (function setupSpecialtyCombobox() {
+      const input = document.getElementById("specialtyInput");
+      const list  = document.getElementById("specialtyList");
+      const err   = document.getElementById("specialtyError");
+      const hidCode = document.getElementById("specialtyCode");
+      const hidEn   = document.getElementById("specialtyEn");
+
+      let activeIndex = -1;
+      let currentItems = [];
+
+      function showError(msg = "候補の中から選んでください。") {
+        err.textContent = msg;
+        err.classList.remove("hidden");
+        input.classList.add("border-red-400", "focus:ring-red-500");
+      }
+      function hideError() {
+        err.classList.add("hidden");
+        input.classList.remove("border-red-400", "focus:ring-red-500");
+      }
+      function hideList() {
+        list.classList.add("hidden");
+        input.setAttribute("aria-expanded", "false");
+        input.setAttribute("aria-activedescendant", "");
+      }
+
+      function renderList(items) {
+        list.innerHTML = "";
+        activeIndex = -1;
+        currentItems = items;
+
+        if (!items.length) {
+          hideList(); return;
+        }
+        items.forEach((r, idx) => {
+          const li = document.createElement("li");
+          li.id = `specialty-opt-${idx}`;
+          li.setAttribute("role", "option");
+          li.className = "px-3 py-2 cursor-pointer hover:bg-indigo-50 text-sm";
+          li.innerHTML = `<span class="font-medium">${r.ja}</span>
+                          <span class="text-gray-500 ml-2">(${r.en})</span>
+                          <span class="text-gray-400 ml-2 text-xs">#${r.code}</span>`;
+          li.addEventListener("mousedown", (e) => { e.preventDefault(); choose(idx); });
+          list.appendChild(li);
+        });
+        list.classList.remove("hidden");
+        input.setAttribute("aria-expanded", "true");
+      }
+
+      function choose(idx) {
+        const r = currentItems[idx];
+        if (!r) return;
+        input.value = r.ja;
+        hidCode.value = r.code;
+        hidEn.value   = r.en;
+        hideError(); hideList();
+      }
+
+      // 入力 → 候補生成
+      function candidates(qRaw) {
+        if (!qRaw) return [];
+        let q = normalizeKey(qRaw);
+        // 別名 → 正式名に寄せる
+        if (SPECIALTY_ALIASES[qRaw]) q = normalizeKey(SPECIALTY_ALIASES[qRaw]);
+
+        // 先頭一致を最優先、次に部分一致
+        const starts = [];
+        const parts  = [];
+        for (const r of SPECIALTIES_INDEX) {
+          const hitStart = r.key_ja.startsWith(q) || r.key_en.startsWith(q) || r.key_code.startsWith(q);
+          const hitPart  = !hitStart && (r.key_ja.includes(q) || r.key_en.includes(q) || r.key_code.includes(q));
+          if (hitStart) starts.push(r);
+          else if (hitPart) parts.push(r);
+        }
+        return [...starts, ...parts].slice(0, 30);
+      }
+
+      input.addEventListener("input", () => {
+        hideError();
+        const items = candidates(input.value);
+        // 選択が外れたら hidden をクリア
+        hidCode.value = ""; hidEn.value = "";
+        renderList(items);
+      });
+
+      input.addEventListener("keydown", (e) => {
+        const visible = !list.classList.contains("hidden");
+        if (!visible && ["ArrowDown", "ArrowUp"].includes(e.key)) {
+          renderList(candidates(input.value));
+        }
+        if (e.key === "ArrowDown" && visible) {
+          e.preventDefault();
+          activeIndex = Math.min(activeIndex + 1, currentItems.length - 1);
+          highlight();
+        } else if (e.key === "ArrowUp" && visible) {
+          e.preventDefault();
+          activeIndex = Math.max(activeIndex - 1, 0);
+          highlight();
+        } else if (e.key === "Enter" && visible) {
+          e.preventDefault(); choose(activeIndex >= 0 ? activeIndex : 0);
+        } else if (e.key === "Escape") {
+          hideList();
+        }
+      });
+
+      function highlight() {
+        [...list.children].forEach((li, i) => {
+          if (i === activeIndex) {
+            li.classList.add("bg-indigo-50");
+            input.setAttribute("aria-activedescendant", li.id);
+            li.scrollIntoView({ block: "nearest" });
+          } else {
+            li.classList.remove("bg-indigo-50");
+          }
+        });
+      }
+
+      input.addEventListener("blur", () => setTimeout(hideList, 120));
+
+      // 送信時：入力があればマスタに存在するものだけ通す（空欄はOK）
+      const form = input.closest("form");
+      if (form) {
+        form.addEventListener("submit", (e) => {
+          const v = input.value.trim();
+          
+          // 空欄は許可（任意項目なので）
+          if (!v) {
+            hidCode.value = "";
+            hidEn.value = "";
+            hideError();
+            return;
+          }
+
+          const key = normalizeKey(v);
+          // 別名補正
+          const alias = SPECIALTY_ALIASES[v] || SPECIALTY_ALIASES[key];
+          const targetLabel = alias || v;
+
+          // マスタ検索（日本語完全一致）
+          const hit = SPECIALTIES_MASTER.find(r => r.ja === targetLabel);
+          if (!hit) {
+            e.preventDefault();
+            e.stopPropagation();
+            renderList(candidates(v));
+            showError("候補の中から選んでください（英名やコードでも検索できます）。");
+            hidCode.value = ""; hidEn.value = "";
+            input.focus();
+            return;
+          }
+          // 正式名＆コード・英名で送る
+          input.value   = hit.ja;
+          hidCode.value = hit.code;
+          hidEn.value   = hit.en;
+          hideError();
+        });
+      }
+    })();
+  </script>
+
   <!-- フォームロジック -->
   <script>
     // Cloudflare Worker API エンドポイント（config.jsから取得）
@@ -419,7 +683,7 @@
         method: document.getElementById('method').value.trim(),
         surveyType: document.getElementById('surveyType').value.trim(),
         targetType: document.getElementById('targetType').value,
-        specialty: document.getElementById('specialty').value.trim(),
+        specialty: document.getElementById('specialtyInput').value.trim(),
         recruitCount: parseInt(document.getElementById('recruitCount').value) || 0,
         inquiryOnly: document.getElementById('inquiryOnly').checked,
         targetConditions: document.getElementById('targetConditions').value.trim(),
