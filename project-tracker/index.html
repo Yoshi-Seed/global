@@ -51,59 +51,24 @@
       </div>
     </div>
 
-    <!-- 統計カード -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-      <!-- 総案件数 -->
-      <div class="rounded-lg shadow-md p-6" style="background: linear-gradient(135deg, #E8F0F1 0%, #d5e5e7 100%);">
+    <!-- 統計カードテンプレート -->
+    <template id="statCardTemplate">
+      <div class="rounded-lg shadow-md p-6 stat-card" style="background: linear-gradient(135deg, #E8F0F1 0%, #d5e5e7 100%);">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-gray-500 text-sm">総案件数</p>
-            <p id="totalProjects" class="text-3xl font-bold text-blue-600">0</p>
+            <p class="text-gray-500 text-sm stat-title"></p>
+            <p class="text-3xl font-bold stat-value"></p>
           </div>
-          <div class="bg-blue-100 rounded-full p-3">
-            <i class="fas fa-folder-open text-blue-600 text-2xl"></i>
+          <div class="icon-container rounded-full p-3">
+            <i class="stat-icon text-2xl"></i>
           </div>
         </div>
       </div>
+    </template>
 
-      <!-- 総リクルート人数 -->
-      <div class="rounded-lg shadow-md p-6" style="background: linear-gradient(135deg, #E8F0F1 0%, #d5e5e7 100%);">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-gray-500 text-sm">総リクルート人数</p>
-            <p id="totalRecruits" class="text-3xl font-bold text-green-600">0</p>
-          </div>
-          <div class="bg-green-100 rounded-full p-3">
-            <i class="fas fa-users text-green-600 text-2xl"></i>
-          </div>
-        </div>
-      </div>
-
-      <!-- 平均リクルート人数 -->
-      <div class="rounded-lg shadow-md p-6" style="background: linear-gradient(135deg, #E8F0F1 0%, #d5e5e7 100%);">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-gray-500 text-sm">平均リクルート人数</p>
-            <p id="avgRecruits" class="text-3xl font-bold text-purple-600">0</p>
-          </div>
-          <div class="bg-purple-100 rounded-full p-3">
-            <i class="fas fa-chart-line text-purple-600 text-2xl"></i>
-          </div>
-        </div>
-      </div>
-
-      <!-- 今月の新規案件 -->
-      <div class="rounded-lg shadow-md p-6" style="background: linear-gradient(135deg, #E8F0F1 0%, #d5e5e7 100%);">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-gray-500 text-sm">今月の新規</p>
-            <p id="thisMonthProjects" class="text-3xl font-bold text-orange-600">0</p>
-          </div>
-          <div class="bg-orange-100 rounded-full p-3">
-            <i class="fas fa-calendar-plus text-orange-600 text-2xl"></i>
-          </div>
-        </div>
-      </div>
+    <!-- 統計カード表示エリア -->
+    <div id="statCardsContainer" class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <!-- 統計カードがJavaScriptで動的に生成されます -->
     </div>
 
     <!-- 最近の案件 -->
@@ -132,74 +97,6 @@
         </table>
       </div>
     </div>
-
-    <!-- 2カラムレイアウト -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-      
-      <!-- 疾患カテゴリー Top 5 -->
-      <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-xl font-bold mb-4 flex items-center">
-          <i class="fas fa-heartbeat mr-2 text-red-600"></i>
-          疾患カテゴリー Top 5
-        </h2>
-        <div id="diseaseChart" class="space-y-3">
-          <!-- 動的に生成 -->
-        </div>
-      </div>
-
-      <!-- 専門（診療科）Top 5 -->
-      <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-xl font-bold mb-4 flex items-center">
-          <i class="fas fa-user-md mr-2 text-indigo-600"></i>
-          専門（診療科）Top 5
-        </h2>
-        <div id="specialtyChart" class="space-y-3">
-          <!-- 動的に生成 -->
-        </div>
-      </div>
-    </div>
-
-    <!-- 2カラムレイアウト -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-      
-      <!-- 対象者タイプ別分布 Top 5 -->
-      <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-xl font-bold mb-4 flex items-center">
-          <i class="fas fa-chart-pie mr-2 text-blue-600"></i>
-          対象者タイプ別分布 Top 5
-        </h2>
-        <div id="targetTypeChart" class="space-y-3">
-          <!-- 動的に生成 -->
-        </div>
-      </div>
-
-      <!-- クライアント Top 5 -->
-      <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-xl font-bold mb-4 flex items-center">
-          <i class="fas fa-handshake mr-2 text-yellow-600"></i>
-          クライアント Top 5
-        </h2>
-        <div id="clientChart" class="space-y-3">
-          <!-- 動的に生成 -->
-        </div>
-      </div>
-    </div>
-
-    <!-- クイックアクション -->
-    <div class="mt-8 flex justify-center space-x-4">
-      <a href="import.html" class="bg-purple-500 text-white px-6 py-3 rounded-lg hover:bg-purple-600 transition flex items-center space-x-2">
-        <i class="fas fa-chart-bar"></i>
-        <span>詳細レポート</span>
-      </a>
-      <a href="register.html" class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition flex items-center space-x-2">
-        <i class="fas fa-plus-circle"></i>
-        <span>新規案件登録</span>
-      </a>
-      <a href="projects.html" class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition flex items-center space-x-2">
-        <i class="fas fa-search"></i>
-        <span>案件検索</span>
-      </a>
-    </div>
   </div>
 
   <!-- 共通設定 -->
@@ -212,282 +109,32 @@
 
   <!-- ダッシュボードロジック -->
   <script>
-    // 初期化
-    async function initDashboard() {
-      // データ存在確認＆自動取得
-      await ensureDataLoaded();
-      await loadStatistics();
-    }
-    
-    // データが取得されているか確認（初回起動時の自動同期）
-    async function ensureDataLoaded() {
-      try {
-        const projects = await api.getAllProjects();
-        if (projects.length === 0) {
-          console.log('データが空です。GitHubから取得しています...');
-          // 強制リフレッシュ
-          api.clearCache();
-          await api.getAllProjects(true);
-        } else {
-          console.log(`${projects.length}件のデータを確認しました`);
-        }
-      } catch (error) {
-        console.error('データ確認エラー:', error);
-        // エラーでもダッシュボード表示は続行
-      }
-    }
+    // 統計カードデータ
+    const statsData = [
+      { title: "総案件数", value: 0, color: "blue", icon: "fas fa-folder-open" },
+      { title: "総リクルート人数", value: 0, color: "green", icon: "fas fa-users" },
+      { title: "平均リクルート人数", value: 0, color: "purple", icon: "fas fa-chart-line" },
+      { title: "今月の新規案件", value: 0, color: "orange", icon: "fas fa-calendar-plus" },
+    ];
 
-    // 統計情報を読み込み
-    async function loadStatistics() {
-      try {
-        const stats = await api.getStats();
+    // コンポーネントを生成
+    function renderStatCards() {
+      const container = document.querySelector('#statCardsContainer');
+      const template = document.querySelector('#statCardTemplate');
 
-        // データがない場合はインポートバナーを表示
-        if (stats.totalProjects === 0) {
-          document.getElementById('importBanner').classList.remove('hidden');
-        }
+      statsData.forEach(stat => {
+        const clone = template.content.cloneNode(true);
+        clone.querySelector('.stat-title').textContent = stat.title;
+        clone.querySelector('.stat-value').textContent = stat.value;
+        clone.querySelector('.icon-container').classList.add(`bg-${stat.color}-100`);
+        clone.querySelector('.stat-icon').classList.add(stat.icon, `text-${stat.color}-600`);
 
-        // 基本統計
-        document.getElementById('totalProjects').textContent = stats.totalProjects;
-        document.getElementById('totalRecruits').textContent = stats.totalRecruits.toLocaleString();
-        document.getElementById('avgRecruits').textContent = stats.averageRecruits;
-
-        // 今月のプロジェクト数
-        const thisMonth = new Date().toISOString().substring(0, 7);
-        document.getElementById('thisMonthProjects').textContent = stats.monthlyTrend[thisMonth] || 0;
-
-        // 対象者タイプ別分布
-        renderTargetTypeChart(stats.targetTypeDistribution);
-
-        // クライアント Top 5
-        renderClientChart(stats.clientDistribution);
-
-        // 疾患カテゴリー Top 5
-        renderDiseaseChart(stats.diseaseDistribution);
-
-        // 専門（診療科）Top 5
-        renderSpecialtyChart(stats.specialtyDistribution);
-
-        // 最近のプロジェクト
-        renderRecentProjects(stats.recentProjects);
-
-      } catch (error) {
-        console.error('Failed to load statistics:', error);
-        alert('データの読み込みに失敗しました。ページを再読み込みしてください。');
-      }
-    }
-
-    // 対象者タイプ別分布グラフ（Top 5）
-    function renderTargetTypeChart(distribution) {
-      const container = document.getElementById('targetTypeChart');
-      container.innerHTML = '';
-
-      const total = Object.values(distribution).reduce((sum, val) => sum + val, 0);
-      
-      if (total === 0) {
-        container.innerHTML = '<p class="text-gray-500 text-center py-4">データがありません</p>';
-        return;
-      }
-
-      const colors = {
-        '医師': 'bg-blue-500',
-        '患者': 'bg-green-500',
-        '介護者': 'bg-yellow-500',
-        '医師・患者': 'bg-purple-500',
-        'KOL': 'bg-red-500',
-        '看護師': 'bg-pink-500',
-        '薬剤師': 'bg-indigo-500'
-      };
-
-      // Top 5に絞る
-      Object.entries(distribution).sort((a, b) => b[1] - a[1]).slice(0, 5).forEach(([type, count]) => {
-        const percentage = ((count / total) * 100).toFixed(1);
-        const colorClass = colors[type] || 'bg-gray-500';
-
-        container.innerHTML += `
-          <div>
-            <div class="flex justify-between mb-1">
-              <span class="text-sm font-medium text-gray-700">${type}</span>
-              <span class="text-sm text-gray-600">${count}件 (${percentage}%)</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-2">
-              <div class="${colorClass} h-2 rounded-full transition-all duration-500" style="width: ${percentage}%"></div>
-            </div>
-          </div>
-        `;
+        container.appendChild(clone);
       });
-    }
-
-    // クライアント Top 5
-    function renderClientChart(clients) {
-      const container = document.getElementById('clientChart');
-      container.innerHTML = '';
-
-      const sorted = Object.entries(clients)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 5);
-
-      if (sorted.length === 0) {
-        container.innerHTML = '<p class="text-gray-500 text-center py-4">データがありません</p>';
-        return;
-      }
-
-      const maxCount = sorted[0][1];
-      const colors = ['bg-yellow-500', 'bg-orange-500', 'bg-red-500', 'bg-pink-500', 'bg-purple-500'];
-
-      sorted.forEach(([client, count], index) => {
-        const percentage = (count / maxCount) * 100;
-
-        container.innerHTML += `
-          <div>
-            <div class="flex justify-between mb-1">
-              <span class="text-sm font-medium text-gray-700 truncate" title="${client}">${truncate(client, 30)}</span>
-              <span class="text-sm text-gray-600">${count}件</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-2">
-              <div class="${colors[index]} h-2 rounded-full transition-all duration-500" style="width: ${percentage}%"></div>
-            </div>
-          </div>
-        `;
-      });
-    }
-
-    // 疾患カテゴリー Top 5
-    function renderDiseaseChart(diseases) {
-      const container = document.getElementById('diseaseChart');
-      container.innerHTML = '';
-
-      const sorted = Object.entries(diseases)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 5);
-
-      if (sorted.length === 0) {
-        container.innerHTML = '<p class="text-gray-500 text-center py-4">データがありません</p>';
-        return;
-      }
-
-      const maxCount = sorted[0][1];
-      const colors = ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-green-500', 'bg-blue-500'];
-
-      sorted.forEach(([disease, count], index) => {
-        const percentage = (count / maxCount) * 100;
-
-        container.innerHTML += `
-          <div>
-            <div class="flex justify-between mb-1">
-              <span class="text-sm font-medium text-gray-700 truncate" title="${disease}">${truncate(disease, 30)}</span>
-              <span class="text-sm text-gray-600">${count}件</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-2">
-              <div class="${colors[index]} h-2 rounded-full transition-all duration-500" style="width: ${percentage}%"></div>
-            </div>
-          </div>
-        `;
-      });
-    }
-
-    // 専門（診療科）Top 5
-    function renderSpecialtyChart(specialties) {
-      const container = document.getElementById('specialtyChart');
-      container.innerHTML = '';
-
-      const sorted = Object.entries(specialties)
-        .filter(([specialty]) => specialty) // 空文字を除外
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 5);
-
-      if (sorted.length === 0) {
-        container.innerHTML = '<p class="text-gray-500 text-center py-4">データがありません</p>';
-        return;
-      }
-
-      const maxCount = sorted[0][1];
-      const colors = ['bg-indigo-500', 'bg-blue-500', 'bg-cyan-500', 'bg-teal-500', 'bg-green-500'];
-
-      sorted.forEach(([specialty, count], index) => {
-        const percentage = (count / maxCount) * 100;
-
-        container.innerHTML += `
-          <div>
-            <div class="flex justify-between mb-1">
-              <span class="text-sm font-medium text-gray-700">${specialty}</span>
-              <span class="text-sm text-gray-600">${count}件</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-2">
-              <div class="${colors[index]} h-2 rounded-full transition-all duration-500" style="width: ${percentage}%"></div>
-            </div>
-          </div>
-        `;
-      });
-    }
-
-    // 最近のプロジェクト一覧
-    function renderRecentProjects(projects) {
-      const tbody = document.getElementById('recentProjectsTable');
-      tbody.innerHTML = '';
-
-      if (projects.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="8" class="px-4 py-8 text-center text-gray-500">
-              案件がまだ登録されていません
-            </td>
-          </tr>
-        `;
-        return;
-      }
-
-      projects.forEach(project => {
-        const date = project.createdAt 
-          ? new Date(project.createdAt).toLocaleDateString('ja-JP')
-          : '-';
-        
-        tbody.innerHTML += `
-          <tr class="hover:bg-gray-50 transition">
-            <td class="px-4 py-3 text-sm text-gray-900">${truncate(project.diseaseName, 30)}</td>
-            <td class="px-4 py-3 text-sm text-gray-600">${project.diseaseAbbr || '-'}</td>
-            <td class="px-4 py-3 text-sm">
-              <span class="px-2 py-1 rounded-full text-xs font-semibold ${getTargetTypeBadgeClass(project.targetType)}">
-                ${project.targetType}
-              </span>
-            </td>
-            <td class="px-4 py-3 text-sm text-gray-600">${project.specialty || '-'}</td>
-            <td class="px-4 py-3 text-sm font-medium ${project.inquiryOnly === 'TRUE' || project.inquiryOnly === true ? 'text-red-600' : 'text-green-600'}">
-              ${project.inquiryOnly === 'TRUE' || project.inquiryOnly === true ? '問合せ: ' : ''}${project.recruitCount}名
-            </td>
-            <td class="px-4 py-3 text-sm text-gray-600">${truncate(project.client || '-', 20)}</td>
-            <td class="px-4 py-3 text-sm text-gray-500">${date}</td>
-            <td class="px-4 py-3 text-sm">
-              <a href="projects.html?id=${project.id}" class="text-blue-600 hover:text-blue-800">
-                <i class="fas fa-eye mr-1"></i>詳細
-              </a>
-            </td>
-          </tr>
-        `;
-      });
-    }
-
-    // 対象者タイプバッジのクラス
-    function getTargetTypeBadgeClass(type) {
-      const classes = {
-        '医師': 'bg-blue-100 text-blue-800',
-        '患者': 'bg-green-100 text-green-800',
-        '介護者': 'bg-yellow-100 text-yellow-800',
-        '看護師': 'bg-pink-100 text-pink-800',
-        'KOL': 'bg-indigo-100 text-indigo-800',
-        '医師・患者': 'bg-purple-100 text-purple-800'
-      };
-      return classes[type] || 'bg-gray-100 text-gray-800';
-    }
-
-    // テキスト切り詰め
-    function truncate(text, length) {
-      if (!text) return '';
-      return text.length > length ? text.substring(0, length) + '...' : text;
     }
 
     // ページ読み込み時に実行
-    window.addEventListener('DOMContentLoaded', initDashboard);
+    window.addEventListener('DOMContentLoaded', renderStatCards);
   </script>
 </body>
 </html>
