@@ -153,9 +153,7 @@
           <button class="filter-btn px-4 py-2 rounded-lg font-semibold" data-value="KOL" style="background: rgba(31, 122, 133, 0.15); color: #1F7A85; border: 1px solid #1F7A85;">
             🎓 KOL
           </button>
-          <button class="filter-btn px-4 py-2 rounded-lg font-semibold" data-value="医師・患者" style="background: rgba(31, 122, 133, 0.15); color: #1F7A85; border: 1px solid #1F7A85;">
-            👨‍⚕️🧑 医師・患者
-          </button>
+
           <button class="filter-btn px-4 py-2 rounded-lg font-semibold" data-value="その他" style="background: rgba(31, 122, 133, 0.15); color: #1F7A85; border: 1px solid #1F7A85;">
             📋 その他
           </button>
@@ -168,7 +166,7 @@
           <div class="step-number rounded-full flex items-center justify-center font-bold mr-2">
             2
           </div>
-          <h3 class="font-bold">専門科で絞り込む（任意）</h3>
+          <h3 class="font-bold">専門科で絞り込む（医師のみ・任意）</h3>
         </div>
         <div class="flex flex-wrap gap-2" id="specialtyFilters">
           <!-- 動的に生成 -->
@@ -478,25 +476,22 @@
       // 対象者種別フィルター
       if (currentFilters.targetType !== 'all') {
         if (currentFilters.targetType === 'その他') {
-          // 「その他」の場合：医師、患者、介護者、看護師、KOL、医師・患者以外
-          const standardTypes = ['医師', '患者', '介護者', '看護師', 'KOL', '医師・患者'];
+          // 「その他」の場合：医師、患者、介護者、看護師、KOL以外
+          const standardTypes = ['医師', '患者', '介護者', '看護師', 'KOL'];
           projects = projects.filter(p => !standardTypes.includes(p.targetType));
         } else {
           projects = projects.filter(p => p.targetType === currentFilters.targetType);
         }
       }
 
-      // 専門科フィルター（SpecialtyDictionary活用で略語検索対応）
+      // 専門科フィルター（厳密な完全一致）
       if (currentFilters.specialty !== 'all') {
-        if (typeof SpecialtyDictionary !== 'undefined') {
-          // SpecialtyDictionaryを使用して略語検索も対応
-          projects = projects.filter(p => 
-            SpecialtyDictionary.matchesProject(p, currentFilters.specialty)
-          );
-        } else {
-          // フォールバック：完全一致
-          projects = projects.filter(p => p.specialty === currentFilters.specialty);
-        }
+        // フィルターボタンからの選択時は厳密に完全一致のみ
+        projects = projects.filter(p => {
+          const pSpecialty = (p.specialty || '').trim();
+          const filterSpecialty = currentFilters.specialty.trim();
+          return pSpecialty === filterSpecialty;
+        });
       }
 
       // フリーワード検索（専門科の略語検索にも対応）
