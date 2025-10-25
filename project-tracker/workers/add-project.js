@@ -454,6 +454,42 @@ function registrationIdExists(csvContent, registrationId) {
 }
 
 /**
+ * フィールド値を正規化してExcel表示問題を防ぐ
+ */
+function normalizeField(value) {
+  if (!value) return value;
+  
+  let normalized = String(value);
+  
+  // 改行文字を全角セミコロンに置換（Excel表示問題を防ぐ）
+  normalized = normalized.replace(/\r\n/g, '；');
+  normalized = normalized.replace(/\r/g, '；');
+  normalized = normalized.replace(/\n/g, '；');
+  
+  // 連続する全角セミコロンを1つに
+  normalized = normalized.replace(/；+/g, '；');
+  
+  // 先頭・末尾の全角セミコロンを削除
+  normalized = normalized.replace(/^；+|；+$/g, '');
+  
+  return normalized;
+}
+
+/**
+ * 専門フィールドを正規化（カンマも置換）
+ */
+function normalizeSpecialty(value) {
+  if (!value) return value;
+  
+  let normalized = normalizeField(value);
+  
+  // カンマを全角カンマに置換（Excel表示問題を防ぐ）
+  normalized = normalized.replace(/,/g, '，');
+  
+  return normalized;
+}
+
+/**
  * CSV行を生成
  */
 function generateCSVRow(data, id, registrationId) {
@@ -465,23 +501,23 @@ function generateCSVRow(data, id, registrationId) {
   const fields = [
     String(id),              // 1列目: id
     registrationId,          // 2列目: registrationId
-    data.diseaseName || '',  // 3列目: 疾患名
-    data.diseaseAbbr || '',  // 4列目: 疾患略語
-    data.method || '',       // 5列目: 手法
-    data.surveyType || '',   // 6列目: 調査種別
-    data.targetType || '',   // 7列目: 対象者種別
-    data.specialty || '',    // 8列目: 専門
+    normalizeField(data.diseaseName || ''),  // 3列目: 疾患名
+    normalizeField(data.diseaseAbbr || ''),  // 4列目: 疾患略語
+    normalizeField(data.method || ''),       // 5列目: 手法
+    normalizeField(data.surveyType || ''),   // 6列目: 調査種別
+    normalizeField(data.targetType || ''),   // 7列目: 対象者種別
+    normalizeSpecialty(data.specialty || ''),    // 8列目: 専門（カンマも正規化）
     String(data.recruitCount || '0'), // 9列目: 実績数
     data.inquiryOnly ? 'TRUE' : 'FALSE', // 10列目: 問合せのみ
-    data.targetConditions || '', // 11列目: 対象条件
-    data.drug || '',         // 12列目: 薬剤
-    data.recruitCompany || '', // 13列目: リクルート実施
-    data.moderator || '',    // 14列目: モデレーター
-    data.client || '',       // 15列目: クライアント
-    data.endClient || '',    // 16列目: エンドクライアント
-    data.projectNumber || '', // 17列目: PJ番号
-    data.implementationDate || '', // 18列目: 実施年月
-    data.registrant || '',   // 19列目: 登録担当
+    normalizeField(data.targetConditions || ''), // 11列目: 対象条件
+    normalizeField(data.drug || ''),         // 12列目: 薬剤
+    normalizeField(data.recruitCompany || ''), // 13列目: リクルート実施
+    normalizeField(data.moderator || ''),    // 14列目: モデレーター
+    normalizeField(data.client || ''),       // 15列目: クライアント
+    normalizeField(data.endClient || ''),    // 16列目: エンドクライアント
+    normalizeField(data.projectNumber || ''), // 17列目: PJ番号
+    normalizeField(data.implementationDate || ''), // 18列目: 実施年月
+    normalizeField(data.registrant || ''),   // 19列目: 登録担当
     registeredDate,          // 20列目: 登録日
   ];
   
