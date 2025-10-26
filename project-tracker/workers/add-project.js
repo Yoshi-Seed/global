@@ -297,6 +297,9 @@ async function createGitHubPR({ token, owner, repo, csvPath, branchName, project
   const maxId = getMaxIdFromCSV(currentContent);
   const newId = maxId + 1;
   
+  // デバッグログ
+  console.log(`[ID Generation] Max ID found: ${maxId}, New ID: ${newId}`);
+  
   // 4.5. registrationIdを生成（YYYYMMDD-XXXX形式、日付ごとの連番）
   const registrationId = generateRegistrationId(currentContent, projectData.createdAt);
   
@@ -363,28 +366,44 @@ async function createGitHubPR({ token, owner, repo, csvPath, branchName, project
 
 /**
  * CSVから最大IDを取得
+ * ダブルクォート付き・なし両方に対応
+ * 埋め込み改行にも対応
  */
 function getMaxIdFromCSV(csvContent) {
-  const lines = csvContent.trim().split('\n');
-  
-  // ヘッダー行をスキップ
-  if (lines.length <= 1) {
-    return 0; // データがない場合は0を返す
-  }
+  // より堅牢な方法：行の先頭のIDフィールドのみを抽出
+  // 改行を含むフィールドがあっても、行の開始位置にあるIDは確実に取得できる
   
   let maxId = 0;
   
-  // 各データ行から最初のカラム（id）を取得
-  for (let i = 1; i < lines.length; i++) {
-    const line = lines[i].trim();
-    if (!line) continue;
-    
-    // CSVの最初のカラム（id）を取得
-    const match = line.match(/^(\d+),/);
-    if (match) {
-      const id = parseInt(match[1], 10);
-      if (!isNaN(id) && id > maxId) {
-        maxId = id;
+  // 方法1: 各行の先頭からIDを抽出（ダブルクォート対応）
+  // 行の開始（^または\n）+ オプショナルなダブルクォート + 数字 + オプショナルなダブルクォート + カンマ
+  const idPattern = /(?:^|\n)"?(\d+)"?,/g;
+  let match;
+  
+  while ((match = idPattern.exec(csvContent)) !== null) {
+    const id = parseInt(match[1], 10);
+    if (!isNaN(id) && id > maxId) {
+      maxId = id;
+    }
+  }
+  
+  // 方法2（バックアップ）: 行ベースでチェック
+  // 方法1で見つからない場合のフォールバック
+  if (maxId === 0) {
+    const lines = csvContent.trim().split(/\r?\n/);
+    for (let i = 1; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (!line) continue;
+      
+      // CSVの最初のカラム（id）を取得
+      // ダブルクォートあり: "123",...
+      // ダブルクォートなし: 123,...
+      const lineMatch = line.match(/^"?(\d+)"?,/);
+      if (lineMatch) {
+        const id = parseInt(lineMatch[1], 10);
+        if (!isNaN(id) && id > maxId) {
+          maxId = id;
+        }
       }
     }
   }
