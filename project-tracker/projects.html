@@ -86,27 +86,30 @@
 <body class="bg-gray-50">
   <!-- ナビゲーション -->
   <nav class="bg-white shadow-md sticky top-0 z-40">
-    <div class="container mx-auto px-4 py-3">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center space-x-4">
-          <img src="Seed_Planning_Logo_Original.jpg" alt="SEED PLANNING" class="h-10">
-          <h1 class="text-lg font-bold text-gray-800">プロジェクト履歴管理システム</h1>
+    <div class="container mx-auto px-2 sm:px-4 py-2 sm:py-3">
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <!-- ロゴ部分 -->
+        <div class="flex items-center space-x-2 sm:space-x-4">
+          <img src="Seed_Planning_Logo_Original.jpg" alt="SEED PLANNING" class="h-8 sm:h-10">
+          <h1 class="hidden md:block text-lg font-bold text-gray-800">プロジェクト履歴管理システム</h1>
         </div>
-        <div class="flex space-x-3">
-          <a href="index.html" class="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
-            <i class="fas fa-home mr-2"></i>ダッシュボード
+        
+        <!-- ナビゲーションボタン -->
+        <div class="flex flex-wrap gap-1 sm:gap-2">
+          <a href="index.html" class="px-2 sm:px-4 py-2 text-xs sm:text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center">
+            <i class="fas fa-home sm:mr-2"></i><span class="hidden sm:inline ml-1">ホーム</span>
           </a>
-          <a href="register.html" class="px-4 py-2 text-sm bg-green-500 text-white rounded-lg hover:bg-green-600 transition">
-            <i class="fas fa-plus mr-2"></i>新規登録
+          <a href="register.html" class="px-2 sm:px-4 py-2 text-xs sm:text-sm bg-green-500 text-white rounded-lg hover:bg-green-600 transition flex items-center">
+            <i class="fas fa-plus sm:mr-2"></i><span class="hidden sm:inline ml-1">新規登録</span>
           </a>
-          <a href="https://seedplanning.monday.com/boards/2723929863" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center">
-            <img src="monday.png" alt="Monday" class="h-4 w-4 mr-2">Monday
+          <a href="https://seedplanning.monday.com/boards/2723929863" target="_blank" rel="noopener noreferrer" class="px-2 sm:px-4 py-2 text-xs sm:text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center">
+            <img src="monday.png" alt="Monday" class="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2"><span class="hidden sm:inline ml-1">Monday</span>
           </a>
-          <a href="https://seedplanning-my.sharepoint.com/:x:/g/personal/h_yamamoto_seedplanning_co_jp/ERX-ZGMkMaZDgLytPc33TJUB8aUZpPKRq7A9XvqPdykK0g?wdOrigin=TEAMS-MAGLEV.p2p_ns.rwc&wdExp=TEAMS-TREATMENT&wdhostclicktime=1744073789628&web=1" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center">
-            <img src="Everyday-1.png" alt="Everyday" class="h-4 w-4 mr-2">Everyday
+          <a href="https://seedplanning-my.sharepoint.com/:x:/g/personal/h_yamamoto_seedplanning_co_jp/ERX-ZGMkMaZDgLytPc33TJUB8aUZpPKRq7A9XvqPdykK0g?wdOrigin=TEAMS-MAGLEV.p2p_ns.rwc&wdExp=TEAMS-TREATMENT&wdhostclicktime=1744073789628&web=1" target="_blank" rel="noopener noreferrer" class="px-2 sm:px-4 py-2 text-xs sm:text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center">
+            <img src="Everyday-1.png" alt="Everyday" class="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2"><span class="hidden sm:inline ml-1">Everyday</span>
           </a>
-          <a href="https://db.seedplanning.co.jp/project/management" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center">
-            <img src="SP_logo_shape_only.png" alt="プロジェクト管理" class="h-4 w-4 mr-2">プロジェクト管理
+          <a href="https://db.seedplanning.co.jp/project/management" target="_blank" rel="noopener noreferrer" class="px-2 sm:px-4 py-2 text-xs sm:text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center">
+            <img src="SP_logo_shape_only.png" alt="プロジェクト管理" class="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2"><span class="hidden sm:inline ml-1">PJ管理</span>
           </a>
         </div>
       </div>
