@@ -760,7 +760,15 @@
             ${project.projectNumber ? `
               <div>
                 <label class="block text-xs font-medium text-gray-500 mb-1">PJ番号</label>
-                <p class="text-sm font-mono text-gray-900">${project.projectNumber}</p>
+                <p class="text-sm font-mono">
+                  <a href="https://db.seedplanning.co.jp/project/management/update/?pj=${encodeURIComponent(project.projectNumber)}" 
+                     target="_blank" 
+                     rel="noopener noreferrer" 
+                     class="text-blue-600 hover:text-blue-800 hover:underline transition">
+                    ${project.projectNumber}
+                    <i class="fas fa-external-link-alt ml-1 text-xs"></i>
+                  </a>
+                </p>
               </div>
             ` : ''}
             ${project.implementationDate ? `
