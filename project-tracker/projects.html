@@ -283,8 +283,101 @@
 
         <!-- アクションボタン -->
         <div class="flex space-x-3 mt-6 pt-4 border-t">
+          <button onclick="showDeleteDialog()" class="flex-1 px-5 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition text-sm font-medium">
+            <i class="fas fa-trash-alt mr-2"></i>削除依頼
+          </button>
           <button onclick="closeDetailModal()" class="flex-1 px-5 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm font-medium">
             閉じる
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 削除確認ダイアログ -->
+  <div id="deleteDialog" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6">
+      <div class="flex items-center justify-between mb-4 border-b pb-3">
+        <h3 class="text-lg font-bold text-red-600 flex items-center">
+          <i class="fas fa-exclamation-triangle mr-2"></i>
+          削除依頼の確認
+        </h3>
+        <button onclick="closeDeleteDialog()" class="text-gray-400 hover:text-gray-600 text-xl transition">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <!-- 警告メッセージ -->
+        <div class="bg-red-50 border border-red-200 rounded-lg p-3">
+          <p class="text-sm text-red-800">
+            <i class="fas fa-info-circle mr-1"></i>
+            このレコードの削除依頼PRを作成します。管理者の承認後、データは完全に削除されます。
+          </p>
+        </div>
+
+        <!-- 削除対象情報 -->
+        <div id="deleteTargetInfo" class="bg-gray-50 rounded-lg p-3 text-sm">
+          <!-- 動的に生成 -->
+        </div>
+
+        <!-- 削除理由入力 -->
+        <div>
+          <label for="deleteReason" class="block text-sm font-medium text-gray-700 mb-2">
+            削除理由 <span class="text-red-500">*</span>
+          </label>
+          <textarea 
+            id="deleteReason" 
+            rows="3" 
+            placeholder="例: 誤登録、重複データ、テストデータなど"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
+            required
+          ></textarea>
+        </div>
+
+        <!-- パスワード入力 -->
+        <div>
+          <label for="deletePassword" class="block text-sm font-medium text-gray-700 mb-2">
+            確認パスワード <span class="text-red-500">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="deletePassword" 
+            placeholder="「delete」と入力してください"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
+            required
+          >
+          <p class="text-xs text-gray-500 mt-1">
+            <i class="fas fa-lock mr-1"></i>削除を実行するには「delete」と入力してください
+          </p>
+        </div>
+
+        <!-- 確認チェックボックス -->
+        <div class="flex items-start">
+          <input 
+            type="checkbox" 
+            id="deleteConfirm" 
+            class="mt-1 mr-2"
+            required
+          >
+          <label for="deleteConfirm" class="text-sm text-gray-700">
+            削除依頼PRを作成することを理解し、同意します
+          </label>
+        </div>
+
+        <!-- アクションボタン -->
+        <div class="flex space-x-3 pt-3">
+          <button 
+            onclick="closeDeleteDialog()" 
+            class="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm font-medium"
+          >
+            キャンセル
+          </button>
+          <button 
+            onclick="submitDeleteRequest()" 
+            class="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition text-sm font-medium"
+          >
+            <i class="fas fa-paper-plane mr-1"></i>削除依頼を送信
           </button>
         </div>
       </div>
@@ -870,6 +963,157 @@
     function closeDetailModal() {
       document.getElementById('detailModal').classList.add('hidden');
       currentProjectId = null;
+    }
+
+    // 削除ダイアログを表示
+    function showDeleteDialog() {
+      if (!currentProjectId) {
+        alert('削除対象のプロジェクトが選択されていません。');
+        return;
+      }
+
+      const project = allProjects.find(p => p.id === currentProjectId);
+      if (!project) {
+        alert('プロジェクト情報が見つかりません。');
+        return;
+      }
+
+      // 削除対象情報を表示
+      const deleteTargetInfo = document.getElementById('deleteTargetInfo');
+      deleteTargetInfo.innerHTML = `
+        <div class="space-y-2">
+          <div class="flex justify-between">
+            <span class="font-medium text-gray-600">データID:</span>
+            <span class="font-bold text-gray-900">${project.id}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="font-medium text-gray-600">登録ID:</span>
+            <span class="text-gray-900">${project.registrationId || 'なし'}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="font-medium text-gray-600">疾患名:</span>
+            <span class="text-gray-900">${project.diseaseName}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="font-medium text-gray-600">対象者種別:</span>
+            <span class="text-gray-900">${project.targetType || 'なし'}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="font-medium text-gray-600">実績数:</span>
+            <span class="text-gray-900">${project.recruitCount || 0}名</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="font-medium text-gray-600">クライアント:</span>
+            <span class="text-gray-900">${project.client || 'なし'}</span>
+          </div>
+        </div>
+      `;
+
+      // フォームをリセット
+      document.getElementById('deleteReason').value = '';
+      document.getElementById('deletePassword').value = '';
+      document.getElementById('deleteConfirm').checked = false;
+
+      // ダイアログを表示
+      document.getElementById('deleteDialog').classList.remove('hidden');
+    }
+
+    // 削除ダイアログを閉じる
+    function closeDeleteDialog() {
+      document.getElementById('deleteDialog').classList.add('hidden');
+    }
+
+    // 削除依頼を送信
+    async function submitDeleteRequest() {
+      // バリデーション
+      const reason = document.getElementById('deleteReason').value.trim();
+      const password = document.getElementById('deletePassword').value.trim();
+      const confirmed = document.getElementById('deleteConfirm').checked;
+
+      if (!reason) {
+        alert('削除理由を入力してください。');
+        return;
+      }
+
+      if (password !== 'delete') {
+        alert('確認パスワードが正しくありません。「delete」と入力してください。');
+        return;
+      }
+
+      if (!confirmed) {
+        alert('確認チェックボックスにチェックを入れてください。');
+        return;
+      }
+
+      if (!currentProjectId) {
+        alert('削除対象のプロジェクトが選択されていません。');
+        return;
+      }
+
+      const project = allProjects.find(p => p.id === currentProjectId);
+      if (!project) {
+        alert('プロジェクト情報が見つかりません。');
+        return;
+      }
+
+      // 最終確認
+      if (!confirm(`本当に削除依頼PRを作成しますか？\n\nデータID: ${project.id}\n疾患名: ${project.diseaseName}\n削除理由: ${reason}`)) {
+        return;
+      }
+
+      try {
+        // ローディング表示
+        const submitButton = event.target;
+        const originalText = submitButton.innerHTML;
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>送信中...';
+
+        // API呼び出し
+        const response = await fetch('https://project-tracker-api.y-honda.workers.dev/', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id: project.id,
+            reason: reason,
+            password: password,
+            projectInfo: {
+              registrationId: project.registrationId,
+              diseaseName: project.diseaseName,
+              diseaseAbbr: project.diseaseAbbr,
+              targetType: project.targetType,
+              recruitCount: project.recruitCount,
+              client: project.client,
+            }
+          })
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          // 成功メッセージ
+          alert(`✅ 削除依頼PRが作成されました！\n\n${result.message}\n\nPR URL: ${result.prUrl}\n\n管理者の承認をお待ちください。`);
+          
+          // ダイアログを閉じる
+          closeDeleteDialog();
+          closeDetailModal();
+          
+          // データを再読み込み（オプション）
+          // await init();
+        } else {
+          throw new Error(result.error || '削除依頼の送信に失敗しました。');
+        }
+      } catch (error) {
+        console.error('削除依頼エラー:', error);
+        alert(`❌ エラーが発生しました:\n${error.message}\n\n再度お試しいただくか、管理者にお問い合わせください。`);
+      } finally {
+        // ボタンを元に戻す
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.innerHTML = originalText;
+        }
+      }
     }
 
     // CSVエクスポート（フィルター適用済み）

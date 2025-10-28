@@ -6,7 +6,7 @@
 // CORS対応
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
@@ -29,6 +29,10 @@ export default {
     
     if (request.method === 'POST') {
       return handlePostProject(request, env);
+    }
+
+    if (request.method === 'DELETE') {
+      return handleDeleteRequest(request, env);
     }
 
     // その他のメソッド・パスは405
@@ -623,5 +627,243 @@ ${data.createdBy ? `\n**登録者:** ${data.createdBy}` : ''}
 
 ---
 このPRは自動生成されました。内容を確認してマージしてください。
+`;
+}
+
+/**
+ * DELETE リクエスト - 削除依頼PRを作成
+ */
+async function handleDeleteRequest(request, env) {
+  try {
+    const data = await request.json();
+    
+    // バリデーション
+    if (!data.id) {
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: 'データIDが指定されていません' 
+      }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    if (!data.reason || data.reason.trim() === '') {
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: '削除理由を入力してください' 
+      }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    if (data.password !== 'delete') {
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: 'パスワードが正しくありません' 
+      }), {
+        status: 403,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // GitHub設定
+    const GITHUB_TOKEN = env.GITHUB_TOKEN;
+    const GITHUB_OWNER = env.GITHUB_OWNER || 'Yoshi-Seed';
+    const GITHUB_REPO = env.GITHUB_REPO || 'global';
+    const CSV_PATH = env.CSV_PATH || 'project-tracker/seed_planning_data.csv';
+    
+    if (!GITHUB_TOKEN) {
+      throw new Error('GitHub token is not configured');
+    }
+
+    const headers = {
+      'Authorization': `Bearer ${GITHUB_TOKEN}`,
+      'Accept': 'application/vnd.github.v3+json',
+      'User-Agent': 'Cloudflare-Worker',
+    };
+
+    // 1. main ブランチの最新SHAを取得
+    const mainRefResponse = await fetch(
+      `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/git/ref/heads/main`,
+      { headers }
+    );
+    
+    if (!mainRefResponse.ok) {
+      throw new Error(`Failed to get main branch: ${mainRefResponse.statusText}`);
+    }
+
+    const mainRef = await mainRefResponse.json();
+    const mainSha = mainRef.object.sha;
+
+    // 2. 現在のCSVファイルを取得
+    const csvResponse = await fetch(
+      `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${CSV_PATH}?ref=main`,
+      { headers }
+    );
+
+    if (!csvResponse.ok) {
+      throw new Error(`Failed to get CSV file: ${csvResponse.statusText}`);
+    }
+
+    const csvData = await csvResponse.json();
+    const currentContent = base64DecodeUTF8(csvData.content);
+
+    // 3. 指定されたIDの行を削除
+    const lines = currentContent.split('\n');
+    const headerLine = lines[0];
+    let deletedLine = null;
+    
+    const updatedLines = lines.filter((line, index) => {
+      if (index === 0) return true; // ヘッダー行は保持
+      if (!line.trim()) return false; // 空行は削除
+      
+      // IDをチェック（引用符あり/なしに対応）
+      const lineMatch = line.match(/^"?(\d+)"?,/);
+      if (lineMatch && lineMatch[1] === String(data.id)) {
+        deletedLine = line;
+        return false; // この行を削除
+      }
+      return true;
+    });
+
+    if (!deletedLine) {
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: `ID ${data.id} のレコードが見つかりませんでした` 
+      }), {
+        status: 404,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const updatedContent = updatedLines.join('\n');
+
+    // 4. 新しいブランチを作成
+    const timestamp = Date.now();
+    const branchName = `delete-request-${data.id}-${timestamp}`;
+    
+    const createBranchResponse = await fetch(
+      `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/git/refs`,
+      {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          ref: `refs/heads/${branchName}`,
+          sha: mainSha,
+        }),
+      }
+    );
+
+    if (!createBranchResponse.ok) {
+      throw new Error(`Failed to create branch: ${createBranchResponse.statusText}`);
+    }
+
+    // 5. 新しいブランチにCSVを更新
+    const updateFileResponse = await fetch(
+      `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${CSV_PATH}`,
+      {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify({
+          message: `🗑️ 削除依頼: ID ${data.id} - ${data.projectInfo?.diseaseName || ''}`,
+          content: base64EncodeUTF8(updatedContent),
+          sha: csvData.sha,
+          branch: branchName,
+        }),
+      }
+    );
+
+    if (!updateFileResponse.ok) {
+      const errorText = await updateFileResponse.text();
+      throw new Error(`Failed to update file: ${updateFileResponse.statusText} - ${errorText}`);
+    }
+
+    // 6. Pull Requestを作成
+    const prTitle = `🗑️ 削除依頼: ID ${data.id} - ${data.projectInfo?.diseaseName || '不明'}`;
+    const prBody = generateDeletePRBody(data);
+
+    const createPRResponse = await fetch(
+      `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/pulls`,
+      {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          title: prTitle,
+          body: prBody,
+          head: branchName,
+          base: 'main',
+        }),
+      }
+    );
+
+    if (!createPRResponse.ok) {
+      const errorText = await createPRResponse.text();
+      throw new Error(`Failed to create PR: ${createPRResponse.statusText} - ${errorText}`);
+    }
+
+    const pr = await createPRResponse.json();
+    console.log(`[削除依頼PR作成] PR #${pr.number}: ${pr.html_url}`);
+
+    // 成功レスポンス
+    return new Response(JSON.stringify({
+      success: true,
+      message: `削除依頼PRが作成されました (PR #${pr.number})`,
+      prUrl: pr.html_url,
+      prNumber: pr.number,
+      branchName: branchName,
+      deletedId: data.id,
+    }), {
+      status: 200,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+
+  } catch (error) {
+    console.error('[削除依頼エラー]', error);
+    return new Response(JSON.stringify({
+      success: false,
+      error: error.message || '削除依頼PRの作成に失敗しました',
+    }), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+}
+
+/**
+ * 削除依頼PR用の本文を生成
+ */
+function generateDeletePRBody(data) {
+  const projectInfo = data.projectInfo || {};
+  const timestamp = new Date().toISOString().replace('T', ' ').substring(0, 19);
+  
+  return `## 🗑️ 削除依頼
+
+### 削除対象
+- **データID**: ${data.id}
+- **登録ID**: ${projectInfo.registrationId || '-'}
+- **疾患名**: ${projectInfo.diseaseName || '-'}
+- **疾患略語**: ${projectInfo.diseaseAbbr || '-'}
+- **対象者種別**: ${projectInfo.targetType || '-'}
+- **実績数**: ${projectInfo.recruitCount || 0}名
+- **クライアント**: ${projectInfo.client || '-'}
+
+### 削除理由
+\`\`\`
+${data.reason}
+\`\`\`
+
+### 削除依頼日時
+${timestamp}
+
+---
+⚠️ **注意**: この PR をマージすると、上記のレコードが CSV から完全に削除されます。
+
+内容を確認の上、問題なければマージしてください。
+削除をキャンセルする場合は、この PR をクローズしてください。
+
+---
+このPRは削除依頼システムにより自動生成されました。
 `;
 }
