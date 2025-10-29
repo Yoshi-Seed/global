@@ -37,7 +37,11 @@
     }
 
     .filter-btn.active {
-      box-shadow: 0 4px 12px rgba(31, 122, 133, 0.4);
+      background: #FFFFFF !important;
+      border: 2px solid #1F7A85 !important;
+      box-shadow: 0 4px 12px rgba(31, 122, 133, 0.3) !important;
+      transform: scale(1.05) !important;
+      font-weight: bold;
     }
 
     .project-card {
@@ -141,7 +145,7 @@
           <h3 class="font-bold">対象者で絞り込む</h3>
         </div>
         <div class="flex flex-wrap gap-2" id="targetTypeFilters">
-          <button class="filter-btn active bg-white px-4 py-2 rounded-lg font-semibold shadow-sm" data-value="all" style="color: #1F7A85;">
+          <button class="filter-btn active bg-white px-4 py-2 rounded-lg font-semibold" data-value="all" style="color: #1F7A85; border: 2px solid #1F7A85; box-shadow: 0 4px 12px rgba(31, 122, 133, 0.3); transform: scale(1.05);">
             すべて
           </button>
           <button class="filter-btn px-4 py-2 rounded-lg font-semibold" data-value="医師" style="background: rgba(31, 122, 133, 0.15); color: #1F7A85; border: 1px solid #1F7A85;">
@@ -539,11 +543,16 @@
         b.style.background = 'rgba(31, 122, 133, 0.15)';
         b.style.color = '#1F7A85';
         b.style.border = '1px solid #1F7A85';
+        b.style.boxShadow = 'none';
+        b.style.transform = 'scale(1)';
       });
       
       btn.classList.add('active', 'bg-white');
+      btn.style.background = '#FFFFFF';
       btn.style.color = '#1F7A85';
-      btn.style.border = 'none';
+      btn.style.border = '2px solid #1F7A85';
+      btn.style.boxShadow = '0 4px 12px rgba(31, 122, 133, 0.3)';
+      btn.style.transform = 'scale(1.05)';
       btn.classList.remove('bg-white/20', 'hover:bg-white/30', 'text-white');
       
       currentFilters.targetType = btn.dataset.value;
@@ -557,11 +566,16 @@
         b.style.background = 'rgba(31, 122, 133, 0.15)';
         b.style.color = '#1F7A85';
         b.style.border = '1px solid #1F7A85';
+        b.style.boxShadow = 'none';
+        b.style.transform = 'scale(1)';
       });
       
       btn.classList.add('active', 'bg-white');
+      btn.style.background = '#FFFFFF';
       btn.style.color = '#1F7A85';
-      btn.style.border = 'none';
+      btn.style.border = '2px solid #1F7A85';
+      btn.style.boxShadow = '0 4px 12px rgba(31, 122, 133, 0.3)';
+      btn.style.transform = 'scale(1.05)';
       btn.classList.remove('bg-white/20', 'hover:bg-white/30', 'text-white');
       
       currentFilters.specialty = btn.dataset.value;
