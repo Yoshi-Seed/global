@@ -806,6 +806,52 @@ async function handleDeleteRequest(request, env) {
     const pr = await createPRResponse.json();
     console.log(`[削除依頼PR作成] PR #${pr.number}: ${pr.html_url}`);
 
+    // 7. PRにラベルを追加（メール通知のトリガー）
+    try {
+      const addLabelsResponse = await fetch(
+        `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/issues/${pr.number}/labels`,
+        {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            labels: ['削除依頼', 'urgent']
+          }),
+        }
+      );
+      
+      if (addLabelsResponse.ok) {
+        console.log(`[削除依頼PR] ラベル追加成功: PR #${pr.number}`);
+      } else {
+        console.warn(`[削除依頼PR] ラベル追加失敗: ${addLabelsResponse.statusText}`);
+      }
+    } catch (labelError) {
+      console.warn('[削除依頼PR] ラベル追加エラー:', labelError);
+      // ラベル追加失敗してもPR作成は成功しているので続行
+    }
+
+    // 8. レビュアーをリクエスト（メール通知のトリガー）
+    try {
+      const requestReviewResponse = await fetch(
+        `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/pulls/${pr.number}/requested_reviewers`,
+        {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            reviewers: [GITHUB_OWNER] // リポジトリオーナーをレビュアーに追加
+          }),
+        }
+      );
+      
+      if (requestReviewResponse.ok) {
+        console.log(`[削除依頼PR] レビュアーリクエスト成功: PR #${pr.number}`);
+      } else {
+        console.warn(`[削除依頼PR] レビュアーリクエスト失敗: ${requestReviewResponse.statusText}`);
+      }
+    } catch (reviewError) {
+      console.warn('[削除依頼PR] レビュアーリクエストエラー:', reviewError);
+      // レビュアーリクエスト失敗してもPR作成は成功しているので続行
+    }
+
     // 成功レスポンス
     return new Response(JSON.stringify({
       success: true,
