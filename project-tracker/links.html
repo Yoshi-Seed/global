@@ -69,14 +69,121 @@
   <!-- メインコンテンツ -->
   <div class="container mx-auto px-4 py-8">
     
-    <!-- ヘッダー -->
+    <!-- 世界時計 -->
     <div class="rounded-lg shadow-md p-6 mb-8" style="background: linear-gradient(135deg, #E8F0F1 0%, #d5e5e7 100%);">
-      <h2 class="text-3xl font-bold text-gray-800 flex items-center">
-        <i class="fas fa-link mr-3 text-blue-600"></i>
-        便利なリンク集
-      </h2>
-      <p class="text-gray-600 mt-2">シード・プランニングで使用する各種システムやツールへのリンク集です。</p>
+      <div class="flex items-center justify-between flex-wrap gap-4">
+        <!-- 時刻表示 -->
+        <div class="flex-1">
+          <h2 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+            <i class="fas fa-globe-americas mr-2 text-blue-600"></i>
+            現在の時刻（自動更新）
+          </h2>
+          <div id="world-times-list" class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div class="bg-white/70 rounded-lg px-4 py-3 shadow-sm">
+              <div class="text-xs text-gray-600 mb-1">🇯🇵 日本</div>
+              <div id="time-jp" class="font-mono font-semibold text-gray-800">--:--</div>
+            </div>
+            <div class="bg-white/70 rounded-lg px-4 py-3 shadow-sm">
+              <div class="text-xs text-gray-600 mb-1">🇺🇸 米国東部</div>
+              <div id="time-us" class="font-mono font-semibold text-gray-800">--:--</div>
+            </div>
+            <div class="bg-white/70 rounded-lg px-4 py-3 shadow-sm">
+              <div class="text-xs text-gray-600 mb-1">🇬🇧 英国</div>
+              <div id="time-uk" class="font-mono font-semibold text-gray-800">--:--</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 祝日情報（任意） -->
+      <div id="holidays" class="mt-4 text-sm text-gray-700"></div>
     </div>
+
+    <script>
+    (function(){
+      // 表示するタイムゾーンと国コード（祝日API用）
+      const zones = [
+        { id: 'time-jp', label: 'JST', tz: 'Asia/Tokyo', country: 'JP' },
+        { id: 'time-us', label: 'US (Eastern)', tz: 'America/New_York', country: 'US' },
+        { id: 'time-uk', label: 'UK', tz: 'Europe/London', country: 'GB' }
+      ];
+
+      // 日時表示フォーマットを作る（例: 2025/11/2 8:54 EDT）
+      function formatDateFor(zone) {
+        const now = new Date();
+        const opts = {
+          timeZone: zone.tz,
+          year: 'numeric', month: '2-digit', day: '2-digit',
+          hour: '2-digit', minute: '2-digit', hour12: false,
+          timeZoneName: 'short'
+        };
+        // formatToParts で安定的に取得して組み立て
+        const parts = new Intl.DateTimeFormat('en-GB', opts).formatToParts(now);
+        const map = {};
+        parts.forEach(p => { map[p.type] = p.value; });
+        // 日/時の先頭ゼロを落とす
+        const year = map.year;
+        const month = Number(map.month);
+        const day = Number(map.day);
+        const hour = Number(map.hour);
+        const minute = map.minute;
+        const tz = map.timeZoneName || '';
+        return `${year}/${month}/${day} ${hour}:${minute} ${tz}`;
+      }
+
+      function updateTimes() {
+        zones.forEach(z => {
+          const el = document.getElementById(z.id);
+          if (el) el.textContent = formatDateFor(z);
+        });
+      }
+
+      // 初回と定期更新（30秒ごと）
+      updateTimes();
+      setInterval(updateTimes, 30000);
+
+      /* -------------------------
+         祝日チェック（任意）
+         - Nager.Date の PublicHolidays API を使用
+         - https://date.nager.at/api/v3/PublicHolidays/{year}/{countryCode}
+         ------------------------- */
+      async function fetchHolidaysForYear(country, year) {
+        const url = `https://date.nager.at/api/v3/PublicHolidays/${year}/${country}`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Holiday API error: ' + res.status);
+        return res.json();
+      }
+
+      async function checkHolidays() {
+        const today = new Date();
+        const isoToday = today.toISOString().slice(0,10); // YYYY-MM-DD
+        const year = today.getFullYear();
+        const out = [];
+        for (const z of zones) {
+          try {
+            const list = await fetchHolidaysForYear(z.country, year);
+            const found = list.find(h => h.date === isoToday);
+            if (found) {
+              out.push(`<span class="inline-block mr-4"><strong>${z.label}:</strong> 🎉 ${found.localName}</span>`);
+            }
+          } catch (err) {
+            // エラーは静かに無視（祝日情報が取得できない場合）
+            console.warn(`Holiday check failed for ${z.label}:`, err);
+          }
+        }
+        const div = document.getElementById('holidays');
+        if (div && out.length > 0) {
+          div.innerHTML = '<div class="bg-amber-50 border border-amber-200 rounded-lg px-4 py-2"><i class="fas fa-calendar-day mr-2 text-amber-600"></i>' + out.join('') + '</div>';
+        }
+      }
+
+      // 祝日チェックを実行（任意・コメントアウトで無効化可能）
+      checkHolidays();
+
+      // デバッグ用に外部からも更新できるようにしておく
+      window.updateWorldTimes = updateTimes;
+    })();
+    </script>
 
     <!-- Group 1: 勤怠・明細 -->
     <div class="group-section mb-8">
