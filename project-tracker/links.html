@@ -76,20 +76,32 @@
         <div class="flex-1">
           <h2 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
             <i class="fas fa-globe-americas mr-2 text-blue-600"></i>
-            現在の時刻（自動更新）
+            現在の時刻（夏時間対応）
           </h2>
           <div id="world-times-list" class="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div class="bg-white/70 rounded-lg px-4 py-3 shadow-sm">
-              <div class="text-xs text-gray-600 mb-1">🇯🇵 日本</div>
-              <div id="time-jp" class="font-mono font-semibold text-gray-800">--:--</div>
+            <!-- 日本 - 優しい赤（日の丸カラー） -->
+            <div class="rounded-lg px-4 py-3 shadow-sm" style="background: linear-gradient(135deg, rgba(220, 38, 38, 0.08) 0%, rgba(239, 68, 68, 0.05) 100%);">
+              <div class="flex items-center text-xs mb-1">
+                <span class="text-2xl mr-2">🇯🇵</span>
+                <span class="font-medium text-red-700">日本</span>
+              </div>
+              <div id="time-jp" class="font-mono font-semibold text-gray-800 text-sm">--:--</div>
             </div>
-            <div class="bg-white/70 rounded-lg px-4 py-3 shadow-sm">
-              <div class="text-xs text-gray-600 mb-1">🇺🇸 米国東部</div>
-              <div id="time-us" class="font-mono font-semibold text-gray-800">--:--</div>
+            <!-- 米国 - 優しい青（星条旗カラー） -->
+            <div class="rounded-lg px-4 py-3 shadow-sm" style="background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(59, 130, 246, 0.05) 100%);">
+              <div class="flex items-center text-xs mb-1">
+                <span class="text-2xl mr-2">🇺🇸</span>
+                <span class="font-medium text-blue-700">米国東部</span>
+              </div>
+              <div id="time-us" class="font-mono font-semibold text-gray-800 text-sm">--:--</div>
             </div>
-            <div class="bg-white/70 rounded-lg px-4 py-3 shadow-sm">
-              <div class="text-xs text-gray-600 mb-1">🇬🇧 英国</div>
-              <div id="time-uk" class="font-mono font-semibold text-gray-800">--:--</div>
+            <!-- 英国 - 優しい紫（ユニオンジャックカラー） -->
+            <div class="rounded-lg px-4 py-3 shadow-sm" style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(167, 139, 250, 0.05) 100%);">
+              <div class="flex items-center text-xs mb-1">
+                <span class="text-2xl mr-2">🇬🇧</span>
+                <span class="font-medium text-purple-700">英国</span>
+              </div>
+              <div id="time-uk" class="font-mono font-semibold text-gray-800 text-sm">--:--</div>
             </div>
           </div>
         </div>
