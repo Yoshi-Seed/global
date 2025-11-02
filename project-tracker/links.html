@@ -28,6 +28,36 @@
     .group-section:nth-child(3) { animation-delay: 0.3s; }
     .group-section:nth-child(4) { animation-delay: 0.4s; }
     .group-section:nth-child(5) { animation-delay: 0.5s; }
+    
+    /* マーキーアニメーション */
+    .marquee-container {
+      flex: 1;
+      max-width: 500px;
+      overflow: hidden;
+      margin-left: 1rem;
+      position: relative;
+      height: 1.75rem;
+    }
+    .marquee-text {
+      display: inline-block;
+      white-space: nowrap;
+      animation: marquee 30s linear infinite;
+      font-size: 0.875rem;
+      color: #4b5563;
+      font-weight: 500;
+      padding-left: 100%;
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-100%); }
+    }
+    
+    /* レスポンシブ対応 */
+    @media (max-width: 768px) {
+      .marquee-container {
+        display: none;
+      }
+    }
   </style>
 </head>
 <body class="bg-gray-50">
@@ -74,9 +104,14 @@
       <div class="flex items-center justify-between flex-wrap gap-4">
         <!-- 時刻表示 -->
         <div class="flex-1">
-          <h2 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
-            <i class="fas fa-globe-americas mr-2 text-blue-600"></i>
-            現在の時刻（夏時間対応）
+          <h2 class="text-xl font-bold text-gray-800 mb-3 flex items-center justify-between">
+            <span class="flex items-center">
+              <i class="fas fa-globe-americas mr-2 text-blue-600"></i>
+              現在の時刻（夏時間対応）
+            </span>
+            <div class="marquee-container">
+              <div id="time-message" class="marquee-text"></div>
+            </div>
           </h2>
           <div id="world-times-list" class="grid grid-cols-1 md:grid-cols-3 gap-3">
             <!-- 日本 - 優しい赤（日の丸カラー） -->
@@ -192,8 +227,46 @@
       // 祝日チェックを実行（任意・コメントアウトで無効化可能）
       checkHolidays();
 
+      /* -------------------------
+         時間帯別メッセージ表示
+         ------------------------- */
+      function updateTimeMessage() {
+        const hour = new Date().getHours();
+        let message = '';
+        
+        if (hour >= 0 && hour < 6) {
+          // 🌃 明け方（0–6時）
+          message = '🌃 静かな時間ですね。ゆっくり深呼吸。 The world\'s quiet — take a breath.';
+        } else if (hour >= 6 && hour < 11) {
+          // 🌅 朝（6–11am）
+          message = '🌅 おはようございます。今日もいい1日にしましょう。 Good morning — wishing you a bright start!';
+        } else if (hour >= 11 && hour < 14) {
+          // 🌞 昼（11–14時）
+          message = '🌞 お疲れ様です。ひと息ついてくださいね。 Hope your day\'s going smoothly.';
+        } else if (hour >= 14 && hour < 19) {
+          // 🌇 夕方（14–19時）
+          message = '🌇 今日もあと少し。無理せずいきましょう。 You\'re doing great — nearly there.';
+        } else if (hour >= 19 && hour < 23) {
+          // 🌙 夜（19–23時）
+          message = '🌙 お疲れ様です。今日もよく頑張りました。 You\'ve earned some rest.';
+        } else {
+          // 🌌 深夜（23–0時）
+          message = '🌌 遅くまでお疲れ様です。そろそろ休みましょう。 Take it easy tonight.';
+        }
+        
+        const messageEl = document.getElementById('time-message');
+        if (messageEl) {
+          messageEl.textContent = message;
+        }
+      }
+
+      // 初回実行と定期更新（30秒ごと、時計と同期）
+      updateTimeMessage();
+      setInterval(updateTimeMessage, 30000);
+
       // デバッグ用に外部からも更新できるようにしておく
       window.updateWorldTimes = updateTimes;
+      window.updateTimeMessage = updateTimeMessage;
     })();
     </script>
 
