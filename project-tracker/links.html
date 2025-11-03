@@ -220,14 +220,22 @@
       }
 
       async function checkHolidays() {
-        const today = new Date();
-        const isoToday = today.toISOString().slice(0,10); // YYYY-MM-DD
-        const year = today.getFullYear();
         const out = [];
         for (const z of zones) {
           try {
+            // 各タイムゾーンの「今日」を取得
+            const now = new Date();
+            const formatter = new Intl.DateTimeFormat('en-CA', { 
+              timeZone: z.tz, 
+              year: 'numeric', 
+              month: '2-digit', 
+              day: '2-digit' 
+            });
+            const localDate = formatter.format(now); // YYYY-MM-DD
+            const year = now.getFullYear();
+            
             const list = await fetchHolidaysForYear(z.country, year);
-            const found = list.find(h => h.date === isoToday);
+            const found = list.find(h => h.date === localDate);
             if (found) {
               out.push(`<span class="inline-block mr-4"><strong>${z.label}:</strong> 🎉 ${found.localName}</span>`);
             }
@@ -237,13 +245,19 @@
           }
         }
         const div = document.getElementById('holidays');
-        if (div && out.length > 0) {
-          div.innerHTML = '<div class="bg-amber-50 border border-amber-200 rounded-lg px-4 py-2"><i class="fas fa-calendar-day mr-2 text-amber-600"></i>' + out.join('') + '</div>';
+        if (div) {
+          if (out.length > 0) {
+            div.innerHTML = '<div class="bg-amber-50 border border-amber-200 rounded-lg px-4 py-2"><i class="fas fa-calendar-day mr-2 text-amber-600"></i>' + out.join('') + '</div>';
+          } else {
+            // 祝日がない場合は表示をクリア
+            div.innerHTML = '';
+          }
         }
       }
 
-      // 祝日チェックを実行（任意・コメントアウトで無効化可能）
+      // 祝日チェックを実行（初回と1時間ごとに更新）
       checkHolidays();
+      setInterval(checkHolidays, 3600000); // 1時間 = 3600000ミリ秒
 
       /* -------------------------
          時間帯別メッセージ表示
