@@ -198,13 +198,13 @@
           <input 
             type="text" 
             id="freewordSearch" 
-            placeholder="疾患名、疾患略語、クライアント、薬剤名などで検索..."
+            placeholder="疾患名、PJ番号、クライアント、薬剤名などで検索（複数キーワード可）..."
             class="w-full px-4 py-2 pr-10 rounded-lg text-gray-800 shadow-md focus:outline-none" style="border: 2px solid #1F7A85; font-size: 14px;"
           >
           <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" style="font-size: 14px;"></i>
         </div>
         <p class="text-xs mt-1" style="color: #5a6c7d;">
-          💡 例: 「アルツハイマー」「AD」「T2DM」「The Link Group」
+          💡 複数キーワードでAND検索: 「アルツハイマー病 The Link Group」「T2DM PJ-2024」
         </p>
       </div>
 
@@ -223,11 +223,13 @@
       <div class="flex items-center space-x-3">
         <label class="text-xs font-medium text-gray-700">並び替え:</label>
         <select id="sortBy" onchange="sortAndRender()" class="px-3 py-1.5 border-2 rounded-lg text-xs" style="border-color: #1F7A85;">
-          <option value="newest">新しい順</option>
-          <option value="oldest">古い順</option>
-          <option value="recruits-desc">実績数（多い順）</option>
-          <option value="recruits-asc">実績数（少ない順）</option>
-          <option value="disease-asc">疾患名（あいうえお順）</option>
+          <option value="reg-date-desc">📅 登録日（新しい順）</option>
+          <option value="reg-date-asc">📅 登録日（古い順）</option>
+          <option value="impl-date-desc">🗓️ 実施年月（新しい順）</option>
+          <option value="impl-date-asc">🗓️ 実施年月（古い順）</option>
+          <option value="recruits-desc">👥 実績数（多い順）</option>
+          <option value="recruits-asc">👥 実績数（少ない順）</option>
+          <option value="disease-asc">🏥 疾患名（あいうえお順）</option>
         </select>
       </div>
       <button onclick="exportFilteredCSV()" class="px-4 py-1.5 bg-green-500 text-white rounded-lg hover:bg-green-600 transition shadow-md text-xs">
@@ -607,26 +609,38 @@
         });
       }
 
-      // フリーワード検索（専門科の略語検索にも対応）
+      // フリーワード検索（複数キーワードAND検索対応）
       if (currentFilters.freeword) {
-        const term = currentFilters.freeword.toLowerCase();
+        const keywords = currentFilters.freeword.trim().split(/\s+/).filter(k => k);
+        
         projects = projects.filter(p => {
-          // 専門科の略語検索（SpecialtyDictionary活用）
-          const specialtyMatch = (typeof SpecialtyDictionary !== 'undefined')
-            ? SpecialtyDictionary.matchesProject(p, term)
-            : (p.specialty || '').toLowerCase().includes(term);
+          // 検索対象テキストを結合
+          const searchableText = [
+            p.diseaseName || '',
+            p.diseaseAbbr || '',
+            p.targetType || '',
+            p.client || '',
+            p.endClient || '',
+            p.drug || '',
+            p.method || '',
+            p.specialty || '',
+            p.recruitCompany || '',
+            p.targetConditions || '',
+            p.projectNumber || '',  // PJ番号を追加
+            p.implementationDate || ''
+          ].join(' ').toLowerCase();
           
-          return (
-            (p.diseaseName || '').toLowerCase().includes(term) ||
-            (p.diseaseAbbr || '').toLowerCase().includes(term) ||
-            (p.targetType || '').toLowerCase().includes(term) ||
-            (p.client || '').toLowerCase().includes(term) ||
-            (p.drug || '').toLowerCase().includes(term) ||
-            (p.method || '').toLowerCase().includes(term) ||
-            specialtyMatch ||  // 専門科の略語検索対応
-            (p.recruitCompany || '').toLowerCase().includes(term) ||
-            (p.targetConditions || '').toLowerCase().includes(term)
-          );
+          // 専門科の略語検索も含める
+          const specialtyMatch = (typeof SpecialtyDictionary !== 'undefined')
+            ? keywords.some(keyword => SpecialtyDictionary.matchesProject(p, keyword))
+            : false;
+          
+          // すべてのキーワードが含まれているかチェック（AND検索）
+          return keywords.every(keyword => {
+            const term = keyword.toLowerCase();
+            return searchableText.includes(term) || 
+                   (specialtyMatch && SpecialtyDictionary.matchesProject(p, keyword));
+          });
         });
       }
 
@@ -645,11 +659,21 @@
       let sorted = [...filteredProjects];
 
       switch(sortBy) {
-        case 'newest':
+        case 'reg-date-desc':
+          // 登録日（新しい順）- registrationId で降順ソート
           sorted.sort((a, b) => compareProjectDates(b, a));
           break;
-        case 'oldest':
+        case 'reg-date-asc':
+          // 登録日（古い順）- registrationId で昇順ソート
           sorted.sort((a, b) => compareProjectDates(a, b));
+          break;
+        case 'impl-date-desc':
+          // 実施年月（新しい順）
+          sorted.sort((a, b) => compareImplementationDates(b, a));
+          break;
+        case 'impl-date-asc':
+          // 実施年月（古い順）
+          sorted.sort((a, b) => compareImplementationDates(a, b));
           break;
         case 'recruits-desc':
           sorted.sort((a, b) => b.recruitCount - a.recruitCount);
@@ -1210,6 +1234,39 @@
       
       // registrationIdで文字列比較（降順用）
       return firstId.localeCompare(secondId);
+    }
+
+    // 実施年月で比較
+    function compareImplementationDates(first, second) {
+      const firstDate = parseImplementationDate(first.implementationDate);
+      const secondDate = parseImplementationDate(second.implementationDate);
+      
+      // どちらも日付がない場合
+      if (!firstDate && !secondDate) return 0;
+      if (!firstDate) return 1;   // 日付なしは後ろ
+      if (!secondDate) return -1; // 日付なしは後ろ
+      
+      // タイムスタンプで比較
+      return firstDate - secondDate;
+    }
+
+    // 実施年月をDate型に変換
+    function parseImplementationDate(dateStr) {
+      if (!dateStr) return null;
+      
+      // yyyy/mm/dd 形式
+      if (/^\d{4}\/\d{1,2}\/\d{1,2}$/.test(dateStr)) {
+        return new Date(dateStr.replace(/\//g, '-'));
+      }
+      
+      // yyyy/mm 形式（1日として扱う）
+      if (/^\d{4}\/\d{1,2}$/.test(dateStr)) {
+        return new Date(dateStr.replace(/\//g, '-') + '-01');
+      }
+      
+      // その他の日付形式
+      const timestamp = new Date(dateStr).getTime();
+      return isNaN(timestamp) ? null : new Date(timestamp);
     }
 
     function getProjectDateValue(project) {
