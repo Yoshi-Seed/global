@@ -85,6 +85,51 @@
       color: #5a6c7d;
       font-size: 0.8rem;
     }
+
+    /* テーブルビュー */
+    #projectTable table {
+      border-collapse: collapse;
+    }
+
+    #projectTable tbody tr {
+      border-bottom: 1px solid #e5e7eb;
+      transition: background-color 0.2s ease;
+    }
+
+    #projectTable tbody tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+
+    #projectTable tbody tr:hover {
+      background-color: #e0f2f4;
+      cursor: pointer;
+    }
+
+    #projectTable td {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 200px;
+    }
+
+    /* ビュー切り替えボタン */
+    .view-toggle-btn {
+      border: none;
+    }
+
+    .view-toggle-btn.active {
+      background: #1F7A85 !important;
+      color: white !important;
+    }
+
+    .view-toggle-btn:not(.active) {
+      background: white !important;
+      color: #1F7A85 !important;
+    }
+
+    .view-toggle-btn:not(.active):hover {
+      background: #e0f2f4 !important;
+    }
   </style>
 </head>
 <body class="bg-gray-50">
@@ -199,8 +244,16 @@
             type="text" 
             id="freewordSearch" 
             placeholder="疾患名、PJ番号、クライアント、薬剤名などで検索（複数キーワード可）..."
-            class="w-full px-4 py-2 pr-10 rounded-lg text-gray-800 shadow-md focus:outline-none" style="border: 2px solid #1F7A85; font-size: 14px;"
+            class="w-full px-4 py-2 pr-20 rounded-lg text-gray-800 shadow-md focus:outline-none" style="border: 2px solid #1F7A85; font-size: 14px;"
           >
+          <button 
+            id="clearSearchBtn"
+            onclick="clearSearch()" 
+            class="absolute right-10 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-red-500 transition hidden"
+            title="検索をクリア"
+          >
+            <i class="fas fa-times-circle" style="font-size: 16px;"></i>
+          </button>
           <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" style="font-size: 14px;"></i>
         </div>
         <p class="text-xs mt-1" style="color: #5a6c7d;">
@@ -218,8 +271,8 @@
       </div>
     </div>
 
-    <!-- ソート・エクスポート -->
-    <div class="flex items-center justify-between mb-4">
+    <!-- ソート・表示切替・エクスポート -->
+    <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
       <div class="flex items-center space-x-3">
         <label class="text-xs font-medium text-gray-700">並び替え:</label>
         <select id="sortBy" onchange="sortAndRender()" class="px-3 py-1.5 border-2 rounded-lg text-xs" style="border-color: #1F7A85;">
@@ -232,14 +285,62 @@
           <option value="disease-asc">🏥 疾患名（あいうえお順）</option>
         </select>
       </div>
-      <button onclick="exportFilteredCSV()" class="px-4 py-1.5 bg-green-500 text-white rounded-lg hover:bg-green-600 transition shadow-md text-xs">
-        <i class="fas fa-file-csv mr-1"></i>CSV出力
-      </button>
+      
+      <div class="flex items-center space-x-3">
+        <!-- 表示切替トグル -->
+        <div class="flex items-center space-x-2">
+          <label class="text-xs font-medium text-gray-700">表示:</label>
+          <div class="inline-flex rounded-lg border-2 overflow-hidden" style="border-color: #1F7A85;">
+            <button 
+              id="viewCardBtn"
+              onclick="switchView('card')" 
+              class="px-3 py-1.5 text-xs font-semibold transition view-toggle-btn active"
+              style="background: #1F7A85; color: white;"
+            >
+              <i class="fas fa-th-large mr-1"></i>カード
+            </button>
+            <button 
+              id="viewTableBtn"
+              onclick="switchView('table')" 
+              class="px-3 py-1.5 text-xs font-semibold transition view-toggle-btn"
+              style="background: white; color: #1F7A85;"
+            >
+              <i class="fas fa-table mr-1"></i>テーブル
+            </button>
+          </div>
+        </div>
+        
+        <button onclick="exportFilteredCSV()" class="px-4 py-1.5 bg-green-500 text-white rounded-lg hover:bg-green-600 transition shadow-md text-xs">
+          <i class="fas fa-file-csv mr-1"></i>CSV出力
+        </button>
+      </div>
     </div>
 
     <!-- 案件カード一覧 -->
     <div id="projectCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       <!-- 動的に生成 -->
+    </div>
+
+    <!-- 案件テーブル一覧 -->
+    <div id="projectTable" class="hidden overflow-x-auto bg-white rounded-lg shadow-md">
+      <table class="min-w-full text-xs">
+        <thead class="text-white" style="background: linear-gradient(135deg, #1F7A85 0%, #1a6770 100%);">
+          <tr>
+            <th class="px-3 py-3 text-left font-semibold">No</th>
+            <th class="px-3 py-3 text-left font-semibold">登録ID</th>
+            <th class="px-3 py-3 text-left font-semibold">PJ番号</th>
+            <th class="px-3 py-3 text-left font-semibold">疾患名</th>
+            <th class="px-3 py-3 text-left font-semibold">対象者</th>
+            <th class="px-3 py-3 text-center font-semibold">実績</th>
+            <th class="px-3 py-3 text-left font-semibold">実施年月</th>
+            <th class="px-3 py-3 text-left font-semibold">クライアント</th>
+            <th class="px-3 py-3 text-center font-semibold">操作</th>
+          </tr>
+        </thead>
+        <tbody id="projectTableBody">
+          <!-- 動的に生成 -->
+        </tbody>
+      </table>
     </div>
 
     <!-- ローディング -->
@@ -406,6 +507,7 @@
       freeword: ''
     };
     let currentProjectId = null;
+    let currentView = 'card'; // 'card' or 'table'
 
     // 初期化
     async function init() {
@@ -528,14 +630,61 @@
 
       // フリーワード検索（リアルタイム）
       const freewordInput = document.getElementById('freewordSearch');
+      const clearBtn = document.getElementById('clearSearchBtn');
       let searchTimeout;
+      
       freewordInput.addEventListener('input', (e) => {
+        // クリアボタンの表示/非表示
+        if (e.target.value.trim()) {
+          clearBtn.classList.remove('hidden');
+        } else {
+          clearBtn.classList.add('hidden');
+        }
+        
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(() => {
           currentFilters.freeword = e.target.value.trim();
           applyFilters();
         }, 300); // 300ms後に検索実行
       });
+    }
+
+    // 検索クリア
+    function clearSearch() {
+      const freewordInput = document.getElementById('freewordSearch');
+      const clearBtn = document.getElementById('clearSearchBtn');
+      
+      freewordInput.value = '';
+      clearBtn.classList.add('hidden');
+      currentFilters.freeword = '';
+      applyFilters();
+    }
+
+    // ビュー切り替え
+    function switchView(view) {
+      currentView = view;
+      
+      const cardBtn = document.getElementById('viewCardBtn');
+      const tableBtn = document.getElementById('viewTableBtn');
+      const cardsContainer = document.getElementById('projectCards');
+      const tableContainer = document.getElementById('projectTable');
+      
+      if (view === 'card') {
+        // カードビュー
+        cardBtn.classList.add('active');
+        tableBtn.classList.remove('active');
+        cardsContainer.classList.remove('hidden');
+        tableContainer.classList.add('hidden');
+      } else {
+        // テーブルビュー
+        tableBtn.classList.add('active');
+        cardBtn.classList.remove('active');
+        cardsContainer.classList.add('hidden');
+        tableContainer.classList.remove('hidden');
+      }
+      
+      // 再レンダリング
+      sortAndRender();
     }
 
     // 対象者フィルター選択
@@ -686,7 +835,12 @@
           break;
       }
 
-      renderProjectCards(sorted);
+      // ビューに応じてレンダリング
+      if (currentView === 'card') {
+        renderProjectCards(sorted);
+      } else {
+        renderProjectTable(sorted);
+      }
     }
 
     // 案件カード表示
@@ -778,6 +932,66 @@
       `;
 
       return card;
+    }
+
+    // プロジェクトテーブルレンダリング
+    function renderProjectTable(projects) {
+      const tbody = document.getElementById('projectTableBody');
+      const noResults = document.getElementById('noResults');
+      
+      tbody.innerHTML = '';
+
+      if (projects.length === 0) {
+        document.getElementById('projectTable').classList.add('hidden');
+        noResults.classList.remove('hidden');
+        return;
+      }
+
+      document.getElementById('projectTable').classList.remove('hidden');
+      noResults.classList.add('hidden');
+
+      projects.forEach((project, index) => {
+        const row = document.createElement('tr');
+        row.onclick = () => showProjectDetail(project.id);
+        
+        const targetTypeBadgeClass = getTargetTypeBadgeClass(project.targetType);
+        
+        row.innerHTML = `
+          <td class="px-3 py-3 text-gray-600">${project.id}</td>
+          <td class="px-3 py-3 text-gray-800 font-mono text-xs">${project.registrationId || '-'}</td>
+          <td class="px-3 py-3 text-gray-800 font-mono text-xs">${project.projectNumber || '-'}</td>
+          <td class="px-3 py-3 text-gray-900 font-semibold" style="max-width: 250px;" title="${project.diseaseName}">
+            ${truncate(project.diseaseName, 35)}
+            ${project.diseaseAbbr ? `<span class="ml-1 text-xs" style="color: #1F7A85;">(${project.diseaseAbbr})</span>` : ''}
+          </td>
+          <td class="px-3 py-3">
+            <span class="badge ${targetTypeBadgeClass} px-2 py-1 rounded-full font-semibold text-xs">
+              ${project.targetType}
+            </span>
+          </td>
+          <td class="px-3 py-3 text-center">
+            ${project.inquiryOnly === 'TRUE' || project.inquiryOnly === true ? 
+              `<span class="text-red-600 font-bold">${project.recruitCount}</span>` :
+              `<span class="text-green-600 font-bold">${project.recruitCount}</span>`
+            }
+          </td>
+          <td class="px-3 py-3 text-gray-700">${formatImplementationDate(project.implementationDate) || '-'}</td>
+          <td class="px-3 py-3 text-gray-700" style="max-width: 180px;" title="${project.client || '-'}">
+            ${truncate(project.client || '-', 25)}
+          </td>
+          <td class="px-3 py-3 text-center">
+            <button 
+              onclick="event.stopPropagation(); showProjectDetail(${project.id});" 
+              class="px-3 py-1 text-xs text-white rounded hover:opacity-80 transition"
+              style="background-color: #1F7A85;"
+            >
+              <i class="fas fa-eye mr-1"></i>詳細
+            </button>
+          </td>
+        `;
+        
+        tbody.appendChild(row);
+      });
     }
 
     // 案件詳細モーダル表示
