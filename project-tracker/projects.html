@@ -283,6 +283,7 @@
           <option value="recruits-desc">👥 実績数（多い順）</option>
           <option value="recruits-asc">👥 実績数（少ない順）</option>
           <option value="disease-asc">🏥 疾患名（あいうえお順）</option>
+          <option value="client-asc">🏢 クライアント（アルファベット順）</option>
         </select>
       </div>
       
@@ -832,6 +833,14 @@
           break;
         case 'disease-asc':
           sorted.sort((a, b) => (a.diseaseName || '').localeCompare(b.diseaseName || '', 'ja'));
+          break;
+        case 'client-asc':
+          // クライアント（アルファベット順）
+          sorted.sort((a, b) => {
+            const clientA = (a.client || '').toLowerCase();
+            const clientB = (b.client || '').toLowerCase();
+            return clientA.localeCompare(clientB, 'en');
+          });
           break;
       }
 
