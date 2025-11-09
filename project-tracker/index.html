@@ -272,6 +272,9 @@
      * 直近3ヵ月の期間を取得（前月確定ローリング）
      * 例：今日が2025/11/9 → 前月=10月 → 直近3ヶ月 = 8月, 9月, 10月
      * 計算方法: 現在月から1ヶ月、2ヶ月、3ヶ月前
+     * 
+     * 注意: toISOString()はUTCを使うためタイムゾーンでずれる問題があり、
+     * ローカルの年月を直接使用する
      */
     function getRecentThreeMonths() {
       const today = new Date();
@@ -279,7 +282,7 @@
       const currentMonth = today.getMonth(); // 0-based (0=Jan, 10=Nov)
       
       console.log('[getRecentThreeMonths] ======== START ========');
-      console.log('[getRecentThreeMonths] Today:', today.toISOString());
+      console.log('[getRecentThreeMonths] Today:', today.toString());
       console.log('[getRecentThreeMonths] Current year:', currentYear);
       console.log('[getRecentThreeMonths] Current month (0-based):', currentMonth, '(November=10)');
       
@@ -287,9 +290,12 @@
       // 直近3ヶ月 = 現在月から3ヶ月前、2ヶ月前、1ヶ月前
       for (let i = 3; i >= 1; i--) {
         const d = new Date(currentYear, currentMonth - i, 1);
-        const monthStr = d.toISOString().substring(0, 7); // YYYY-MM
+        // UTC変換を避けて、ローカルの年月を直接使用
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0'); // 1-based, 0埋め
+        const monthStr = `${year}-${month}`;
         months.push(monthStr);
-        console.log(`[getRecentThreeMonths]   ${i}ヶ月前: ${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')} → ${monthStr}`);
+        console.log(`[getRecentThreeMonths]   ${i}ヶ月前: year=${year}, month=${d.getMonth() + 1} → ${monthStr}`);
       }
       
       console.log('[getRecentThreeMonths] Result:', months);
@@ -314,12 +320,16 @@
      */
     function getRecentSixMonths() {
       const today = new Date();
-      const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+      const currentYear = today.getFullYear();
+      const currentMonth = today.getMonth();
       
       const months = [];
-      for (let i = 5; i >= 0; i--) {
-        const d = new Date(lastMonth.getFullYear(), lastMonth.getMonth() - i, 1);
-        months.push(d.toISOString().substring(0, 7));
+      for (let i = 6; i >= 1; i--) {
+        const d = new Date(currentYear, currentMonth - i, 1);
+        // UTC変換を避けて、ローカルの年月を直接使用
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        months.push(`${year}-${month}`);
       }
       return months;
     }
