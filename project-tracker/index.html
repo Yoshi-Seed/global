@@ -252,10 +252,276 @@
       }
     }
 
+    // ==========================================
+    // Phase 1: 期間比較データ集計ロジック
+    // ==========================================
+    
+    /**
+     * 直近3ヵ月の期間を取得（前月確定）
+     * 例：今日が2025/11/9 → 2025/8-10月
+     */
+    function getRecentThreeMonths() {
+      const today = new Date();
+      const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+      
+      const months = [];
+      for (let i = 2; i >= 0; i--) {
+        const d = new Date(lastMonth.getFullYear(), lastMonth.getMonth() - i, 1);
+        months.push(d.toISOString().substring(0, 7)); // YYYY-MM
+      }
+      return months;
+    }
+    
+    /**
+     * 昨年同時期の3ヵ月を取得
+     */
+    function getYoYThreeMonths() {
+      const recentMonths = getRecentThreeMonths();
+      return recentMonths.map(month => {
+        const [year, m] = month.split('-');
+        return `${parseInt(year) - 1}-${m}`;
+      });
+    }
+    
+    /**
+     * 直近6ヵ月の期間を取得（スパークライン用）
+     */
+    function getRecentSixMonths() {
+      const today = new Date();
+      const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+      
+      const months = [];
+      for (let i = 5; i >= 0; i--) {
+        const d = new Date(lastMonth.getFullYear(), lastMonth.getMonth() - i, 1);
+        months.push(d.toISOString().substring(0, 7));
+      }
+      return months;
+    }
+    
+    /**
+     * プロジェクトを月別に集計
+     */
+    function aggregateByMonth(projects, fieldName) {
+      const monthlyData = {};
+      
+      // 診療科フィールドの完全一致除外リスト（対象者タイプや調査手法など）
+      const EXACT_EXCLUDE_VALUES = [
+        '医師', '患者', '介護者', 'KOL', '看護師', 
+        '定性', '定量', '薬剤師', 'その他', '家族'
+      ];
+      
+      // 診療科の部分一致パターン（診療科名に含まれる典型的なキーワード）
+      const SPECIALTY_KEYWORDS = [
+        '内科', '外科', '科医', '医', '専門医', // 「○○科」「○○医」を含むものを許可
+        '腫瘍', '循環器', '消化器', '呼吸器', '神経', '精神', 
+        '小児', '産婦人科', '整形', '皮膚', '泌尿器', '眼科', 
+        '耳鼻', '麻酔', '放射線', '救急', '総合', 'リウマチ', 
+        '腎臓', '血液', '内分泌', '糖尿病', '乳腺', '心臓', 
+        '脳神経', 'リハビリ', '病理', 'アレルギー', '代謝',
+        '肝臓', '甲状腺', '診療'
+      ];
+      
+      projects.forEach(project => {
+        // 実施年月をパース
+        let month = null;
+        if (project.implementationDate) {
+          const dateStr = project.implementationDate.trim();
+          
+          // パターン1: yyyy/mm または yyyy/mm/dd 形式
+          if (/^\d{4}\/\d{1,2}/.test(dateStr)) {
+            const parts = dateStr.split('/');
+            const year = parts[0];
+            const m = parts[1].padStart(2, '0');
+            month = `${year}-${m}`;
+          }
+          // パターン2: yyyy-mm または yyyy-mm-dd 形式
+          else if (/^\d{4}-\d{1,2}/.test(dateStr)) {
+            const parts = dateStr.split('-');
+            const year = parts[0];
+            const m = parts[1].padStart(2, '0');
+            month = `${year}-${m}`;
+          }
+          // パターン3: yyyy/m（スラッシュのみ、日付なし）
+          else if (/^\d{4}\/\d{1,2}$/.test(dateStr)) {
+            const parts = dateStr.split('/');
+            const year = parts[0];
+            const m = parts[1].padStart(2, '0');
+            month = `${year}-${m}`;
+          }
+          // パターン4: その他の形式（Date()でパース試行）
+          else {
+            const date = new Date(dateStr);
+            if (!isNaN(date.getTime())) {
+              month = date.toISOString().substring(0, 7);
+            }
+          }
+        }
+        
+        if (!month) return; // 日付が不正な場合はスキップ
+        
+        let fieldValue = project[fieldName];
+        if (!fieldValue || fieldValue.trim() === '') return; // 空の値はスキップ
+        
+        fieldValue = fieldValue.trim();
+        
+        // 診療科フィールドの場合は、非診療科の値を除外
+        if (fieldName === 'specialty') {
+          // 完全一致での除外チェック（「医師」単体は除外、「内科医」は許可）
+          if (EXACT_EXCLUDE_VALUES.includes(fieldValue)) {
+            console.log(`Excluding exact match: "${fieldValue}"`);
+            return; // 非診療科の値はスキップ
+          }
+          
+          // 診療科キーワードが含まれているかチェック（部分一致）
+          const hasSpecialtyKeyword = SPECIALTY_KEYWORDS.some(keyword => 
+            fieldValue.includes(keyword)
+          );
+          
+          // 診療科キーワードが含まれていない場合もスキップ
+          if (!hasSpecialtyKeyword) {
+            console.log(`Skipping non-specialty value: "${fieldValue}"`);
+            return;
+          }
+          
+          console.log(`Including specialty: "${fieldValue}"`);
+        }
+        
+        if (!monthlyData[month]) {
+          monthlyData[month] = {};
+        }
+        if (!monthlyData[month][fieldValue]) {
+          monthlyData[month][fieldValue] = 0;
+        }
+        monthlyData[month][fieldValue]++;
+      });
+      
+      return monthlyData;
+    }
+    
+    /**
+     * 期間比較データを生成
+     */
+    function generateComparisonData(projects, fieldName) {
+      console.log(`generateComparisonData for ${fieldName}:`, {
+        totalProjects: projects.length,
+        sampleDates: projects.slice(0, 5).map(p => p.implementationDate)
+      });
+      
+      const monthlyData = aggregateByMonth(projects, fieldName);
+      console.log(`Monthly data for ${fieldName}:`, Object.keys(monthlyData).sort());
+      
+      const recentMonths = getRecentThreeMonths();
+      const yoyMonths = getYoYThreeMonths();
+      const sixMonths = getRecentSixMonths();
+      
+      console.log(`Periods:`, { recentMonths, yoyMonths });
+      
+      // 直近3ヵ月の集計
+      const currData = {};
+      recentMonths.forEach(month => {
+        if (monthlyData[month]) {
+          console.log(`  ${month} data:`, monthlyData[month]);
+          Object.entries(monthlyData[month]).forEach(([key, count]) => {
+            currData[key] = (currData[key] || 0) + count;
+          });
+        }
+      });
+      
+      console.log(`Current period (${fieldName}) aggregated data:`, currData);
+      
+      // 昨年同時期の集計
+      const prevData = {};
+      yoyMonths.forEach(month => {
+        if (monthlyData[month]) {
+          console.log(`  ${month} data (YoY):`, monthlyData[month]);
+          Object.entries(monthlyData[month]).forEach(([key, count]) => {
+            prevData[key] = (prevData[key] || 0) + count;
+          });
+        }
+      });
+      
+      console.log(`Previous period (${fieldName}) aggregated data:`, prevData);
+      
+      // 直近6ヵ月の月別推移（スパークライン用）
+      const sparklineData = {};
+      sixMonths.forEach(month => {
+        if (monthlyData[month]) {
+          Object.entries(monthlyData[month]).forEach(([key, count]) => {
+            if (!sparklineData[key]) sparklineData[key] = [];
+            sparklineData[key].push(count);
+          });
+        }
+      });
+      
+      // 比較データを生成
+      const allKeys = new Set([...Object.keys(currData), ...Object.keys(prevData)]);
+      const comparison = [];
+      
+      allKeys.forEach(key => {
+        const curr = currData[key] || 0;
+        const prev = prevData[key] || 0;
+        const delta = curr - prev;
+        const yoyPercent = prev > 0 ? ((delta / prev) * 100) : null;
+        
+        // 全体に対する構成比
+        const currTotal = Object.values(currData).reduce((sum, v) => sum + v, 0);
+        const prevTotal = Object.values(prevData).reduce((sum, v) => sum + v, 0);
+        const currShare = currTotal > 0 ? (curr / currTotal) * 100 : 0;
+        const prevShare = prevTotal > 0 ? (prev / prevTotal) * 100 : 0;
+        const shareDelta = currShare - prevShare;
+        
+        comparison.push({
+          name: key,
+          curr: curr,
+          prev: prev,
+          delta: delta,
+          yoyPercent: yoyPercent,
+          currShare: currShare,
+          prevShare: prevShare,
+          shareDelta: shareDelta,
+          sparkline: sparklineData[key] || []
+        });
+      });
+      
+      console.log(`${fieldName} comparison before filtering (${comparison.length} items):`, comparison);
+      
+      // ノイズ抑制フィルター：フィールドごとに基準を調整
+      const filtered = comparison.filter(item => {
+        if (fieldName === 'specialty' || fieldName === 'diseaseName') {
+          // 診療科と疾患カテゴリーは少なくとも1件あればOK（データが少ないため）
+          return item.prev >= 1 || item.curr >= 1;
+        } else if (fieldName === 'client') {
+          // クライアントも緩めの基準
+          return item.prev >= 2 || item.curr >= 3;
+        } else {
+          // その他のフィールドは厳しい基準：Prev<5 かつ Curr<8 は除外
+          return item.prev >= 5 || item.curr >= 8;
+        }
+      });
+      
+      console.log(`${fieldName} comparison after filtering (${filtered.length} items):`, filtered);
+      
+      // 件数順でソート
+      filtered.sort((a, b) => b.curr - a.curr);
+      
+      const result = {
+        data: filtered,
+        recentPeriod: recentMonths,
+        yoyPeriod: yoyMonths,
+        currTotal: Object.values(currData).reduce((sum, v) => sum + v, 0),
+        prevTotal: Object.values(prevData).reduce((sum, v) => sum + v, 0)
+      };
+      
+      console.log(`${fieldName} final result:`, result);
+      
+      return result;
+    }
+
     // 統計情報を読み込み
     async function loadStatistics() {
       try {
         const stats = await api.getStats();
+        const allProjects = await api.getAllProjects();
 
         // データがない場合はインポートバナーを表示
         if (stats.totalProjects === 0) {
@@ -271,17 +537,20 @@
         const thisMonth = new Date().toISOString().substring(0, 7);
         document.getElementById('thisMonthProjects').textContent = stats.monthlyTrend[thisMonth] || 0;
 
-        // 対象者タイプ別分布
+        // 対象者タイプ別分布（既存ロジック維持）
         renderTargetTypeChart(stats.targetTypeDistribution);
 
-        // クライアント Top 5
-        renderClientChart(stats.clientDistribution);
+        // 【新ロジック】疾患カテゴリー Top 5（期間比較）
+        const diseaseComparison = generateComparisonData(allProjects, 'diseaseName');
+        renderDiseaseChartWithComparison(diseaseComparison);
 
-        // 疾患カテゴリー Top 5
-        renderDiseaseChart(stats.diseaseDistribution);
+        // 【新ロジック】専門（診療科）Top 5（期間比較）
+        const specialtyComparison = generateComparisonData(allProjects, 'specialty');
+        renderSpecialtyChartWithComparison(specialtyComparison);
 
-        // 専門（診療科）Top 5
-        renderSpecialtyChart(stats.specialtyDistribution);
+        // 【新ロジック】クライアント Top 5（期間比較）
+        const clientComparison = generateComparisonData(allProjects, 'client');
+        renderClientChartWithComparison(clientComparison);
 
         // 最近のプロジェクト
         renderRecentProjects(stats.recentProjects);
@@ -331,6 +600,119 @@
           </div>
         `;
       });
+    }
+
+    // ==========================================
+    // Phase 2: 期間比較UI（二重バー + Δバッジ）
+    // ==========================================
+    
+    /**
+     * 期間比較カードを生成（共通関数）
+     */
+    function renderComparisonChart(container, comparisonResult, colorClass = 'bg-blue-500') {
+      const { data, recentPeriod, yoyPeriod, currTotal, prevTotal } = comparisonResult;
+      
+      console.log('renderComparisonChart called:', { 
+        dataCount: data.length, 
+        currTotal, 
+        prevTotal,
+        recentPeriod,
+        yoyPeriod,
+        sampleData: data.slice(0, 3)
+      });
+      
+      container.innerHTML = '';
+      
+      // 期間表示
+      const periodInfo = `
+        <div class="text-xs text-gray-500 mb-3 flex items-center justify-between">
+          <span>直近3ヵ月: ${recentPeriod[0]}〜${recentPeriod[2]} (${currTotal}件)</span>
+          <span>昨年同時期: ${yoyPeriod[0]}〜${yoyPeriod[2]} (${prevTotal}件)</span>
+        </div>
+      `;
+      container.innerHTML = periodInfo;
+      
+      if (data.length === 0) {
+        container.innerHTML += '<p class="text-gray-500 text-center py-4">データがありません</p>';
+        return;
+      }
+      
+      // Top 5のみ表示
+      data.slice(0, 5).forEach((item) => {
+        const maxCount = Math.max(item.curr, item.prev);
+        const currPercent = maxCount > 0 ? (item.curr / maxCount) * 100 : 0;
+        const prevPercent = maxCount > 0 ? (item.prev / maxCount) * 100 : 0;
+        
+        // Δバッジの生成
+        let deltaBadge = '';
+        if (item.prev === 0) {
+          // 新規台頭
+          deltaBadge = `<span class="px-2 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded">新規台頭</span>`;
+        } else if (item.delta > 0) {
+          deltaBadge = `<span class="px-2 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded">+${item.delta}件 (+${item.yoyPercent.toFixed(1)}%)</span>`;
+        } else if (item.delta < 0) {
+          deltaBadge = `<span class="px-2 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded">${item.delta}件 (${item.yoyPercent.toFixed(1)}%)</span>`;
+        } else {
+          deltaBadge = `<span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded">変動なし</span>`;
+        }
+        
+        // 構成比差
+        const shareText = item.shareDelta !== 0 
+          ? `<span class="text-xs ${item.shareDelta > 0 ? 'text-green-600' : 'text-red-600'}">(${item.shareDelta > 0 ? '+' : ''}${item.shareDelta.toFixed(1)}pt)</span>`
+          : '';
+        
+        container.innerHTML += `
+          <div class="mb-4">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-sm font-medium text-gray-700">${item.name}</span>
+              <div class="flex items-center space-x-2">
+                ${deltaBadge}
+                ${shareText}
+              </div>
+            </div>
+            <div class="relative">
+              <!-- 下地バー（昨年同時期） -->
+              <div class="w-full bg-gray-200 rounded-full h-6 mb-1">
+                <div class="${colorClass} opacity-30 h-6 rounded-full transition-all duration-500" style="width: ${prevPercent}%"></div>
+              </div>
+              <!-- 濃色バー（直近3ヵ月） -->
+              <div class="w-full absolute top-0 left-0">
+                <div class="${colorClass} h-6 rounded-full transition-all duration-500 flex items-center justify-end pr-2" style="width: ${currPercent}%">
+                  <span class="text-white text-xs font-bold">${item.curr}件</span>
+                </div>
+              </div>
+            </div>
+            <div class="flex justify-between text-xs text-gray-500 mt-1">
+              <span>昨年: ${item.prev}件</span>
+              <span>構成比: ${item.currShare.toFixed(1)}%</span>
+            </div>
+          </div>
+        `;
+      });
+    }
+    
+    /**
+     * 疾患カテゴリー Top 5（期間比較版）
+     */
+    function renderDiseaseChartWithComparison(comparisonResult) {
+      const container = document.getElementById('diseaseChart');
+      renderComparisonChart(container, comparisonResult, 'bg-red-500');
+    }
+    
+    /**
+     * 専門（診療科）Top 5（期間比較版）
+     */
+    function renderSpecialtyChartWithComparison(comparisonResult) {
+      const container = document.getElementById('specialtyChart');
+      renderComparisonChart(container, comparisonResult, 'bg-indigo-500');
+    }
+    
+    /**
+     * クライアント Top 5（期間比較版）
+     */
+    function renderClientChartWithComparison(comparisonResult) {
+      const container = document.getElementById('clientChart');
+      renderComparisonChart(container, comparisonResult, 'bg-yellow-500');
     }
 
     // クライアント Top 5
