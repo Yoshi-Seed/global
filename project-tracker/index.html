@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>プロジェクト履歴管理システム - ダッシュボード</title>
-  <!-- Version: 2025-11-09-v2 期間計算修正版 -->
+  <!-- Version: 2025-11-09-final 期間比較分析システム本番版 -->
   <link rel="icon" type="image/png" href="SP_logo_shape%20only.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -50,17 +50,6 @@
 
   <!-- メインコンテンツ -->
   <div class="container mx-auto px-4 py-8">
-    
-    <!-- デバッグ情報バナー（開発確認用） -->
-    <div id="debugBanner" class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
-      <div class="flex items-center">
-        <i class="fas fa-info-circle text-yellow-400 mr-3"></i>
-        <div class="text-sm">
-          <strong>バージョン:</strong> 2025-11-09-v2 (期間計算修正版) | 
-          <strong>期間確認:</strong> <span id="debugPeriod" class="font-mono text-blue-600">読み込み中...</span>
-        </div>
-      </div>
-    </div>
     
     <!-- データインポート促進バナー -->
     <div id="importBanner" class="hidden bg-gradient-to-r from-purple-500 to-blue-600 text-white rounded-lg shadow-lg p-6 mb-8">
@@ -167,7 +156,7 @@
       <div class="bg-white rounded-lg shadow-md p-6">
         <h2 class="text-xl font-bold mb-4 flex items-center">
           <i class="fas fa-heartbeat mr-2 text-red-600"></i>
-          疾患カテゴリー Top 5
+          疾患カテゴリー Top 5 <span class="text-sm font-normal text-gray-500 ml-2">（過去3ヵ月比較）</span>
         </h2>
         <div id="diseaseChart" class="space-y-3">
           <!-- 動的に生成 -->
@@ -178,7 +167,7 @@
       <div class="bg-white rounded-lg shadow-md p-6">
         <h2 class="text-xl font-bold mb-4 flex items-center">
           <i class="fas fa-user-md mr-2 text-indigo-600"></i>
-          専門（診療科）Top 5
+          専門（診療科）Top 5 <span class="text-sm font-normal text-gray-500 ml-2">（過去3ヵ月比較）</span>
         </h2>
         <div id="specialtyChart" class="space-y-3">
           <!-- 動的に生成 -->
@@ -204,7 +193,7 @@
       <div class="bg-white rounded-lg shadow-md p-6">
         <h2 class="text-xl font-bold mb-4 flex items-center">
           <i class="fas fa-handshake mr-2 text-yellow-600"></i>
-          クライアント Top 5
+          クライアント Top 5 <span class="text-sm font-normal text-gray-500 ml-2">（過去3ヵ月比較）</span>
         </h2>
         <div id="clientChart" class="space-y-3">
           <!-- 動的に生成 -->
@@ -556,26 +545,6 @@
     // 統計情報を読み込み
     async function loadStatistics() {
       try {
-        // 期間計算確認
-        const testPeriods = getRecentThreeMonths();
-        console.log('🔍 [loadStatistics] 計算された期間:', testPeriods);
-        console.log('✅ 期待される期間: [2025-08, 2025-09, 2025-10]');
-        
-        // 期間の妥当性チェック
-        const expectedPeriods = ['2025-08', '2025-09', '2025-10'];
-        const periodsMatch = JSON.stringify(testPeriods) === JSON.stringify(expectedPeriods);
-        console.log(periodsMatch ? '✅ 期間一致!' : '❌ 期間が異なります!');
-        
-        // デバッグバナーに期間を表示
-        const debugElem = document.getElementById('debugPeriod');
-        if (debugElem) {
-          debugElem.textContent = `${testPeriods[0]}〜${testPeriods[2]}`;
-          // 期待通りなら緑、異なるなら赤
-          debugElem.className = periodsMatch 
-            ? 'font-mono text-green-600 font-bold' 
-            : 'font-mono text-red-600 font-bold';
-        }
-        
         const stats = await api.getStats();
         const allProjects = await api.getAllProjects();
 
