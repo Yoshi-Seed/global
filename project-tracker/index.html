@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>プロジェクト履歴管理システム - ダッシュボード</title>
+  <!-- Version: 2025-11-09-v2 期間計算修正版 -->
   <link rel="icon" type="image/png" href="SP_logo_shape%20only.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -49,6 +50,17 @@
 
   <!-- メインコンテンツ -->
   <div class="container mx-auto px-4 py-8">
+    
+    <!-- デバッグ情報バナー（開発確認用） -->
+    <div id="debugBanner" class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+      <div class="flex items-center">
+        <i class="fas fa-info-circle text-yellow-400 mr-3"></i>
+        <div class="text-sm">
+          <strong>バージョン:</strong> 2025-11-09-v2 (期間計算修正版) | 
+          <strong>期間確認:</strong> <span id="debugPeriod" class="font-mono text-blue-600">読み込み中...</span>
+        </div>
+      </div>
+    </div>
     
     <!-- データインポート促進バナー -->
     <div id="importBanner" class="hidden bg-gradient-to-r from-purple-500 to-blue-600 text-white rounded-lg shadow-lg p-6 mb-8">
@@ -524,6 +536,18 @@
     // 統計情報を読み込み
     async function loadStatistics() {
       try {
+        // 期間計算確認
+        const testPeriods = getRecentThreeMonths();
+        console.log('🔍 [loadStatistics] 計算された期間:', testPeriods);
+        console.log('✅ 期待される期間: [2025-08, 2025-09, 2025-10]');
+        
+        // デバッグバナーに期間を表示
+        const debugElem = document.getElementById('debugPeriod');
+        if (debugElem) {
+          debugElem.textContent = `${testPeriods[0]}〜${testPeriods[2]}`;
+          debugElem.className = 'font-mono text-green-600 font-bold';
+        }
+        
         const stats = await api.getStats();
         const allProjects = await api.getAllProjects();
 
