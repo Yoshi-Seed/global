@@ -269,22 +269,32 @@
     // ==========================================
     
     /**
-     * 直近3ヵ月の期間を取得（前月確定）
-     * 例：今日が2025/11/9 → 前月=2025/10 → 2025/08, 2025/09, 2025/10
+     * 直近3ヵ月の期間を取得（前月確定ローリング）
+     * 例：今日が2025/11/9 → 前月=10月 → 直近3ヶ月 = 8月, 9月, 10月
+     * 計算方法: 現在月から1ヶ月、2ヶ月、3ヶ月前
      */
     function getRecentThreeMonths() {
       const today = new Date();
-      const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+      const currentYear = today.getFullYear();
+      const currentMonth = today.getMonth(); // 0-based (0=Jan, 10=Nov)
       
-      console.log('[getRecentThreeMonths] Today:', today.toISOString(), 'Last month:', lastMonth.toISOString());
+      console.log('[getRecentThreeMonths] ======== START ========');
+      console.log('[getRecentThreeMonths] Today:', today.toISOString());
+      console.log('[getRecentThreeMonths] Current year:', currentYear);
+      console.log('[getRecentThreeMonths] Current month (0-based):', currentMonth, '(November=10)');
       
       const months = [];
-      for (let i = 2; i >= 0; i--) {
-        const d = new Date(lastMonth.getFullYear(), lastMonth.getMonth() - i, 1);
-        months.push(d.toISOString().substring(0, 7)); // YYYY-MM
+      // 直近3ヶ月 = 現在月から3ヶ月前、2ヶ月前、1ヶ月前
+      for (let i = 3; i >= 1; i--) {
+        const d = new Date(currentYear, currentMonth - i, 1);
+        const monthStr = d.toISOString().substring(0, 7); // YYYY-MM
+        months.push(monthStr);
+        console.log(`[getRecentThreeMonths]   ${i}ヶ月前: ${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')} → ${monthStr}`);
       }
       
       console.log('[getRecentThreeMonths] Result:', months);
+      console.log('[getRecentThreeMonths] Expected: [2025-08, 2025-09, 2025-10]');
+      console.log('[getRecentThreeMonths] ======== END ========');
       return months;
     }
     
@@ -541,11 +551,19 @@
         console.log('🔍 [loadStatistics] 計算された期間:', testPeriods);
         console.log('✅ 期待される期間: [2025-08, 2025-09, 2025-10]');
         
+        // 期間の妥当性チェック
+        const expectedPeriods = ['2025-08', '2025-09', '2025-10'];
+        const periodsMatch = JSON.stringify(testPeriods) === JSON.stringify(expectedPeriods);
+        console.log(periodsMatch ? '✅ 期間一致!' : '❌ 期間が異なります!');
+        
         // デバッグバナーに期間を表示
         const debugElem = document.getElementById('debugPeriod');
         if (debugElem) {
           debugElem.textContent = `${testPeriods[0]}〜${testPeriods[2]}`;
-          debugElem.className = 'font-mono text-green-600 font-bold';
+          // 期待通りなら緑、異なるなら赤
+          debugElem.className = periodsMatch 
+            ? 'font-mono text-green-600 font-bold' 
+            : 'font-mono text-red-600 font-bold';
         }
         
         const stats = await api.getStats();
