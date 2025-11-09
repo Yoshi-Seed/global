@@ -258,17 +258,21 @@
     
     /**
      * 直近3ヵ月の期間を取得（前月確定）
-     * 例：今日が2025/11/9 → 2025/8-10月
+     * 例：今日が2025/11/9 → 前月=2025/10 → 2025/08, 2025/09, 2025/10
      */
     function getRecentThreeMonths() {
       const today = new Date();
       const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+      
+      console.log('[getRecentThreeMonths] Today:', today.toISOString(), 'Last month:', lastMonth.toISOString());
       
       const months = [];
       for (let i = 2; i >= 0; i--) {
         const d = new Date(lastMonth.getFullYear(), lastMonth.getMonth() - i, 1);
         months.push(d.toISOString().substring(0, 7)); // YYYY-MM
       }
+      
+      console.log('[getRecentThreeMonths] Result:', months);
       return months;
     }
     
@@ -646,8 +650,8 @@
         // Δバッジの生成
         let deltaBadge = '';
         if (item.prev === 0) {
-          // 新規台頭
-          deltaBadge = `<span class="px-2 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded">新規台頭</span>`;
+          // 新規
+          deltaBadge = `<span class="px-2 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded">新規</span>`;
         } else if (item.delta > 0) {
           deltaBadge = `<span class="px-2 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded">+${item.delta}件 (+${item.yoyPercent.toFixed(1)}%)</span>`;
         } else if (item.delta < 0) {
