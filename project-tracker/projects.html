@@ -544,6 +544,30 @@
         // データ読み込み
         allProjects = await api.getAllProjects();
         
+        // デバッグ: データ読み込み後の重複チェック
+        console.log(`📊 Total projects loaded: ${allProjects.length}`);
+        const allIds = allProjects.map(p => p.id);
+        const uniqueIds = [...new Set(allIds)];
+        if (allIds.length !== uniqueIds.length) {
+          console.error(`❌ データに重複あり！ Total: ${allIds.length}, Unique: ${uniqueIds.length}`);
+          const duplicates = allIds.filter((id, index) => allIds.indexOf(id) !== index);
+          console.error('重複ID:', duplicates);
+          
+          // 重複を削除
+          const seen = new Set();
+          allProjects = allProjects.filter(p => {
+            if (seen.has(p.id)) {
+              console.warn(`🔧 重複削除: ID ${p.id} - ${p.diseaseName}`);
+              return false;
+            }
+            seen.add(p.id);
+            return true;
+          });
+          console.log(`✅ 重複削除後: ${allProjects.length} projects`);
+        } else {
+          console.log(`✅ データに重複なし`);
+        }
+        
         // 専門科フィルターを生成
         generateSpecialtyFilters();
         
@@ -911,6 +935,14 @@
           hidePagination();
           showLoadMore(sorted);
         }
+      }
+      
+      // デバッグ: 重複チェック
+      const ids = displayProjects.map(p => p.id);
+      const uniqueIds = [...new Set(ids)];
+      if (ids.length !== uniqueIds.length) {
+        console.warn(`⚠️ 重複検出！ Total: ${ids.length}, Unique: ${uniqueIds.length}`);
+        console.warn('重複ID:', ids.filter((id, index) => ids.indexOf(id) !== index));
       }
       
       // ビューに応じてレンダリング
