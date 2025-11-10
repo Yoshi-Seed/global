@@ -131,65 +131,64 @@
       background: #e0f2f4 !important;
     }
     
-    /* アコーディオンスタイル */
-    .accordion-header {
+    /* カテゴリーボタンスタイル（対象者と同じスタイル） */
+    .category-btn {
       transition: all 0.2s ease;
       cursor: pointer;
       user-select: none;
+      background: rgba(31, 122, 133, 0.15);
+      color: #1F7A85;
+      border: 1px solid #1F7A85;
     }
     
-    .accordion-header:hover {
-      background: rgba(255, 255, 255, 0.1);
+    .category-btn:hover {
+      background: rgba(31, 122, 133, 0.25);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(31, 122, 133, 0.2);
     }
     
-    .accordion-header.active {
-      background: rgba(255, 255, 255, 0.15);
+    .category-btn.active {
+      background: white !important;
+      color: #1F7A85 !important;
+      border: 2px solid #1F7A85 !important;
+      box-shadow: 0 4px 12px rgba(31, 122, 133, 0.3) !important;
+      transform: scale(1.05) !important;
     }
     
-    .accordion-content {
+    /* 専門科リスト表示エリア */
+    .specialty-list-container {
       max-height: 0;
       overflow: hidden;
       transition: max-height 0.3s ease;
     }
     
-    .accordion-content.open {
-      max-height: 500px;
+    .specialty-list-container.open {
+      max-height: 300px;
       overflow-y: auto;
     }
     
-    .specialty-chip {
+    /* 専門科ボタン（対象者と同じスタイル） */
+    .specialty-btn {
       transition: all 0.2s ease;
       cursor: pointer;
       user-select: none;
+      background: rgba(31, 122, 133, 0.15);
+      color: #1F7A85;
+      border: 1px solid #1F7A85;
     }
     
-    .specialty-chip:hover {
+    .specialty-btn:hover {
+      background: rgba(31, 122, 133, 0.25);
       transform: translateY(-1px);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 2px 8px rgba(31, 122, 133, 0.2);
     }
     
-    .specialty-chip.selected {
-      background: #1F7A85 !important;
-      color: white !important;
-      border-color: #1F7A85 !important;
-    }
-    
-    .selected-chip {
-      animation: slideIn 0.2s ease-out;
-    }
-    
-    .category-badge {
-      min-width: 28px;
-      height: 20px;
-      font-size: 11px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .category-search-input {
-      font-size: 12px;
-      padding: 4px 8px;
+    .specialty-btn.selected {
+      background: white !important;
+      color: #1F7A85 !important;
+      border: 2px solid #1F7A85 !important;
+      box-shadow: 0 4px 12px rgba(31, 122, 133, 0.3) !important;
+      transform: scale(1.05) !important;
     }
   </style>
 </head>
@@ -276,7 +275,7 @@
         </div>
       </div>
 
-      <!-- Step 2: 専門科フィルター（アコーディオン式） -->
+      <!-- Step 2: 専門科フィルター（コンパクト版） -->
       <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 mb-4">
         <div class="flex items-center mb-3">
           <div class="step-number rounded-full flex items-center justify-center font-bold mr-2">
@@ -285,16 +284,16 @@
           <h3 class="font-bold">専門科で絞り込む（医師のみ・任意）</h3>
         </div>
         
-        <!-- 選択中の専門科チップ表示エリア -->
-        <div id="selectedSpecialtiesChips" class="mb-3 hidden">
-          <div class="flex flex-wrap gap-2" id="selectedSpecialtiesContainer">
-            <!-- 選択された専門科が動的に表示される -->
-          </div>
+        <!-- カテゴリー選択ボタン（横並び） -->
+        <div class="flex flex-wrap gap-2 mb-3" id="categoryButtons">
+          <!-- 動的に生成 -->
         </div>
         
-        <!-- カテゴリー別アコーディオン -->
-        <div id="specialtyAccordion" class="space-y-2">
-          <!-- 動的に生成 -->
+        <!-- 選択されたカテゴリーの専門科一覧（横並び） -->
+        <div id="specialtyListContainer" class="specialty-list-container">
+          <div class="flex flex-wrap gap-2 p-3 bg-white/5 rounded-lg" id="specialtyList">
+            <!-- 動的に生成 -->
+          </div>
         </div>
       </div>
 
@@ -681,16 +680,16 @@
       }
     }
 
-    // 専門科アコーディオンを生成（シンプル版：単一選択のみ）
+    // 専門科フィルター生成（コンパクト版：カテゴリーボタン + 専門科横並び）
+    let selectedCategory = null;
+    let categorizedSpecialtiesData = {};
+    
     function generateSpecialtyFilters() {
-      const container = document.getElementById('specialtyAccordion');
-      container.innerHTML = '';
-      
       // すべての専門科を取得
       const allSpecialties = [...new Set(allProjects.map(p => p.specialty).filter(s => s))];
       
       // カテゴリーごとに専門科を分類
-      const categorizedSpecialties = {};
+      categorizedSpecialtiesData = {};
       
       for (const [category, data] of Object.entries(SPECIALTY_GROUPS)) {
         const matchedSpecs = allSpecialties.filter(spec => 
@@ -698,7 +697,7 @@
         );
         
         if (matchedSpecs.length > 0) {
-          categorizedSpecialties[category] = {
+          categorizedSpecialtiesData[category] = {
             ...data,
             specs: matchedSpecs,
             count: matchedSpecs.reduce((sum, spec) => 
@@ -708,158 +707,101 @@
         }
       }
       
-      // カテゴリーをアコーディオンとして表示
-      for (const [category, data] of Object.entries(categorizedSpecialties)) {
-        const accordionItem = createAccordionItem(category, data);
-        container.appendChild(accordionItem);
+      // カテゴリーボタンを生成
+      generateCategoryButtons();
+    }
+    
+    function generateCategoryButtons() {
+      const container = document.getElementById('categoryButtons');
+      container.innerHTML = '';
+      
+      for (const [category, data] of Object.entries(categorizedSpecialtiesData)) {
+        const btn = document.createElement('button');
+        btn.className = 'category-btn px-4 py-2 rounded-lg font-semibold text-sm';
+        btn.dataset.category = category;
+        
+        // アイコンとカテゴリー名を表示
+        btn.innerHTML = `
+          <i class="fas ${data.icon} mr-1" style="font-size: 12px;"></i>
+          ${category}
+          <span class="ml-1 text-xs font-bold">(${data.count})</span>
+        `;
+        
+        // クリックイベント
+        btn.onclick = () => toggleCategory(category);
+        
+        container.appendChild(btn);
       }
     }
     
-    function createAccordionItem(category, data) {
-      const item = document.createElement('div');
-      item.className = 'border border-gray-200 rounded-lg overflow-hidden';
+    function toggleCategory(category) {
+      const btn = document.querySelector(`[data-category="${category}"]`);
+      const listContainer = document.getElementById('specialtyListContainer');
+      const specialtyList = document.getElementById('specialtyList');
       
-      // ヘッダー
-      const header = document.createElement('div');
-      header.className = 'accordion-header px-3 py-2 flex items-center justify-between';
-      header.style.background = 'rgba(255, 255, 255, 0.5)';
-      header.innerHTML = `
-        <div class="flex items-center space-x-2">
-          <i class="fas ${data.icon}" style="color: ${data.color}; font-size: 14px;"></i>
-          <span class="font-semibold text-sm">${category}</span>
-          <span class="category-badge bg-gray-200 text-gray-700 rounded-full px-2 font-bold">${data.count}</span>
-        </div>
-        <i class="fas fa-chevron-down text-xs transition-transform duration-200" id="chevron-${category}"></i>
-      `;
+      // 同じカテゴリーをクリックした場合は閉じる
+      if (selectedCategory === category) {
+        selectedCategory = null;
+        btn.classList.remove('active');
+        listContainer.classList.remove('open');
+        return;
+      }
       
-      // コンテンツ（専門科リスト）
-      const content = document.createElement('div');
-      content.className = 'accordion-content';
-      content.id = `content-${category}`;
+      // 他のカテゴリーボタンの選択を解除
+      document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
       
-      const specList = document.createElement('div');
-      specList.className = 'p-3 space-y-2';
+      // 選択されたカテゴリーボタンをアクティブに
+      selectedCategory = category;
+      btn.classList.add('active');
       
-      // 優先表示専門科（最大5個）
-      const prioritySpecs = getPrioritySpecialties(category, 5).filter(spec => data.specs.includes(spec));
-      const otherSpecs = data.specs.filter(spec => !prioritySpecs.includes(spec));
+      // 専門科リストを表示
+      displaySpecialties(category);
       
-      // 優先専門科を表示
-      prioritySpecs.forEach(spec => {
-        const chip = createSpecialtyChip(spec, data.specs);
-        specList.appendChild(chip);
+      // リストコンテナを開く
+      listContainer.classList.add('open');
+    }
+    
+    function displaySpecialties(category) {
+      const specialtyList = document.getElementById('specialtyList');
+      specialtyList.innerHTML = '';
+      
+      const data = categorizedSpecialtiesData[category];
+      if (!data) return;
+      
+      // すべての専門科を横並びで表示（改行なし、全て表示）
+      data.specs.forEach(spec => {
+        const count = allProjects.filter(p => p.specialty === spec).length;
+        const btn = document.createElement('button');
+        btn.className = 'specialty-btn px-3 py-2 rounded-lg font-semibold text-sm';
+        btn.dataset.specialty = spec;
+        
+        // 選択中の専門科かチェック
+        if (currentFilters.specialty === spec) {
+          btn.classList.add('selected');
+        }
+        
+        btn.innerHTML = `
+          ${spec}
+          <span class="ml-1 text-xs font-bold">(${count})</span>
+        `;
+        
+        // クリックイベント
+        btn.onclick = () => selectSpecialty(spec);
+        
+        specialtyList.appendChild(btn);
       });
-      
-      // 「もっと見る」機能
-      if (otherSpecs.length > 0) {
-        const moreContainer = document.createElement('div');
-        moreContainer.id = `more-${category}`;
-        moreContainer.className = 'hidden space-y-2';
-        
-        otherSpecs.forEach(spec => {
-          const chip = createSpecialtyChip(spec, data.specs);
-          moreContainer.appendChild(chip);
-        });
-        
-        specList.appendChild(moreContainer);
-        
-        const moreBtn = document.createElement('button');
-        moreBtn.className = 'text-xs underline mt-2';
-        moreBtn.style.color = data.color;
-        moreBtn.innerHTML = `<i class="fas fa-ellipsis-h mr-1"></i>さらに${otherSpecs.length}件表示`;
-        moreBtn.onclick = (e) => {
-          e.stopPropagation();
-          const moreDiv = document.getElementById(`more-${category}`);
-          if (moreDiv.classList.contains('hidden')) {
-            moreDiv.classList.remove('hidden');
-            moreBtn.innerHTML = `<i class="fas fa-chevron-up mr-1"></i>閉じる`;
-          } else {
-            moreDiv.classList.add('hidden');
-            moreBtn.innerHTML = `<i class="fas fa-ellipsis-h mr-1"></i>さらに${otherSpecs.length}件表示`;
-          }
-        };
-        
-        specList.appendChild(moreBtn);
-      }
-      
-      content.appendChild(specList);
-      
-      // アコーディオン開閉イベント
-      header.onclick = () => toggleAccordion(category);
-      
-      item.appendChild(header);
-      item.appendChild(content);
-      
-      return item;
     }
     
-    function createSpecialtyChip(specialty, allInCategory) {
-      const count = allProjects.filter(p => p.specialty === specialty).length;
-      const chip = document.createElement('button');
-      chip.className = 'specialty-chip inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs border';
-      chip.style.background = currentFilters.specialty === specialty ? '#1F7A85' : 'rgba(31, 122, 133, 0.1)';
-      chip.style.color = currentFilters.specialty === specialty ? 'white' : '#1F7A85';
-      chip.style.borderColor = '#1F7A85';
-      
-      if (currentFilters.specialty === specialty) {
-        chip.classList.add('selected');
-      }
-      
-      chip.innerHTML = `
-        <span>${specialty}</span>
-        <span class="font-bold">${count}</span>
-      `;
-      
-      chip.onclick = (e) => {
-        e.stopPropagation();
-        selectSpecialtyFromAccordion(specialty);
-      };
-      
-      return chip;
-    }
-    
-    function toggleAccordion(category) {
-      const content = document.getElementById(`content-${category}`);
-      const chevron = document.getElementById(`chevron-${category}`);
-      const header = chevron.closest('.accordion-header');
-      
-      if (content.classList.contains('open')) {
-        content.classList.remove('open');
-        chevron.style.transform = 'rotate(0deg)';
-        header.classList.remove('active');
-      } else {
-        // 他のアコーディオンを閉じる（オプション：複数開けたい場合は削除）
-        document.querySelectorAll('.accordion-content.open').forEach(c => {
-          c.classList.remove('open');
-          const cat = c.id.replace('content-', '');
-          const chev = document.getElementById(`chevron-${cat}`);
-          if (chev) chev.style.transform = 'rotate(0deg)';
-        });
-        document.querySelectorAll('.accordion-header.active').forEach(h => {
-          h.classList.remove('active');
-        });
-        
-        content.classList.add('open');
-        chevron.style.transform = 'rotate(180deg)';
-        header.classList.add('active');
-      }
-    }
-    
-    function selectSpecialtyFromAccordion(specialty) {
-      // 既存の選択ロジックを再利用
+    function selectSpecialty(specialty) {
+      // フィルターを更新
       currentFilters.specialty = specialty;
       
-      // すべてのチップの選択状態を更新
-      document.querySelectorAll('.specialty-chip').forEach(chip => {
-        const chipText = chip.querySelector('span').textContent;
-        if (chipText === specialty) {
-          chip.classList.add('selected');
-          chip.style.background = '#1F7A85';
-          chip.style.color = 'white';
+      // すべての専門科ボタンの選択状態を更新
+      document.querySelectorAll('.specialty-btn').forEach(btn => {
+        if (btn.dataset.specialty === specialty) {
+          btn.classList.add('selected');
         } else {
-          chip.classList.remove('selected');
-          chip.style.background = 'rgba(31, 122, 133, 0.1)';
-          chip.style.color = '#1F7A85';
+          btn.classList.remove('selected');
         }
       });
       
