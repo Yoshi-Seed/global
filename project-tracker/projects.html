@@ -130,6 +130,67 @@
     .view-toggle-btn:not(.active):hover {
       background: #e0f2f4 !important;
     }
+    
+    /* アコーディオンスタイル */
+    .accordion-header {
+      transition: all 0.2s ease;
+      cursor: pointer;
+      user-select: none;
+    }
+    
+    .accordion-header:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .accordion-header.active {
+      background: rgba(255, 255, 255, 0.15);
+    }
+    
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    
+    .accordion-content.open {
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    
+    .specialty-chip {
+      transition: all 0.2s ease;
+      cursor: pointer;
+      user-select: none;
+    }
+    
+    .specialty-chip:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    
+    .specialty-chip.selected {
+      background: #1F7A85 !important;
+      color: white !important;
+      border-color: #1F7A85 !important;
+    }
+    
+    .selected-chip {
+      animation: slideIn 0.2s ease-out;
+    }
+    
+    .category-badge {
+      min-width: 28px;
+      height: 20px;
+      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .category-search-input {
+      font-size: 12px;
+      padding: 4px 8px;
+    }
   </style>
 </head>
 <body class="bg-gray-50">
@@ -215,7 +276,7 @@
         </div>
       </div>
 
-      <!-- Step 2: 専門科フィルター -->
+      <!-- Step 2: 専門科フィルター（アコーディオン式） -->
       <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 mb-4">
         <div class="flex items-center mb-3">
           <div class="step-number rounded-full flex items-center justify-center font-bold mr-2">
@@ -223,12 +284,18 @@
           </div>
           <h3 class="font-bold">専門科で絞り込む（医師のみ・任意）</h3>
         </div>
-        <div class="flex flex-wrap gap-2" id="specialtyFilters">
+        
+        <!-- 選択中の専門科チップ表示エリア -->
+        <div id="selectedSpecialtiesChips" class="mb-3 hidden">
+          <div class="flex flex-wrap gap-2" id="selectedSpecialtiesContainer">
+            <!-- 選択された専門科が動的に表示される -->
+          </div>
+        </div>
+        
+        <!-- カテゴリー別アコーディオン -->
+        <div id="specialtyAccordion" class="space-y-2">
           <!-- 動的に生成 -->
         </div>
-        <button onclick="toggleAllSpecialties()" class="mt-2 text-xs underline" style="color: #1F7A85;">
-          <i class="fas fa-ellipsis-h mr-1"></i>すべて表示
-        </button>
       </div>
 
       <!-- Step 3: フリーワード検索 -->
@@ -516,11 +583,20 @@
   <!-- 共通設定 -->
   <script src="js/config.js"></script>
   <script src="js/specialties.js"></script>
+  <script type="module" src="js/specialty-groups.js"></script>
   <!-- API Client -->
   <script src="js/api.js"></script>
 
   <!-- 案件検索ロジック -->
-  <script>
+  <script type="module">
+    // specialty-groups.js からインポート
+    import { 
+      SPECIALTY_GROUPS, 
+      getCategoryForSpecialty,
+      getPrioritySpecialties,
+      searchSpecialtiesInCategory
+    } from './js/specialty-groups.js';
+    
     let allProjects = [];
     let filteredProjects = [];
     let currentFilters = {
@@ -528,6 +604,7 @@
       specialty: 'all',
       freeword: ''
     };
+    let selectedSpecialties = []; // 選択された専門科の配列（マルチ選択対応）
     let currentProjectId = null;
     let currentView = 'card'; // 'card' or 'table'
     
