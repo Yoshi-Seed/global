@@ -1226,6 +1226,13 @@
     function updateURL() {
       const params = new URLSearchParams();
       
+      // 既存のURLパラメータからidを保持（ディープリンク用）
+      const currentParams = new URLSearchParams(window.location.search);
+      const projectId = currentParams.get('id');
+      if (projectId) {
+        params.set('id', projectId);
+      }
+      
       // 検索キーワード
       if (currentFilters.freeword.trim()) {
         params.set('q', currentFilters.freeword.trim());
@@ -1727,6 +1734,14 @@
     function closeDetailModal() {
       document.getElementById('detailModal').classList.add('hidden');
       currentProjectId = null;
+      
+      // URLから id パラメータを削除（ディープリンク後のクリーンアップ）
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('id')) {
+        params.delete('id');
+        const newURL = params.toString() ? `?${params.toString()}` : window.location.pathname;
+        window.history.replaceState({}, '', newURL);
+      }
     }
 
     // 削除ダイアログを表示
