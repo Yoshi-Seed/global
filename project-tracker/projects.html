@@ -2050,13 +2050,17 @@
       return `${year}/${month}/${day}`;
     }
 
-    // グローバルスコープに公開（index.htmlからのリンク用）
+    // グローバルスコープに公開（index.htmlからのリンク用、onclick/onchange属性で使用）
     // ES6 moduleスコープで定義された関数をwindowオブジェクトに明示的に割り当て
     window.showProjectDetail = showProjectDetail;
     window.closeDetailModal = closeDetailModal;
     window.showDeleteDialog = showDeleteDialog;
     window.closeDeleteDialog = closeDeleteDialog;
     window.submitDeleteRequest = submitDeleteRequest;
+    window.clearSearch = clearSearch;
+    window.switchView = switchView;
+    window.exportFilteredCSV = exportFilteredCSV;
+    window.sortAndRender = sortAndRender;
 
     // モーダルの背景クリックで閉じる機能を追加
     function setupModalClickHandlers() {
