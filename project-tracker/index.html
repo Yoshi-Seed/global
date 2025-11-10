@@ -239,16 +239,26 @@
     async function ensureDataLoaded() {
       try {
         const projects = await api.getAllProjects();
+        console.log('🔍 Data Check:');
+        console.log(`  - Projects loaded: ${projects.length}`);
+        console.log('  - Expected: ~469 (after CSV parser fix)');
+        console.log('  - Old (buggy): 611');
+        
         if (projects.length === 0) {
-          console.log('データが空です。GitHubから取得しています...');
+          console.log('⚠️ データが空です。GitHubから取得しています...');
           // 強制リフレッシュ
           api.clearCache();
           await api.getAllProjects(true);
+        } else if (projects.length > 500) {
+          console.warn('⚠️ プロジェクト数が500を超えています！CSVパーサーの修正が反映されていない可能性があります。');
+          console.warn('💡 対処法:');
+          console.warn('  1. 5分待ってから再度リロード（Cloudflare Workerのキャッシュが期限切れになる）');
+          console.warn('  2. スーパーリロード（Ctrl+Shift+R または Cmd+Shift+R）');
         } else {
-          console.log(`${projects.length}件のデータを確認しました`);
+          console.log(`✅ ${projects.length}件のデータを確認しました（正常）`);
         }
       } catch (error) {
-        console.error('データ確認エラー:', error);
+        console.error('❌ データ確認エラー:', error);
         // エラーでもダッシュボード表示は続行
       }
     }
@@ -548,6 +558,13 @@
         const stats = await api.getStats();
         const allProjects = await api.getAllProjects();
 
+        // デバッグログ
+        console.log('📊 Dashboard Statistics:');
+        console.log('  - Total Projects (from stats):', stats.totalProjects);
+        console.log('  - All Projects (direct):', allProjects.length);
+        console.log('  - Total Recruits:', stats.totalRecruits);
+        console.log('  - Average Recruits:', stats.averageRecruits);
+        
         // データがない場合はインポートバナーを表示
         if (stats.totalProjects === 0) {
           document.getElementById('importBanner').classList.remove('hidden');
