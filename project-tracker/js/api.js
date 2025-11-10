@@ -66,20 +66,57 @@ class ProjectAPI {
   }
 
   /**
-   * CSVテキストをパース
+   * CSVテキストをパース（引用符内の改行に対応）
    */
   parseCSV(csvText) {
-    // CRLF (\r\n) と LF (\n) の両方に対応
-    const lines = csvText.trim().split(/\r?\n/);
-    if (lines.length < 2) {
+    const text = csvText.trim();
+    const rows = [];
+    let currentRow = '';
+    let inQuotes = false;
+    
+    // 文字列を1文字ずつ処理して、引用符内の改行を考慮
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      const nextChar = text[i + 1];
+      
+      if (char === '"') {
+        if (inQuotes && nextChar === '"') {
+          // エスケープされた引用符
+          currentRow += '""';
+          i++; // 次の文字をスキップ
+        } else {
+          // 引用符の開始/終了
+          inQuotes = !inQuotes;
+          currentRow += char;
+        }
+      } else if ((char === '\n' || (char === '\r' && nextChar === '\n')) && !inQuotes) {
+        // 引用符外の改行 = 行の区切り
+        if (currentRow.trim()) {
+          rows.push(currentRow.trim());
+        }
+        currentRow = '';
+        if (char === '\r') i++; // CRLF の場合、\n もスキップ
+      } else {
+        currentRow += char;
+      }
+    }
+    
+    // 最後の行を追加
+    if (currentRow.trim()) {
+      rows.push(currentRow.trim());
+    }
+    
+    if (rows.length < 2) {
       return [];
     }
 
     // ヘッダー行をスキップ
-    const dataLines = lines.slice(1);
+    const dataRows = rows.slice(1);
     
-    return dataLines.map((line, index) => {
-      const fields = this.parseCSVLine(line.trim());
+    console.log(`📝 CSV parsing: ${rows.length} total rows (including header), ${dataRows.length} data rows`);
+    
+    return dataRows.map((row, index) => {
+      const fields = this.parseCSVLine(row);
 
       // CSVカラム順（20列）：id, registrationId, 疾患名, 疾患略語, 手法, 調査種別, 対象者種別, 専門, 実績数, 問合せのみ, 対象条件, 薬剤, リクルート実施, モデレーター, クライアント, エンドクライアント, PJ番号, 実施年月, 登録担当, 登録日
       const id = parseInt(fields[0]) || (index + 1);
