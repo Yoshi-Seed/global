@@ -130,6 +130,66 @@
     .view-toggle-btn:not(.active):hover {
       background: #e0f2f4 !important;
     }
+    
+    /* カテゴリーボタンスタイル（対象者と同じスタイル） */
+    .category-btn {
+      transition: all 0.2s ease;
+      cursor: pointer;
+      user-select: none;
+      background: rgba(31, 122, 133, 0.15);
+      color: #1F7A85;
+      border: 1px solid #1F7A85;
+    }
+    
+    .category-btn:hover {
+      background: rgba(31, 122, 133, 0.25);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(31, 122, 133, 0.2);
+    }
+    
+    .category-btn.active {
+      background: white !important;
+      color: #1F7A85 !important;
+      border: 2px solid #1F7A85 !important;
+      box-shadow: 0 4px 12px rgba(31, 122, 133, 0.3) !important;
+      transform: scale(1.05) !important;
+    }
+    
+    /* 専門科リスト表示エリア */
+    .specialty-list-container {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    
+    .specialty-list-container.open {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    
+    /* 専門科ボタン（対象者と同じスタイル） */
+    .specialty-btn {
+      transition: all 0.2s ease;
+      cursor: pointer;
+      user-select: none;
+      background: rgba(31, 122, 133, 0.15);
+      color: #1F7A85;
+      border: 1px solid #1F7A85;
+    }
+    
+    .specialty-btn:hover {
+      background: rgba(31, 122, 133, 0.25);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(31, 122, 133, 0.2);
+    }
+    
+    .specialty-btn.selected {
+      background: white !important;
+      color: #1F7A85 !important;
+      border: 2px solid #1F7A85 !important;
+      box-shadow: 0 4px 12px rgba(31, 122, 133, 0.3) !important;
+      transform: scale(1.05) !important;
+    }
   </style>
 </head>
 <body class="bg-gray-50">
@@ -215,7 +275,7 @@
         </div>
       </div>
 
-      <!-- Step 2: 専門科フィルター -->
+      <!-- Step 2: 専門科フィルター（コンパクト版） -->
       <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 mb-4">
         <div class="flex items-center mb-3">
           <div class="step-number rounded-full flex items-center justify-center font-bold mr-2">
@@ -223,12 +283,18 @@
           </div>
           <h3 class="font-bold">専門科で絞り込む（医師のみ・任意）</h3>
         </div>
-        <div class="flex flex-wrap gap-2" id="specialtyFilters">
+        
+        <!-- カテゴリー選択ボタン（横並び） -->
+        <div class="flex flex-wrap gap-2 mb-3" id="categoryButtons">
           <!-- 動的に生成 -->
         </div>
-        <button onclick="toggleAllSpecialties()" class="mt-2 text-xs underline" style="color: #1F7A85;">
-          <i class="fas fa-ellipsis-h mr-1"></i>すべて表示
-        </button>
+        
+        <!-- 選択されたカテゴリーの専門科一覧（横並び） -->
+        <div id="specialtyListContainer" class="specialty-list-container">
+          <div class="flex flex-wrap gap-2 p-3 bg-white/5 rounded-lg" id="specialtyList">
+            <!-- 動的に生成 -->
+          </div>
+        </div>
       </div>
 
       <!-- Step 3: フリーワード検索 -->
@@ -516,11 +582,24 @@
   <!-- 共通設定 -->
   <script src="js/config.js"></script>
   <script src="js/specialties.js"></script>
+  <script type="module" src="js/specialty-groups.js"></script>
   <!-- API Client -->
   <script src="js/api.js"></script>
 
   <!-- 案件検索ロジック -->
-  <script>
+  <script type="module">
+    // specialty-groups.js からインポート
+    import { 
+      SPECIALTY_GROUPS, 
+      getCategoryForSpecialty,
+      getPrioritySpecialties,
+      searchSpecialtiesInCategory
+    } from './js/specialty-groups.js';
+    
+    // グローバルスコープに公開（他の関数から使用するため）
+    window.SPECIALTY_GROUPS = SPECIALTY_GROUPS;
+    window.getPrioritySpecialties = getPrioritySpecialties;
+    
     let allProjects = [];
     let filteredProjects = [];
     let currentFilters = {
@@ -528,6 +607,7 @@
       specialty: 'all',
       freeword: ''
     };
+    let selectedSpecialties = []; // 選択された専門科の配列（マルチ選択対応）
     let currentProjectId = null;
     let currentView = 'card'; // 'card' or 'table'
     
@@ -600,28 +680,134 @@
       }
     }
 
-    // 専門科フィルターボタンを生成
+    // 専門科フィルター生成（コンパクト版：カテゴリーボタン + 専門科横並び）
+    let selectedCategory = null;
+    let categorizedSpecialtiesData = {};
+    
     function generateSpecialtyFilters() {
-      const container = document.getElementById('specialtyFilters');
-      const specialties = [...new Set(allProjects.map(p => p.specialty).filter(s => s))];
+      // すべての専門科を取得
+      const allSpecialties = [...new Set(allProjects.map(p => p.specialty).filter(s => s))];
       
-      // 「すべて」ボタン
-      const allBtn = createFilterButton('すべて', 'all', true);
-      container.appendChild(allBtn);
+      // カテゴリーごとに専門科を分類
+      categorizedSpecialtiesData = {};
       
-      // 頻出専門科を優先表示（最大8個）
-      const topSpecialties = specialties
-        .map(s => ({
-          name: s,
-          count: allProjects.filter(p => p.specialty === s).length
-        }))
-        .sort((a, b) => b.count - a.count)
-        .slice(0, 8);
+      for (const [category, data] of Object.entries(SPECIALTY_GROUPS)) {
+        const matchedSpecs = allSpecialties.filter(spec => 
+          data.specialties.includes(spec)
+        );
+        
+        if (matchedSpecs.length > 0) {
+          categorizedSpecialtiesData[category] = {
+            ...data,
+            specs: matchedSpecs,
+            count: matchedSpecs.reduce((sum, spec) => 
+              sum + allProjects.filter(p => p.specialty === spec).length, 0
+            )
+          };
+        }
+      }
       
-      topSpecialties.forEach(({name}) => {
-        const btn = createFilterButton(name, name);
+      // カテゴリーボタンを生成
+      generateCategoryButtons();
+    }
+    
+    function generateCategoryButtons() {
+      const container = document.getElementById('categoryButtons');
+      container.innerHTML = '';
+      
+      for (const [category, data] of Object.entries(categorizedSpecialtiesData)) {
+        const btn = document.createElement('button');
+        btn.className = 'category-btn px-4 py-2 rounded-lg font-semibold text-sm';
+        btn.dataset.category = category;
+        
+        // アイコンとカテゴリー名を表示
+        btn.innerHTML = `
+          <i class="fas ${data.icon} mr-1" style="font-size: 12px;"></i>
+          ${category}
+          <span class="ml-1 text-xs font-bold">(${data.count})</span>
+        `;
+        
+        // クリックイベント
+        btn.onclick = () => toggleCategory(category);
+        
         container.appendChild(btn);
+      }
+    }
+    
+    function toggleCategory(category) {
+      const btn = document.querySelector(`[data-category="${category}"]`);
+      const listContainer = document.getElementById('specialtyListContainer');
+      const specialtyList = document.getElementById('specialtyList');
+      
+      // 同じカテゴリーをクリックした場合は閉じる
+      if (selectedCategory === category) {
+        selectedCategory = null;
+        btn.classList.remove('active');
+        listContainer.classList.remove('open');
+        return;
+      }
+      
+      // 他のカテゴリーボタンの選択を解除
+      document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+      
+      // 選択されたカテゴリーボタンをアクティブに
+      selectedCategory = category;
+      btn.classList.add('active');
+      
+      // 専門科リストを表示
+      displaySpecialties(category);
+      
+      // リストコンテナを開く
+      listContainer.classList.add('open');
+    }
+    
+    function displaySpecialties(category) {
+      const specialtyList = document.getElementById('specialtyList');
+      specialtyList.innerHTML = '';
+      
+      const data = categorizedSpecialtiesData[category];
+      if (!data) return;
+      
+      // すべての専門科を横並びで表示（改行なし、全て表示）
+      data.specs.forEach(spec => {
+        const count = allProjects.filter(p => p.specialty === spec).length;
+        const btn = document.createElement('button');
+        btn.className = 'specialty-btn px-3 py-2 rounded-lg font-semibold text-sm';
+        btn.dataset.specialty = spec;
+        
+        // 選択中の専門科かチェック
+        if (currentFilters.specialty === spec) {
+          btn.classList.add('selected');
+        }
+        
+        btn.innerHTML = `
+          ${spec}
+          <span class="ml-1 text-xs font-bold">(${count})</span>
+        `;
+        
+        // クリックイベント
+        btn.onclick = () => selectSpecialty(spec);
+        
+        specialtyList.appendChild(btn);
       });
+    }
+    
+    function selectSpecialty(specialty) {
+      // フィルターを更新
+      currentFilters.specialty = specialty;
+      
+      // すべての専門科ボタンの選択状態を更新
+      document.querySelectorAll('.specialty-btn').forEach(btn => {
+        if (btn.dataset.specialty === specialty) {
+          btn.classList.add('selected');
+        } else {
+          btn.classList.remove('selected');
+        }
+      });
+      
+      // フィルターを適用
+      applyFilters();
+      updateURL();
     }
 
     function createFilterButton(label, value, isActive = false) {
@@ -653,29 +839,7 @@
       return btn;
     }
 
-    function toggleAllSpecialties() {
-      const container = document.getElementById('specialtyFilters');
-      const allSpecialties = [...new Set(allProjects.map(p => p.specialty).filter(s => s))];
-      
-      // 現在の表示数をチェック
-      const currentCount = container.children.length;
-      
-      if (currentCount <= 9) {
-        // すべて表示
-        container.innerHTML = '';
-        const allBtn = createFilterButton('すべて', 'all', currentFilters.specialty === 'all');
-        container.appendChild(allBtn);
-        
-        allSpecialties.forEach(name => {
-          const btn = createFilterButton(name, name, currentFilters.specialty === name);
-          container.appendChild(btn);
-        });
-      } else {
-        // 元に戻す
-        container.innerHTML = '';
-        generateSpecialtyFilters();
-      }
-    }
+    // toggleAllSpecialties は不要になったので削除
 
     // フィルターイベントリスナー設定
     function setupFilterListeners() {
