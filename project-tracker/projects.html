@@ -446,8 +446,8 @@
   </div>
 
   <!-- 案件詳細モーダル -->
-  <div id="detailModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onclick="closeDetailModal()">
-    <div class="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+  <div id="detailModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto" id="detailModalContent">
       <div class="p-8">
         <!-- モーダルヘッダー -->
         <div class="flex items-center justify-between mb-4 border-b pb-3">
@@ -490,8 +490,8 @@
   </div>
 
   <!-- 削除確認ダイアログ -->
-  <div id="deleteDialog" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onclick="closeDeleteDialog()">
-    <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6" onclick="event.stopPropagation()">
+  <div id="deleteDialog" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6" id="deleteDialogContent">
       <div class="flex items-center justify-between mb-4 border-b pb-3">
         <h3 class="text-lg font-bold text-red-600 flex items-center">
           <i class="fas fa-exclamation-triangle mr-2"></i>
@@ -1879,13 +1879,6 @@
         }
       }
     }
-    
-    // グローバルスコープに公開（index.htmlからのリンク用、onclick属性で使用）
-    window.showProjectDetail = showProjectDetail;
-    window.closeDetailModal = closeDetailModal;
-    window.showDeleteDialog = showDeleteDialog;
-    window.closeDeleteDialog = closeDeleteDialog;
-    window.submitDeleteRequest = submitDeleteRequest;
 
     // CSVエクスポート（フィルター適用済み）
     function exportFilteredCSV() {
@@ -2042,8 +2035,58 @@
       return `${year}/${month}/${day}`;
     }
 
+    // グローバルスコープに公開（index.htmlからのリンク用）
+    // ES6 moduleスコープで定義された関数をwindowオブジェクトに明示的に割り当て
+    window.showProjectDetail = showProjectDetail;
+    window.closeDetailModal = closeDetailModal;
+    window.showDeleteDialog = showDeleteDialog;
+    window.closeDeleteDialog = closeDeleteDialog;
+    window.submitDeleteRequest = submitDeleteRequest;
+
+    // モーダルの背景クリックで閉じる機能を追加
+    function setupModalClickHandlers() {
+      // 案件詳細モーダル
+      const detailModal = document.getElementById('detailModal');
+      const detailModalContent = document.getElementById('detailModalContent');
+      
+      if (detailModal && detailModalContent) {
+        // 背景クリックで閉じる
+        detailModal.addEventListener('click', (e) => {
+          if (e.target === detailModal) {
+            closeDetailModal();
+          }
+        });
+        
+        // コンテンツクリックでイベント伝播を停止（背景クリックと区別）
+        detailModalContent.addEventListener('click', (e) => {
+          e.stopPropagation();
+        });
+      }
+      
+      // 削除確認ダイアログ
+      const deleteDialog = document.getElementById('deleteDialog');
+      const deleteDialogContent = document.getElementById('deleteDialogContent');
+      
+      if (deleteDialog && deleteDialogContent) {
+        // 背景クリックで閉じる
+        deleteDialog.addEventListener('click', (e) => {
+          if (e.target === deleteDialog) {
+            closeDeleteDialog();
+          }
+        });
+        
+        // コンテンツクリックでイベント伝播を停止
+        deleteDialogContent.addEventListener('click', (e) => {
+          e.stopPropagation();
+        });
+      }
+    }
+
     // ページ読み込み時に実行
-    window.addEventListener('DOMContentLoaded', init);
+    window.addEventListener('DOMContentLoaded', () => {
+      init();
+      setupModalClickHandlers();
+    });
   </script>
 </body>
 </html>
