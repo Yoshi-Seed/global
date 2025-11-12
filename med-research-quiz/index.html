@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Med Research Quiz — by ウェインツ君</title>
+  <meta name="description" content="医療マーケットリサーチの定量・定性を楽しく深掘る学習クイズ" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <div class="logo">MRQ</div>
+      <div class="title">
+        <h1>Med Research Quiz</h1>
+        <p class="subtitle">定量 × 定性を“楽しく・深く”学べるクイズ | by ウェインツ君</p>
+      </div>
+    </div>
+    <div class="controls">
+      <button id="toggleDark" aria-pressed="false" class="ghost">🌙</button>
+      <button id="howToBtn" class="ghost">使い方</button>
+    </div>
+  </header>
+
+  <main id="screen" class="screen">
+    <!-- screens are injected here -->
+  </main>
+
+  <footer class="app-footer">
+    <div>
+      <small>© 2025 Med Research Quiz — companionship by ウェインツ君</small>
+    </div>
+    <div>
+      <small><a href="#about" id="aboutLink">参考・クレジット</a></small>
+    </div>
+  </footer>
+
+  <div id="modal" class="modal" aria-hidden="true" aria-labelledby="modalTitle" role="dialog">
+    <div class="modal-content" role="document">
+      <button class="close" id="modalClose" aria-label="閉じる">×</button>
+      <h2 id="modalTitle">使い方</h2>
+      <div id="modalBody" class="modal-body">
+        <ol>
+          <li>はじめに <b>定量 / 定性</b> を選択します。途中で切り替えもOK。</li>
+          <li>問題の <b>難易度</b> はあなたの正答率で自動調整。難しいほど点が高いです。</li>
+          <li>連続正解で <b>STREAKボーナス</b>、素早い回答で <b>タイムボーナス</b>。</li>
+          <li>各問のあとに <b>学び（Takeaway）</b> を確認。参考記事へのリンク付き。</li>
+          <li><b>レビュー画面</b>で正誤と学びをまとめて振り返り、結果JSONをダウンロードできます。</li>
+        </ol>
+        <p class="muted">※ アクセシビリティ配慮: キーボード操作（1〜9で選択、Enterで送信、Hでヒント）に対応しています。</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
