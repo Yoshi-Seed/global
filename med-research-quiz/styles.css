@@ -88,7 +88,31 @@ body {
   padding: 10px 14px; border-radius: 999px; border: 1px solid var(--border);
   background: white; cursor: pointer;
 }
+.segment button.mode-button {
+  flex: 1 1 220px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  border: 1px solid rgba(23,34,59,0.16);
+  background: rgba(255,255,255,0.9);
+  color: var(--fg);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  box-shadow: 0 8px 20px rgba(14,30,67,0.12);
+  transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+}
+.segment button.mode-button:hover,
+.segment button.mode-button:focus-visible {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(14,30,67,0.16);
+}
 .dark .segment button { background: rgba(255,255,255,0.05); color: var(--fg); }
+.dark .segment button.mode-button {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(229,238,252,0.18);
+  box-shadow: 0 10px 24px rgba(6,12,30,0.4);
+}
 
 .primary {
   background: linear-gradient(135deg, #2250b5, #5a2fcf);
