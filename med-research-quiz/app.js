@@ -98,8 +98,8 @@
           <h2>ようこそ、Yoshi。今日はどっちから攻める？</h2>
           <p class="lead">定量は「統計×設計」。定性は「洞察×会話術」。<br/>どちらからでも、“プロの目線”で楽しめる難しさにしてあるよ。</p>
           <div class="segment" role="group" aria-label="モード選択">
-            <button class="primary" id="startQuant">定量で勝負（BEST: ${bestQuant}）</button>
-            <button class="secondary" id="startQual">定性を深掘る（BEST: ${bestQual}）</button>
+            <button class="mode-button" id="startQuant">定量で勝負（BEST: ${bestQuant}）</button>
+            <button class="mode-button" id="startQual">定性を深掘る（BEST: ${bestQual}）</button>
           </div>
           <div class="segment" style="margin-top:8px">
             <label for="qCount">ラウンド長：</label>
