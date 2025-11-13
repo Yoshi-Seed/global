@@ -200,14 +200,24 @@
 
     // Wire up
     if (q.type === "mcq" || q.type === "ms") {
-      $$(".choice").forEach(el => el.addEventListener("click", () => {
-        if (q.type === "mcq") {
-          $$(".choice").forEach(c => c.classList.remove("selected"));
-          el.classList.add("selected");
-        } else {
-          el.classList.toggle("selected");
-        }
-      }));
+      const isMulti = q.type === "ms";
+      $$(".choice").forEach(el => {
+        el.setAttribute("aria-pressed", "false");
+        el.setAttribute("role", "button");
+        el.addEventListener("click", () => {
+          if (!isMulti) {
+            $$(".choice").forEach(c => {
+              c.classList.remove("selected");
+              c.setAttribute("aria-pressed", "false");
+            });
+            el.classList.add("selected");
+            el.setAttribute("aria-pressed", "true");
+          } else {
+            const selected = el.classList.toggle("selected");
+            el.setAttribute("aria-pressed", selected ? "true" : "false");
+          }
+        });
+      });
     } else if (q.type === "estimate") {
       $("#numInput").addEventListener("keydown", (e) => { if (e.key==="Enter") $("#submitBtn").click(); });
     } else if (q.type === "order") {
@@ -266,7 +276,8 @@
 
   function renderBody(q) {
     if (q.type === "mcq" || q.type === "ms") {
-      return `<div class="choices">${q.choices.map((c,i) => `<button class="choice" data-index="${i}" data-value="${c.value}">${c.label}</button>`).join("")}</div>`;
+      const choiceClass = q.type === "ms" ? "choice multi" : "choice single";
+      return `<div class="choices">${q.choices.map((c,i) => `<button type="button" class="${choiceClass}" data-index="${i}" data-value="${c.value}" aria-pressed="false"><span class="choice-label">${c.label}</span></button>`).join("")}</div>`;
     }
     if (q.type === "estimate") {
       return `<label>数値を入力（単位: ${q.unit || "件/％ 等"}）</label>
@@ -386,6 +397,77 @@
     return { correct, base, detail };
   }
 
+  function findChoiceLabel(q, value) {
+    return q.choices?.find(c => c.value === value)?.label ?? String(value);
+  }
+
+  function renderAnswerList(items, ordered=false) {
+    if (!items || items.length === 0) return "<span class=\"muted\">（該当なし）</span>";
+    const tag = ordered ? "ol" : "ul";
+    const cls = ordered ? "answer-list ordered" : "answer-list";
+    return `<${tag} class="${cls}">${items.map(item => `<li>${item}</li>`).join("")}</${tag}>`;
+  }
+
+  function formatCorrectAnswer(q) {
+    if (!q) return "";
+    if (q.type === "mcq") {
+      return `<span class="answer-chip">${findChoiceLabel(q, q.answer)}</span>`;
+    }
+    if (q.type === "ms") {
+      const labels = (q.answers || []).map(v => findChoiceLabel(q, v));
+      return renderAnswerList(labels);
+    }
+    if (q.type === "estimate") {
+      const unit = q.unit || "";
+      const main = `<span class="answer-chip">${q.answer}${unit}</span>`;
+      const tol = q.tolerance !== undefined ? `<span class="muted">（許容誤差 ±${q.tolerance}${unit}）</span>` : "";
+      return main + tol;
+    }
+    if (q.type === "order") {
+      return renderAnswerList(q.items || [], true);
+    }
+    if (q.type === "match") {
+      const list = (q.pairs || []).map(p => `<strong>${p.left}</strong> → ${p.right}`);
+      return renderAnswerList(list);
+    }
+    return "";
+  }
+
+  function formatUserAnswer(q, ans) {
+    if (!q) return "";
+    if (ans === null || ans === undefined) return "<span class=\"muted\">未回答</span>";
+    if (q.type === "mcq") {
+      return `<span class="answer-chip">${findChoiceLabel(q, ans)}</span>`;
+    }
+    if (q.type === "ms") {
+      const arr = Array.isArray(ans) ? ans : [];
+      if (arr.length === 0) return "<span class=\"muted\">未選択</span>";
+      return renderAnswerList(arr.map(v => findChoiceLabel(q, v)));
+    }
+    if (q.type === "estimate") {
+      const unit = q.unit || "";
+      return `<span class="answer-chip">${ans}${unit}</span>`;
+    }
+    if (q.type === "order") {
+      const arr = Array.isArray(ans) ? ans : [];
+      if (arr.length === 0) return "<span class=\"muted\">未完成</span>";
+      const ordered = arr.map(idx => q.items?.[idx] ?? `項目${idx+1}`);
+      return renderAnswerList(ordered, true);
+    }
+    if (q.type === "match") {
+      const arr = Array.isArray(ans) ? ans : [];
+      if (arr.length === 0) return "<span class=\"muted\">未ペア</span>";
+      const list = arr.map(a => {
+        const base = (q.pairs || []).find(p => (p.rightKey || p.left) === a.key);
+        const rightLabel = base ? base.right : a.key;
+        const leftLabel = a.paired || "未選択";
+        return `<strong>${leftLabel}</strong> → ${rightLabel}`;
+      });
+      return renderAnswerList(list);
+    }
+    return "";
+  }
+
   function adaptNext(correct, curDiff) {
     // Simple adaptive: try to bring a higher/lower difficulty question next
     const idx = state.currentIndex;
@@ -435,7 +517,9 @@
       id: q.id, prompt: q.prompt, type: q.type, difficulty: q.difficulty,
       userAnswer: ans, correct: ev.correct, points: Math.round(gained),
       maxPoints: DIFF_POINTS[q.difficulty], tags: q.tags || [],
-      timeRemaining: state.timeLeft
+      timeRemaining: state.timeLeft,
+      correctAnswerHtml: formatCorrectAnswer(q),
+      userAnswerHtml: formatUserAnswer(q, ans)
     });
 
     // UI feedback
@@ -478,7 +562,7 @@
         <h3>復習</h3>
         <div class="review-grid">
           ${state.asked.map(a => `
-            <div class="review-item">
+            <div class="review-item${a.correct ? "" : " incorrect"}">
               <div class="qmeta">
                 <span class="badge">${a.type.toUpperCase()}</span>
                 <span class="badge">難易度${a.difficulty}</span>
@@ -487,6 +571,7 @@
                 <span class="badge">+${a.points}</span>
               </div>
               <div><strong>${a.prompt}</strong></div>
+              ${!a.correct ? `<div class="answer-card correct-answer"><div class="answer-title">正解</div>${a.correctAnswerHtml}</div>` : ""}
             </div>
           `).join("")}
         </div>
