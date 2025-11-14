@@ -188,11 +188,9 @@ function validateProject(data) {
     errors.targetType = '対象者種別は必須です';
   }
 
-  // 対象者種別の列挙チェック
-  const validTargetTypes = ['医師', '患者', '介護者', '医師・患者', 'KOL', '看護師', '薬剤師'];
-  if (data.targetType && !validTargetTypes.includes(data.targetType)) {
-    errors.targetType = '対象者種別が不正です';
-  }
+  // 対象者種別の列挙チェック（定義済みの選択肢以外も許可 - 「その他」入力用）
+  // 空でなければ任意の値を許可（「その他」で入力された詳細内容を含む）
+  // バリデーションは空文字チェックのみ
 
   // 実績数のチェック
   if (!data.recruitCount) {
