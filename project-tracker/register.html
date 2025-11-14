@@ -151,7 +151,23 @@
             <option value="KOL">KOL</option>
             <option value="看護師">看護師</option>
             <option value="薬剤師">薬剤師</option>
+            <option value="その他">その他</option>
           </select>
+          
+          <!-- その他選択時の入力ボックス -->
+          <div id="targetTypeOtherContainer" class="mt-3 hidden">
+            <label for="targetTypeOther" class="block text-sm font-medium text-gray-700 mb-2">
+              対象者種別の詳細 <span class="text-red-500">*</span>
+            </label>
+            <input 
+              type="text" 
+              id="targetTypeOther" 
+              name="targetTypeOther" 
+              placeholder="例: 栄養士、理学療法士など"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+            <p class="text-xs text-gray-500 mt-1">具体的な対象者種別を入力してください</p>
+          </div>
         </div>
 
         <!-- 専門（コンボボックス） -->
@@ -779,13 +795,18 @@
       submitButton.disabled = true;
       submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>送信中...</span>';
 
+      // 対象者種別の値を取得（「その他」の場合は入力内容を使用）
+      const targetTypeSelect = document.getElementById('targetType').value;
+      const targetTypeOther = document.getElementById('targetTypeOther').value.trim();
+      const finalTargetType = targetTypeSelect === 'その他' ? targetTypeOther : targetTypeSelect;
+
       // フォームデータを収集
       const formData = {
         diseaseName: document.getElementById('diseaseName').value.trim(),
         diseaseAbbr: document.getElementById('diseaseAbbr').value.trim(),
         method: document.getElementById('method').value.trim(),
         surveyType: document.getElementById('surveyType').value.trim(),
-        targetType: document.getElementById('targetType').value,
+        targetType: finalTargetType,
         specialty: document.getElementById('specialtyInput').value.trim(),
         recruitCount: parseInt(document.getElementById('recruitCount').value) || 0,
         inquiryOnly: document.getElementById('inquiryOnly').checked,
@@ -847,6 +868,9 @@
         el.classList.remove('border-red-500');
         el.classList.add('border-gray-300');
       });
+      // 対象者種別「その他」の入力ボックスを非表示に
+      document.getElementById('targetTypeOtherContainer').classList.add('hidden');
+      document.getElementById('targetTypeOther').required = false;
     }
 
     // 成功メッセージ表示（PRリンク付き）
@@ -927,6 +951,27 @@
       // 入力時にバリデーションをクリア
       clientInput.addEventListener('input', clearClientValidation);
       endClientInput.addEventListener('input', clearClientValidation);
+    })();
+
+    // 対象者種別「その他」の表示/非表示とバリデーション
+    (function setupTargetTypeOther() {
+      const targetTypeSelect = document.getElementById('targetType');
+      const otherContainer = document.getElementById('targetTypeOtherContainer');
+      const otherInput = document.getElementById('targetTypeOther');
+      
+      // 選択変更時の処理
+      targetTypeSelect.addEventListener('change', function() {
+        if (this.value === 'その他') {
+          // その他を選択時：入力ボックスを表示し、必須化
+          otherContainer.classList.remove('hidden');
+          otherInput.required = true;
+        } else {
+          // その他以外を選択時：入力ボックスを非表示にし、必須を解除
+          otherContainer.classList.add('hidden');
+          otherInput.required = false;
+          otherInput.value = ''; // 入力内容をクリア
+        }
+      });
     })();
   </script>
 </body>
