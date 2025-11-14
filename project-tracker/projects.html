@@ -739,11 +739,26 @@
       const listContainer = document.getElementById('specialtyListContainer');
       const specialtyList = document.getElementById('specialtyList');
       
-      // 同じカテゴリーをクリックした場合は閉じる
+      // 同じカテゴリーをクリックした場合は閉じる＆専門科フィルターを解除
       if (selectedCategory === category) {
         selectedCategory = null;
         btn.classList.remove('active');
         listContainer.classList.remove('open');
+        
+        // 専門科フィルターも解除
+        if (currentFilters.specialty !== 'all') {
+          // すべての専門科ボタンの選択を解除
+          document.querySelectorAll('#specialtyFilters .filter-btn').forEach(b => {
+            b.classList.remove('active', 'bg-white');
+            b.style.background = 'rgba(31, 122, 133, 0.15)';
+            b.style.color = '#1F7A85';
+            b.style.border = '1px solid #1F7A85';
+            b.style.boxShadow = 'none';
+            b.style.transform = 'scale(1)';
+          });
+          currentFilters.specialty = 'all';
+          applyFilters();
+        }
         return;
       }
       
@@ -930,8 +945,27 @@
       applyFilters();
     }
 
-    // 専門科フィルター選択
+    // 専門科フィルター選択（トグル対応）
     function selectSpecialtyFilter(btn) {
+      const value = btn.dataset.value;
+      
+      // すでに選択されている場合は解除（トグル）
+      if (btn.classList.contains('active') && currentFilters.specialty === value) {
+        // 選択を解除
+        btn.classList.remove('active', 'bg-white');
+        btn.style.background = 'rgba(31, 122, 133, 0.15)';
+        btn.style.color = '#1F7A85';
+        btn.style.border = '1px solid #1F7A85';
+        btn.style.boxShadow = 'none';
+        btn.style.transform = 'scale(1)';
+        
+        // フィルターをリセット
+        currentFilters.specialty = 'all';
+        applyFilters();
+        return;
+      }
+      
+      // 他のボタンの選択を解除
       document.querySelectorAll('#specialtyFilters .filter-btn').forEach(b => {
         b.classList.remove('active', 'bg-white');
         b.style.background = 'rgba(31, 122, 133, 0.15)';
@@ -941,6 +975,7 @@
         b.style.transform = 'scale(1)';
       });
       
+      // 選択されたボタンをアクティブ化
       btn.classList.add('active', 'bg-white');
       btn.style.background = '#FFFFFF';
       btn.style.color = '#1F7A85';
@@ -949,7 +984,7 @@
       btn.style.transform = 'scale(1.05)';
       btn.classList.remove('bg-white/20', 'hover:bg-white/30', 'text-white');
       
-      currentFilters.specialty = btn.dataset.value;
+      currentFilters.specialty = value;
       applyFilters();
     }
 
