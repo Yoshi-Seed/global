@@ -1932,11 +1932,35 @@
 
     // CSVエクスポート（フィルター適用済み）
     function exportFilteredCSV() {
-      const headers = ['疾患名', '疾患略語', '手法', '調査種別', '対象者種別', '専門', '実績数', '対象条件', '薬剤', 'リクルート実施', 'モデレーター', 'クライアント', 'エンドクライアント', 'PJ番号', '実施年月', '登録担当', '登録日'];
+      // すべてのデータ列を含むヘッダー
+      const headers = [
+        'id',
+        'registrationId',
+        '疾患名',
+        '疾患略語',
+        '手法',
+        '調査種別',
+        '対象者種別',
+        '専門',
+        '実績数',
+        '問合せのみ',
+        '対象条件',
+        '薬剤',
+        'リクルート実施',
+        'モデレーター',
+        'クライアント',
+        'エンドクライアント',
+        'PJ番号',
+        '実施年月',
+        '登録担当',
+        '登録日'
+      ];
       const csvLines = [headers.join(',')];
       
       filteredProjects.forEach(project => {
         const row = [
+          project.id || '',
+          escapeCSVField(project.registrationId || ''),
           escapeCSVField(project.diseaseName || ''),
           escapeCSVField(project.diseaseAbbr || ''),
           escapeCSVField(project.method || ''),
@@ -1944,6 +1968,7 @@
           escapeCSVField(project.targetType || ''),
           escapeCSVField(project.specialty || ''),
           project.recruitCount || 0,
+          project.inquiryOnly === 'TRUE' || project.inquiryOnly === true ? 'TRUE' : 'FALSE',
           escapeCSVField(project.targetConditions || ''),
           escapeCSVField(project.drug || ''),
           escapeCSVField(project.recruitCompany || ''),
@@ -1953,7 +1978,7 @@
           escapeCSVField(project.projectNumber || ''),
           escapeCSVField(project.implementationDate || ''),
           escapeCSVField(project.registrant || ''),
-          project.registeredDate || '',
+          escapeCSVField(project.registeredDate || ''),
         ];
         csvLines.push(row.join(','));
       });
