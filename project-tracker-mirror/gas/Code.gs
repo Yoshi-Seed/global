@@ -2,7 +2,7 @@
  * Project Tracker (Mirror) - Google Apps Script
  *
  * - doGet:  ?action=list で全件JSONを返す
- * - doPost: action=add で1行追記 / action=delete_request で削除依頼を別シートへ記録
+ * - doPost: action=add で1行追記 / action=delete で本体シートから削除 / action=delete_request で削除依頼を別シートへ記録（必要なら）
  *
  * フロント側: /project-tracker-mirror/js/config.js の GAS_CONFIG を設定
  */
@@ -18,6 +18,16 @@ const TOKEN = '';
 
 // 削除依頼の格納先
 const DELETE_REQUEST_SHEET_NAME = 'delete_requests';
+
+// ✅ 本削除ログ（監査用）
+const DELETE_LOG_SHEET_NAME = 'delete_logs';
+
+// ✅ 削除確認フレーズ（フロント側の入力と一致させる）
+// ※本番では推測されにくい文字列に変更推奨
+const DELETE_CONFIRM_PHRASE = 'delete';
+
+// ✅ 安全のため、削除はTOKEN必須にする（推奨）
+const REQUIRE_TOKEN_FOR_DELETE = true;
 
 // 想定カラム（20列）
 const PROJECT_HEADERS = [
@@ -99,6 +109,10 @@ function doPost(e) {
 
     if (action === 'add') {
       return handleAdd_(payload);
+    }
+
+    if (action === 'delete') {
+      return handleDelete_(payload);
     }
 
     if (action === 'delete_request') {
@@ -201,6 +215,121 @@ function handleDeleteRequest_(data) {
     requestId,
     message: '削除依頼を記録しました（管理者が確認します）',
   });
+}
+
+
+function handleDelete_(data) {
+  // ✅ 安全のため、削除は TOKEN を設定している場合のみ許可（推奨）
+  // （公開Webアプリ + 静的サイト連携だとURLが知られる可能性があるため）
+  if (REQUIRE_TOKEN_FOR_DELETE && !TOKEN) {
+    return json_({
+      success: false,
+      message: 'TOKEN が未設定のため削除は無効です。Code.gs の TOKEN と js/config.js の GAS_CONFIG.TOKEN を設定してください。'
+    });
+  }
+
+  const targetId = Number(data.id);
+  const reason = String(data.reason || '').trim();
+  const password = String(data.password || '').trim();
+  const registrationId = String(data.registrationId || '').trim(); // 予備
+
+  if (!targetId && !registrationId) {
+    return json_({ success: false, message: 'id もしくは registrationId は必須です' });
+  }
+  if (!reason) {
+    return json_({ success: false, message: 'reason は必須です' });
+  }
+  if (password !== DELETE_CONFIRM_PHRASE) {
+    return json_({ success: false, message: '確認パスワードが正しくありません' });
+  }
+
+  const lock = LockService.getScriptLock();
+  lock.waitLock(30000);
+
+  try {
+    const sheet = getMainSheet_();
+    ensureProjectHeader_(sheet);
+
+    let rowIndex = null;
+    if (targetId) {
+      rowIndex = findRowIndexById_(sheet, targetId);
+    }
+    if (!rowIndex && registrationId) {
+      rowIndex = findRowIndexByRegistrationId_(sheet, registrationId);
+    }
+
+    if (!rowIndex) {
+      return json_({
+        success: false,
+        message: `削除対象が見つかりません（id=${targetId || '-'} / registrationId=${registrationId || '-'}）`
+      });
+    }
+
+    const rowValues = sheet.getRange(rowIndex, 1, 1, PROJECT_HEADERS.length).getValues()[0];
+    const snapshot = rowToProject_(rowValues);
+
+    // ✅ 先にログ（監査用）
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const logSheet = getOrCreateSheet_(ss, DELETE_LOG_SHEET_NAME, [
+      'timestamp',
+      'id',
+      'registrationId',
+      'reason',
+      'clientTimestamp',
+      'deletedRowIndex',
+      'snapshot_json',
+    ]);
+
+    logSheet.appendRow([
+      new Date().toISOString(),
+      snapshot.id || targetId || '',
+      snapshot.registrationId || registrationId || '',
+      reason,
+      String(data.clientTimestamp || ''),
+      rowIndex,
+      JSON.stringify(snapshot),
+    ]);
+
+    // ✅ 本体から削除
+    sheet.deleteRow(rowIndex);
+
+    return json_({
+      success: true,
+      message: '削除しました',
+      id: snapshot.id || targetId || null,
+      registrationId: snapshot.registrationId || registrationId || null,
+    });
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function findRowIndexById_(sheet, targetId) {
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return null;
+
+  const ids = sheet.getRange(2, 1, lastRow - 1, 1).getValues();
+  for (let i = 0; i < ids.length; i++) {
+    const n = Number.parseInt(ids[i][0], 10);
+    if (!Number.isNaN(n) && n === targetId) {
+      return i + 2; // header offset
+    }
+  }
+  return null;
+}
+
+function findRowIndexByRegistrationId_(sheet, registrationId) {
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return null;
+
+  const regs = sheet.getRange(2, 2, lastRow - 1, 1).getValues();
+  for (let i = 0; i < regs.length; i++) {
+    const v = String(regs[i][0] || '').trim();
+    if (v && v === registrationId) {
+      return i + 2; // header offset
+    }
+  }
+  return null;
 }
 
 // ------------------------

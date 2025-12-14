@@ -495,7 +495,7 @@
       <div class="flex items-center justify-between mb-4 border-b pb-3">
         <h3 class="text-lg font-bold text-red-600 flex items-center">
           <i class="fas fa-exclamation-triangle mr-2"></i>
-          削除依頼の確認
+          削除の確認
         </h3>
         <button onclick="closeDeleteDialog()" class="text-gray-400 hover:text-gray-600 text-xl transition">
           <i class="fas fa-times"></i>
@@ -507,7 +507,7 @@
         <div class="bg-red-50 border border-red-200 rounded-lg p-3">
           <p class="text-sm text-red-800">
             <i class="fas fa-info-circle mr-1"></i>
-            このレコードの削除依頼PRを作成します。管理者の承認後、データは完全に削除されます。
+            このレコードを削除します。削除後は元に戻せません。
           </p>
         </div>
 
@@ -556,7 +556,7 @@
             required
           >
           <label for="deleteConfirm" class="text-sm text-gray-700">
-            削除依頼PRを作成することを理解し、同意します
+            このデータを削除することを理解し、同意します
           </label>
         </div>
 
@@ -572,7 +572,7 @@
             onclick="submitDeleteRequest()" 
             class="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition text-sm font-medium"
           >
-            <i class="fas fa-paper-plane mr-1"></i>削除依頼を送信
+            <i class="fas fa-trash-alt mr-1"></i>削除を実行
           </button>
         </div>
       </div>
@@ -1837,7 +1837,7 @@
       document.getElementById('deleteDialog').classList.add('hidden');
     }
 
-    // 削除依頼を送信
+    // 削除を実行
     async function submitDeleteRequest() {
       // バリデーション
       const reason = document.getElementById('deleteReason').value.trim();
@@ -1871,7 +1871,7 @@
       }
 
       // 最終確認
-      if (!confirm(`本当に削除依頼を送信しますか？\n\nデータID: ${project.id}\n疾患名: ${project.diseaseName}\n削除理由: ${reason}`)) {
+      if (!confirm(`本当に削除しますか？\n\nデータID: ${project.id}\n疾患名: ${project.diseaseName}\n削除理由: ${reason}`)) {
         return;
       }
 
@@ -1887,10 +1887,12 @@
           submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>送信中...';
         }
 
-        // API呼び出し（GAS: delete_request）
-        const endpoint = (typeof API !== 'undefined' && typeof API.getDeleteRequestUrl === 'function')
-          ? API.getDeleteRequestUrl()
-          : '';
+        // API呼び出し（GAS: delete）
+        const endpoint = (typeof API !== 'undefined' && typeof API.getDeleteUrl === 'function')
+          ? API.getDeleteUrl()
+          : ((typeof API !== 'undefined' && typeof API.getDeleteRequestUrl === 'function')
+              ? API.getDeleteRequestUrl() // 互換
+              : '');
 
         if (!endpoint) {
           throw new Error('GAS_CONFIG.URL が未設定です（js/config.js を確認してください）');
@@ -1902,7 +1904,7 @@
             'Content-Type': 'text/plain;charset=utf-8',
           },
           body: JSON.stringify({
-            action: 'delete_request',
+            action: 'delete',
             id: project.id,
             reason,
             password,
@@ -1925,22 +1927,39 @@
           result = { success: response.ok };
         }
 
-        if (response.ok && result && result.success) {
-          // 成功メッセージ
-          const reqId = result.requestId ? `\n\nリクエストID: ${result.requestId}` : '';
-          alert(`✅ 削除依頼を送信しました！\n\n${result.message || '削除依頼を記録しました。'}${reqId}\n\n管理者の確認をお待ちください。`);
-          
-          // ダイアログを閉じる
-          closeDeleteDialog();
-          closeDetailModal();
-          
-          // データを再読み込み（オプション）
-          // await init();
-        } else {
-          throw new Error((result && (result.error || result.message)) || '削除依頼の送信に失敗しました。');
+        
+if (response.ok && result && result.success) {
+  // 成功メッセージ
+  alert(`✅ 削除しました！
+
+${result.message || '削除しました。'}
+
+データID: ${project.id}
+登録ID: ${project.registrationId || 'なし'}`);
+
+  // ダイアログを閉じる
+  closeDeleteDialog();
+  closeDetailModal();
+
+  // 画面上のデータも即時反映
+  allProjects = allProjects.filter(p => p.id !== project.id);
+  filteredProjects = filteredProjects.filter(p => p.id !== project.id);
+
+  // キャッシュもクリア（次回取得に備える）
+  if (typeof api !== 'undefined' && typeof api.clearCache === 'function') {
+    api.clearCache();
+  }
+
+  // フィルターUIを再生成して再描画
+  try {
+    generateSpecialtyFilters();
+  } catch (_) {}
+  applyFilters();
+} else {
+          throw new Error((result && (result.error || result.message)) || '削除に失敗しました。');
         }
       } catch (error) {
-        console.error('削除依頼エラー:', error);
+        console.error('削除エラー:', error);
         alert(`❌ エラーが発生しました:\n${error.message}\n\n再度お試しいただくか、管理者にお問い合わせください。`);
       } finally {
         // ボタンを元に戻す
