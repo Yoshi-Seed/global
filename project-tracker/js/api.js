@@ -1,18 +1,22 @@
 /**
  * API Client for Project Tracker
- * GitHub-backed data source via Cloudflare Worker
+ * Google Sheets-backed data source via Google Apps Script (Web App)
  */
 
 class ProjectAPI {
   constructor() {
-    // Cloudflare Worker エンドポイント
-    this.API_BASE = 'https://project-tracker-api.y-honda.workers.dev';
+    // GAS URL（js/config.js で定義）
+    this.API_BASE = (typeof API !== 'undefined' && typeof API.getDataUrl === 'function')
+      ? API.getDataUrl()
+      : '';
 
     // キャッシュ（メモリ）
     this.cache = {
       projects: null,
       timestamp: null,
-      ttl: 60000, // 1分（Worker側で5分キャッシュしているので、クライアント側は短くてOK）
+      ttl: (typeof GAS_CONFIG !== 'undefined' && GAS_CONFIG.CACHE_TTL_MS)
+        ? GAS_CONFIG.CACHE_TTL_MS
+        : 60000,
     };
 
     // 専門科の略語マッピング
@@ -22,7 +26,7 @@ class ProjectAPI {
   }
 
   /**
-   * プロジェクトデータを取得（GitHub main ブランチのCSV）
+   * プロジェクトデータを取得（Google Sheets → GAS doGet() JSON）
    */
   async getAllProjects(forceRefresh = false) {
     // キャッシュチェック
@@ -35,22 +39,42 @@ class ProjectAPI {
     }
 
     try {
-      console.log('Fetching data from GitHub via Worker...');
-      const response = await fetch(`${this.API_BASE}/data`);
-      
+      // GAS URL が未設定のときは、ローカル JSON を読む（デモ/開発用）
+      if (!this.API_BASE) {
+        console.warn('GAS_CONFIG.URL is not set. Falling back to local data/projects.json');
+        const response = await fetch('data/projects.json', { cache: 'no-store' });
+        if (!response.ok) {
+          throw new Error(`Local fallback HTTP ${response.status}: ${response.statusText}`);
+        }
+        const raw = await response.json();
+        const projects = Array.isArray(raw) ? raw : (raw.projects || []);
+        const normalized = projects.map((p, i) => this.normalizeProject_(p, i));
+
+        this.cache.projects = normalized;
+        this.cache.timestamp = Date.now();
+
+        console.log(`Loaded ${normalized.length} projects from local fallback`);
+        return normalized;
+      }
+
+      console.log('Fetching data from Google Sheets via GAS...');
+      const response = await fetch(this.API_BASE, { cache: 'no-store' });
+
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
-      
-      const csvText = await response.text();
-      const projects = this.parseCSV(csvText);
+
+      // GAS側は JSON を返す想定
+      const raw = await response.json();
+      const projects = Array.isArray(raw) ? raw : (raw.projects || []);
+      const normalized = projects.map((p, i) => this.normalizeProject_(p, i));
       
       // キャッシュ更新
-      this.cache.projects = projects;
+      this.cache.projects = normalized;
       this.cache.timestamp = Date.now();
       
-      console.log(`Loaded ${projects.length} projects from GitHub`);
-      return projects;
+      console.log(`Loaded ${normalized.length} projects from Google Sheets`);
+      return normalized;
       
     } catch (error) {
       console.error('Failed to fetch projects:', error);
@@ -63,6 +87,67 @@ class ProjectAPI {
       
       throw error;
     }
+  }
+
+  /**
+   * GASから返るJSONを、従来の ProjectAPI と同じ形に正規化
+   */
+  normalizeProject_(raw, index) {
+    const p = raw || {};
+
+    const id = Number.parseInt(p.id, 10);
+    const safeId = Number.isFinite(id) ? id : (index + 1);
+
+    // inquiryOnly: boolean / 'TRUE'/'FALSE' / 'true'/'false'
+    const inquiryOnly = (() => {
+      const v = p.inquiryOnly;
+      if (typeof v === 'boolean') return v ? 'TRUE' : 'FALSE';
+      const s = String(v ?? '').trim().toUpperCase();
+      if (s === 'TRUE') return 'TRUE';
+      if (s === 'FALSE') return 'FALSE';
+      // Apps Script が boolean を返すケース
+      if (s === '1' || s === 'YES') return 'TRUE';
+      if (s === '0' || s === 'NO') return 'FALSE';
+      return 'FALSE';
+    })();
+
+    const registeredDate = String(p.registeredDate || p.registered_date || '').trim();
+    const createdAt = (() => {
+      if (p.createdAt) return String(p.createdAt);
+      if (!registeredDate) return null;
+      const d = new Date(registeredDate);
+      return Number.isNaN(d.getTime()) ? null : d.toISOString();
+    })();
+
+    const specialtyName = String(p.specialty || '').trim();
+    const specialtyCode = this.specialtyDictionary
+      ? this.specialtyDictionary.deriveCodeFromName(specialtyName)
+      : null;
+
+    return {
+      id: safeId,
+      registrationId: String(p.registrationId || p.registration_id || '').trim(),
+      diseaseName: String(p.diseaseName || p.disease_name || '').trim(),
+      diseaseAbbr: String(p.diseaseAbbr || p.disease_abbr || '').trim(),
+      method: String(p.method || '').trim(),
+      surveyType: String(p.surveyType || p.survey_type || '').trim(),
+      targetType: String(p.targetType || p.target_type || '').trim(),
+      specialty: specialtyName,
+      specialtyCode,
+      recruitCount: Number.parseInt(p.recruitCount ?? p.recruit_count ?? 0, 10) || 0,
+      inquiryOnly,
+      targetConditions: String(p.targetConditions || p.target_conditions || '').trim(),
+      drug: String(p.drug || '').trim(),
+      recruitCompany: String(p.recruitCompany || p.recruit_company || '').trim(),
+      moderator: String(p.moderator || '').trim(),
+      client: String(p.client || '').trim(),
+      endClient: String(p.endClient || p.end_client || '').trim(),
+      projectNumber: String(p.projectNumber || p.project_number || '').trim(),
+      implementationDate: String(p.implementationDate || p.implementation_date || '').trim(),
+      registrant: String(p.registrant || '').trim(),
+      registeredDate: registeredDate,
+      createdAt,
+    };
   }
 
   /**

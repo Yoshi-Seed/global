@@ -1,5 +1,10 @@
 # プロジェクト履歴管理システム (Seed Planning版)
 
+> ⚠️ **この project-tracker-mirror は Cloudflare Worker / GitHub PR 方式ではなく**
+> **Google Sheets（GAS Webアプリ）で読み書きする版**です。
+> 
+> セットアップは **README_MIRROR.md** を参照してください。
+
 医療系マーケットリサーチの案件情報を登録・管理し、過去の類似案件を検索できるWebアプリケーション  
 **Seed Planningの実データ（113件）に完全対応**
 

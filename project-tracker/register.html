@@ -409,7 +409,7 @@
             class="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition font-semibold flex items-center justify-center space-x-2"
           >
             <i class="fas fa-code-branch"></i>
-            <span>この内容でPRを作る</span>
+            <span>この内容で登録する</span>
           </button>
           <button 
             type="button" 
@@ -427,16 +427,24 @@
         <div class="flex items-center justify-between mb-2">
           <div class="flex items-center space-x-2">
             <i class="fas fa-check-circle text-xl"></i>
-            <span class="font-semibold">PRを作成しました！</span>
+            <span class="font-semibold">登録しました！</span>
           </div>
           <button onclick="hideSuccessMessage()" class="text-green-700 hover:text-green-900">
             <i class="fas fa-times"></i>
           </button>
         </div>
-        <div id="prLinkContainer" class="ml-7">
-          <a id="prLink" href="#" target="_blank" class="text-blue-600 hover:text-blue-800 underline flex items-center space-x-2">
-            <i class="fab fa-github"></i>
-            <span>GitHubでPRを確認する</span>
+        <div id="successDetails" class="ml-7 space-y-2">
+          <p class="text-sm">
+            <span class="font-semibold">登録ID:</span>
+            <span id="savedId">-</span>
+          </p>
+          <p class="text-sm">
+            <span class="font-semibold">登録番号:</span>
+            <span id="savedRegistrationId">-</span>
+          </p>
+          <a id="projectLink" href="projects.html" class="text-blue-600 hover:text-blue-800 underline inline-flex items-center space-x-2">
+            <i class="fas fa-search"></i>
+            <span>案件検索で確認する</span>
             <i class="fas fa-external-link-alt text-sm"></i>
           </a>
         </div>
@@ -761,7 +769,7 @@
 
   <!-- フォームロジック -->
   <script>
-    // Cloudflare Worker API エンドポイント（config.jsから取得）
+    // ✅ Google Apps Script（Webアプリ）URL（config.jsから取得）
     const API_ENDPOINT = API.getSubmitUrl();
 
     // フォーム送信
@@ -821,31 +829,42 @@
       };
 
       try {
-        // API にPOSTリクエスト
+        // ✅ GAS(Webアプリ) にPOST（/faq/yoshi と同じ: text/plain で JSON文字列を送る）
         const response = await fetch(API_ENDPOINT, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'text/plain;charset=utf-8',
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify({
+            ...formData,
+            // 将来拡張用（GAS側が action をURLから取れない場合にも備える）
+            action: 'add',
+            clientTimestamp: new Date().toISOString(),
+          }),
         });
 
-        const result = await response.json();
+        // GAS からのレスポンスJSON（CORS/実装差分でjson()が失敗しても落とさない）
+        let result = null;
+        try {
+          result = await response.json();
+        } catch (e) {
+          result = { success: response.ok };
+        }
 
-        if (response.ok && result.success) {
-          // 成功: PRリンクを表示
-          showSuccessMessage(result.prUrl);
-          
+        if (response.ok && result && result.success) {
+          // 成功: 登録情報を表示
+          showSuccessMessage(result);
+
           // フォームをリセット
           setTimeout(() => {
             resetForm();
-          }, 1000);
+          }, 800);
         } else {
           // エラー: バリデーションエラーを表示
-          if (result.details) {
+          if (result && result.details) {
             showValidationErrors(result.details);
           } else {
-            showErrorMessage(result.message || 'エラーが発生しました');
+            showErrorMessage((result && (result.message || result.error)) || 'エラーが発生しました');
           }
         }
       } catch (error) {
@@ -872,14 +891,22 @@
       document.getElementById('targetTypeOther').required = false;
     }
 
-    // 成功メッセージ表示（PRリンク付き）
-    function showSuccessMessage(prUrl) {
+    // 成功メッセージ表示
+    function showSuccessMessage(result) {
       const element = document.getElementById('successMessage');
-      const prLink = document.getElementById('prLink');
-      
-      prLink.href = prUrl;
+
+      const idEl = document.getElementById('savedId');
+      const regEl = document.getElementById('savedRegistrationId');
+      const projectLink = document.getElementById('projectLink');
+
+      if (idEl) idEl.textContent = result.id != null ? String(result.id) : '-';
+      if (regEl) regEl.textContent = result.registrationId ? String(result.registrationId) : '-';
+
+      if (projectLink) {
+        projectLink.href = result.id != null ? `projects.html?id=${encodeURIComponent(result.id)}` : 'projects.html';
+      }
+
       element.classList.remove('hidden');
-      
       // 自動的に非表示にしない（ユーザーが確認するまで表示）
     }
 
