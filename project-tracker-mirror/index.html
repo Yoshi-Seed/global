@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>プロジェクト履歴管理システム - ダッシュボード</title>
+  <!-- Version: 2025-11-09-final 期間比較分析システム本番版 -->
+  <link rel="icon" type="image/png" href="SP_logo_shape_only.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50">
+  <!-- ナビゲーション -->
+  <nav class="bg-white shadow-md sticky top-0 z-40">
+    <div class="container mx-auto px-2 sm:px-4 py-2 sm:py-3">
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <!-- ロゴ部分 -->
+        <div class="flex items-center space-x-2 sm:space-x-4">
+          <img src="Seed_Planning_Logo_Original.jpg" alt="SEED PLANNING" class="h-8 sm:h-10">
+          <h1 class="hidden md:block text-lg font-bold text-gray-800">プロジェクト履歴管理システム</h1>
+        </div>
+        
+        <!-- ナビゲーションボタン -->
+        <div class="flex flex-wrap gap-1 sm:gap-2">
+          <a href="index.html" class="px-2 sm:px-4 py-2 text-xs sm:text-sm text-white rounded-lg transition flex items-center" style="background-color: #1F7A85;">
+            <i class="fas fa-home sm:mr-2"></i><span class="hidden sm:inline ml-1">ホーム</span>
+          </a>
+          <a href="register.html" class="px-2 sm:px-4 py-2 text-xs sm:text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center">
+            <i class="fas fa-plus sm:mr-2"></i><span class="hidden sm:inline ml-1">新規登録</span>
+          </a>
+          <a href="projects.html" class="px-2 sm:px-4 py-2 text-xs sm:text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center">
+            <i class="fas fa-search sm:mr-2"></i><span class="hidden sm:inline ml-1">案件検索</span>
+          </a>
+          <a href="links.html" class="px-2 sm:px-4 py-2 text-xs sm:text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center">
+            <i class="fas fa-link sm:mr-2"></i><span class="hidden sm:inline ml-1">リンク集</span>
+          </a>
+          <a href="https://seedplanning.monday.com/boards/2723929863" target="_blank" rel="noopener noreferrer" class="px-2 sm:px-4 py-2 text-xs sm:text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center">
+            <img src="monday.png" alt="Monday" class="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2"><span class="hidden sm:inline ml-1">Monday</span>
+          </a>
+          <a href="https://db.seedplanning.co.jp/project/management" target="_blank" rel="noopener noreferrer" class="px-2 sm:px-4 py-2 text-xs sm:text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center">
+            <img src="SP_logo_shape_only.png" alt="プロジェクト管理" class="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2"><span class="hidden sm:inline ml-1">PJ管理</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- メインコンテンツ -->
+  <div class="container mx-auto px-4 py-8">
+    
+    <!-- データインポート促進バナー -->
+    <div id="importBanner" class="hidden bg-gradient-to-r from-purple-500 to-blue-600 text-white rounded-lg shadow-lg p-6 mb-8">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <i class="fas fa-database text-4xl"></i>
+          <div>
+            <h3 class="text-xl font-bold">データがまだインポートされていません</h3>
+            <p class="text-sm opacity-90">Seed Planningの実績データ（113件）をインポートして、すぐに使い始めましょう！</p>
+          </div>
+        </div>
+        <a href="import.html" class="bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
+          <i class="fas fa-file-import mr-2"></i>今すぐインポート
+        </a>
+      </div>
+    </div>
+
+    <!-- 統計カード -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <!-- 総案件数 -->
+      <div class="rounded-lg shadow-md p-6" style="background: linear-gradient(135deg, #E8F0F1 0%, #d5e5e7 100%);">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-500 text-sm">総案件数</p>
+            <p id="totalProjects" class="text-3xl font-bold text-blue-600">0</p>
+          </div>
+          <div class="bg-blue-100 rounded-full p-3">
+            <i class="fas fa-folder-open text-blue-600 text-2xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 総リクルート人数 -->
+      <div class="rounded-lg shadow-md p-6" style="background: linear-gradient(135deg, #E8F0F1 0%, #d5e5e7 100%);">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-500 text-sm">総リクルート人数</p>
+            <p id="totalRecruits" class="text-3xl font-bold text-green-600">0</p>
+          </div>
+          <div class="bg-green-100 rounded-full p-3">
+            <i class="fas fa-users text-green-600 text-2xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 平均リクルート人数 -->
+      <div class="rounded-lg shadow-md p-6" style="background: linear-gradient(135deg, #E8F0F1 0%, #d5e5e7 100%);">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-500 text-sm">平均リクルート人数</p>
+            <p id="avgRecruits" class="text-3xl font-bold text-purple-600">0</p>
+          </div>
+          <div class="bg-purple-100 rounded-full p-3">
+            <i class="fas fa-chart-line text-purple-600 text-2xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 今月の新規案件 -->
+      <div class="rounded-lg shadow-md p-6" style="background: linear-gradient(135deg, #E8F0F1 0%, #d5e5e7 100%);">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-500 text-sm">今月の新規</p>
+            <p id="thisMonthProjects" class="text-3xl font-bold text-orange-600">0</p>
+          </div>
+          <div class="bg-orange-100 rounded-full p-3">
+            <i class="fas fa-calendar-plus text-orange-600 text-2xl"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 最近の案件 -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+      <h2 class="text-xl font-bold mb-4 flex items-center">
+        <i class="fas fa-clock mr-2 text-purple-600"></i>
+        最近の案件（5件）
+      </h2>
+      <div class="overflow-x-auto">
+        <table class="min-w-full">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">疾患名</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">疾患略語</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">対象者</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">専門</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">実績数</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">クライアント</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">登録日</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">アクション</th>
+            </tr>
+          </thead>
+          <tbody id="recentProjectsTable" class="bg-white divide-y divide-gray-200">
+            <!-- 動的に生成 -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 2カラムレイアウト -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      
+      <!-- 疾患カテゴリー Top 5 -->
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-bold mb-4 flex items-center">
+          <i class="fas fa-heartbeat mr-2 text-red-600"></i>
+          疾患カテゴリー Top 5 <span class="text-sm font-normal text-gray-500 ml-2">（過去3ヵ月比較）</span>
+        </h2>
+        <div id="diseaseChart" class="space-y-3">
+          <!-- 動的に生成 -->
+        </div>
+      </div>
+
+      <!-- 専門（診療科）Top 5 -->
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-bold mb-4 flex items-center">
+          <i class="fas fa-user-md mr-2 text-indigo-600"></i>
+          専門（診療科）Top 5 <span class="text-sm font-normal text-gray-500 ml-2">（過去3ヵ月比較）</span>
+        </h2>
+        <div id="specialtyChart" class="space-y-3">
+          <!-- 動的に生成 -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 2カラムレイアウト -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      
+      <!-- 対象者タイプ別分布 Top 5 -->
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-bold mb-4 flex items-center">
+          <i class="fas fa-chart-pie mr-2 text-blue-600"></i>
+          対象者タイプ別分布 Top 5 <span class="text-sm font-normal text-gray-500 ml-2">（過去1年比較）</span>
+        </h2>
+        <div id="targetTypeChart" class="space-y-3">
+          <!-- 動的に生成 -->
+        </div>
+      </div>
+
+      <!-- クライアント Top 5 -->
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-bold mb-4 flex items-center">
+          <i class="fas fa-handshake mr-2 text-yellow-600"></i>
+          クライアント Top 5 <span class="text-sm font-normal text-gray-500 ml-2">（過去3ヵ月比較）</span>
+        </h2>
+        <div id="clientChart" class="space-y-3">
+          <!-- 動的に生成 -->
+        </div>
+      </div>
+    </div>
+
+    <!-- クイックアクション -->
+    <div class="mt-8 flex justify-center space-x-4">
+      <a href="import.html" class="bg-purple-500 text-white px-6 py-3 rounded-lg hover:bg-purple-600 transition flex items-center space-x-2">
+        <i class="fas fa-chart-bar"></i>
+        <span>詳細レポート</span>
+      </a>
+      <a href="register.html" class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition flex items-center space-x-2">
+        <i class="fas fa-plus-circle"></i>
+        <span>新規案件登録</span>
+      </a>
+      <a href="projects.html" class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition flex items-center space-x-2">
+        <i class="fas fa-search"></i>
+        <span>案件検索</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- 共通設定 -->
+  <script src="js/config.js"></script>
+  <script src="js/specialties.js"></script>
+  <!-- API Client -->
+  <script src="js/api.js"></script>
+  <!-- Export helpers -->
+  <script src="js/export.js"></script>
+
+  <!-- ダッシュボードロジック -->
+  <script>
+    // 初期化
+    async function initDashboard() {
+      // データ存在確認＆自動取得
+      await ensureDataLoaded();
+      await loadStatistics();
+    }
+    
+    // データが取得されているか確認（初回起動時の自動同期）
+    async function ensureDataLoaded() {
+      try {
+        const projects = await api.getAllProjects();
+        console.log('🔍 Data Check:');
+        console.log(`  - Projects loaded: ${projects.length}`);
+        console.log('  - Expected: ~469 (after CSV parser fix)');
+        console.log('  - Old (buggy): 611');
+        
+        if (projects.length === 0) {
+          console.log('⚠️ データが空です。GitHubから取得しています...');
+          // 強制リフレッシュ
+          api.clearCache();
+          await api.getAllProjects(true);
+        } else if (projects.length > 500) {
+          console.warn('⚠️ プロジェクト数が500を超えています！CSVパーサーの修正が反映されていない可能性があります。');
+          console.warn('💡 対処法:');
+          console.warn('  1. 5分待ってから再度リロード（Cloudflare Workerのキャッシュが期限切れになる）');
+          console.warn('  2. スーパーリロード（Ctrl+Shift+R または Cmd+Shift+R）');
+        } else {
+          console.log(`✅ ${projects.length}件のデータを確認しました（正常）`);
+        }
+      } catch (error) {
+        console.error('❌ データ確認エラー:', error);
+        // エラーでもダッシュボード表示は続行
+      }
+    }
+
+    // ==========================================
+    // Phase 1: 期間比較データ集計ロジック
+    // ==========================================
+    
+    /**
+     * 直近3ヵ月の期間を取得（前月確定ローリング）
+     * 例：今日が2025/11/9 → 前月=10月 → 直近3ヶ月 = 8月, 9月, 10月
+     * 計算方法: 現在月から1ヶ月、2ヶ月、3ヶ月前
+     * 
+     * 注意: toISOString()はUTCを使うためタイムゾーンでずれる問題があり、
+     * ローカルの年月を直接使用する
+     */
+    function getRecentThreeMonths() {
+      const today = new Date();
+      const currentYear = today.getFullYear();
+      const currentMonth = today.getMonth(); // 0-based (0=Jan, 10=Nov)
+      
+      console.log('[getRecentThreeMonths] ======== START ========');
+      console.log('[getRecentThreeMonths] Today:', today.toString());
+      console.log('[getRecentThreeMonths] Current year:', currentYear);
+      console.log('[getRecentThreeMonths] Current month (0-based):', currentMonth, '(November=10)');
+      
+      const months = [];
+      // 直近3ヶ月 = 現在月から3ヶ月前、2ヶ月前、1ヶ月前
+      for (let i = 3; i >= 1; i--) {
+        const d = new Date(currentYear, currentMonth - i, 1);
+        // UTC変換を避けて、ローカルの年月を直接使用
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0'); // 1-based, 0埋め
+        const monthStr = `${year}-${month}`;
+        months.push(monthStr);
+        console.log(`[getRecentThreeMonths]   ${i}ヶ月前: year=${year}, month=${d.getMonth() + 1} → ${monthStr}`);
+      }
+      
+      console.log('[getRecentThreeMonths] Result:', months);
+      console.log('[getRecentThreeMonths] Expected: [2025-08, 2025-09, 2025-10]');
+      console.log('[getRecentThreeMonths] ======== END ========');
+      return months;
+    }
+    
+    /**
+     * 昨年同時期の3ヵ月を取得
+     */
+    function getYoYThreeMonths() {
+      const recentMonths = getRecentThreeMonths();
+      return recentMonths.map(month => {
+        const [year, m] = month.split('-');
+        return `${parseInt(year) - 1}-${m}`;
+      });
+    }
+    
+    /**
+     * 直近6ヵ月の期間を取得（スパークライン用）
+     */
+    function getRecentSixMonths() {
+      const today = new Date();
+      const currentYear = today.getFullYear();
+      const currentMonth = today.getMonth();
+
+      const months = [];
+      for (let i = 6; i >= 1; i--) {
+        const d = new Date(currentYear, currentMonth - i, 1);
+        // UTC変換を避けて、ローカルの年月を直接使用
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        months.push(`${year}-${month}`);
+      }
+      return months;
+    }
+
+    /**
+     * 直近12ヵ月の期間を取得
+     */
+    function getRecentTwelveMonths() {
+      const today = new Date();
+      const currentYear = today.getFullYear();
+      const currentMonth = today.getMonth();
+
+      const months = [];
+      for (let i = 12; i >= 1; i--) {
+        const d = new Date(currentYear, currentMonth - i, 1);
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        months.push(`${year}-${month}`);
+      }
+      return months;
+    }
+
+    /**
+     * 昨年同時期の12ヵ月を取得
+     */
+    function getYoYTwelveMonths() {
+      return getRecentTwelveMonths().map(month => {
+        const [year, m] = month.split('-');
+        return `${parseInt(year) - 1}-${m}`;
+      });
+    }
+    
+    /**
+     * プロジェクトを月別に集計
+     */
+    function aggregateByMonth(projects, fieldName) {
+      const monthlyData = {};
+      
+      // 診療科フィールドの完全一致除外リスト（対象者タイプや調査手法など）
+      const EXACT_EXCLUDE_VALUES = [
+        '医師', '患者', '介護者', 'KOL', '看護師', 
+        '定性', '定量', '薬剤師', 'その他', '家族'
+      ];
+      
+      // 診療科の部分一致パターン（診療科名に含まれる典型的なキーワード）
+      const SPECIALTY_KEYWORDS = [
+        '内科', '外科', '科医', '医', '専門医', // 「○○科」「○○医」を含むものを許可
+        '腫瘍', '循環器', '消化器', '呼吸器', '神経', '精神', 
+        '小児', '産婦人科', '整形', '皮膚', '泌尿器', '眼科', 
+        '耳鼻', '麻酔', '放射線', '救急', '総合', 'リウマチ', 
+        '腎臓', '血液', '内分泌', '糖尿病', '乳腺', '心臓', 
+        '脳神経', 'リハビリ', '病理', 'アレルギー', '代謝',
+        '肝臓', '甲状腺', '診療'
+      ];
+      
+      projects.forEach(project => {
+        // 実施年月をパース
+        let month = null;
+        if (project.implementationDate) {
+          const dateStr = project.implementationDate.trim();
+          
+          // パターン1: yyyy/mm または yyyy/mm/dd 形式
+          if (/^\d{4}\/\d{1,2}/.test(dateStr)) {
+            const parts = dateStr.split('/');
+            const year = parts[0];
+            const m = parts[1].padStart(2, '0');
+            month = `${year}-${m}`;
+          }
+          // パターン2: yyyy-mm または yyyy-mm-dd 形式
+          else if (/^\d{4}-\d{1,2}/.test(dateStr)) {
+            const parts = dateStr.split('-');
+            const year = parts[0];
+            const m = parts[1].padStart(2, '0');
+            month = `${year}-${m}`;
+          }
+          // パターン3: yyyy/m（スラッシュのみ、日付なし）
+          else if (/^\d{4}\/\d{1,2}$/.test(dateStr)) {
+            const parts = dateStr.split('/');
+            const year = parts[0];
+            const m = parts[1].padStart(2, '0');
+            month = `${year}-${m}`;
+          }
+          // パターン4: その他の形式（Date()でパース試行）
+          else {
+            const date = new Date(dateStr);
+            if (!isNaN(date.getTime())) {
+              month = date.toISOString().substring(0, 7);
+            }
+          }
+        }
+        
+        if (!month) return; // 日付が不正な場合はスキップ
+        
+        let fieldValue = project[fieldName];
+        if (!fieldValue || fieldValue.trim() === '') return; // 空の値はスキップ
+        
+        fieldValue = fieldValue.trim();
+        
+        // 診療科フィールドの場合は、非診療科の値を除外
+        if (fieldName === 'specialty') {
+          // 完全一致での除外チェック（「医師」単体は除外、「内科医」は許可）
+          if (EXACT_EXCLUDE_VALUES.includes(fieldValue)) {
+            console.log(`Excluding exact match: "${fieldValue}"`);
+            return; // 非診療科の値はスキップ
+          }
+          
+          // 診療科キーワードが含まれているかチェック（部分一致）
+          const hasSpecialtyKeyword = SPECIALTY_KEYWORDS.some(keyword => 
+            fieldValue.includes(keyword)
+          );
+          
+          // 診療科キーワードが含まれていない場合もスキップ
+          if (!hasSpecialtyKeyword) {
+            console.log(`Skipping non-specialty value: "${fieldValue}"`);
+            return;
+          }
+          
+          console.log(`Including specialty: "${fieldValue}"`);
+        }
+        
+        if (!monthlyData[month]) {
+          monthlyData[month] = {};
+        }
+        if (!monthlyData[month][fieldValue]) {
+          monthlyData[month][fieldValue] = 0;
+        }
+        monthlyData[month][fieldValue]++;
+      });
+      
+      return monthlyData;
+    }
+    
+    /**
+     * 期間比較データを生成
+     */
+    function generateComparisonData(projects, fieldName, options = {}) {
+      console.log(`generateComparisonData for ${fieldName}:`, {
+        totalProjects: projects.length,
+        sampleDates: projects.slice(0, 5).map(p => p.implementationDate)
+      });
+
+      const monthlyData = aggregateByMonth(projects, fieldName);
+      console.log(`Monthly data for ${fieldName}:`, Object.keys(monthlyData).sort());
+
+      const {
+        recentMonths = getRecentThreeMonths(),
+        yoyMonths = getYoYThreeMonths(),
+        sparklineMonths = getRecentSixMonths(),
+        filterFn
+      } = options;
+
+      console.log(`Periods:`, { recentMonths, yoyMonths });
+
+      // 直近3ヵ月の集計
+      const currData = {};
+      recentMonths.forEach(month => {
+        if (monthlyData[month]) {
+          console.log(`  ${month} data:`, monthlyData[month]);
+          Object.entries(monthlyData[month]).forEach(([key, count]) => {
+            currData[key] = (currData[key] || 0) + count;
+          });
+        }
+      });
+      
+      console.log(`Current period (${fieldName}) aggregated data:`, currData);
+      
+      // 昨年同時期の集計
+      const prevData = {};
+      yoyMonths.forEach(month => {
+        if (monthlyData[month]) {
+          console.log(`  ${month} data (YoY):`, monthlyData[month]);
+          Object.entries(monthlyData[month]).forEach(([key, count]) => {
+            prevData[key] = (prevData[key] || 0) + count;
+          });
+        }
+      });
+      
+      console.log(`Previous period (${fieldName}) aggregated data:`, prevData);
+      
+      // 直近6ヵ月の月別推移（スパークライン用）
+      const sparklineData = {};
+      sparklineMonths.forEach(month => {
+        if (monthlyData[month]) {
+          Object.entries(monthlyData[month]).forEach(([key, count]) => {
+            if (!sparklineData[key]) sparklineData[key] = [];
+            sparklineData[key].push(count);
+          });
+        }
+      });
+
+      // 比較データを生成
+      const allKeys = new Set([...Object.keys(currData), ...Object.keys(prevData)]);
+      const comparison = [];
+
+      const currTotal = Object.values(currData).reduce((sum, v) => sum + v, 0);
+      const prevTotal = Object.values(prevData).reduce((sum, v) => sum + v, 0);
+
+      allKeys.forEach(key => {
+        const curr = currData[key] || 0;
+        const prev = prevData[key] || 0;
+        const delta = curr - prev;
+        const yoyPercent = prev > 0 ? ((delta / prev) * 100) : null;
+
+        // 全体に対する構成比
+        const currShare = currTotal > 0 ? (curr / currTotal) * 100 : 0;
+        const prevShare = prevTotal > 0 ? (prev / prevTotal) * 100 : 0;
+        const shareDelta = currShare - prevShare;
+
+        comparison.push({
+          name: key,
+          curr: curr,
+          prev: prev,
+          delta: delta,
+          yoyPercent: yoyPercent,
+          currShare: currShare,
+          prevShare: prevShare,
+          shareDelta: shareDelta,
+          sparkline: sparklineData[key] || []
+        });
+      });
+      
+      console.log(`${fieldName} comparison before filtering (${comparison.length} items):`, comparison);
+      
+      // ノイズ抑制フィルター：フィールドごとに基準を調整
+      const defaultFilter = (item) => {
+        if (fieldName === 'specialty' || fieldName === 'diseaseName') {
+          // 診療科と疾患カテゴリーは少なくとも1件あればOK（データが少ないため）
+          return item.prev >= 1 || item.curr >= 1;
+        } else if (fieldName === 'client') {
+          // クライアントも緩めの基準
+          return item.prev >= 2 || item.curr >= 3;
+        } else {
+          // その他のフィールドは厳しい基準：Prev<5 かつ Curr<8 は除外
+          return item.prev >= 5 || item.curr >= 8;
+        }
+      };
+
+      const effectiveFilter = filterFn || defaultFilter;
+      const filtered = comparison.filter(effectiveFilter);
+      
+      console.log(`${fieldName} comparison after filtering (${filtered.length} items):`, filtered);
+      
+      // 件数順でソート
+      filtered.sort((a, b) => b.curr - a.curr);
+      
+      const result = {
+        data: filtered,
+        recentPeriod: recentMonths,
+        yoyPeriod: yoyMonths,
+        currTotal,
+        prevTotal
+      };
+      
+      console.log(`${fieldName} final result:`, result);
+      
+      return result;
+    }
+
+    // 統計情報を読み込み
+    async function loadStatistics() {
+      try {
+        const stats = await api.getStats();
+        const allProjects = await api.getAllProjects();
+
+        // デバッグログ
+        console.log('📊 Dashboard Statistics:');
+        console.log('  - Total Projects (from stats):', stats.totalProjects);
+        console.log('  - All Projects (direct):', allProjects.length);
+        console.log('  - Total Recruits:', stats.totalRecruits);
+        console.log('  - Average Recruits:', stats.averageRecruits);
+        
+        // データがない場合はインポートバナーを表示
+        if (stats.totalProjects === 0) {
+          document.getElementById('importBanner').classList.remove('hidden');
+        }
+
+        // 基本統計
+        document.getElementById('totalProjects').textContent = stats.totalProjects;
+        document.getElementById('totalRecruits').textContent = stats.totalRecruits.toLocaleString();
+        document.getElementById('avgRecruits').textContent = stats.averageRecruits;
+
+        // 今月のプロジェクト数
+        const thisMonth = new Date().toISOString().substring(0, 7);
+        document.getElementById('thisMonthProjects').textContent = stats.monthlyTrend[thisMonth] || 0;
+
+        // 対象者タイプ別分布 Top 5（過去1年比較）
+        const targetTypeComparison = generateComparisonData(allProjects, 'targetType', {
+          recentMonths: getRecentTwelveMonths(),
+          yoyMonths: getYoYTwelveMonths(),
+          filterFn: (item) => item.prev >= 5 || item.curr >= 5
+        });
+        renderTargetTypeChartWithComparison(targetTypeComparison);
+
+        // 【新ロジック】疾患カテゴリー Top 5（期間比較）
+        const diseaseComparison = generateComparisonData(allProjects, 'diseaseName');
+        renderDiseaseChartWithComparison(diseaseComparison);
+
+        // 【新ロジック】専門（診療科）Top 5（期間比較）
+        const specialtyComparison = generateComparisonData(allProjects, 'specialty');
+        renderSpecialtyChartWithComparison(specialtyComparison);
+
+        // 【新ロジック】クライアント Top 5（期間比較）
+        const clientComparison = generateComparisonData(allProjects, 'client');
+        renderClientChartWithComparison(clientComparison);
+
+        // 最近のプロジェクト
+        renderRecentProjects(stats.recentProjects);
+
+      } catch (error) {
+        console.error('Failed to load statistics:', error);
+        alert('データの読み込みに失敗しました。ページを再読み込みしてください。');
+      }
+    }
+
+    /**
+     * 対象者タイプ別分布 Top 5（過去1年比較版）
+     */
+    function renderTargetTypeChartWithComparison(comparisonResult) {
+      const container = document.getElementById('targetTypeChart');
+      renderComparisonChart(container, comparisonResult, 'bg-blue-500', {
+        currentLabel: '過去1年',
+        previousLabel: '前年同期間'
+      });
+    }
+
+    // ==========================================
+    // Phase 2: 期間比較UI（二重バー + Δバッジ）
+    // ==========================================
+    
+    /**
+     * 期間比較カードを生成（共通関数）
+     */
+    function renderComparisonChart(container, comparisonResult, colorClass = 'bg-blue-500', options = {}) {
+      const { data, recentPeriod, yoyPeriod, currTotal, prevTotal } = comparisonResult;
+      const {
+        currentLabel = '直近3ヵ月',
+        previousLabel = '昨年同時期'
+      } = options;
+      
+      console.log('renderComparisonChart called:', { 
+        dataCount: data.length, 
+        currTotal, 
+        prevTotal,
+        recentPeriod,
+        yoyPeriod,
+        sampleData: data.slice(0, 3)
+      });
+      
+      container.innerHTML = '';
+      
+      // 期間表示
+      const recentStart = recentPeriod.length > 0 ? recentPeriod[0] : '-';
+      const recentEnd = recentPeriod.length > 0 ? recentPeriod[recentPeriod.length - 1] : '-';
+      const yoyStart = yoyPeriod.length > 0 ? yoyPeriod[0] : '-';
+      const yoyEnd = yoyPeriod.length > 0 ? yoyPeriod[yoyPeriod.length - 1] : '-';
+      const periodInfo = `
+        <div class="text-xs text-gray-500 mb-3 flex items-center justify-between">
+          <span>${currentLabel}: ${recentStart}〜${recentEnd} (${currTotal}件)</span>
+          <span>${previousLabel}: ${yoyStart}〜${yoyEnd} (${prevTotal}件)</span>
+        </div>
+      `;
+      container.innerHTML = periodInfo;
+      
+      if (data.length === 0) {
+        container.innerHTML += '<p class="text-gray-500 text-center py-4">データがありません</p>';
+        return;
+      }
+      
+      // Top 5のみ表示
+      data.slice(0, 5).forEach((item) => {
+        const maxCount = Math.max(item.curr, item.prev);
+        const currPercent = maxCount > 0 ? (item.curr / maxCount) * 100 : 0;
+        const prevPercent = maxCount > 0 ? (item.prev / maxCount) * 100 : 0;
+        
+        // Δバッジの生成
+        let deltaBadge = '';
+        if (item.prev === 0) {
+          // 新規
+          deltaBadge = `<span class="px-2 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded">新規</span>`;
+        } else if (item.delta > 0) {
+          deltaBadge = `<span class="px-2 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded">+${item.delta}件 (+${item.yoyPercent.toFixed(1)}%)</span>`;
+        } else if (item.delta < 0) {
+          deltaBadge = `<span class="px-2 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded">${item.delta}件 (${item.yoyPercent.toFixed(1)}%)</span>`;
+        } else {
+          deltaBadge = `<span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded">変動なし</span>`;
+        }
+        
+        // 構成比差
+        const shareText = item.shareDelta !== 0 
+          ? `<span class="text-xs ${item.shareDelta > 0 ? 'text-green-600' : 'text-red-600'}">(${item.shareDelta > 0 ? '+' : ''}${item.shareDelta.toFixed(1)}pt)</span>`
+          : '';
+        
+        container.innerHTML += `
+          <div class="mb-4">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-sm font-medium text-gray-700">${item.name}</span>
+              <div class="flex items-center space-x-2">
+                ${deltaBadge}
+                ${shareText}
+              </div>
+            </div>
+            <div class="relative">
+              <!-- 下地バー（昨年同時期） -->
+              <div class="w-full bg-gray-200 rounded-full h-6 mb-1">
+                <div class="${colorClass} opacity-30 h-6 rounded-full transition-all duration-500" style="width: ${prevPercent}%"></div>
+              </div>
+              <!-- 濃色バー（直近3ヵ月） -->
+              <div class="w-full absolute top-0 left-0">
+                <div class="${colorClass} h-6 rounded-full transition-all duration-500 flex items-center justify-end pr-2" style="width: ${currPercent}%">
+                  <span class="text-white text-xs font-bold">${item.curr}件</span>
+                </div>
+              </div>
+            </div>
+            <div class="flex justify-between text-xs text-gray-500 mt-1">
+              <span>昨年: ${item.prev}件</span>
+              <span>構成比: ${item.currShare.toFixed(1)}%</span>
+            </div>
+          </div>
+        `;
+      });
+    }
+    
+    /**
+     * 疾患カテゴリー Top 5（期間比較版）
+     */
+    function renderDiseaseChartWithComparison(comparisonResult) {
+      const container = document.getElementById('diseaseChart');
+      renderComparisonChart(container, comparisonResult, 'bg-red-500');
+    }
+    
+    /**
+     * 専門（診療科）Top 5（期間比較版）
+     */
+    function renderSpecialtyChartWithComparison(comparisonResult) {
+      const container = document.getElementById('specialtyChart');
+      renderComparisonChart(container, comparisonResult, 'bg-indigo-500');
+    }
+    
+    /**
+     * クライアント Top 5（期間比較版）
+     */
+    function renderClientChartWithComparison(comparisonResult) {
+      const container = document.getElementById('clientChart');
+      renderComparisonChart(container, comparisonResult, 'bg-yellow-500');
+    }
+
+    // クライアント Top 5
+    function renderClientChart(clients) {
+      const container = document.getElementById('clientChart');
+      container.innerHTML = '';
+
+      const sorted = Object.entries(clients)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+
+      if (sorted.length === 0) {
+        container.innerHTML = '<p class="text-gray-500 text-center py-4">データがありません</p>';
+        return;
+      }
+
+      const maxCount = sorted[0][1];
+      const colors = ['bg-yellow-500', 'bg-orange-500', 'bg-red-500', 'bg-pink-500', 'bg-purple-500'];
+
+      sorted.forEach(([client, count], index) => {
+        const percentage = (count / maxCount) * 100;
+
+        container.innerHTML += `
+          <div>
+            <div class="flex justify-between mb-1">
+              <span class="text-sm font-medium text-gray-700 truncate" title="${client}">${truncate(client, 30)}</span>
+              <span class="text-sm text-gray-600">${count}件</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+              <div class="${colors[index]} h-2 rounded-full transition-all duration-500" style="width: ${percentage}%"></div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    // 疾患カテゴリー Top 5
+    function renderDiseaseChart(diseases) {
+      const container = document.getElementById('diseaseChart');
+      container.innerHTML = '';
+
+      const sorted = Object.entries(diseases)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+
+      if (sorted.length === 0) {
+        container.innerHTML = '<p class="text-gray-500 text-center py-4">データがありません</p>';
+        return;
+      }
+
+      const maxCount = sorted[0][1];
+      const colors = ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-green-500', 'bg-blue-500'];
+
+      sorted.forEach(([disease, count], index) => {
+        const percentage = (count / maxCount) * 100;
+
+        container.innerHTML += `
+          <div>
+            <div class="flex justify-between mb-1">
+              <span class="text-sm font-medium text-gray-700 truncate" title="${disease}">${truncate(disease, 30)}</span>
+              <span class="text-sm text-gray-600">${count}件</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+              <div class="${colors[index]} h-2 rounded-full transition-all duration-500" style="width: ${percentage}%"></div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    // 専門（診療科）Top 5
+    function renderSpecialtyChart(specialties) {
+      const container = document.getElementById('specialtyChart');
+      container.innerHTML = '';
+
+      const sorted = Object.entries(specialties)
+        .filter(([specialty]) => specialty) // 空文字を除外
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+
+      if (sorted.length === 0) {
+        container.innerHTML = '<p class="text-gray-500 text-center py-4">データがありません</p>';
+        return;
+      }
+
+      const maxCount = sorted[0][1];
+      const colors = ['bg-indigo-500', 'bg-blue-500', 'bg-cyan-500', 'bg-teal-500', 'bg-green-500'];
+
+      sorted.forEach(([specialty, count], index) => {
+        const percentage = (count / maxCount) * 100;
+
+        container.innerHTML += `
+          <div>
+            <div class="flex justify-between mb-1">
+              <span class="text-sm font-medium text-gray-700">${specialty}</span>
+              <span class="text-sm text-gray-600">${count}件</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+              <div class="${colors[index]} h-2 rounded-full transition-all duration-500" style="width: ${percentage}%"></div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    // 最近のプロジェクト一覧
+    function renderRecentProjects(projects) {
+      const tbody = document.getElementById('recentProjectsTable');
+      tbody.innerHTML = '';
+
+      if (projects.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" class="px-4 py-8 text-center text-gray-500">
+              案件がまだ登録されていません
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      projects.forEach(project => {
+        const date = project.createdAt 
+          ? new Date(project.createdAt).toLocaleDateString('ja-JP')
+          : '-';
+        
+        tbody.innerHTML += `
+          <tr class="hover:bg-gray-50 transition">
+            <td class="px-4 py-3 text-sm text-gray-900">${truncate(project.diseaseName, 30)}</td>
+            <td class="px-4 py-3 text-sm text-gray-600">${project.diseaseAbbr || '-'}</td>
+            <td class="px-4 py-3 text-sm">
+              <span class="px-2 py-1 rounded-full text-xs font-semibold ${getTargetTypeBadgeClass(project.targetType)}">
+                ${project.targetType}
+              </span>
+            </td>
+            <td class="px-4 py-3 text-sm text-gray-600">${project.specialty || '-'}</td>
+            <td class="px-4 py-3 text-sm font-medium ${project.inquiryOnly === 'TRUE' || project.inquiryOnly === true ? 'text-red-600' : 'text-green-600'}">
+              ${project.inquiryOnly === 'TRUE' || project.inquiryOnly === true ? '問合せ: ' : ''}${project.recruitCount}名
+            </td>
+            <td class="px-4 py-3 text-sm text-gray-600">${truncate(project.client || '-', 20)}</td>
+            <td class="px-4 py-3 text-sm text-gray-500">${date}</td>
+            <td class="px-4 py-3 text-sm">
+              <a href="projects.html?id=${project.id}" class="text-blue-600 hover:text-blue-800">
+                <i class="fas fa-eye mr-1"></i>詳細
+              </a>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    // 対象者タイプバッジのクラス
+    function getTargetTypeBadgeClass(type) {
+      const classes = {
+        '医師': 'bg-blue-100 text-blue-800',
+        '患者': 'bg-green-100 text-green-800',
+        '介護者': 'bg-yellow-100 text-yellow-800',
+        '看護師': 'bg-pink-100 text-pink-800',
+        'KOL': 'bg-indigo-100 text-indigo-800',
+        '医師・患者': 'bg-purple-100 text-purple-800'
+      };
+      return classes[type] || 'bg-gray-100 text-gray-800';
+    }
+
+    // テキスト切り詰め
+    function truncate(text, length) {
+      if (!text) return '';
+      return text.length > length ? text.substring(0, length) + '...' : text;
+    }
+
+    // ページ読み込み時に実行
+    window.addEventListener('DOMContentLoaded', initDashboard);
+  </script>
+</body>
+</html>

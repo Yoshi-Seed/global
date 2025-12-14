@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>詳細レポート - プロジェクト履歴管理システム</title>
+  <link rel="icon" type="image/png" href="SP_logo_shape_only.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- External libs for dashboard -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+  <style>
+    /* Dashboard-specific styles */
+    :root{
+      --bg:#E8F0F1; --card:#fff; --primary:#1F7A85; --muted:#6b7b83; --ink:#0a2a33; --border:#d6e2e5; --chip:#f1f7f8;
+    }
+    
+    body {
+      background: var(--bg);
+      color: var(--ink);
+    }
+    
+    .dashboard-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .filter-panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+    }
+    
+    .content-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+    
+    .filter-block {
+      margin-bottom: 12px;
+      border-top: 1px dashed var(--border);
+      padding-top: 12px;
+    }
+    
+    .filter-block:first-child {
+      border-top: none;
+      padding-top: 0;
+    }
+    
+    .filter-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    
+    .filter-header h3 {
+      font-size: 14px;
+      margin: 0;
+      font-weight: 600;
+    }
+    
+    .quick-actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    
+    .chip {
+      background: var(--chip);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    
+    .chip:hover {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    
+    .chip.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    
+    .scroll-list {
+      max-height: 200px;
+      overflow: auto;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 8px;
+      margin-top: 8px;
+    }
+    
+    .filter-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 4px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    
+    .filter-option:hover {
+      background: #f6fbfc;
+    }
+    
+    .filter-option label {
+      flex: 1;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    
+    .count-badge {
+      font-size: 10px;
+      color: #31585f;
+      background: #e3f0f2;
+      border-radius: 999px;
+      padding: 2px 6px;
+      font-weight: 600;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 13px;
+    }
+    
+    .kpi-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      padding: 12px;
+    }
+    
+    .kpi-card {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+    }
+    
+    .kpi-card h4 {
+      margin: 0 0 8px;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    
+    .kpi-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 12px;
+    }
+    
+    .chart-card {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      min-height: 350px;
+      max-height: 400px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .chart-card h4 {
+      margin: 0 0 12px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+    
+    .chart-card canvas {
+      flex: 1;
+      max-height: 320px;
+    }
+    
+    .table-wrapper {
+      padding: 12px;
+    }
+    
+    .data-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 13px;
+    }
+    
+    .data-table th,
+    .data-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+    
+    .data-table th {
+      position: sticky;
+      top: 0;
+      background: #fcfeff;
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+    }
+    
+    .data-table th:hover {
+      background: #f0f9fa;
+    }
+    
+    .toolbar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .toolbar-right {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    
+    .btn {
+      appearance: none;
+      border: 1px solid var(--primary);
+      background: var(--primary);
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    
+    .btn:hover {
+      background: #1a6770;
+      border-color: #1a6770;
+    }
+    
+    .btn.secondary {
+      background: #fff;
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+    
+    .btn.ghost {
+      background: transparent;
+      border-color: var(--border);
+      color: var(--ink);
+    }
+    
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    select {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 13px;
+      background: white;
+    }
+    
+    .small-text {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    
+    @media (max-width: 1200px) {
+      .dashboard-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .kpi-cards {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- ナビゲーション（index.htmlと同じ） -->
+  <nav class="bg-white shadow-md sticky top-0 z-40">
+    <div class="container mx-auto px-4 py-3">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <img src="Seed_Planning_Logo_Original.jpg" alt="SEED PLANNING" class="h-10">
+          <h1 class="text-lg font-bold text-gray-800">プロジェクト履歴管理システム</h1>
+        </div>
+        <div class="flex space-x-3">
+          <a href="index.html" class="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
+            <i class="fas fa-home mr-2"></i>ダッシュボード
+          </a>
+          <a href="register.html" class="px-4 py-2 text-sm bg-green-500 text-white rounded-lg hover:bg-green-600 transition">
+            <i class="fas fa-plus mr-2"></i>新規登録
+          </a>
+          <a href="projects.html" class="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
+            <i class="fas fa-search mr-2"></i>案件検索
+          </a>
+          <a href="import.html" class="px-4 py-2 text-sm text-white rounded-lg transition" style="background-color: #1F7A85;">
+            <i class="fas fa-chart-bar mr-2"></i>詳細レポート
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- メインコンテンツ -->
+  <div class="dashboard-container" style="display: grid; grid-template-columns: 280px 1fr; gap: 16px; margin-top: 20px;">
+    
+    <!-- 左側：フィルターパネル -->
+    <aside class="filter-panel" aria-label="フィルターパネル">
+      <h2 style="font-size: 16px; font-weight: 700; margin: 0 0 8px;">フィルター</h2>
+      <p class="small-text" style="margin-bottom: 12px;">
+        選択内容に応じて他の選択肢も自動更新します。
+      </p>
+      
+      <!-- キーワード検索 -->
+      <div style="margin-bottom: 12px;">
+        <input id="search" type="search" class="search-input" placeholder="キーワード検索（クライアント・疾患など）" />
+      </div>
+
+      <!-- クライアントフィルター -->
+      <div class="filter-block" id="clientBlock">
+        <div class="filter-header">
+          <h3>クライアント</h3>
+          <div class="quick-actions">
+            <button class="chip" data-chip="client:selectAll">全選択</button>
+            <button class="chip" data-chip="client:clear">クリア</button>
+          </div>
+        </div>
+        <div class="scroll-list" id="clientList" role="group" aria-label="クライアント"></div>
+      </div>
+
+      <!-- リクルーターフィルター -->
+      <div class="filter-block" id="recruiterBlock">
+        <div class="filter-header">
+          <h3>リクルーター</h3>
+          <div class="quick-actions">
+            <button class="chip" data-chip="recruiter:selectAll">全選択</button>
+            <button class="chip" data-chip="recruiter:clear">クリア</button>
+          </div>
+        </div>
+        <div class="scroll-list" id="recruiterList" role="group" aria-label="リクルーター"></div>
+      </div>
+
+      <!-- 疾患フィルター -->
+      <div class="filter-block" id="diseaseBlock">
+        <div class="filter-header">
+          <h3>疾患（Indication）</h3>
+          <div class="quick-actions">
+            <button class="chip" data-chip="disease:selectAll">全選択</button>
+            <button class="chip" data-chip="disease:clear">クリア</button>
+          </div>
+        </div>
+        <div class="scroll-list" id="diseaseList" role="group" aria-label="疾患"></div>
+      </div>
+
+      <!-- 専門科フィルター -->
+      <div class="filter-block" id="specialtyBlock">
+        <div class="filter-header">
+          <h3>専門（HCP Specialty）</h3>
+          <div class="quick-actions">
+            <button class="chip" data-chip="specialty:selectAll">全選択</button>
+            <button class="chip" data-chip="specialty:clear">クリア</button>
+          </div>
+        </div>
+        <div class="scroll-list" id="specialtyList" role="group" aria-label="専門"></div>
+      </div>
+
+      <p class="small-text" style="margin-top: 12px;">
+        ※ GitHubのCSVデータから自動読み込み
+      </p>
+    </aside>
+
+    <!-- 右側：メインコンテンツ -->
+    <section class="content-section">
+      <!-- ツールバー -->
+      <div class="toolbar">
+        <div>
+          <strong id="recCount" style="font-size: 15px;">0 件</strong>
+          <span class="small-text" id="activeFilters"></span>
+        </div>
+        <div class="toolbar-right">
+          <button class="btn secondary" id="downloadBtn" disabled>
+            <i class="fas fa-download mr-1"></i>CSV保存
+          </button>
+          <button class="btn ghost" id="resetBtn" disabled>
+            <i class="fas fa-redo mr-1"></i>リセット
+          </button>
+          <label class="small-text" for="viewMode">集計視点：</label>
+          <select id="viewMode">
+            <option value="overall">全体</option>
+            <option value="byRecruiter">リクルーター別</option>
+            <option value="byClient">クライアント別</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- KPIカード -->
+      <div class="kpi-cards">
+        <div class="kpi-card">
+          <h4>ユニーク・クライアント</h4>
+          <div id="kpiClients" class="kpi-value">-</div>
+        </div>
+        <div class="kpi-card">
+          <h4>ユニーク・リクルーター</h4>
+          <div id="kpiRecruiters" class="kpi-value">-</div>
+        </div>
+        <div class="kpi-card">
+          <h4>ユニーク・疾患</h4>
+          <div id="kpiDiseases" class="kpi-value">-</div>
+        </div>
+      </div>
+
+      <!-- チャート -->
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h4>疾患別 件数</h4>
+          <div style="position: relative; height: 300px;">
+            <canvas id="chartDisease"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <h4 id="shareTitle">リクルーター別 構成比</h4>
+          <div style="position: relative; height: 300px;">
+            <canvas id="chartRecruiter"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- データテーブル -->
+      <div class="table-wrapper">
+        <h4 style="font-size: 15px; font-weight: 600; margin: 0 0 8px;">明細一覧</h4>
+        <p class="small-text" style="margin-bottom: 12px;">ヘッダークリックでソート可能</p>
+        <div style="overflow: auto; border: 1px solid var(--border); border-radius: 12px; max-height: 600px;">
+          <table id="dataTable" class="data-table" aria-live="polite"></table>
+        </div>
+        <div class="toolbar" style="border-top: 1px solid var(--border); border-bottom: none;">
+          <div class="small-text" id="pageInfo"></div>
+          <div class="toolbar-right">
+            <button class="btn ghost" id="prevPage">
+              <i class="fas fa-chevron-left"></i> 前へ
+            </button>
+            <button class="btn ghost" id="nextPage">
+              次へ <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ローディング表示 -->
+  <div id="loadingOverlay" style="display: none; position: fixed; inset: 0; background: rgba(232, 240, 241, 0.9); z-index: 9999; display: flex; align-items: center; justify-content: center;">
+    <div style="text-align: center;">
+      <i class="fas fa-spinner fa-spin" style="font-size: 48px; color: #1F7A85; margin-bottom: 16px;"></i>
+      <p style="font-size: 16px; font-weight: 600; color: #1F7A85;">データ読み込み中...</p>
+    </div>
+  </div>
+
+  <script>
+  // ------------------ Config ------------------
+  const DEFAULT_CSV_URL = 'https://raw.githubusercontent.com/Yoshi-Seed/global/main/project-tracker/seed_planning_data.csv';
+
+  // ------------------ State ------------------
+  const state = {
+    raw: [],
+    headers: [],
+    mapping: { client: null, recruiter: null, disease: null, specialty: null, date: null },
+    filters: { client: new Set(), recruiter: new Set(), disease: new Set(), specialty: new Set() },
+    search: "",
+    page: 1,
+    pageSize: 20,
+    sort: { key: null, dir: 1 },
+    viewMode: 'overall'
+  };
+
+  // ------------------ Utils ------------------
+  function el(sel) { return document.querySelector(sel); }
+  function els(sel) { return Array.from(document.querySelectorAll(sel)); }
+  function norm(s) { return String(s || '').toLowerCase().replace(/\s+/g, ''); }
+  function unique(arr) {
+    const set = new Set();
+    arr.forEach(v => { if (v !== '' && v != null) set.add(v); });
+    return Array.from(set);
+  }
+  function safeVal(row, key) {
+    if (!key) return '';
+    const v = row[key];
+    if (v == null) return '';
+    return String(v).trim();
+  }
+  function fmtInt(n) { return new Intl.NumberFormat('ja-JP').format(n); }
+  function debounce(fn, ms) {
+    let t = null;
+    return function() {
+      const a = arguments;
+      clearTimeout(t);
+      t = setTimeout(() => fn.apply(null, a), ms || 250);
+    };
+  }
+  function toCSV(rows) {
+    if (rows.length === 0) return '';
+    const headers = Object.keys(rows[0]);
+    function esc(s) { return '"' + String(s).replace(/"/g, '""') + '"'; }
+    const head = headers.map(esc).join(',');
+    const lines = rows.map(r => headers.map(h => esc(r[h] != null ? r[h] : '')).join(','));
+    return [head].concat(lines).join('\n');
+  }
+
+  function inferMapping(headers) {
+    const lower = headers.map(h => norm(h));
+    function pick(cands) {
+      for (let i = 0; i < cands.length; i++) {
+        const needle = norm(cands[i]);
+        const idx = lower.findIndex(h => h.indexOf(needle) > -1);
+        if (idx > -1) return headers[idx];
+      }
+      return '';
+    }
+    return {
+      client: pick(['クライアント', 'client', '顧客', 'sponsor']),
+      recruiter: pick(['リクルート実施', 'リクルーター', 'recruiter', 'supplier']),
+      disease: pick(['疾患名', '疾患略語', 'disease', 'indication']),
+      specialty: pick(['専門', '診療科', 'specialty', 'hcp']),
+      date: pick(['date', '日付', '登録日', 'created'])
+    };
+  }
+
+  // ------------------ Load Data ------------------
+  function loadData() {
+    const loadingOverlay = el('#loadingOverlay');
+    if (loadingOverlay) loadingOverlay.style.display = 'flex';
+
+    Papa.parse(DEFAULT_CSV_URL, {
+      download: true,
+      header: true,
+      skipEmptyLines: true,
+      dynamicTyping: false,
+      complete: function(res) {
+        state.raw = (res.data || []).map(r => {
+          const o = {};
+          Object.keys(r).forEach(k => { o[k] = r[k]; });
+          return o;
+        });
+        state.headers = res.meta && res.meta.fields ? res.meta.fields : Object.keys(state.raw[0] || {});
+        const guess = inferMapping(state.headers);
+        state.mapping = {
+          client: guess.client || null,
+          recruiter: guess.recruiter || null,
+          disease: guess.disease || null,
+          specialty: guess.specialty || null,
+          date: guess.date || null
+        };
+        
+        if (loadingOverlay) loadingOverlay.style.display = 'none';
+        initializeDashboard();
+      },
+      error: function(err) {
+        console.error('CSV Load Error:', err);
+        if (loadingOverlay) loadingOverlay.style.display = 'none';
+        alert('データの読み込みに失敗しました: ' + (err && err.message ? err.message : ''));
+      }
+    });
+  }
+
+  // ------------------ Dashboard Logic ------------------
+  function initializeDashboard() {
+    el('#downloadBtn').disabled = false;
+    el('#resetBtn').disabled = false;
+
+    Object.keys(state.filters).forEach(dim => {
+      const vals = unique(state.raw.map(r => safeVal(r, state.mapping[dim])));
+      state.filters[dim] = new Set(vals);
+    });
+
+    state.page = 1;
+    state.search = '';
+    el('#search').value = '';
+    buildAll();
+  }
+
+  function getFilteredData() {
+    const s = (state.search || '').toLowerCase();
+    const dims = Object.keys(state.filters);
+    
+    return state.raw.filter(row => {
+      for (let i = 0; i < dims.length; i++) {
+        const dim = dims[i];
+        const mapKey = state.mapping[dim];
+        if (!mapKey) continue;
+        const v = safeVal(row, mapKey);
+        if (!state.filters[dim].has(v)) return false;
+      }
+      
+      if (!s) return true;
+      const hay = dims.map(d => safeVal(row, state.mapping[d])).join(' ').toLowerCase();
+      return hay.indexOf(s) > -1;
+    });
+  }
+
+  function computeFacetOptions(current) {
+    const dims = Object.keys(state.filters);
+    const out = {};
+    
+    dims.forEach(dim => {
+      const key = state.mapping[dim];
+      if (!key) {
+        out[dim] = [];
+        return;
+      }
+      
+      const subset = current.filter(row => {
+        for (let j = 0; j < dims.length; j++) {
+          const od = dims[j];
+          if (od === dim) continue;
+          const k = state.mapping[od];
+          if (!k) continue;
+          const v = safeVal(row, k);
+          if (!state.filters[od].has(v)) return false;
+        }
+        return true;
+      });
+      
+      const arr = unique(subset.map(r => safeVal(r, key))).sort((a, b) => a.localeCompare(b, 'ja'));
+      const counts = {};
+      arr.forEach(v => { counts[v] = 0; });
+      subset.forEach(r => {
+        const v = safeVal(r, key);
+        if (counts.hasOwnProperty(v)) counts[v]++;
+      });
+      
+      out[dim] = arr.map(v => ({ value: v, count: counts[v] }));
+    });
+    
+    return out;
+  }
+
+  function buildFilterList(dim, items) {
+    const list = el('#' + dim + 'List');
+    list.innerHTML = '';
+    
+    if (items.length === 0) {
+      list.innerHTML = '<div class="small-text">（項目なし）</div>';
+      return;
+    }
+    
+    items.forEach(it => {
+      const value = it.value;
+      const count = it.count;
+      const row = document.createElement('div');
+      row.className = 'filter-option';
+      
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.id = dim + '-' + value.replace(/\W+/g, '_');
+      cb.checked = state.filters[dim].has(value);
+      cb.setAttribute('data-dim', dim);
+      cb.setAttribute('data-val', value);
+      
+      const label = document.createElement('label');
+      label.setAttribute('for', cb.id);
+      label.textContent = value || '（空）';
+      if (!value) label.style.fontStyle = 'italic';
+      
+      const countSpan = document.createElement('span');
+      countSpan.className = 'count-badge';
+      countSpan.textContent = String(count);
+      
+      row.appendChild(cb);
+      row.appendChild(label);
+      row.appendChild(countSpan);
+      list.appendChild(row);
+      
+      cb.addEventListener('change', e => {
+        const d = e.target.getAttribute('data-dim');
+        const v = e.target.getAttribute('data-val');
+        if (e.target.checked) {
+          state.filters[d].add(v);
+        } else {
+          state.filters[d].delete(v);
+        }
+        state.page = 1;
+        buildAll();
+      });
+    });
+  }
+
+  function summarizeFilters() {
+    const parts = [];
+    Object.keys(state.filters).forEach(dim => {
+      if (!state.mapping[dim]) return;
+      const total = state.filters[dim].size;
+      const full = unique(state.raw.map(r => safeVal(r, state.mapping[dim]))).length;
+      if (total === full) return;
+      parts.push(dim + ': ' + total + '件選択');
+    });
+    el('#activeFilters').textContent = parts.length ? ' | ' + parts.join(' / ') : '';
+  }
+
+  function buildKPIs(rows) {
+    const dims = ['client', 'recruiter', 'disease'];
+    const vals = dims.map(d => unique(rows.map(r => safeVal(r, state.mapping[d]))).length);
+    el('#kpiClients').textContent = fmtInt(vals[0]);
+    el('#kpiRecruiters').textContent = fmtInt(vals[1]);
+    el('#kpiDiseases').textContent = fmtInt(vals[2]);
+  }
+
+  let chartDisease = null;
+  let chartRecruiter = null;
+
+  function buildCharts(rows) {
+    const dKey = state.mapping.disease;
+    const rKey = state.mapping.recruiter;
+    const cKey = state.mapping.client;
+    
+    // Disease chart
+    const diseaseCounts = {};
+    rows.forEach(r => {
+      const v = safeVal(r, dKey);
+      if (!v) return;
+      diseaseCounts[v] = (diseaseCounts[v] || 0) + 1;
+    });
+    const dLabels = Object.keys(diseaseCounts).sort((a, b) => diseaseCounts[b] - diseaseCounts[a]).slice(0, 12);
+    const dData = dLabels.map(l => diseaseCounts[l]);
+    
+    const ctx1 = el('#chartDisease');
+    if (chartDisease) chartDisease.destroy();
+    chartDisease = new Chart(ctx1, {
+      type: 'bar',
+      data: {
+        labels: dLabels,
+        datasets: [{ label: '件数', data: dData, backgroundColor: '#1F7A85' }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } }
+      }
+    });
+    
+    // Share chart
+    const grpKey = (state.viewMode === 'byClient') ? cKey : rKey;
+    const shareName = (state.viewMode === 'byClient') ? 'クライアント構成比' : 'リクルーター構成比';
+    const share = {};
+    rows.forEach(r => {
+      const v = safeVal(r, grpKey);
+      if (!v) return;
+      share[v] = (share[v] || 0) + 1;
+    });
+    const rLabels = Object.keys(share).sort((a, b) => share[b] - share[a]).slice(0, 20);
+    const rData = rLabels.map(l => share[l]);
+    
+    el('#shareTitle').textContent = shareName;
+    const ctx2 = el('#chartRecruiter');
+    if (chartRecruiter) chartRecruiter.destroy();
+    chartRecruiter = new Chart(ctx2, {
+      type: 'doughnut',
+      data: {
+        labels: rLabels,
+        datasets: [{ data: rData }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
+        }
+      }
+    });
+  }
+
+  function buildTable(rows) {
+    const table = el('#dataTable');
+    
+    if (rows.length === 0) {
+      table.innerHTML = '<thead></thead><tbody><tr><td class="small-text">（該当データがありません）</td></tr></tbody>';
+      el('#pageInfo').textContent = '';
+      return;
+    }
+    
+    const mapped = Object.keys(state.mapping).map(k => state.mapping[k]).filter(Boolean);
+    const others = state.headers.filter(h => mapped.indexOf(h) === -1);
+    const allCols = Array.from(new Set(mapped.concat(others)));
+    
+    // 表示する列を限定
+    const displayColumns = [
+      'クライアント',
+      'リクルート実施',
+      '疾患名',
+      '専門',
+      '疾患略語',
+      '調査種別',
+      '対象条件',
+      '実施年月'
+    ];
+    
+    // 指定された列のみをフィルタリング（存在する列のみ）
+    const cols = displayColumns.filter(col => allCols.includes(col));
+    
+    let sorted = rows.slice();
+    if (state.sort.key) {
+      sorted.sort((a, b) => {
+        const va = (a[state.sort.key] != null ? a[state.sort.key] : '').toString();
+        const vb = (b[state.sort.key] != null ? b[state.sort.key] : '').toString();
+        return va.localeCompare(vb, 'ja') * state.sort.dir;
+      });
+    }
+    
+    const start = (state.page - 1) * state.pageSize;
+    const pageRows = sorted.slice(start, start + state.pageSize);
+    
+    const thead = '<thead><tr>' + cols.map(h => {
+      return '<th data-col="' + h + '">' + h + (state.sort.key === h ? (state.sort.dir > 0 ? ' ▲' : ' ▼') : '') + '</th>';
+    }).join('') + '</tr></thead>';
+    
+    const tbody = '<tbody>' + pageRows.map(r => {
+      return '<tr>' + cols.map(h => {
+        const v = r[h];
+        return '<td>' + (v != null ? v : '') + '</td>';
+      }).join('') + '</tr>';
+    }).join('') + '</tbody>';
+    
+    table.innerHTML = thead + tbody;
+    
+    els('th').forEach(th => {
+      th.addEventListener('click', () => {
+        const k = th.getAttribute('data-col');
+        if (state.sort.key === k) {
+          state.sort.dir *= -1;
+        } else {
+          state.sort = { key: k, dir: 1 };
+        }
+        buildAll();
+      });
+    });
+    
+    const totalPages = Math.max(1, Math.ceil(rows.length / state.pageSize));
+    el('#pageInfo').textContent = state.page + '/' + totalPages + ' ページ（' + fmtInt(rows.length) + ' 件中）';
+    
+    el('#prevPage').onclick = () => {
+      if (state.page > 1) {
+        state.page--;
+        buildTable(rows);
+      }
+    };
+    
+    el('#nextPage').onclick = () => {
+      if (state.page < totalPages) {
+        state.page++;
+        buildTable(rows);
+      }
+    };
+  }
+
+  function buildFiltersUI(rows) {
+    const facets = computeFacetOptions(rows);
+    Object.keys(facets).forEach(dim => {
+      buildFilterList(dim, facets[dim]);
+    });
+  }
+
+  function buildAll() {
+    const rows = getFilteredData();
+    el('#recCount').textContent = fmtInt(rows.length) + ' 件';
+    buildKPIs(rows);
+    buildFiltersUI(state.raw);
+    buildCharts(rows);
+    buildTable(rows);
+    summarizeFilters();
+  }
+
+  // ------------------ Event Handlers ------------------
+  function wireChips() {
+    els('.chip').forEach(ch => {
+      ch.addEventListener('click', () => {
+        const pair = ch.getAttribute('data-chip').split(':');
+        const dim = pair[0];
+        const cmd = pair[1];
+        const allVals = unique(state.raw.map(r => safeVal(r, state.mapping[dim])));
+        
+        if (cmd === 'selectAll') {
+          state.filters[dim] = new Set(allVals);
+        } else if (cmd === 'clear') {
+          state.filters[dim] = new Set();
+        } else {
+          state.filters[dim] = new Set([cmd]);
+        }
+        
+        state.page = 1;
+        buildAll();
+        
+        els('.chip[data-chip^="' + dim + ':"]').forEach(x => {
+          x.classList.remove('active');
+        });
+        ch.classList.add('active');
+      });
+    });
+  }
+
+  function wireEvents() {
+    el('#search').addEventListener('input', debounce(e => {
+      state.search = e.target.value.trim();
+      state.page = 1;
+      buildAll();
+    }, 250));
+    
+    el('#resetBtn').addEventListener('click', () => {
+      Object.keys(state.filters).forEach(dim => {
+        const vals = unique(state.raw.map(r => safeVal(r, state.mapping[dim])));
+        state.filters[dim] = new Set(vals);
+      });
+      state.search = '';
+      el('#search').value = '';
+      state.page = 1;
+      state.sort = { key: null, dir: 1 };
+      els('.chip').forEach(x => x.classList.remove('active'));
+      buildAll();
+    });
+    
+    el('#downloadBtn').addEventListener('click', () => {
+      const rows = getFilteredData();
+      const csv = toCSV(rows);
+      // BOM（Byte Order Mark）を追加して文字化けを防止
+      const BOM = '\uFEFF';
+      const csvWithBOM = BOM + csv;
+      const blob = new Blob([csvWithBOM], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `filtered_export_${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+    });
+    
+    el('#viewMode').addEventListener('change', () => {
+      state.viewMode = el('#viewMode').value;
+      buildAll();
+    });
+  }
+
+  // ------------------ Boot ------------------
+  document.addEventListener('DOMContentLoaded', () => {
+    wireChips();
+    wireEvents();
+    loadData();
+  });
+  </script>
+</body>
+</html>

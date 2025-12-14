@@ -1,0 +1,2192 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>案件検索 - プロジェクト履歴管理システム</title>
+  <link rel="icon" type="image/png" href="SP_logo_shape_only.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-size: 13px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .card-enter {
+      animation: fadeIn 0.3s ease-out forwards;
+    }
+
+    .filter-btn {
+      transition: all 0.2s ease;
+      font-size: 13px;
+    }
+
+    .filter-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .filter-btn.active {
+      background: #FFFFFF !important;
+      border: 2px solid #1F7A85 !important;
+      box-shadow: 0 4px 12px rgba(31, 122, 133, 0.3) !important;
+      transform: scale(1.05) !important;
+      font-weight: bold;
+    }
+
+    .project-card {
+      transition: all 0.3s ease;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .project-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    .badge {
+      animation: slideIn 0.2s ease-out;
+    }
+
+    .step-number {
+      background: linear-gradient(135deg, #1F7A85 0%, #1a6770 100%);
+      width: 24px;
+      height: 24px;
+      font-size: 12px;
+    }
+
+    .search-container {
+      background: linear-gradient(135deg, #E8F0F1 0%, #d5e5e7 100%);
+      color: #2c3e50;
+    }
+
+    .search-container h2 {
+      color: #1F7A85;
+      font-size: 1.5rem;
+    }
+
+    .search-container h3 {
+      color: #1F7A85;
+      font-size: 1rem;
+    }
+
+    .search-container p {
+      color: #5a6c7d;
+      font-size: 0.8rem;
+    }
+
+    /* テーブルビュー */
+    #projectTable table {
+      border-collapse: collapse;
+    }
+
+    #projectTable tbody tr {
+      border-bottom: 1px solid #e5e7eb;
+      transition: background-color 0.2s ease;
+    }
+
+    #projectTable tbody tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+
+    #projectTable tbody tr:hover {
+      background-color: #e0f2f4;
+      cursor: pointer;
+    }
+
+    #projectTable td {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 200px;
+    }
+
+    /* ビュー切り替えボタン */
+    .view-toggle-btn {
+      border: none;
+    }
+
+    .view-toggle-btn.active {
+      background: #1F7A85 !important;
+      color: white !important;
+    }
+
+    .view-toggle-btn:not(.active) {
+      background: white !important;
+      color: #1F7A85 !important;
+    }
+
+    .view-toggle-btn:not(.active):hover {
+      background: #e0f2f4 !important;
+    }
+    
+    /* カテゴリーボタンスタイル（対象者と同じスタイル） */
+    .category-btn {
+      transition: all 0.2s ease;
+      cursor: pointer;
+      user-select: none;
+      background: rgba(31, 122, 133, 0.15);
+      color: #1F7A85;
+      border: 1px solid #1F7A85;
+    }
+    
+    .category-btn:hover {
+      background: rgba(31, 122, 133, 0.25);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(31, 122, 133, 0.2);
+    }
+    
+    .category-btn.active {
+      background: white !important;
+      color: #1F7A85 !important;
+      border: 2px solid #1F7A85 !important;
+      box-shadow: 0 4px 12px rgba(31, 122, 133, 0.3) !important;
+      transform: scale(1.05) !important;
+    }
+    
+    /* 専門科リスト表示エリア */
+    .specialty-list-container {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    
+    .specialty-list-container.open {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    
+    /* 専門科ボタン（対象者と同じスタイル） */
+    .specialty-btn {
+      transition: all 0.2s ease;
+      cursor: pointer;
+      user-select: none;
+      background: rgba(31, 122, 133, 0.15);
+      color: #1F7A85;
+      border: 1px solid #1F7A85;
+    }
+    
+    .specialty-btn:hover {
+      background: rgba(31, 122, 133, 0.25);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(31, 122, 133, 0.2);
+    }
+    
+    .specialty-btn.selected {
+      background: white !important;
+      color: #1F7A85 !important;
+      border: 2px solid #1F7A85 !important;
+      box-shadow: 0 4px 12px rgba(31, 122, 133, 0.3) !important;
+      transform: scale(1.05) !important;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- ナビゲーション -->
+  <nav class="bg-white shadow-md sticky top-0 z-40">
+    <div class="container mx-auto px-2 sm:px-4 py-2 sm:py-3">
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <!-- ロゴ部分 -->
+        <div class="flex items-center space-x-2 sm:space-x-4">
+          <img src="Seed_Planning_Logo_Original.jpg" alt="SEED PLANNING" class="h-8 sm:h-10">
+          <h1 class="hidden md:block text-lg font-bold text-gray-800">プロジェクト履歴管理システム</h1>
+        </div>
+        
+        <!-- ナビゲーションボタン -->
+        <div class="flex flex-wrap gap-1 sm:gap-2">
+          <a href="index.html" class="px-2 sm:px-4 py-2 text-xs sm:text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center">
+            <i class="fas fa-home sm:mr-2"></i><span class="hidden sm:inline ml-1">ホーム</span>
+          </a>
+          <a href="register.html" class="px-2 sm:px-4 py-2 text-xs sm:text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center">
+            <i class="fas fa-plus sm:mr-2"></i><span class="hidden sm:inline ml-1">新規登録</span>
+          </a>
+          <a href="projects.html" class="px-2 sm:px-4 py-2 text-xs sm:text-sm text-white rounded-lg transition flex items-center" style="background-color: #1F7A85;">
+            <i class="fas fa-search sm:mr-2"></i><span class="hidden sm:inline ml-1">案件検索</span>
+          </a>
+          <a href="links.html" class="px-2 sm:px-4 py-2 text-xs sm:text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center">
+            <i class="fas fa-link sm:mr-2"></i><span class="hidden sm:inline ml-1">リンク集</span>
+          </a>
+          <a href="https://seedplanning.monday.com/boards/2723929863" target="_blank" rel="noopener noreferrer" class="px-2 sm:px-4 py-2 text-xs sm:text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center">
+            <img src="monday.png" alt="Monday" class="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2"><span class="hidden sm:inline ml-1">Monday</span>
+          </a>
+          <a href="https://db.seedplanning.co.jp/project/management" target="_blank" rel="noopener noreferrer" class="px-2 sm:px-4 py-2 text-xs sm:text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center">
+            <img src="SP_logo_shape_only.png" alt="プロジェクト管理" class="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2"><span class="hidden sm:inline ml-1">PJ管理</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- メインコンテンツ -->
+  <div class="container mx-auto px-4 py-8">
+    
+    <!-- 検索ヘッダー -->
+    <div class="search-container text-white rounded-xl shadow-lg p-5 mb-6">
+      <div class="text-center mb-4">
+        <h2 class="font-bold mb-1 flex items-center justify-center">
+          <i class="fas fa-search mr-2" style="font-size: 1.2rem;"></i>
+          プロジェクト検索
+        </h2>
+        <p class="subtitle-text">3つのステップで過去案件を絞り込み</p>
+      </div>
+
+      <!-- Step 1: 対象者フィルター -->
+      <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 mb-4">
+        <div class="flex items-center mb-3">
+          <div class="step-number rounded-full flex items-center justify-center font-bold mr-2">
+            1
+          </div>
+          <h3 class="font-bold">対象者で絞り込む</h3>
+        </div>
+        <div class="flex flex-wrap gap-2" id="targetTypeFilters">
+          <button class="filter-btn active bg-white px-4 py-2 rounded-lg font-semibold" data-value="all" style="color: #1F7A85; border: 2px solid #1F7A85; box-shadow: 0 4px 12px rgba(31, 122, 133, 0.3); transform: scale(1.05);">
+            すべて
+          </button>
+          <button class="filter-btn px-4 py-2 rounded-lg font-semibold" data-value="医師" style="background: rgba(31, 122, 133, 0.15); color: #1F7A85; border: 1px solid #1F7A85;">
+            👨‍⚕️ 医師
+          </button>
+          <button class="filter-btn px-4 py-2 rounded-lg font-semibold" data-value="患者" style="background: rgba(31, 122, 133, 0.15); color: #1F7A85; border: 1px solid #1F7A85;">
+            🧑 患者
+          </button>
+          <button class="filter-btn px-4 py-2 rounded-lg font-semibold" data-value="介護者" style="background: rgba(31, 122, 133, 0.15); color: #1F7A85; border: 1px solid #1F7A85;">
+            👥 介護者
+          </button>
+          <button class="filter-btn px-4 py-2 rounded-lg font-semibold" data-value="看護師" style="background: rgba(31, 122, 133, 0.15); color: #1F7A85; border: 1px solid #1F7A85;">
+            👩‍⚕️ 看護師
+          </button>
+          <button class="filter-btn px-4 py-2 rounded-lg font-semibold" data-value="KOL" style="background: rgba(31, 122, 133, 0.15); color: #1F7A85; border: 1px solid #1F7A85;">
+            🎓 KOL
+          </button>
+
+          <button class="filter-btn px-4 py-2 rounded-lg font-semibold" data-value="その他" style="background: rgba(31, 122, 133, 0.15); color: #1F7A85; border: 1px solid #1F7A85;">
+            📋 その他
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: 専門科フィルター（コンパクト版） -->
+      <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 mb-4">
+        <div class="flex items-center mb-3">
+          <div class="step-number rounded-full flex items-center justify-center font-bold mr-2">
+            2
+          </div>
+          <h3 class="font-bold">専門科で絞り込む（医師のみ・任意）</h3>
+        </div>
+        
+        <!-- カテゴリー選択ボタン（横並び） -->
+        <div class="flex flex-wrap gap-2 mb-3" id="categoryButtons">
+          <!-- 動的に生成 -->
+        </div>
+        
+        <!-- 選択されたカテゴリーの専門科一覧（横並び） -->
+        <div id="specialtyListContainer" class="specialty-list-container">
+          <div class="flex flex-wrap gap-2 p-3 bg-white/5 rounded-lg" id="specialtyList">
+            <!-- 動的に生成 -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: フリーワード検索 -->
+      <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+        <div class="flex items-center mb-3">
+          <div class="step-number rounded-full flex items-center justify-center font-bold mr-2">
+            3
+          </div>
+          <h3 class="font-bold">フリーワード検索</h3>
+        </div>
+        <div class="relative">
+          <input 
+            type="text" 
+            id="freewordSearch" 
+            placeholder="疾患名、PJ番号、クライアント、薬剤名などで検索（複数キーワード可）..."
+            class="w-full px-4 py-2 pr-20 rounded-lg text-gray-800 shadow-md focus:outline-none" style="border: 2px solid #1F7A85; font-size: 14px;"
+          >
+          <button 
+            id="clearSearchBtn"
+            onclick="clearSearch()" 
+            class="absolute right-10 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-red-500 transition hidden"
+            title="検索をクリア"
+          >
+            <i class="fas fa-times-circle" style="font-size: 16px;"></i>
+          </button>
+          <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" style="font-size: 14px;"></i>
+        </div>
+        <p class="text-xs mt-1" style="color: #5a6c7d;">
+          💡 複数キーワードでAND検索: 「アルツハイマー病 The Link Group」「T2DM PJ-2024」
+        </p>
+      </div>
+
+      <!-- 結果カウント -->
+      <div class="mt-4 text-center">
+        <div class="inline-block bg-white/20 backdrop-blur-sm rounded-full px-5 py-2">
+          <span class="text-xs font-medium" style="color: #1F7A85;">該当件数: </span>
+          <span id="resultCount" class="text-xl font-bold" style="color: #1F7A85;">0</span>
+          <span class="text-xs font-medium" style="color: #1F7A85;">件</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ソート・表示切替・エクスポート -->
+    <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
+      <div class="flex items-center space-x-3">
+        <label class="text-xs font-medium text-gray-700">並び替え:</label>
+        <select id="sortBy" onchange="sortAndRender()" class="px-3 py-1.5 border-2 rounded-lg text-xs" style="border-color: #1F7A85;">
+          <option value="reg-date-desc">📅 登録日（新しい順）</option>
+          <option value="reg-date-asc">📅 登録日（古い順）</option>
+          <option value="impl-date-desc">🗓️ 実施年月（新しい順）</option>
+          <option value="impl-date-asc">🗓️ 実施年月（古い順）</option>
+          <option value="recruits-desc">👥 実績数（多い順）</option>
+          <option value="recruits-asc">👥 実績数（少ない順）</option>
+          <option value="disease-asc">🏥 疾患名（あいうえお順）</option>
+          <option value="client-asc">🏢 クライアント（アルファベット順）</option>
+        </select>
+      </div>
+      
+      <div class="flex items-center space-x-3">
+        <!-- 表示切替トグル -->
+        <div class="flex items-center space-x-2">
+          <label class="text-xs font-medium text-gray-700">表示:</label>
+          <div class="inline-flex rounded-lg border-2 overflow-hidden" style="border-color: #1F7A85;">
+            <button 
+              id="viewCardBtn"
+              onclick="switchView('card')" 
+              class="px-3 py-1.5 text-xs font-semibold transition view-toggle-btn active"
+              style="background: #1F7A85; color: white;"
+            >
+              <i class="fas fa-th-large mr-1"></i>カード
+            </button>
+            <button 
+              id="viewTableBtn"
+              onclick="switchView('table')" 
+              class="px-3 py-1.5 text-xs font-semibold transition view-toggle-btn"
+              style="background: white; color: #1F7A85;"
+            >
+              <i class="fas fa-table mr-1"></i>テーブル
+            </button>
+          </div>
+        </div>
+        
+        <button onclick="exportFilteredCSV()" class="px-4 py-1.5 bg-green-500 text-white rounded-lg hover:bg-green-600 transition shadow-md text-xs">
+          <i class="fas fa-file-csv mr-1"></i>CSV出力
+        </button>
+      </div>
+    </div>
+
+    <!-- 案件カード一覧 -->
+    <div id="projectCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- 動的に生成 -->
+    </div>
+
+    <!-- 案件テーブル一覧 -->
+    <div id="projectTable" class="hidden overflow-x-auto bg-white rounded-lg shadow-md">
+      <table class="min-w-full text-xs">
+        <thead class="text-white" style="background: linear-gradient(135deg, #1F7A85 0%, #1a6770 100%);">
+          <tr>
+            <th class="px-3 py-3 text-left font-semibold">No</th>
+            <th class="px-3 py-3 text-left font-semibold">登録ID</th>
+            <th class="px-3 py-3 text-left font-semibold">PJ番号</th>
+            <th class="px-3 py-3 text-left font-semibold">疾患名</th>
+            <th class="px-3 py-3 text-left font-semibold">対象者</th>
+            <th class="px-3 py-3 text-center font-semibold">実績</th>
+            <th class="px-3 py-3 text-left font-semibold">実施年月</th>
+            <th class="px-3 py-3 text-left font-semibold">クライアント</th>
+            <th class="px-3 py-3 text-center font-semibold">操作</th>
+          </tr>
+        </thead>
+        <tbody id="projectTableBody">
+          <!-- 動的に生成 -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ローディング -->
+    <div id="loadingIndicator" class="text-center py-8">
+      <i class="fas fa-spinner fa-spin text-2xl" style="color: #1F7A85;"></i>
+      <p class="text-gray-600 mt-3 text-sm">データを読み込み中...</p>
+    </div>
+
+    <!-- 結果なし -->
+    <div id="noResults" class="hidden text-center py-8">
+      <i class="fas fa-search text-4xl text-gray-300 mb-3"></i>
+      <p class="text-base text-gray-600 font-medium">該当する案件が見つかりませんでした</p>
+      <p class="text-gray-500 mt-1 text-sm">別の条件で検索してください</p>
+    </div>
+
+    <!-- ページネーション -->
+    <div id="paginationContainer" class="hidden mt-6 flex justify-center items-center gap-2">
+      <button id="prevPageBtn" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed">
+        <i class="fas fa-chevron-left mr-1"></i>前へ
+      </button>
+      <div id="pageNumbers" class="flex gap-1">
+        <!-- 動的に生成 -->
+      </div>
+      <button id="nextPageBtn" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed">
+        次へ<i class="fas fa-chevron-right ml-1"></i>
+      </button>
+    </div>
+
+    <!-- さらに表示ボタン -->
+    <div id="loadMoreContainer" class="hidden mt-6 text-center">
+      <button id="loadMoreBtn" class="px-6 py-3 text-white rounded-lg transition" style="background-color: #1F7A85;" onmouseover="this.style.backgroundColor='#1a6770'" onmouseout="this.style.backgroundColor='#1F7A85'">
+        <i class="fas fa-plus-circle mr-2"></i>さらに表示 (<span id="remainingCount">0</span>件)
+      </button>
+      <p class="text-xs text-gray-500 mt-2">現在 <span id="currentShownCount">0</span> / <span id="totalCount">0</span> 件表示中</p>
+    </div>
+  </div>
+
+  <!-- 案件詳細モーダル -->
+  <div id="detailModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto" id="detailModalContent">
+      <div class="p-8">
+        <!-- モーダルヘッダー -->
+        <div class="flex items-center justify-between mb-4 border-b pb-3">
+          <h2 class="text-xl font-bold text-gray-800 flex items-center">
+            <i class="fas fa-file-alt mr-2 text-lg" style="color: #1F7A85;"></i>
+            案件詳細
+          </h2>
+          <button onclick="closeDetailModal()" class="text-gray-400 hover:text-gray-600 text-2xl transition">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <!-- 詳細コンテンツ -->
+        <div id="detailContent" class="space-y-6">
+          <!-- 動的に生成 -->
+        </div>
+
+        <!-- 類似案件 -->
+        <div id="similarProjectsSection" class="mt-6 border-t pt-4">
+          <h3 class="text-lg font-bold mb-3 flex items-center">
+            <i class="fas fa-sitemap mr-2 text-base" style="color: #1F7A85;"></i>
+            類似案件
+          </h3>
+          <div id="similarProjectsList" class="space-y-3">
+            <!-- 動的に生成 -->
+          </div>
+        </div>
+
+        <!-- アクションボタン -->
+        <div class="flex space-x-3 mt-6 pt-4 border-t">
+          <button onclick="showDeleteDialog()" class="flex-1 px-5 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition text-sm font-medium">
+            <i class="fas fa-trash-alt mr-2"></i>削除依頼
+          </button>
+          <button onclick="closeDetailModal()" class="flex-1 px-5 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm font-medium">
+            閉じる
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 削除確認ダイアログ -->
+  <div id="deleteDialog" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6" id="deleteDialogContent">
+      <div class="flex items-center justify-between mb-4 border-b pb-3">
+        <h3 class="text-lg font-bold text-red-600 flex items-center">
+          <i class="fas fa-exclamation-triangle mr-2"></i>
+          削除依頼の確認
+        </h3>
+        <button onclick="closeDeleteDialog()" class="text-gray-400 hover:text-gray-600 text-xl transition">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <!-- 警告メッセージ -->
+        <div class="bg-red-50 border border-red-200 rounded-lg p-3">
+          <p class="text-sm text-red-800">
+            <i class="fas fa-info-circle mr-1"></i>
+            このレコードの削除依頼PRを作成します。管理者の承認後、データは完全に削除されます。
+          </p>
+        </div>
+
+        <!-- 削除対象情報 -->
+        <div id="deleteTargetInfo" class="bg-gray-50 rounded-lg p-3 text-sm">
+          <!-- 動的に生成 -->
+        </div>
+
+        <!-- 削除理由入力 -->
+        <div>
+          <label for="deleteReason" class="block text-sm font-medium text-gray-700 mb-2">
+            削除理由 <span class="text-red-500">*</span>
+          </label>
+          <textarea 
+            id="deleteReason" 
+            rows="3" 
+            placeholder="例: 誤登録、重複データ、テストデータなど"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
+            required
+          ></textarea>
+        </div>
+
+        <!-- パスワード入力 -->
+        <div>
+          <label for="deletePassword" class="block text-sm font-medium text-gray-700 mb-2">
+            確認パスワード <span class="text-red-500">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="deletePassword" 
+            placeholder="「delete」と入力してください"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
+            required
+          >
+          <p class="text-xs text-gray-500 mt-1">
+            <i class="fas fa-lock mr-1"></i>削除を実行するには「delete」と入力してください
+          </p>
+        </div>
+
+        <!-- 確認チェックボックス -->
+        <div class="flex items-start">
+          <input 
+            type="checkbox" 
+            id="deleteConfirm" 
+            class="mt-1 mr-2"
+            required
+          >
+          <label for="deleteConfirm" class="text-sm text-gray-700">
+            削除依頼PRを作成することを理解し、同意します
+          </label>
+        </div>
+
+        <!-- アクションボタン -->
+        <div class="flex space-x-3 pt-3">
+          <button 
+            onclick="closeDeleteDialog()" 
+            class="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm font-medium"
+          >
+            キャンセル
+          </button>
+          <button 
+            onclick="submitDeleteRequest()" 
+            class="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition text-sm font-medium"
+          >
+            <i class="fas fa-paper-plane mr-1"></i>削除依頼を送信
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 共通設定 -->
+  <script src="js/config.js"></script>
+  <script src="js/specialties.js"></script>
+  <script type="module" src="js/specialty-groups.js"></script>
+  <!-- API Client -->
+  <script src="js/api.js"></script>
+
+  <!-- 案件検索ロジック -->
+  <script type="module">
+    // specialty-groups.js からインポート
+    import { 
+      SPECIALTY_GROUPS, 
+      getCategoryForSpecialty,
+      getPrioritySpecialties,
+      searchSpecialtiesInCategory
+    } from './js/specialty-groups.js';
+    
+    // グローバルスコープに公開（他の関数から使用するため）
+    window.SPECIALTY_GROUPS = SPECIALTY_GROUPS;
+    window.getPrioritySpecialties = getPrioritySpecialties;
+    
+    let allProjects = [];
+    let filteredProjects = [];
+    let currentFilters = {
+      targetType: 'all',
+      specialty: 'all',
+      freeword: ''
+    };
+    let selectedSpecialties = []; // 選択された専門科の配列（マルチ選択対応）
+    let currentProjectId = null;
+    let currentView = 'card'; // 'card' or 'table'
+    
+    // ページネーション・ロードモア関連
+    let currentPage = 1;
+    let pageSize = 100;
+    let shownCount = 100; // ロードモア用の表示件数
+    const loadMoreIncrement = 100; // 「さらに表示」で追加する件数
+    const searchResultLimit = 500; // 検索結果でロードモアに切り替える閾値
+
+    // 初期化
+    async function init() {
+      try {
+        // データ読み込み
+        allProjects = await api.getAllProjects();
+        
+        // デバッグ: データ読み込み後の重複チェック
+        console.log(`📊 Total projects loaded: ${allProjects.length}`);
+        const allIds = allProjects.map(p => p.id);
+        const uniqueIds = [...new Set(allIds)];
+        if (allIds.length !== uniqueIds.length) {
+          console.error(`❌ データに重複あり！ Total: ${allIds.length}, Unique: ${uniqueIds.length}`);
+          const duplicates = allIds.filter((id, index) => allIds.indexOf(id) !== index);
+          console.error('重複ID:', duplicates);
+          
+          // 重複を削除
+          const seen = new Set();
+          allProjects = allProjects.filter(p => {
+            if (seen.has(p.id)) {
+              console.warn(`🔧 重複削除: ID ${p.id} - ${p.diseaseName}`);
+              return false;
+            }
+            seen.add(p.id);
+            return true;
+          });
+          console.log(`✅ 重複削除後: ${allProjects.length} projects`);
+        } else {
+          console.log(`✅ データに重複なし`);
+        }
+        
+        // 専門科フィルターを生成
+        generateSpecialtyFilters();
+        
+        // フィルターイベントリスナー設定
+        setupFilterListeners();
+        
+        // URL状態から復元
+        restoreFromURL();
+        
+        // 初期表示
+        applyFilters();
+        
+        // ローディング非表示
+        document.getElementById('loadingIndicator').classList.add('hidden');
+        
+        // URLパラメータから特定案件を開く
+        const urlParams = new URLSearchParams(window.location.search);
+        const projectId = urlParams.get('id');
+        
+        if (projectId) {
+          // 少し遅延してモーダルを開く（データ読み込み完了を確実にするため）
+          setTimeout(() => {
+            showProjectDetail(parseInt(projectId));
+          }, 300);
+        }
+        
+      } catch (error) {
+        console.error('初期化エラー:', error);
+        alert('データの読み込みに失敗しました');
+      }
+    }
+
+    // 専門科フィルター生成（コンパクト版：カテゴリーボタン + 専門科横並び）
+    let selectedCategory = null;
+    let categorizedSpecialtiesData = {};
+    
+    function generateSpecialtyFilters() {
+      // すべての専門科を取得
+      const allSpecialties = [...new Set(allProjects.map(p => p.specialty).filter(s => s))];
+      
+      // カテゴリーごとに専門科を分類
+      categorizedSpecialtiesData = {};
+      
+      for (const [category, data] of Object.entries(SPECIALTY_GROUPS)) {
+        const matchedSpecs = allSpecialties.filter(spec => 
+          data.specialties.includes(spec)
+        );
+        
+        if (matchedSpecs.length > 0) {
+          categorizedSpecialtiesData[category] = {
+            ...data,
+            specs: matchedSpecs,
+            count: matchedSpecs.reduce((sum, spec) => 
+              sum + allProjects.filter(p => p.specialty === spec).length, 0
+            )
+          };
+        }
+      }
+      
+      // カテゴリーボタンを生成
+      generateCategoryButtons();
+    }
+    
+    function generateCategoryButtons() {
+      const container = document.getElementById('categoryButtons');
+      container.innerHTML = '';
+      
+      for (const [category, data] of Object.entries(categorizedSpecialtiesData)) {
+        const btn = document.createElement('button');
+        btn.className = 'category-btn px-4 py-2 rounded-lg font-semibold text-sm';
+        btn.dataset.category = category;
+        
+        // アイコンとカテゴリー名を表示
+        btn.innerHTML = `
+          <i class="fas ${data.icon} mr-1" style="font-size: 12px;"></i>
+          ${category}
+          <span class="ml-1 text-xs font-bold">(${data.count})</span>
+        `;
+        
+        // クリックイベント
+        btn.onclick = () => toggleCategory(category);
+        
+        container.appendChild(btn);
+      }
+    }
+    
+    function toggleCategory(category) {
+      const btn = document.querySelector(`[data-category="${category}"]`);
+      const listContainer = document.getElementById('specialtyListContainer');
+      const specialtyList = document.getElementById('specialtyList');
+      
+      // 同じカテゴリーをクリックした場合は閉じる＆専門科フィルターを解除
+      if (selectedCategory === category) {
+        selectedCategory = null;
+        btn.classList.remove('active');
+        listContainer.classList.remove('open');
+        
+        // 専門科フィルターも解除
+        if (currentFilters.specialty !== 'all') {
+          // すべての専門科ボタンの選択を解除
+          document.querySelectorAll('#specialtyFilters .filter-btn').forEach(b => {
+            b.classList.remove('active', 'bg-white');
+            b.style.background = 'rgba(31, 122, 133, 0.15)';
+            b.style.color = '#1F7A85';
+            b.style.border = '1px solid #1F7A85';
+            b.style.boxShadow = 'none';
+            b.style.transform = 'scale(1)';
+          });
+          currentFilters.specialty = 'all';
+          applyFilters();
+        }
+        return;
+      }
+      
+      // 他のカテゴリーボタンの選択を解除
+      document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+      
+      // 選択されたカテゴリーボタンをアクティブに
+      selectedCategory = category;
+      btn.classList.add('active');
+      
+      // 専門科リストを表示
+      displaySpecialties(category);
+      
+      // リストコンテナを開く
+      listContainer.classList.add('open');
+    }
+    
+    function displaySpecialties(category) {
+      const specialtyList = document.getElementById('specialtyList');
+      specialtyList.innerHTML = '';
+      
+      const data = categorizedSpecialtiesData[category];
+      if (!data) return;
+      
+      // すべての専門科を横並びで表示（改行なし、全て表示）
+      data.specs.forEach(spec => {
+        const count = allProjects.filter(p => p.specialty === spec).length;
+        const btn = document.createElement('button');
+        btn.className = 'specialty-btn px-3 py-2 rounded-lg font-semibold text-sm';
+        btn.dataset.specialty = spec;
+        
+        // 選択中の専門科かチェック
+        if (currentFilters.specialty === spec) {
+          btn.classList.add('selected');
+        }
+        
+        btn.innerHTML = `
+          ${spec}
+          <span class="ml-1 text-xs font-bold">(${count})</span>
+        `;
+        
+        // クリックイベント
+        btn.onclick = () => selectSpecialty(spec);
+        
+        specialtyList.appendChild(btn);
+      });
+    }
+    
+    function selectSpecialty(specialty) {
+      // フィルターを更新
+      currentFilters.specialty = specialty;
+      
+      // すべての専門科ボタンの選択状態を更新
+      document.querySelectorAll('.specialty-btn').forEach(btn => {
+        if (btn.dataset.specialty === specialty) {
+          btn.classList.add('selected');
+        } else {
+          btn.classList.remove('selected');
+        }
+      });
+      
+      // フィルターを適用
+      applyFilters();
+      updateURL();
+    }
+
+    function createFilterButton(label, value, isActive = false) {
+      const btn = document.createElement('button');
+      btn.className = `filter-btn px-4 py-2 rounded-lg text-sm font-semibold`;
+      if (isActive) {
+        btn.classList.add('active', 'bg-white');
+        btn.style.color = '#1F7A85';
+      } else {
+        btn.style.background = 'rgba(31, 122, 133, 0.15)';
+        btn.style.color = '#1F7A85';
+        btn.style.border = '1px solid #1F7A85';
+      }
+      
+      // 専門科フィルターの場合、略語コードも表示
+      if (typeof SpecialtyDictionary !== 'undefined' && value !== 'all') {
+        const code = SpecialtyDictionary.deriveCodeFromName(label);
+        if (code) {
+          btn.innerHTML = `${label} <span style="opacity: 0.6; font-size: 0.85em;">(${code})</span>`;
+        } else {
+          btn.textContent = label;
+        }
+      } else {
+        btn.textContent = label;
+      }
+      
+      btn.dataset.value = value;
+      btn.onclick = () => selectSpecialtyFilter(btn);
+      return btn;
+    }
+
+    // toggleAllSpecialties は不要になったので削除
+
+    // フィルターイベントリスナー設定
+    function setupFilterListeners() {
+      // 対象者フィルター
+      document.querySelectorAll('#targetTypeFilters .filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => selectTargetTypeFilter(btn));
+      });
+
+      // フリーワード検索（リアルタイム）
+      const freewordInput = document.getElementById('freewordSearch');
+      const clearBtn = document.getElementById('clearSearchBtn');
+      let searchTimeout;
+      
+      freewordInput.addEventListener('input', (e) => {
+        // クリアボタンの表示/非表示
+        if (e.target.value.trim()) {
+          clearBtn.classList.remove('hidden');
+        } else {
+          clearBtn.classList.add('hidden');
+        }
+        
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          currentFilters.freeword = e.target.value.trim();
+          applyFilters();
+        }, 300); // 300ms後に検索実行
+      });
+    }
+
+    // 検索クリア
+    function clearSearch() {
+      const freewordInput = document.getElementById('freewordSearch');
+      const clearBtn = document.getElementById('clearSearchBtn');
+      
+      freewordInput.value = '';
+      clearBtn.classList.add('hidden');
+      currentFilters.freeword = '';
+      applyFilters();
+    }
+
+    // ビュー切り替え
+    function switchView(view) {
+      currentView = view;
+      
+      const cardBtn = document.getElementById('viewCardBtn');
+      const tableBtn = document.getElementById('viewTableBtn');
+      const cardsContainer = document.getElementById('projectCards');
+      const tableContainer = document.getElementById('projectTable');
+      
+      if (view === 'card') {
+        // カードビュー
+        cardBtn.classList.add('active');
+        tableBtn.classList.remove('active');
+        cardsContainer.classList.remove('hidden');
+        tableContainer.classList.add('hidden');
+      } else {
+        // テーブルビュー
+        tableBtn.classList.add('active');
+        cardBtn.classList.remove('active');
+        cardsContainer.classList.add('hidden');
+        tableContainer.classList.remove('hidden');
+      }
+      
+      // 再レンダリング
+      sortAndRender();
+    }
+
+    // 対象者フィルター選択
+    function selectTargetTypeFilter(btn) {
+      document.querySelectorAll('#targetTypeFilters .filter-btn').forEach(b => {
+        b.classList.remove('active', 'bg-white');
+        b.style.background = 'rgba(31, 122, 133, 0.15)';
+        b.style.color = '#1F7A85';
+        b.style.border = '1px solid #1F7A85';
+        b.style.boxShadow = 'none';
+        b.style.transform = 'scale(1)';
+      });
+      
+      btn.classList.add('active', 'bg-white');
+      btn.style.background = '#FFFFFF';
+      btn.style.color = '#1F7A85';
+      btn.style.border = '2px solid #1F7A85';
+      btn.style.boxShadow = '0 4px 12px rgba(31, 122, 133, 0.3)';
+      btn.style.transform = 'scale(1.05)';
+      btn.classList.remove('bg-white/20', 'hover:bg-white/30', 'text-white');
+      
+      currentFilters.targetType = btn.dataset.value;
+      applyFilters();
+    }
+
+    // 専門科フィルター選択（トグル対応）
+    function selectSpecialtyFilter(btn) {
+      const value = btn.dataset.value;
+      
+      // すでに選択されている場合は解除（トグル）
+      if (btn.classList.contains('active') && currentFilters.specialty === value) {
+        // 選択を解除
+        btn.classList.remove('active', 'bg-white');
+        btn.style.background = 'rgba(31, 122, 133, 0.15)';
+        btn.style.color = '#1F7A85';
+        btn.style.border = '1px solid #1F7A85';
+        btn.style.boxShadow = 'none';
+        btn.style.transform = 'scale(1)';
+        
+        // フィルターをリセット
+        currentFilters.specialty = 'all';
+        applyFilters();
+        return;
+      }
+      
+      // 他のボタンの選択を解除
+      document.querySelectorAll('#specialtyFilters .filter-btn').forEach(b => {
+        b.classList.remove('active', 'bg-white');
+        b.style.background = 'rgba(31, 122, 133, 0.15)';
+        b.style.color = '#1F7A85';
+        b.style.border = '1px solid #1F7A85';
+        b.style.boxShadow = 'none';
+        b.style.transform = 'scale(1)';
+      });
+      
+      // 選択されたボタンをアクティブ化
+      btn.classList.add('active', 'bg-white');
+      btn.style.background = '#FFFFFF';
+      btn.style.color = '#1F7A85';
+      btn.style.border = '2px solid #1F7A85';
+      btn.style.boxShadow = '0 4px 12px rgba(31, 122, 133, 0.3)';
+      btn.style.transform = 'scale(1.05)';
+      btn.classList.remove('bg-white/20', 'hover:bg-white/30', 'text-white');
+      
+      currentFilters.specialty = value;
+      applyFilters();
+    }
+
+    // フィルター適用
+    async function applyFilters() {
+      let projects = [...allProjects];
+
+      // 対象者種別フィルター
+      if (currentFilters.targetType !== 'all') {
+        if (currentFilters.targetType === 'その他') {
+          // 「その他」の場合：医師、患者、介護者、看護師、KOL以外
+          const standardTypes = ['医師', '患者', '介護者', '看護師', 'KOL'];
+          projects = projects.filter(p => !standardTypes.includes(p.targetType));
+        } else {
+          projects = projects.filter(p => p.targetType === currentFilters.targetType);
+        }
+      }
+
+      // 専門科フィルター（厳密な完全一致）
+      if (currentFilters.specialty !== 'all') {
+        // フィルターボタンからの選択時は厳密に完全一致のみ
+        projects = projects.filter(p => {
+          const pSpecialty = (p.specialty || '').trim();
+          const filterSpecialty = currentFilters.specialty.trim();
+          return pSpecialty === filterSpecialty;
+        });
+      }
+
+      // フリーワード検索（複数キーワードAND検索対応）
+      if (currentFilters.freeword) {
+        const keywords = currentFilters.freeword.trim().split(/\s+/).filter(k => k);
+        
+        projects = projects.filter(p => {
+          // 検索対象テキストを結合
+          const searchableText = [
+            p.diseaseName || '',
+            p.diseaseAbbr || '',
+            p.targetType || '',
+            p.client || '',
+            p.endClient || '',
+            p.drug || '',
+            p.method || '',
+            p.specialty || '',
+            p.recruitCompany || '',
+            p.targetConditions || '',
+            p.projectNumber || '',  // PJ番号を追加
+            p.implementationDate || ''
+          ].join(' ').toLowerCase();
+          
+          // 専門科の略語検索も含める
+          const specialtyMatch = (typeof SpecialtyDictionary !== 'undefined')
+            ? keywords.some(keyword => SpecialtyDictionary.matchesProject(p, keyword))
+            : false;
+          
+          // すべてのキーワードが含まれているかチェック（AND検索）
+          return keywords.every(keyword => {
+            const term = keyword.toLowerCase();
+            return searchableText.includes(term) || 
+                   (specialtyMatch && SpecialtyDictionary.matchesProject(p, keyword));
+          });
+        });
+      }
+
+      filteredProjects = projects;
+      
+      // ページネーション状態をリセット
+      currentPage = 1;
+      shownCount = 100;
+      
+      // 結果カウント更新
+      document.getElementById('resultCount').textContent = projects.length;
+      
+      // URL状態を更新
+      updateURL();
+      
+      // ソートして表示
+      sortAndRender();
+    }
+
+    // ソート＆レンダリング
+    function sortAndRender() {
+      const sortBy = document.getElementById('sortBy').value;
+      let sorted = [...filteredProjects];
+
+      switch(sortBy) {
+        case 'reg-date-desc':
+          // 登録日（新しい順）- registrationId で降順ソート
+          sorted.sort((a, b) => compareProjectDates(b, a));
+          break;
+        case 'reg-date-asc':
+          // 登録日（古い順）- registrationId で昇順ソート
+          sorted.sort((a, b) => compareProjectDates(a, b));
+          break;
+        case 'impl-date-desc':
+          // 実施年月（新しい順）
+          sorted.sort((a, b) => compareImplementationDates(b, a));
+          break;
+        case 'impl-date-asc':
+          // 実施年月（古い順）
+          sorted.sort((a, b) => compareImplementationDates(a, b));
+          break;
+        case 'recruits-desc':
+          sorted.sort((a, b) => b.recruitCount - a.recruitCount);
+          break;
+        case 'recruits-asc':
+          sorted.sort((a, b) => a.recruitCount - b.recruitCount);
+          break;
+        case 'disease-asc':
+          sorted.sort((a, b) => (a.diseaseName || '').localeCompare(b.diseaseName || '', 'ja'));
+          break;
+        case 'client-asc':
+          // クライアント（アルファベット順）
+          sorted.sort((a, b) => {
+            const clientA = (a.client || '').toLowerCase();
+            const clientB = (b.client || '').toLowerCase();
+            return clientA.localeCompare(clientB, 'en');
+          });
+          break;
+      }
+
+      // ページネーション/ロードモアの判定とレンダリング
+      renderWithPagination(sorted);
+    }
+    
+    // ページネーション/ロードモア統合レンダリング
+    function renderWithPagination(sorted) {
+      const isSearching = currentFilters.freeword.trim().length > 0;
+      const totalCount = sorted.length;
+      let displayProjects;
+      
+      // 表示制御ロジック
+      if (!isSearching) {
+        // 検索なし → ページネーション
+        displayProjects = paginate(sorted, currentPage, pageSize);
+        showPagination(sorted);
+        hideLoadMore();
+      } else {
+        // 検索あり
+        if (totalCount <= searchResultLimit) {
+          // 500件以下 → 全件表示
+          displayProjects = sorted;
+          hidePagination();
+          hideLoadMore();
+        } else {
+          // 500件超 → ロードモア
+          displayProjects = sorted.slice(0, shownCount);
+          hidePagination();
+          showLoadMore(sorted);
+        }
+      }
+      
+      // デバッグ: 重複チェック
+      const ids = displayProjects.map(p => p.id);
+      const uniqueIds = [...new Set(ids)];
+      if (ids.length !== uniqueIds.length) {
+        console.warn(`⚠️ 重複検出！ Total: ${ids.length}, Unique: ${uniqueIds.length}`);
+        console.warn('重複ID:', ids.filter((id, index) => ids.indexOf(id) !== index));
+      }
+      
+      // ビューに応じてレンダリング
+      if (currentView === 'card') {
+        renderProjectCards(displayProjects);
+      } else {
+        renderProjectTable(displayProjects);
+      }
+    }
+    
+    // ページ分割
+    function paginate(arr, page, size) {
+      const start = (page - 1) * size;
+      return arr.slice(start, start + size);
+    }
+    
+    // ページネーション表示
+    function showPagination(allItems) {
+      const container = document.getElementById('paginationContainer');
+      const prevBtn = document.getElementById('prevPageBtn');
+      const nextBtn = document.getElementById('nextPageBtn');
+      const pageNumbers = document.getElementById('pageNumbers');
+      
+      const totalPages = Math.ceil(allItems.length / pageSize);
+      
+      if (totalPages <= 1) {
+        container.classList.add('hidden');
+        return;
+      }
+      
+      container.classList.remove('hidden');
+      
+      // ページ番号生成
+      pageNumbers.innerHTML = '';
+      const maxVisible = 7; // 表示するページ番号の最大数
+      let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+      let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+      
+      if (endPage - startPage < maxVisible - 1) {
+        startPage = Math.max(1, endPage - maxVisible + 1);
+      }
+      
+      for (let i = startPage; i <= endPage; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        btn.className = `px-3 py-2 rounded-lg transition ${i === currentPage ? 'bg-blue-600 text-white' : 'bg-gray-200 hover:bg-gray-300'}`;
+        btn.onclick = () => goToPage(i);
+        pageNumbers.appendChild(btn);
+      }
+      
+      // 前へ/次へボタンの状態
+      prevBtn.disabled = currentPage === 1;
+      nextBtn.disabled = currentPage === totalPages;
+      
+      prevBtn.onclick = () => goToPage(currentPage - 1);
+      nextBtn.onclick = () => goToPage(currentPage + 1);
+    }
+    
+    // ページネーション非表示
+    function hidePagination() {
+      document.getElementById('paginationContainer').classList.add('hidden');
+    }
+    
+    // ロードモア表示
+    function showLoadMore(allItems) {
+      const container = document.getElementById('loadMoreContainer');
+      const btn = document.getElementById('loadMoreBtn');
+      const remaining = document.getElementById('remainingCount');
+      const currentShown = document.getElementById('currentShownCount');
+      const total = document.getElementById('totalCount');
+      
+      const totalCount = allItems.length;
+      const remainingCount = Math.max(0, totalCount - shownCount);
+      
+      if (remainingCount === 0) {
+        container.classList.add('hidden');
+        return;
+      }
+      
+      container.classList.remove('hidden');
+      remaining.textContent = remainingCount;
+      currentShown.textContent = shownCount;
+      total.textContent = totalCount;
+      
+      btn.onclick = () => loadMore();
+    }
+    
+    // ロードモア非表示
+    function hideLoadMore() {
+      document.getElementById('loadMoreContainer').classList.add('hidden');
+    }
+    
+    // ページ移動
+    function goToPage(page) {
+      currentPage = page;
+      updateURL();
+      sortAndRender();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    
+    // さらに表示
+    function loadMore() {
+      const previousShown = shownCount;
+      shownCount += loadMoreIncrement;
+      sortAndRender();
+      
+      // 新しく表示された項目の先頭にスクロール
+      setTimeout(() => {
+        const cards = document.querySelectorAll('.project-card, .project-row');
+        if (cards[previousShown]) {
+          cards[previousShown].scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
+    
+    // URL状態を更新
+    function updateURL() {
+      const params = new URLSearchParams();
+      
+      // 既存のURLパラメータからidを保持（ディープリンク用）
+      const currentParams = new URLSearchParams(window.location.search);
+      const projectId = currentParams.get('id');
+      if (projectId) {
+        params.set('id', projectId);
+      }
+      
+      // 検索キーワード
+      if (currentFilters.freeword.trim()) {
+        params.set('q', currentFilters.freeword.trim());
+      }
+      
+      // ページ番号（検索なしかつ2ページ目以降のみ）
+      if (!currentFilters.freeword.trim() && currentPage > 1) {
+        params.set('page', currentPage.toString());
+      }
+      
+      // ビュー
+      if (currentView !== 'card') {
+        params.set('view', currentView);
+      }
+      
+      // 対象者種別
+      if (currentFilters.targetType !== 'all') {
+        params.set('target', currentFilters.targetType);
+      }
+      
+      // 専門科
+      if (currentFilters.specialty !== 'all') {
+        params.set('specialty', currentFilters.specialty);
+      }
+      
+      // ソート
+      const sortBy = document.getElementById('sortBy').value;
+      if (sortBy !== 'reg-date-desc') {
+        params.set('sort', sortBy);
+      }
+      
+      const newURL = params.toString() ? `?${params.toString()}` : window.location.pathname;
+      window.history.replaceState({}, '', newURL);
+    }
+    
+    // URL状態から復元
+    function restoreFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      
+      // 検索キーワード
+      const q = params.get('q');
+      if (q) {
+        document.getElementById('freewordSearch').value = q;
+        currentFilters.freeword = q;
+      }
+      
+      // ページ番号
+      const page = params.get('page');
+      if (page) {
+        currentPage = parseInt(page, 10) || 1;
+      }
+      
+      // ビュー
+      const view = params.get('view');
+      if (view === 'table') {
+        currentView = 'table';
+        document.getElementById('cardViewBtn').classList.remove('active');
+        document.getElementById('tableViewBtn').classList.add('active');
+      }
+      
+      // 対象者種別
+      const target = params.get('target');
+      if (target) {
+        currentFilters.targetType = target;
+        const targetBtn = document.querySelector(`#targetTypeFilters button[data-value="${target}"]`);
+        if (targetBtn) {
+          selectTargetTypeFilter(targetBtn);
+        }
+      }
+      
+      // 専門科
+      const specialty = params.get('specialty');
+      if (specialty) {
+        currentFilters.specialty = specialty;
+        const specialtyBtn = document.querySelector(`#specialtyFilters button[data-value="${specialty}"]`);
+        if (specialtyBtn) {
+          selectSpecialtyFilter(specialtyBtn);
+        }
+      }
+      
+      // ソート
+      const sort = params.get('sort');
+      if (sort) {
+        document.getElementById('sortBy').value = sort;
+      }
+    }
+
+    // 検索キーワードをハイライト
+    function highlightText(text, keywords) {
+      if (!text || !keywords || keywords.length === 0) {
+        return text || '';
+      }
+      
+      let result = text;
+      keywords.forEach(keyword => {
+        if (!keyword.trim()) return;
+        
+        // 大文字小文字を区別しない正規表現
+        const regex = new RegExp(`(${escapeRegExp(keyword)})`, 'gi');
+        result = result.replace(regex, '<mark class="bg-yellow-200 font-semibold">$1</mark>');
+      });
+      
+      return result;
+    }
+    
+    // 正規表現の特殊文字をエスケープ
+    function escapeRegExp(string) {
+      return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    // 案件カード表示
+    function renderProjectCards(projects) {
+      const container = document.getElementById('projectCards');
+      const noResults = document.getElementById('noResults');
+      
+      container.innerHTML = '';
+
+      if (projects.length === 0) {
+        container.classList.add('hidden');
+        noResults.classList.remove('hidden');
+        return;
+      }
+
+      container.classList.remove('hidden');
+      noResults.classList.add('hidden');
+
+      projects.forEach((project, index) => {
+        const card = createProjectCard(project, index);
+        container.appendChild(card);
+      });
+    }
+
+    // プロジェクトカード作成
+    function createProjectCard(project, index) {
+      const card = document.createElement('div');
+      card.className = 'project-card card-enter bg-white rounded-xl shadow-md overflow-hidden border border-gray-200';
+      card.style.animationDelay = `${index * 0.05}s`;
+      card.onclick = () => showProjectDetail(project.id);
+
+      const targetTypeBadgeClass = getTargetTypeBadgeClass(project.targetType);
+      
+      // 検索キーワードを取得
+      const keywords = currentFilters.freeword.trim().split(/\s+/).filter(k => k);
+      
+      // テキストをハイライト
+      const highlightedDiseaseName = highlightText(project.diseaseName, keywords);
+      const highlightedDiseaseAbbr = highlightText(project.diseaseAbbr, keywords);
+      const highlightedSpecialty = highlightText(project.specialty, keywords);
+      const highlightedClient = highlightText(project.client, keywords);
+      
+      card.innerHTML = `
+        <div class="p-4">
+          <!-- 疾患名 -->
+          <h3 class="text-sm font-bold text-gray-900 mb-1 line-clamp-2" style="line-height: 1.3;">
+            ${highlightedDiseaseName}
+          </h3>
+          
+          <!-- 疾患略語 -->
+          ${project.diseaseAbbr ? `
+            <p class="text-xs font-medium mb-2" style="color: #1F7A85;">${highlightedDiseaseAbbr}</p>
+          ` : '<div class="mb-2"></div>'}
+          
+          <div class="h-px bg-gray-200 mb-2"></div>
+          
+          <!-- 詳細情報 -->
+          <div class="space-y-2">
+            <!-- 対象者 -->
+            <div class="flex items-center">
+              <i class="fas fa-user-circle w-4 text-gray-400 mr-1.5" style="font-size: 11px;"></i>
+              <span class="badge ${targetTypeBadgeClass} px-2 py-0.5 rounded-full font-semibold" style="font-size: 10px;">
+                ${project.targetType}
+              </span>
+            </div>
+            
+            <!-- 専門科 -->
+            ${project.specialty ? `
+              <div class="flex items-center">
+                <i class="fas fa-hospital w-4 text-gray-400 mr-1.5" style="font-size: 11px;"></i>
+                <span class="text-xs text-gray-700">${truncate(highlightedSpecialty, 18)}</span>
+              </div>
+            ` : ''}
+            
+            <!-- 実績数 / 問合せのみ -->
+            <div class="flex items-center">
+              <i class="fas fa-users w-4 text-gray-400 mr-1.5" style="font-size: 11px;"></i>
+              ${project.inquiryOnly === 'TRUE' || project.inquiryOnly === true ? 
+                `<span class="text-xs font-bold text-red-600">問合せのみ: ${project.recruitCount}名</span>` :
+                `<span class="text-xs font-bold text-green-600">実績: ${project.recruitCount}名</span>`
+              }
+            </div>
+            
+            <!-- クライアント -->
+            ${project.client ? `
+              <div class="flex items-center">
+                <i class="fas fa-building w-4 text-gray-400 mr-1.5" style="font-size: 11px;"></i>
+                <span class="text-xs text-gray-700">${truncate(highlightedClient, 20)}</span>
+              </div>
+            ` : ''}
+          </div>
+          
+          <!-- 詳細ボタン -->
+          <button class="mt-3 w-full text-white py-1.5 rounded-lg transition text-xs font-medium" style="background-color: #1F7A85;" onmouseover="this.style.backgroundColor='#1a6770'" onmouseout="this.style.backgroundColor='#1F7A85'">
+            <i class="fas fa-eye mr-1" style="font-size: 10px;"></i>詳細を見る
+          </button>
+        </div>
+      `;
+
+      return card;
+    }
+
+    // プロジェクトテーブルレンダリング
+    function renderProjectTable(projects) {
+      const tbody = document.getElementById('projectTableBody');
+      const noResults = document.getElementById('noResults');
+      
+      tbody.innerHTML = '';
+
+      if (projects.length === 0) {
+        document.getElementById('projectTable').classList.add('hidden');
+        noResults.classList.remove('hidden');
+        return;
+      }
+
+      document.getElementById('projectTable').classList.remove('hidden');
+      noResults.classList.add('hidden');
+
+      // 検索キーワードを取得
+      const keywords = currentFilters.freeword.trim().split(/\s+/).filter(k => k);
+
+      projects.forEach((project, index) => {
+        const row = document.createElement('tr');
+        row.className = 'project-row';
+        row.onclick = () => showProjectDetail(project.id);
+        
+        const targetTypeBadgeClass = getTargetTypeBadgeClass(project.targetType);
+        
+        // テキストをハイライト
+        const highlightedDiseaseName = highlightText(project.diseaseName, keywords);
+        const highlightedDiseaseAbbr = highlightText(project.diseaseAbbr, keywords);
+        const highlightedClient = highlightText(project.client || '-', keywords);
+        const highlightedProjectNumber = highlightText(project.projectNumber, keywords);
+        
+        row.innerHTML = `
+          <td class="px-3 py-3 text-gray-600">${project.id}</td>
+          <td class="px-3 py-3 text-gray-800 font-mono text-xs">${project.registrationId || '-'}</td>
+          <td class="px-3 py-3 text-gray-800 font-mono text-xs">${highlightedProjectNumber || '-'}</td>
+          <td class="px-3 py-3 text-gray-900 font-semibold" style="max-width: 250px;" title="${project.diseaseName}">
+            ${truncate(highlightedDiseaseName, 35)}
+            ${project.diseaseAbbr ? `<span class="ml-1 text-xs" style="color: #1F7A85;">(${highlightedDiseaseAbbr})</span>` : ''}
+          </td>
+          <td class="px-3 py-3">
+            <span class="badge ${targetTypeBadgeClass} px-2 py-1 rounded-full font-semibold text-xs">
+              ${project.targetType}
+            </span>
+          </td>
+          <td class="px-3 py-3 text-center">
+            ${project.inquiryOnly === 'TRUE' || project.inquiryOnly === true ? 
+              `<span class="text-red-600 font-bold">${project.recruitCount}</span>` :
+              `<span class="text-green-600 font-bold">${project.recruitCount}</span>`
+            }
+          </td>
+          <td class="px-3 py-3 text-gray-700">${formatImplementationDate(project.implementationDate) || '-'}</td>
+          <td class="px-3 py-3 text-gray-700" style="max-width: 180px;" title="${project.client || '-'}">
+            ${truncate(highlightedClient, 25)}
+          </td>
+          <td class="px-3 py-3 text-center">
+            <button 
+              onclick="event.stopPropagation(); showProjectDetail(${project.id});" 
+              class="px-3 py-1 text-xs text-white rounded hover:opacity-80 transition"
+              style="background-color: #1F7A85;"
+            >
+              <i class="fas fa-eye mr-1"></i>詳細
+            </button>
+          </td>
+        `;
+        
+        tbody.appendChild(row);
+      });
+    }
+
+    // 案件詳細モーダル表示
+    async function showProjectDetail(id) {
+      currentProjectId = id;
+      const project = await api.getProjectById(id);
+      
+      if (!project) {
+        alert('案件が見つかりません');
+        return;
+      }
+
+      const detailContent = document.getElementById('detailContent');
+      const targetTypeBadgeClass = getTargetTypeBadgeClass(project.targetType);
+      
+      detailContent.innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-medium text-gray-500 mb-1">疾患名</label>
+            <p class="text-base font-bold text-gray-900">${project.diseaseName}</p>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-500 mb-1">疾患略語</label>
+            <p class="text-base font-semibold" style="color: #1F7A85;">${project.diseaseAbbr || '-'}</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-medium text-gray-500 mb-1">対象者タイプ</label>
+            <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold ${targetTypeBadgeClass}">
+              ${project.targetType}
+            </span>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-500 mb-1">専門（診療科）</label>
+            <p class="text-sm text-gray-900">${project.specialty || '-'}</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-medium text-gray-500 mb-1">手法</label>
+            <p class="text-sm text-gray-900">${project.method || '-'}</p>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-500 mb-1">調査種別</label>
+            <p class="text-sm text-gray-900">${project.surveyType || '-'}</p>
+          </div>
+        </div>
+
+        ${project.inquiryOnly === 'TRUE' || project.inquiryOnly === true ? `
+          <!-- 問合せのみの場合 -->
+          <div>
+            <label class="block text-xs font-medium text-gray-500 mb-1">問合せ確認数（推定回収数）</label>
+            <p class="text-2xl font-bold text-red-600">${project.recruitCount}名</p>
+            <p class="text-xs text-gray-500 mt-1">※問合せのみで記録された数値です</p>
+          </div>
+        ` : `
+          <!-- 通常の実績数 -->
+          <div>
+            <label class="block text-xs font-medium text-gray-500 mb-1">実績数（リクルート人数）</label>
+            <p class="text-2xl font-bold text-green-600">${project.recruitCount}名</p>
+          </div>
+        `}
+
+        <div>
+          <label class="block text-xs font-medium text-gray-500 mb-1">対象条件</label>
+          <div class="bg-gray-50 rounded-lg p-3 border border-gray-200">
+            <p class="text-sm text-gray-900 whitespace-pre-wrap">${project.targetConditions || '-'}</p>
+          </div>
+        </div>
+
+        ${project.drug ? `
+          <div>
+            <label class="block text-xs font-medium text-gray-500 mb-1">薬剤</label>
+            <p class="text-sm text-gray-900">${project.drug}</p>
+          </div>
+        ` : ''}
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-medium text-gray-500 mb-1">リクルート実施会社</label>
+            <p class="text-sm text-gray-900">${project.recruitCompany || '-'}</p>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-500 mb-1">クライアント</label>
+            <p class="text-sm font-semibold" style="color: #1F7A85;">${project.client || '-'}</p>
+          </div>
+        </div>
+
+        <!-- 新規追加項目 -->
+        <div class="border-t pt-4 mt-2">
+          <h4 class="text-sm font-semibold text-gray-700 mb-3 flex items-center">
+            <i class="fas fa-info-circle mr-2" style="color: #1F7A85;"></i>
+            追加情報
+          </h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            ${project.moderator ? `
+              <div>
+                <label class="block text-xs font-medium text-gray-500 mb-1">モデレーター</label>
+                <p class="text-sm text-gray-900">${project.moderator}</p>
+              </div>
+            ` : ''}
+            ${project.endClient ? `
+              <div>
+                <label class="block text-xs font-medium text-gray-500 mb-1">エンドクライアント</label>
+                <p class="text-sm text-gray-900">${project.endClient}</p>
+              </div>
+            ` : ''}
+            ${project.projectNumber ? `
+              <div>
+                <label class="block text-xs font-medium text-gray-500 mb-1">PJ番号</label>
+                <p class="text-base font-mono font-bold">
+                  <a href="https://db.seedplanning.co.jp/project/management/update/?pj=${encodeURIComponent(project.projectNumber)}" 
+                     target="_blank" 
+                     rel="noopener noreferrer" 
+                     class="text-blue-600 hover:text-blue-800 hover:underline transition">
+                    ${project.projectNumber}
+                    <i class="fas fa-external-link-alt ml-1 text-xs"></i>
+                  </a>
+                </p>
+              </div>
+            ` : ''}
+            ${project.implementationDate ? `
+              <div>
+                <label class="block text-xs font-medium text-gray-500 mb-1">実施年月</label>
+                <p class="text-sm text-gray-900">${formatImplementationDate(project.implementationDate)}</p>
+              </div>
+            ` : ''}
+            ${project.registrant ? `
+              <div>
+                <label class="block text-xs font-medium text-gray-500 mb-1">登録担当</label>
+                <p class="text-sm text-gray-900">${project.registrant}</p>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          ${project.registeredDate ? `
+            <div>
+              <label class="block text-xs font-medium text-gray-500 mb-1">登録日</label>
+              <p class="text-sm text-gray-600">${formatDateString(project.registeredDate)}</p>
+            </div>
+          ` : ''}
+          ${project.registrationId ? `
+            <div>
+              <label class="block text-xs font-medium text-gray-500 mb-1">登録ID</label>
+              <p class="text-sm font-mono text-gray-900">${project.registrationId}</p>
+            </div>
+          ` : ''}
+        </div>
+      `;
+
+      // 類似案件を表示
+      await loadSimilarProjects(project.id);
+
+      // モーダルを表示
+      const modal = document.getElementById('detailModal');
+      modal.classList.remove('hidden');
+      
+      // モーダル内のコンテンツを最上部にスクロール
+      const modalContent = modal.querySelector('.bg-white');
+      if (modalContent) {
+        modalContent.scrollTop = 0;
+      }
+    }
+
+    // 類似案件を読み込み
+    async function loadSimilarProjects(projectId) {
+      const similar = await api.findSimilarProjects(projectId, 3);
+      const container = document.getElementById('similarProjectsList');
+
+      if (similar.length === 0) {
+        container.innerHTML = '<p class="text-gray-500 text-center py-4">類似案件が見つかりませんでした</p>';
+        return;
+      }
+
+      container.innerHTML = similar.map(project => `
+        <div class="p-3 rounded-lg border-2 transition cursor-pointer shadow-sm hover:shadow-md" style="background: linear-gradient(to right, #E8F0F1, #d5e5e7); border-color: #1F7A85;" onmouseover="this.style.borderColor='#1a6770'" onmouseout="this.style.borderColor='#1F7A85'" 
+             onclick="showProjectDetail(${project.id})">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex-1">
+              <span class="font-bold text-gray-900 text-sm">${truncate(project.diseaseName, 40)}</span>
+              ${project.diseaseAbbr ? `<span class="ml-1 text-xs text-gray-600">(${project.diseaseAbbr})</span>` : ''}
+            </div>
+            <span class="px-3 py-1 text-white text-xs font-bold rounded-full ml-2" style="background-color: #1F7A85;">
+              類似度: ${project.similarityScore}
+            </span>
+          </div>
+          <div class="grid grid-cols-3 gap-3 text-xs">
+            <div>
+              <span class="text-gray-600">対象者:</span>
+              <span class="font-medium ml-0.5">${project.targetType}</span>
+            </div>
+            <div>
+              <span class="text-gray-600">専門:</span>
+              <span class="font-medium ml-0.5">${project.specialty || '-'}</span>
+            </div>
+            <div>
+              ${project.inquiryOnly === 'TRUE' || project.inquiryOnly === true ?
+                `<span class="text-gray-600">問合せ:</span>
+                 <span class="font-medium ml-0.5 text-red-600">${project.recruitCount}名</span>` :
+                `<span class="text-gray-600">実績:</span>
+                 <span class="font-medium ml-0.5 text-green-600">${project.recruitCount}名</span>`
+              }
+            </div>
+          </div>
+          ${project.client ? `
+            <div class="mt-1.5 text-xs">
+              <span class="text-gray-600">クライアント:</span>
+              <span class="font-medium ml-0.5" style="color: #1F7A85;">${project.client}</span>
+            </div>
+          ` : ''}
+        </div>
+      `).join('');
+    }
+
+    // モーダルを閉じる
+    function closeDetailModal() {
+      document.getElementById('detailModal').classList.add('hidden');
+      currentProjectId = null;
+      
+      // URLから id パラメータを削除（ディープリンク後のクリーンアップ）
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('id')) {
+        params.delete('id');
+        const newURL = params.toString() ? `?${params.toString()}` : window.location.pathname;
+        window.history.replaceState({}, '', newURL);
+      }
+    }
+
+    // 削除ダイアログを表示
+    function showDeleteDialog() {
+      if (!currentProjectId) {
+        alert('削除対象のプロジェクトが選択されていません。');
+        return;
+      }
+
+      const project = allProjects.find(p => p.id === currentProjectId);
+      if (!project) {
+        alert('プロジェクト情報が見つかりません。');
+        return;
+      }
+
+      // 削除対象情報を表示
+      const deleteTargetInfo = document.getElementById('deleteTargetInfo');
+      deleteTargetInfo.innerHTML = `
+        <div class="space-y-2">
+          <div class="flex justify-between">
+            <span class="font-medium text-gray-600">データID:</span>
+            <span class="font-bold text-gray-900">${project.id}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="font-medium text-gray-600">登録ID:</span>
+            <span class="text-gray-900">${project.registrationId || 'なし'}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="font-medium text-gray-600">疾患名:</span>
+            <span class="text-gray-900">${project.diseaseName}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="font-medium text-gray-600">対象者種別:</span>
+            <span class="text-gray-900">${project.targetType || 'なし'}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="font-medium text-gray-600">実績数:</span>
+            <span class="text-gray-900">${project.recruitCount || 0}名</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="font-medium text-gray-600">クライアント:</span>
+            <span class="text-gray-900">${project.client || 'なし'}</span>
+          </div>
+        </div>
+      `;
+
+      // フォームをリセット
+      document.getElementById('deleteReason').value = '';
+      document.getElementById('deletePassword').value = '';
+      document.getElementById('deleteConfirm').checked = false;
+
+      // ダイアログを表示
+      document.getElementById('deleteDialog').classList.remove('hidden');
+    }
+
+    // 削除ダイアログを閉じる
+    function closeDeleteDialog() {
+      document.getElementById('deleteDialog').classList.add('hidden');
+    }
+
+    // 削除依頼を送信
+    async function submitDeleteRequest() {
+      // バリデーション
+      const reason = document.getElementById('deleteReason').value.trim();
+      const password = document.getElementById('deletePassword').value.trim();
+      const confirmed = document.getElementById('deleteConfirm').checked;
+
+      if (!reason) {
+        alert('削除理由を入力してください。');
+        return;
+      }
+
+      if (password !== 'delete') {
+        alert('確認パスワードが正しくありません。「delete」と入力してください。');
+        return;
+      }
+
+      if (!confirmed) {
+        alert('確認チェックボックスにチェックを入れてください。');
+        return;
+      }
+
+      if (!currentProjectId) {
+        alert('削除対象のプロジェクトが選択されていません。');
+        return;
+      }
+
+      const project = allProjects.find(p => p.id === currentProjectId);
+      if (!project) {
+        alert('プロジェクト情報が見つかりません。');
+        return;
+      }
+
+      // 最終確認
+      if (!confirm(`本当に削除依頼を送信しますか？\n\nデータID: ${project.id}\n疾患名: ${project.diseaseName}\n削除理由: ${reason}`)) {
+        return;
+      }
+
+      let submitButton = null;
+      let originalText = null;
+
+      try {
+        // ローディング表示（inline onclick なので event に依存しない）
+        submitButton = document.querySelector('#deleteDialog button[onclick="submitDeleteRequest()"]');
+        if (submitButton) {
+          originalText = submitButton.innerHTML;
+          submitButton.disabled = true;
+          submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>送信中...';
+        }
+
+        // API呼び出し（GAS: delete_request）
+        const endpoint = (typeof API !== 'undefined' && typeof API.getDeleteRequestUrl === 'function')
+          ? API.getDeleteRequestUrl()
+          : '';
+
+        if (!endpoint) {
+          throw new Error('GAS_CONFIG.URL が未設定です（js/config.js を確認してください）');
+        }
+
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8',
+          },
+          body: JSON.stringify({
+            action: 'delete_request',
+            id: project.id,
+            reason,
+            password,
+            clientTimestamp: new Date().toISOString(),
+            projectInfo: {
+              registrationId: project.registrationId,
+              diseaseName: project.diseaseName,
+              diseaseAbbr: project.diseaseAbbr,
+              targetType: project.targetType,
+              recruitCount: project.recruitCount,
+              client: project.client,
+            }
+          })
+        });
+
+        let result = null;
+        try {
+          result = await response.json();
+        } catch (e) {
+          result = { success: response.ok };
+        }
+
+        if (response.ok && result && result.success) {
+          // 成功メッセージ
+          const reqId = result.requestId ? `\n\nリクエストID: ${result.requestId}` : '';
+          alert(`✅ 削除依頼を送信しました！\n\n${result.message || '削除依頼を記録しました。'}${reqId}\n\n管理者の確認をお待ちください。`);
+          
+          // ダイアログを閉じる
+          closeDeleteDialog();
+          closeDetailModal();
+          
+          // データを再読み込み（オプション）
+          // await init();
+        } else {
+          throw new Error((result && (result.error || result.message)) || '削除依頼の送信に失敗しました。');
+        }
+      } catch (error) {
+        console.error('削除依頼エラー:', error);
+        alert(`❌ エラーが発生しました:\n${error.message}\n\n再度お試しいただくか、管理者にお問い合わせください。`);
+      } finally {
+        // ボタンを元に戻す
+        if (submitButton) {
+          submitButton.disabled = false;
+          if (originalText != null) submitButton.innerHTML = originalText;
+        }
+      }
+    }
+
+    // CSVエクスポート（フィルター適用済み）
+    function exportFilteredCSV() {
+      // すべてのデータ列を含むヘッダー
+      const headers = [
+        'id',
+        'registrationId',
+        '疾患名',
+        '疾患略語',
+        '手法',
+        '調査種別',
+        '対象者種別',
+        '専門',
+        '実績数',
+        '問合せのみ',
+        '対象条件',
+        '薬剤',
+        'リクルート実施',
+        'モデレーター',
+        'クライアント',
+        'エンドクライアント',
+        'PJ番号',
+        '実施年月',
+        '登録担当',
+        '登録日'
+      ];
+      const csvLines = [headers.join(',')];
+      
+      filteredProjects.forEach(project => {
+        const row = [
+          project.id || '',
+          escapeCSVField(project.registrationId || ''),
+          escapeCSVField(project.diseaseName || ''),
+          escapeCSVField(project.diseaseAbbr || ''),
+          escapeCSVField(project.method || ''),
+          escapeCSVField(project.surveyType || ''),
+          escapeCSVField(project.targetType || ''),
+          escapeCSVField(project.specialty || ''),
+          project.recruitCount || 0,
+          project.inquiryOnly === 'TRUE' || project.inquiryOnly === true ? 'TRUE' : 'FALSE',
+          escapeCSVField(project.targetConditions || ''),
+          escapeCSVField(project.drug || ''),
+          escapeCSVField(project.recruitCompany || ''),
+          escapeCSVField(project.moderator || ''),
+          escapeCSVField(project.client || ''),
+          escapeCSVField(project.endClient || ''),
+          escapeCSVField(project.projectNumber || ''),
+          escapeCSVField(project.implementationDate || ''),
+          escapeCSVField(project.registrant || ''),
+          escapeCSVField(project.registeredDate || ''),
+        ];
+        csvLines.push(row.join(','));
+      });
+      
+      const BOM = '\uFEFF';
+      const csv = BOM + csvLines.join('\n');
+      
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `filtered_projects_${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // ユーティリティ関数
+    function getTargetTypeBadgeClass(type) {
+      const classes = {
+        '医師': 'bg-blue-100 text-blue-800',
+        '患者': 'bg-green-100 text-green-800',
+        '介護者': 'bg-yellow-100 text-yellow-800',
+        '看護師': 'bg-pink-100 text-pink-800',
+        'KOL': 'bg-indigo-100 text-indigo-800',
+        '医師・患者': 'bg-purple-100 text-purple-800'
+      };
+      return classes[type] || 'bg-gray-100 text-gray-800';
+    }
+
+    function truncate(text, length) {
+      if (!text) return '';
+      return text.length > length ? text.substring(0, length) + '...' : text;
+    }
+
+    function escapeCSVField(field) {
+      if (typeof field !== 'string') return field;
+      if (field.includes(',') || field.includes('"') || field.includes('\n')) {
+        return `"${field.replace(/"/g, '""')}"`;
+      }
+      return field;
+    }
+
+    function compareProjectDates(first, second) {
+      // registrationIdで比較（YYYYMMDD-XXXX形式）
+      const firstId = first.registrationId;
+      const secondId = second.registrationId;
+      
+      // registrationIdがない場合は日付で比較
+      if (!firstId && !secondId) return 0;
+      if (!firstId) return 1;
+      if (!secondId) return -1;
+      
+      // registrationIdで文字列比較（降順用）
+      return firstId.localeCompare(secondId);
+    }
+
+    // 実施年月で比較
+    function compareImplementationDates(first, second) {
+      const firstDate = parseImplementationDate(first.implementationDate);
+      const secondDate = parseImplementationDate(second.implementationDate);
+      
+      // どちらも日付がない場合
+      if (!firstDate && !secondDate) return 0;
+      if (!firstDate) return 1;   // 日付なしは後ろ
+      if (!secondDate) return -1; // 日付なしは後ろ
+      
+      // タイムスタンプで比較
+      return firstDate - secondDate;
+    }
+
+    // 実施年月をDate型に変換
+    function parseImplementationDate(dateStr) {
+      if (!dateStr) return null;
+      
+      // yyyy/mm/dd 形式
+      if (/^\d{4}\/\d{1,2}\/\d{1,2}$/.test(dateStr)) {
+        return new Date(dateStr.replace(/\//g, '-'));
+      }
+      
+      // yyyy/mm 形式（1日として扱う）
+      if (/^\d{4}\/\d{1,2}$/.test(dateStr)) {
+        return new Date(dateStr.replace(/\//g, '-') + '-01');
+      }
+      
+      // その他の日付形式
+      const timestamp = new Date(dateStr).getTime();
+      return isNaN(timestamp) ? null : new Date(timestamp);
+    }
+
+    function getProjectDateValue(project) {
+      const candidates = [project.createdAt, project.registeredDate];
+      for (const value of candidates) {
+        if (!value) continue;
+        const timestamp = new Date(value).getTime();
+        if (!Number.isNaN(timestamp)) return timestamp;
+      }
+      return null;
+    }
+
+    function formatDateString(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return value;
+      return date.toLocaleDateString('ja-JP');
+    }
+
+    // 実施年月をフォーマット（日にちまで、時間は除く）
+    function formatImplementationDate(value) {
+      if (!value) return '';
+      
+      // 既に yyyy/mm または yyyy/mm/dd 形式の場合はそのまま返す
+      if (/^\d{4}\/\d{1,2}(\/\d{1,2})?$/.test(value)) {
+        return value;
+      }
+      
+      // ISO形式やその他の日時形式の場合
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return value;
+      
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      
+      // 日が1日の場合は年月のみ、それ以外は年月日
+      if (day === '01') {
+        return `${year}/${month}`;
+      }
+      return `${year}/${month}/${day}`;
+    }
+
+    // グローバルスコープに公開（index.htmlからのリンク用、onclick/onchange属性で使用）
+    // ES6 moduleスコープで定義された関数をwindowオブジェクトに明示的に割り当て
+    window.showProjectDetail = showProjectDetail;
+    window.closeDetailModal = closeDetailModal;
+    window.showDeleteDialog = showDeleteDialog;
+    window.closeDeleteDialog = closeDeleteDialog;
+    window.submitDeleteRequest = submitDeleteRequest;
+    window.clearSearch = clearSearch;
+    window.switchView = switchView;
+    window.exportFilteredCSV = exportFilteredCSV;
+    window.sortAndRender = sortAndRender;
+
+    // モーダルの背景クリックで閉じる機能を追加
+    function setupModalClickHandlers() {
+      // 案件詳細モーダル
+      const detailModal = document.getElementById('detailModal');
+      const detailModalContent = document.getElementById('detailModalContent');
+      
+      if (detailModal && detailModalContent) {
+        // 背景クリックで閉じる
+        detailModal.addEventListener('click', (e) => {
+          if (e.target === detailModal) {
+            closeDetailModal();
+          }
+        });
+        
+        // コンテンツクリックでイベント伝播を停止（背景クリックと区別）
+        detailModalContent.addEventListener('click', (e) => {
+          e.stopPropagation();
+        });
+      }
+      
+      // 削除確認ダイアログ
+      const deleteDialog = document.getElementById('deleteDialog');
+      const deleteDialogContent = document.getElementById('deleteDialogContent');
+      
+      if (deleteDialog && deleteDialogContent) {
+        // 背景クリックで閉じる
+        deleteDialog.addEventListener('click', (e) => {
+          if (e.target === deleteDialog) {
+            closeDeleteDialog();
+          }
+        });
+        
+        // コンテンツクリックでイベント伝播を停止
+        deleteDialogContent.addEventListener('click', (e) => {
+          e.stopPropagation();
+        });
+      }
+    }
+
+    // ページ読み込み時に実行
+    window.addEventListener('DOMContentLoaded', () => {
+      init();
+      setupModalClickHandlers();
+    });
+  </script>
+</body>
+</html>

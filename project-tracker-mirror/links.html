@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>便利なリンク集 - プロジェクト履歴管理システム</title>
+  <link rel="icon" type="image/png" href="SP_logo_shape_only.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .link-card {
+      transition: all 0.3s ease;
+    }
+    .link-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+    .group-section {
+      animation: fadeIn 0.5s ease-out forwards;
+      opacity: 0;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .group-section:nth-child(1) { animation-delay: 0.1s; }
+    .group-section:nth-child(2) { animation-delay: 0.2s; }
+    .group-section:nth-child(3) { animation-delay: 0.3s; }
+    .group-section:nth-child(4) { animation-delay: 0.4s; }
+    .group-section:nth-child(5) { animation-delay: 0.5s; }
+    
+    /* マーキーアニメーション */
+    .marquee-container {
+      flex: 1;
+      max-width: 500px;
+      overflow: hidden;
+      margin-left: 1rem;
+      position: relative;
+      height: 1.75rem;
+    }
+    .marquee-text {
+      display: inline-block;
+      white-space: nowrap;
+      animation: marquee 30s linear infinite;
+      font-size: 0.875rem;
+      color: #4b5563;
+      font-weight: 500;
+      padding-left: 100%;
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-100%); }
+    }
+    
+    /* レスポンシブ対応 */
+    @media (max-width: 768px) {
+      .marquee-container {
+        display: none;
+      }
+    }
+
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- ナビゲーション -->
+  <nav class="bg-white shadow-md sticky top-0 z-40">
+    <div class="container mx-auto px-2 sm:px-4 py-2 sm:py-3">
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <!-- ロゴ部分 -->
+        <div class="flex items-center space-x-2 sm:space-x-4">
+          <img src="Seed_Planning_Logo_Original.jpg" alt="SEED PLANNING" class="h-8 sm:h-10">
+          <h1 class="hidden md:block text-lg font-bold text-gray-800">プロジェクト履歴管理システム</h1>
+        </div>
+        
+        <!-- ナビゲーションボタン -->
+        <div class="flex flex-wrap gap-1 sm:gap-2">
+          <a href="index.html" class="px-2 sm:px-4 py-2 text-xs sm:text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center">
+            <i class="fas fa-home sm:mr-2"></i><span class="hidden sm:inline ml-1">ホーム</span>
+          </a>
+          <a href="register.html" class="px-2 sm:px-4 py-2 text-xs sm:text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center">
+            <i class="fas fa-plus sm:mr-2"></i><span class="hidden sm:inline ml-1">新規登録</span>
+          </a>
+          <a href="projects.html" class="px-2 sm:px-4 py-2 text-xs sm:text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center">
+            <i class="fas fa-search sm:mr-2"></i><span class="hidden sm:inline ml-1">案件検索</span>
+          </a>
+          <a href="links.html" class="px-2 sm:px-4 py-2 text-xs sm:text-sm text-white rounded-lg transition flex items-center" style="background-color: #1F7A85;">
+            <i class="fas fa-link sm:mr-2"></i><span class="hidden sm:inline ml-1">リンク集</span>
+          </a>
+          <a href="https://seedplanning.monday.com/boards/2723929863" target="_blank" rel="noopener noreferrer" class="px-2 sm:px-4 py-2 text-xs sm:text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center">
+            <img src="monday.png" alt="Monday" class="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2"><span class="hidden sm:inline ml-1">Monday</span>
+          </a>
+          <a href="https://db.seedplanning.co.jp/project/management" target="_blank" rel="noopener noreferrer" class="px-2 sm:px-4 py-2 text-xs sm:text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center">
+            <img src="SP_logo_shape_only.png" alt="プロジェクト管理" class="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2"><span class="hidden sm:inline ml-1">PJ管理</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- メインコンテンツ -->
+  <div class="seasonal-dawn-wrapper">
+    <div class="container mx-auto px-4 py-8">
+    
+    <!-- 世界時計 -->
+    <div class="rounded-lg shadow-md p-6 mb-8" style="background: linear-gradient(135deg, #E8F0F1 0%, #d5e5e7 100%);">
+      <div class="flex items-center justify-between flex-wrap gap-4">
+        <!-- 時刻表示 -->
+        <div class="flex-1">
+          <h2 class="text-xl font-bold text-gray-800 mb-3 flex items-center justify-between">
+            <span class="flex items-center">
+              <i class="fas fa-globe-americas mr-2 text-blue-600"></i>
+              現在の時刻（夏時間対応）
+            </span>
+            <div class="marquee-container">
+              <div id="time-message" class="marquee-text"></div>
+            </div>
+          </h2>
+          
+          <!-- 為替レート表示バー -->
+          <div class="mb-3">
+            <a href="https://finance.yahoo.co.jp/fx/convert?bid=1&base=USD&counter=JPY" 
+               target="_blank" 
+               rel="noopener noreferrer"
+               class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg hover:shadow-md transition group">
+              <i class="fas fa-dollar-sign text-green-600 mr-2"></i>
+              <span class="text-sm font-semibold text-gray-700">
+                1ドル = <span id="usd-jpy-rate" class="text-green-700 font-bold">---</span>円
+              </span>
+              <span class="text-xs text-gray-500 ml-2">
+                (<span id="rate-update-time">取得中...</span>)
+              </span>
+              <i class="fas fa-external-link-alt text-xs text-gray-400 ml-2 group-hover:text-green-600 transition"></i>
+            </a>
+          </div>
+          
+          <div id="world-times-list" class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <!-- 日本 - 優しい赤（日の丸カラー） -->
+            <div class="rounded-lg px-4 py-3 shadow-sm" style="background: linear-gradient(135deg, rgba(220, 38, 38, 0.08) 0%, rgba(239, 68, 68, 0.05) 100%);">
+              <div class="flex items-center text-xs mb-1">
+                <span class="text-2xl mr-2">🇯🇵</span>
+                <span class="font-medium text-red-700">日本</span>
+              </div>
+              <div id="time-jp" class="font-mono font-semibold text-gray-800 text-sm">--:--</div>
+            </div>
+            <!-- 米国 - 優しい青（星条旗カラー） -->
+            <div class="rounded-lg px-4 py-3 shadow-sm" style="background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(59, 130, 246, 0.05) 100%);">
+              <div class="flex items-center text-xs mb-1">
+                <span class="text-2xl mr-2">🇺🇸</span>
+                <span class="font-medium text-blue-700">米国東部</span>
+              </div>
+              <div id="time-us" class="font-mono font-semibold text-gray-800 text-sm">--:--</div>
+            </div>
+            <!-- 英国 - 優しい紫（ユニオンジャックカラー） -->
+            <div class="rounded-lg px-4 py-3 shadow-sm" style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(167, 139, 250, 0.05) 100%);">
+              <div class="flex items-center text-xs mb-1">
+                <span class="text-2xl mr-2">🇬🇧</span>
+                <span class="font-medium text-purple-700">英国</span>
+              </div>
+              <div id="time-uk" class="font-mono font-semibold text-gray-800 text-sm">--:--</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 祝日情報（任意） -->
+      <div id="holidays" class="mt-4 text-sm text-gray-700"></div>
+    </div>
+
+    <script>
+    (function(){
+      // 表示するタイムゾーンと国コード（祝日API用）
+      const zones = [
+        { id: 'time-jp', label: 'JST', tz: 'Asia/Tokyo', country: 'JP' },
+        { id: 'time-us', label: 'US (Eastern)', tz: 'America/New_York', country: 'US' },
+        { id: 'time-uk', label: 'UK', tz: 'Europe/London', country: 'GB' }
+      ];
+
+      // 日時表示フォーマットを作る（例: 2025/11/2 8:54 EDT）
+      function formatDateFor(zone) {
+        const now = new Date();
+        const opts = {
+          timeZone: zone.tz,
+          year: 'numeric', month: '2-digit', day: '2-digit',
+          hour: '2-digit', minute: '2-digit', hour12: false,
+          timeZoneName: 'short'
+        };
+        // formatToParts で安定的に取得して組み立て
+        const parts = new Intl.DateTimeFormat('en-GB', opts).formatToParts(now);
+        const map = {};
+        parts.forEach(p => { map[p.type] = p.value; });
+        // 日/時の先頭ゼロを落とす
+        const year = map.year;
+        const month = Number(map.month);
+        const day = Number(map.day);
+        const hour = Number(map.hour);
+        const minute = map.minute;
+        const tz = map.timeZoneName || '';
+        return `${year}/${month}/${day} ${hour}:${minute} ${tz}`;
+      }
+
+      function updateTimes() {
+        zones.forEach(z => {
+          const el = document.getElementById(z.id);
+          if (el) el.textContent = formatDateFor(z);
+        });
+      }
+
+      // 初回と定期更新（30秒ごと）
+      updateTimes();
+      setInterval(updateTimes, 30000);
+
+      /* -------------------------
+         祝日チェック（任意）
+         - Nager.Date の PublicHolidays API を使用
+         - https://date.nager.at/api/v3/PublicHolidays/{year}/{countryCode}
+         ------------------------- */
+      async function fetchHolidaysForYear(country, year) {
+        const url = `https://date.nager.at/api/v3/PublicHolidays/${year}/${country}`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Holiday API error: ' + res.status);
+        return res.json();
+      }
+
+      async function checkHolidays() {
+        const out = [];
+        for (const z of zones) {
+          try {
+            // 各タイムゾーンの「今日」を取得
+            const now = new Date();
+            const formatter = new Intl.DateTimeFormat('en-CA', { 
+              timeZone: z.tz, 
+              year: 'numeric', 
+              month: '2-digit', 
+              day: '2-digit' 
+            });
+            const localDate = formatter.format(now); // YYYY-MM-DD
+            const year = now.getFullYear();
+            
+            const list = await fetchHolidaysForYear(z.country, year);
+            const found = list.find(h => h.date === localDate);
+            if (found) {
+              out.push(`<span class="inline-block mr-4"><strong>${z.label}:</strong> 🎉 ${found.localName}</span>`);
+            }
+          } catch (err) {
+            // エラーは静かに無視（祝日情報が取得できない場合）
+            console.warn(`Holiday check failed for ${z.label}:`, err);
+          }
+        }
+        const div = document.getElementById('holidays');
+        if (div) {
+          if (out.length > 0) {
+            div.innerHTML = '<div class="bg-amber-50 border border-amber-200 rounded-lg px-4 py-2"><i class="fas fa-calendar-day mr-2 text-amber-600"></i>' + out.join('') + '</div>';
+          } else {
+            // 祝日がない場合は表示をクリア
+            div.innerHTML = '';
+          }
+        }
+      }
+
+      // 祝日チェックを実行（初回と1時間ごとに更新）
+      checkHolidays();
+      setInterval(checkHolidays, 3600000); // 1時間 = 3600000ミリ秒
+
+      /* -------------------------
+         時間帯別メッセージ表示
+         ------------------------- */
+      function updateTimeMessage() {
+        const hour = new Date().getHours();
+        let message = '';
+        
+        if (hour >= 0 && hour < 6) {
+          // 🌃 明け方（0–6時）
+          message = '🌃 静かな時間ですね。ゆっくり深呼吸。 The world\'s quiet — take a breath.';
+        } else if (hour >= 6 && hour < 11) {
+          // 🌅 朝（6–11am）
+          message = '🌅 おはようございます。今日もいい1日にしましょう。 Good morning — wishing you a bright start!';
+        } else if (hour >= 11 && hour < 14) {
+          // 🌞 昼（11–14時）
+          message = '🌞 お疲れ様です。ひと息ついてくださいね。 Hope your day\'s going smoothly.';
+        } else if (hour >= 14 && hour < 19) {
+          // 🌇 夕方（14–19時）
+          message = '🌇 今日もあと少し。無理せずいきましょう。 You\'re doing great — nearly there.';
+        } else if (hour >= 19 && hour < 23) {
+          // 🌙 夜（19–23時）
+          message = '🌙 お疲れ様です。今日もよく頑張りました。 You\'ve earned some rest.';
+        } else {
+          // 🌌 深夜（23–0時）
+          message = '🌌 遅くまでお疲れ様です。そろそろ休みましょう。 Take it easy tonight.';
+        }
+        
+        const messageEl = document.getElementById('time-message');
+        if (messageEl) {
+          messageEl.textContent = message;
+        }
+      }
+
+      // 初回実行と定期更新（30秒ごと、時計と同期）
+      updateTimeMessage();
+      setInterval(updateTimeMessage, 30000);
+
+      /* -------------------------
+         為替レート取得（USD/JPY）
+         - ExchangeRate-API 使用
+         ------------------------- */
+      async function fetchExchangeRate() {
+        try {
+          const response = await fetch('https://open.er-api.com/v6/latest/USD');
+          if (!response.ok) {
+            throw new Error('API response not OK');
+          }
+          const data = await response.json();
+          
+          const jpy = data.rates.JPY;
+          const rateEl = document.getElementById('usd-jpy-rate');
+          const timeEl = document.getElementById('rate-update-time');
+          
+          if (rateEl && jpy) {
+            rateEl.textContent = jpy.toFixed(2);
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            timeEl.textContent = `${hours}:${minutes}更新`;
+          }
+        } catch (error) {
+          console.error('為替レート取得エラー:', error);
+          const rateEl = document.getElementById('usd-jpy-rate');
+          const timeEl = document.getElementById('rate-update-time');
+          if (rateEl) rateEl.textContent = '取得失敗';
+          if (timeEl) timeEl.textContent = 'エラー';
+        }
+      }
+
+      // 初回実行と定期更新（10分ごと）
+      fetchExchangeRate();
+      setInterval(fetchExchangeRate, 10 * 60 * 1000);
+
+      // デバッグ用に外部からも更新できるようにしておく
+      window.updateWorldTimes = updateTimes;
+      window.updateTimeMessage = updateTimeMessage;
+      window.fetchExchangeRate = fetchExchangeRate;
+    })();
+    </script>
+
+    <!-- Group 1: 勤怠・明細 -->
+    <div class="group-section mb-8">
+      <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="px-4 py-2" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+          <h3 class="text-base font-bold text-white flex items-center">
+            <i class="fas fa-clock mr-2 text-sm"></i>
+            勤怠・明細
+          </h3>
+        </div>
+        <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <a href="https://attendance.officestation.jp/independent/recorder2/personal/" target="_blank" rel="noopener noreferrer" class="link-card bg-gradient-to-r from-blue-50 to-blue-100 p-4 rounded-lg border border-blue-200">
+            <div class="flex items-center space-x-3">
+              <div class="bg-blue-500 text-white rounded-full p-3">
+                <i class="fas fa-user-clock text-xl"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-800">【打刻】オフィスステーション</h4>
+                <p class="text-sm text-gray-600">勤怠打刻システム</p>
+              </div>
+            </div>
+          </a>
+          
+          <a href="https://service.officestation.jp/4yp3n5/user-mypage/auth" target="_blank" rel="noopener noreferrer" class="link-card bg-gradient-to-r from-green-50 to-green-100 p-4 rounded-lg border border-green-200">
+            <div class="flex items-center space-x-3">
+              <div class="bg-green-500 text-white rounded-full p-3">
+                <i class="fas fa-file-invoice-dollar text-xl"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-800">【給料明細】オフィスステーション</h4>
+                <p class="text-sm text-gray-600">給与明細確認システム</p>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Group 2: シード社内システム -->
+    <div class="group-section mb-8">
+      <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="px-4 py-2" style="background: linear-gradient(135deg, #6b200e 0%, #a0301a 100%);">
+          <h3 class="text-base font-bold text-white flex items-center">
+            <i class="fas fa-building mr-2 text-sm"></i>
+            シード社内システム
+          </h3>
+        </div>
+        <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <a href="https://db.seedplanning.co.jp/mypage/home" target="_blank" rel="noopener noreferrer" class="link-card bg-gradient-to-r from-purple-50 to-purple-100 p-4 rounded-lg border border-purple-200">
+            <div class="flex items-center space-x-3">
+              <div class="bg-purple-500 text-white rounded-full p-3">
+                <i class="fas fa-tasks text-xl"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-800">マイマネージメントシステム</h4>
+                <p class="text-sm text-gray-600">日報・予定管理</p>
+              </div>
+            </div>
+          </a>
+          
+          <a href="https://db.seedplanning.co.jp/project/management" target="_blank" rel="noopener noreferrer" class="link-card bg-gradient-to-r from-indigo-50 to-indigo-100 p-4 rounded-lg border border-indigo-200">
+            <div class="flex items-center space-x-3">
+              <div class="bg-indigo-500 text-white rounded-full p-3">
+                <i class="fas fa-project-diagram text-xl"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-800">プロジェクト管理システム</h4>
+                <p class="text-sm text-gray-600">案件管理</p>
+              </div>
+            </div>
+          </a>
+          
+          <a href="https://rspottery.rakurakuseisan.jp/NIIUA1kaUSa/" target="_blank" rel="noopener noreferrer" class="link-card bg-gradient-to-r from-amber-50 to-amber-100 p-4 rounded-lg border border-amber-200">
+            <div class="flex items-center space-x-3">
+              <div class="bg-amber-500 text-white rounded-full p-3">
+                <i class="fas fa-yen-sign text-xl"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-800">楽楽精算</h4>
+                <p class="text-sm text-gray-600">経費精算システム</p>
+              </div>
+            </div>
+          </a>
+          
+          <a href="http://seedintra2:8080/info/" target="_blank" rel="noopener noreferrer" class="link-card bg-gradient-to-r from-red-50 to-red-100 p-4 rounded-lg border border-red-200">
+            <div class="flex items-center space-x-3">
+              <div class="bg-red-500 text-white rounded-full p-3">
+                <i class="fas fa-shield-alt text-xl"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-800">【VPN必要】社内情報ポータル</h4>
+                <p class="text-sm text-gray-600">社内専用ポータル</p>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Group 3: 調査プラットフォーム -->
+    <div class="group-section mb-8">
+      <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="px-4 py-2" style="background: linear-gradient(135deg, #E8F0F1 0%, #d5e5e7 100%);">
+          <h3 class="text-base font-bold text-gray-800 flex items-center">
+            <i class="fas fa-chart-bar mr-2 text-sm"></i>
+            調査プラットフォーム
+          </h3>
+        </div>
+        <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <a href="https://app.goto.com/meetings" target="_blank" rel="noopener noreferrer" class="link-card p-4 rounded-lg border border-gray-200" style="background: #FFE600;">
+            <div class="flex items-center space-x-3">
+              <div class="bg-black text-white rounded-full p-3">
+                <i class="fas fa-video text-xl"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-800">GoToMeeting</h4>
+                <p class="text-sm text-gray-700">オンライン会議システム</p>
+              </div>
+            </div>
+          </a>
+          
+          <a href="https://qb4.qualboard.com/research/#/" target="_blank" rel="noopener noreferrer" class="link-card p-4 rounded-lg border border-gray-200" style="background: #05930C;">
+            <div class="flex items-center space-x-3">
+              <div class="bg-white text-gray-800 rounded-full p-3">
+                <i class="fas fa-comments text-xl"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-white">Qualboard</h4>
+                <p class="text-sm text-gray-100">定性調査プラットフォーム</p>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Group 4: 書き起こし・AIツールなど -->
+    <div class="group-section mb-8">
+      <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="px-4 py-2" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+          <h3 class="text-base font-bold text-gray-800 flex items-center">
+            <i class="fas fa-robot mr-2 text-sm"></i>
+            書き起こし・AIツールなど
+          </h3>
+        </div>
+        <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <a href="https://app.plaud.ai/" target="_blank" rel="noopener noreferrer" class="link-card bg-gradient-to-r from-pink-50 to-pink-100 p-4 rounded-lg border border-pink-200">
+            <div class="flex items-center space-x-3">
+              <div class="bg-pink-500 text-white rounded-full p-3">
+                <i class="fas fa-microphone text-xl"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-800">PLAUD Note</h4>
+                <p class="text-sm text-gray-600">書き起こしツール</p>
+              </div>
+            </div>
+          </a>
+          
+          <a href="https://yoshi-seed.github.io/faq/animated-background.html" target="_blank" rel="noopener noreferrer" class="link-card bg-gradient-to-r from-violet-50 to-violet-100 p-4 rounded-lg border border-violet-200">
+            <div class="flex items-center space-x-3">
+              <div class="bg-violet-500 text-white rounded-full p-3">
+                <i class="fas fa-question-circle text-xl"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-800">シードAI活用FAQ</h4>
+                <p class="text-sm text-gray-600">社内AI活用ガイド</p>
+              </div>
+            </div>
+          </a>
+          
+          <a href="https://notebooklm.google.com/notebook/ddc97a3d-b325-4478-98b5-aca9d1fe81ae" target="_blank" rel="noopener noreferrer" class="link-card bg-gradient-to-r from-emerald-50 to-emerald-100 p-4 rounded-lg border border-emerald-200">
+            <div class="flex items-center space-x-3">
+              <div class="bg-emerald-500 text-white rounded-full p-3">
+                <i class="fas fa-book text-xl"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-800">NotebookLM</h4>
+                <p class="text-sm text-gray-600">JMRA&メディ研ガイドライン</p>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Group 5: 検索・便利サイト -->
+    <div class="group-section mb-8">
+      <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="px-4 py-2" style="background: linear-gradient(135deg, #E8F0F1 0%, #d5e5e7 100%);">
+          <h3 class="text-base font-bold text-gray-800 flex items-center">
+            <i class="fas fa-search mr-2 text-sm"></i>
+            検索・便利サイト
+          </h3>
+          <p class="text-xs text-gray-700 mt-0.5">Recommended for Medical Market Researcher!</p>
+        </div>
+        <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <a href="https://www.medinew.jp/articles/page/1" target="_blank" rel="noopener noreferrer" class="link-card bg-gradient-to-r from-cyan-50 to-cyan-100 p-4 rounded-lg border border-cyan-200">
+            <div class="flex items-center space-x-3">
+              <div class="bg-cyan-500 text-white rounded-full p-3">
+                <i class="fas fa-newspaper text-xl"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-800">Medinew</h4>
+                <p class="text-sm text-gray-600">医薬品マーケティング記事</p>
+              </div>
+            </div>
+          </a>
+          
+          <a href="https://www.pmda.go.jp/index.html" target="_blank" rel="noopener noreferrer" class="link-card bg-gradient-to-r from-teal-50 to-teal-100 p-4 rounded-lg border border-teal-200">
+            <div class="flex items-center space-x-3">
+              <div class="bg-teal-500 text-white rounded-full p-3">
+                <i class="fas fa-hospital text-xl"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-800">PMDA</h4>
+                <p class="text-sm text-gray-600">政府機関 最新医薬品情報</p>
+              </div>
+            </div>
+          </a>
+          
+          <a href="https://www.kegg.jp/kegg/drug/drug_ja.html" target="_blank" rel="noopener noreferrer" class="link-card bg-gradient-to-r from-blue-50 to-blue-100 p-4 rounded-lg border border-blue-200">
+            <div class="flex items-center space-x-3">
+              <div class="bg-blue-600 text-white rounded-full p-3">
+                <i class="fas fa-database text-xl"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-800">KEGG</h4>
+                <p class="text-sm text-gray-600">京都大学 医薬品検索DB</p>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    </div>
+
+    <!-- フッター -->
+    <footer class="bg-white border-t border-gray-200 py-6 mt-12">
+      <div class="container mx-auto px-4 text-center text-gray-600">
+        <p>&copy; 2025 Seed Planning. All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
+
+</body>
+</html>
