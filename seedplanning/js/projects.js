@@ -160,7 +160,7 @@ class ProjectsListPage {
 
     // 実施期
     const tdTerm = document.createElement('td');
-    tdTerm.textContent = project.term || '-';
+    tdTerm.textContent = this.dateToTerm(project.term) || '-';
     tr.appendChild(tdTerm);
 
     // クライアント名
@@ -191,6 +191,53 @@ class ProjectsListPage {
       return `${year}-${month}-${day}`;
     } catch (error) {
       return dateString;
+    }
+  }
+
+  /**
+   * 日付文字列から「期」に変換
+   * ルール: 43期 = 2025年3月～2026年2月
+   *         44期 = 2026年3月～2027年2月
+   * @param {string|Date} dateInput - 日付文字列
+   * @return {string} "43期", "44期" など
+   */
+  dateToTerm(dateInput) {
+    if (!dateInput) return '';
+    
+    // すでに「○○期」の形式なら、そのまま返す
+    if (typeof dateInput === 'string' && /^\d+期$/.test(dateInput.trim())) {
+      return dateInput.trim();
+    }
+
+    try {
+      const date = new Date(dateInput);
+      if (isNaN(date.getTime())) {
+        return String(dateInput);
+      }
+
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1; // 0-indexed
+
+      // 基準: 43期 = 2025/03 ~ 2026/02
+      const BASE_TERM = 43;
+      const BASE_START_YEAR = 2025;
+      const BASE_START_MONTH = 3;
+
+      // 期の開始年月を計算
+      let termStartYear;
+      if (month >= BASE_START_MONTH) {
+        termStartYear = year;
+      } else {
+        termStartYear = year - 1;
+      }
+
+      // 43期からの差分を計算
+      const yearDiff = termStartYear - BASE_START_YEAR;
+      const term = BASE_TERM + yearDiff;
+
+      return `${term}期`;
+    } catch (error) {
+      return String(dateInput);
     }
   }
 

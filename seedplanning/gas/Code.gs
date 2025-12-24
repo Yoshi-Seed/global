@@ -43,13 +43,72 @@ const INDEX_HEADERS = [
   'project_name',     // プロジェクト名
   'project_type',     // プロジェクトタイプ（公的/民間）
   'category',         // カテゴリー（エネルギー・環境/エレクトロニクス・IT/その他の市場分野/ヘルスケア/メディカル・バイオ/医療IT）
-  'term',             // 実施期（40期, 41期, ..., 44期）
+  'term',             // 実施期（40期, 41期, ..., 44期） ※日付文字列なら自動変換
   'client_name',      // クライアント名
   'summary',          // 1行サマリー（80文字程度）
   'updated_at',       // 更新日時（ISO 8601）
   'registered_by',    // 登録担当者
   'registered_date'   // 登録日（yyyy-MM-dd）
 ];
+
+/**
+ * 日付文字列から「期」に変換
+ * ルール: 43期 = 2025年3月～2026年2月
+ *         44期 = 2026年3月～2027年2月
+ *         N期 = (2025 + N - 43)年3月～(2026 + N - 43)年2月
+ * 
+ * @param {string|Date} dateInput - 日付文字列または Date オブジェクト
+ * @return {string} "43期", "44期" などの文字列。変換できない場合は元の値
+ */
+function dateToTerm_(dateInput) {
+  if (!dateInput) return '';
+  
+  // すでに「○○期」の形式なら、そのまま返す
+  if (typeof dateInput === 'string' && /^\d+期$/.test(dateInput.trim())) {
+    return dateInput.trim();
+  }
+
+  try {
+    let date;
+    if (dateInput instanceof Date) {
+      date = dateInput;
+    } else {
+      // 文字列から Date オブジェクトを作成
+      date = new Date(dateInput);
+    }
+
+    if (isNaN(date.getTime())) {
+      // 変換できない場合は元の値を返す
+      return String(dateInput);
+    }
+
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1; // 0-indexed
+
+    // 基準: 43期 = 2025/03 ~ 2026/02
+    const BASE_TERM = 43;
+    const BASE_START_YEAR = 2025;
+    const BASE_START_MONTH = 3;
+
+    // 期の開始年月を計算
+    // 3月以降なら、その年の3月が期の開始
+    // 2月以前なら、前年の3月が期の開始
+    let termStartYear;
+    if (month >= BASE_START_MONTH) {
+      termStartYear = year;
+    } else {
+      termStartYear = year - 1;
+    }
+
+    // 43期からの差分を計算
+    const yearDiff = termStartYear - BASE_START_YEAR;
+    const term = BASE_TERM + yearDiff;
+
+    return `${term}期`;
+  } catch (error) {
+    return String(dateInput);
+  }
+}
 
 // projects_detail のカラム（7列）
 const DETAIL_HEADERS = [
@@ -610,7 +669,7 @@ function rowToIndexProject_(row) {
     project_name: row[1],
     project_type: row[2],
     category: row[3],
-    term: row[4],
+    term: dateToTerm_(row[4]), // 日付文字列を「○○期」に変換
     client_name: row[5],
     summary: row[6],
     updated_at: row[7],
