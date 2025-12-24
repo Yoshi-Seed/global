@@ -125,9 +125,10 @@ class SeedPlanningAPI {
       const response = await fetch(baseUrl, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'text/plain;charset=utf-8',
         },
-        body: JSON.stringify(requestBody)
+        body: JSON.stringify(requestBody),
+        redirect: 'follow'
       });
       
       // レスポンスのテキストを取得
