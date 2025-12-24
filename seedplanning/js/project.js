@@ -114,6 +114,67 @@ class ProjectDetailPage {
         window.location.href = `edit.html?pj=${encodeURIComponent(this.pjNumber)}`;
       };
     }
+
+    // 削除ボタン
+    const deleteBtn = document.getElementById('deleteBtn');
+    if (deleteBtn) {
+      deleteBtn.style.display = 'inline-block';
+      deleteBtn.onclick = () => {
+        this.handleDelete();
+      };
+    }
+  }
+
+  /**
+   * 削除処理
+   */
+  async handleDelete() {
+    const projectName = this.project.project_name || 'このプロジェクト';
+    
+    // 確認ダイアログ
+    const confirmed = confirm(
+      `【確認】\n\n「${projectName}」(PJ: ${this.pjNumber})\nを本当に削除しますか？\n\nこの操作は取り消せません。`
+    );
+    
+    if (!confirmed) {
+      return;
+    }
+
+    // 削除理由の入力
+    const reason = prompt('削除理由を入力してください:', '');
+    if (!reason || reason.trim() === '') {
+      alert('削除理由が入力されていません。削除をキャンセルしました。');
+      return;
+    }
+
+    // 最終確認
+    const finalConfirm = confirm(
+      `【最終確認】\n\n本当に削除しますか？\n削除理由: ${reason}\n\nこの操作は取り消せません。`
+    );
+    
+    if (!finalConfirm) {
+      return;
+    }
+
+    try {
+      // 削除リクエストをAPIに送信
+      const response = await api.requestDelete(
+        this.pjNumber,
+        reason,
+        this.project
+      );
+
+      if (response.success) {
+        alert(`✅ 削除リクエストを送信しました。\n\n管理者による確認後、削除が実行されます。`);
+        // 一覧ページに戻る
+        window.location.href = 'projects.html';
+      } else {
+        throw new Error(response.message || '削除リクエストの送信に失敗しました');
+      }
+    } catch (error) {
+      console.error('Delete error:', error);
+      alert(`❌ エラーが発生しました\n\n${error.message}`);
+    }
   }
 
   /**
