@@ -88,16 +88,37 @@ body {
   margin-bottom: var(--spacing-xl);
 }
 
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header-logo {
+  height: 60px;
+  width: auto;
+  flex-shrink: 0;
+}
+
+.header-center {
+  flex: 1;
+  text-align: center;
+  padding: 0 var(--spacing-lg);
+}
+
 .header-title {
   font-size: var(--font-size-2xl);
   font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: var(--spacing-xs);
+  margin: 0;
 }
 
 .header-subtitle {
   font-size: var(--font-size-sm);
   color: var(--text-secondary);
+  margin: var(--spacing-xs) 0 0 0;
 }
 
 /* カード */
