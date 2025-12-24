@@ -1,0 +1,322 @@
+# Seed Planning プロジェクト管理システム - データスキーマ
+
+## 概要
+
+このシステムは、Google Sheets の2シート構成でプロジェクトデータを管理します：
+
+1. **projects_index**: 一覧・検索用の軽量データ（10列）
+2. **projects_detail**: 詳細ページ用の重量データ（8列）
+
+---
+
+## 1. projects_index（一覧用シート）
+
+### カラム定義
+
+| カラム名 | 型 | 必須 | 説明 | 例 |
+|---------|---|------|------|---|
+| pj_number | 文字列 | ✅ | PJ番号（主キー） | `Z04012101` |
+| project_name | 文字列 | ✅ | プロジェクト名 | `運営適正化委員会による運営監視業務に関する調査研究事業一式` |
+| project_type | 文字列 | ✅ | プロジェクトタイプ | `公的` / `民間` |
+| category | 文字列 | ✅ | カテゴリー | `ヘルスケア` / `IT` / `製造` / `流通` 等 |
+| term | 文字列 |   | 実施期 | `40期` / `41期` / `42期` / `43期` / `44期` |
+| client_name | 文字列 |   | クライアント名 | `全国社会福祉協議会` |
+| summary | 文字列 |   | 1行サマリー（80文字程度） | `運営適正化委員会の運営監視業務の実態把握と標準的なガイドライン作成` |
+| updated_at | ISO 8601 | ✅ | 更新日時 | `2024-12-24T12:34:56.789Z` |
+| registered_by | 文字列 |   | 登録担当者 | `田中太郎` |
+| registered_date | yyyy-MM-dd | ✅ | 登録日 | `2024-12-24` |
+
+### データ例
+
+```
+pj_number: Z04012101
+project_name: 運営適正化委員会による運営監視業務に関する調査研究事業一式
+project_type: 公的
+category: ヘルスケア
+term: 44期
+client_name: 全国社会福祉協議会
+summary: 運営適正化委員会の運営監視業務の実態把握と標準的なガイドライン作成
+updated_at: 2024-12-24T12:34:56.789Z
+registered_by: 山田花子
+registered_date: 2024-12-24
+```
+
+---
+
+## 2. projects_detail（詳細用シート）
+
+### カラム定義
+
+| カラム名 | 型 | 必須 | 説明 | フォーマット |
+|---------|---|------|------|------------|
+| pj_number | 文字列 | ✅ | PJ番号（主キー、indexと連携） | `Z04012101` |
+| background | 文字列（長文） |   | 背景・課題 | Markdown形式推奨 |
+| purpose | 文字列（長文） |   | 目的 | Markdown形式推奨 |
+| implementation | 文字列（長文） |   | 実施内容 | Markdown形式推奨 |
+| deliverables | 文字列（長文） |   | 成果物 | Markdown形式推奨 |
+| reference_files | JSON配列文字列 |   | 参照ファイル | `[{"label":"...", "url":"..."}]` |
+| notes | 文字列 |   | 備考・その他 | 自由記述 |
+| history_log | JSON配列文字列 |   | 変更履歴 | `[{"timestamp":"...", "action":"...", "user":"..."}]` |
+
+### Markdown 形式の例（background, purpose, implementation, deliverables）
+
+```markdown
+## 背景・課題
+- 社会福祉法に基づき都道府県社協に設置された運営適正化委員会は、日常生活自立支援事業（日自）の運営監視と苦情解決を担ってきた
+- 制度創設から20年以上が経過し、基本的な組織・機能の見直しが行われていない
+- 日自の利用者数は増加（平成13年度約4千人から令和5年度約5.6万人へ）
+- 適切な運用が求められる一方で、運営監視業務の標準的な運用がこれまで整理されていなかった
+
+## 主な課題
+1. 標準的な業務運用が未整理
+2. 各都道府県でばらつきがある
+3. 利用者数増加に対応できていない
+```
+
+### reference_files の JSON 形式
+
+```json
+[
+  {
+    "label": "事業計画書（ver.2）",
+    "url": "https://drive.google.com/file/d/XXXX/view",
+    "type": "pdf",
+    "size": "2.5MB",
+    "uploadDate": "2024-12-01"
+  },
+  {
+    "label": "入札説明書",
+    "url": "https://drive.google.com/file/d/YYYY/view",
+    "type": "pdf"
+  },
+  {
+    "label": "ヒアリング項目",
+    "url": "https://drive.google.com/file/d/ZZZZ/view",
+    "type": "docx"
+  }
+]
+```
+
+**最小構成**（labelとurlのみ必須）:
+```json
+[
+  {"label": "事業計画書", "url": "https://..."},
+  {"label": "報告書", "url": "https://..."}
+]
+```
+
+### history_log の JSON 形式
+
+```json
+[
+  {
+    "timestamp": "2024-12-24T12:34:56.789Z",
+    "action": "created",
+    "user": "山田花子"
+  },
+  {
+    "timestamp": "2024-12-25T10:20:30.123Z",
+    "action": "updated",
+    "user": "佐藤次郎",
+    "changes": "背景・課題セクションを更新"
+  }
+]
+```
+
+---
+
+## 3. データ入力時の注意事項
+
+### Markdown の活用
+
+長文フィールド（background, purpose, implementation, deliverables）では Markdown を推奨：
+
+```markdown
+# 大見出し
+## 中見出し
+### 小見出し
+
+- 箇条書き1
+- 箇条書き2
+  - ネスト1
+  - ネスト2
+
+1. 番号付きリスト1
+2. 番号付きリスト2
+
+**太字** / *斜体* / `コード`
+
+[リンクテキスト](https://example.com)
+```
+
+### JSON フィールドの編集
+
+`reference_files` と `history_log` は JSON 形式です：
+
+- **Sheets上で直接編集する場合**: JSON 文法に注意（ダブルクォート、カンマ、ブラケット）
+- **フロント画面から編集する場合**: 自動的に JSON に変換されます（推奨）
+
+### 改行の扱い
+
+- Markdown フィールド内では **改行はそのまま保存**されます
+- フロント側で HTML に変換する際、改行は `<br>` または段落 `<p>` に変換されます
+
+---
+
+## 4. API レスポンス形式
+
+### 一覧取得（/action=list）
+
+```json
+{
+  "success": true,
+  "projects": [
+    {
+      "pj_number": "Z04012101",
+      "project_name": "運営適正化委員会...",
+      "project_type": "公的",
+      "category": "ヘルスケア",
+      "term": "44期",
+      "client_name": "全国社会福祉協議会",
+      "summary": "運営適正化委員会の...",
+      "updated_at": "2024-12-24T12:34:56.789Z",
+      "registered_by": "山田花子",
+      "registered_date": "2024-12-24"
+    }
+  ],
+  "count": 1,
+  "filters": {
+    "type": "",
+    "category": "",
+    "term": "",
+    "client": "",
+    "q": ""
+  },
+  "updatedAt": "2024-12-24T12:34:56.789Z"
+}
+```
+
+### 詳細取得（/action=detail&pj=Z04012101）
+
+```json
+{
+  "success": true,
+  "project": {
+    "pj_number": "Z04012101",
+    "project_name": "運営適正化委員会...",
+    "project_type": "公的",
+    "category": "ヘルスケア",
+    "term": "44期",
+    "client_name": "全国社会福祉協議会",
+    "summary": "運営適正化委員会の...",
+    "updated_at": "2024-12-24T12:34:56.789Z",
+    "registered_by": "山田花子",
+    "registered_date": "2024-12-24",
+    "background": "## 背景・課題\n- 社会福祉法に基づき...",
+    "purpose": "## 目的\n1. 各都道府県の...",
+    "implementation": "## 実施内容\n- プレヒアリング調査...",
+    "deliverables": "## 成果物\n- 調査研究事業の報告書...",
+    "reference_files": [
+      {"label": "事業計画書", "url": "https://..."},
+      {"label": "報告書", "url": "https://..."}
+    ],
+    "notes": "特記事項なし",
+    "history_log": [
+      {"timestamp": "2024-12-24T12:34:56.789Z", "action": "created", "user": "山田花子"}
+    ]
+  }
+}
+```
+
+---
+
+## 5. バリデーションルール
+
+### 新規登録（action=add）時の必須項目
+
+- `pj_number` (PJ番号)
+- `project_name` (プロジェクト名)
+- `project_type` (プロジェクトタイプ)
+- `category` (カテゴリー)
+
+### 推奨事項
+
+- `term` (実施期): 入力推奨（検索軸として重要）
+- `client_name` (クライアント名): 入力推奨（検索軸として重要）
+- `summary` (サマリー): 80文字以内推奨（一覧表示で見やすく）
+
+### PJ番号のフォーマット
+
+- 形式は自由ですが、一貫性を保つことを推奨
+- 例: `Z04012101` (Z + 年度2桁 + 月2桁 + 連番4桁)
+- 重複チェック: GAS側で自動実施
+
+---
+
+## 6. データ移行・インポート
+
+### 既存データがある場合
+
+1. **CSV形式で準備**
+   - `projects_index.csv` と `projects_detail.csv` を作成
+   - カラム順序はスキーマ定義に従う
+
+2. **Google Sheets にインポート**
+   - ファイル → インポート → CSV を選択
+   - インポート先: 既存のシートに追加（ヘッダー行を保持）
+
+3. **JSON フィールドの確認**
+   - `reference_files` と `history_log` が正しい JSON 形式か確認
+   - 無効なJSONの場合、API でエラーが発生します
+
+### データクレンジング
+
+長文フィールドに特殊文字が含まれる場合:
+- GAS側で自動処理（特になし、そのまま保存）
+- Markdown として正しくレンダリングされるか、フロント側で確認
+
+---
+
+## 7. パフォーマンス考慮事項
+
+### 一覧取得の最適化
+
+- **projects_index** は軽量（10列のみ）なので、数百件でも高速
+- 1000件を超える場合、GAS側でページネーション実装を推奨
+
+### 詳細取得の最適化
+
+- 詳細は **1件ずつ取得**（オンデマンド）
+- キャッシュ: フロント側で `sessionStorage` を活用
+
+### キャッシュ戦略
+
+- 一覧: 60秒キャッシュ（config.js の `CACHE_TTL_MS`）
+- 詳細: ページ遷移中はキャッシュ保持、戻るボタンで再利用
+
+---
+
+## 8. 今後の拡張性
+
+### 追加可能なフィールド例
+
+**projects_index**:
+- `status` (ステータス: 進行中/完了/保留)
+- `priority` (優先度: 高/中/低)
+- `tags` (タグ: JSON配列)
+
+**projects_detail**:
+- `budget` (予算)
+- `timeline` (スケジュール: JSON配列)
+- `team_members` (チームメンバー: JSON配列)
+- `attachments` (添付ファイル: 追加のファイル群)
+
+### シートの追加
+
+- `projects_comments` (コメント機能)
+- `projects_versions` (バージョン管理)
+- `projects_approvals` (承認フロー)
+
+---
+
+このスキーマ設計により、**検索は軽快**、**詳細は充実**のバランスを実現しています。
