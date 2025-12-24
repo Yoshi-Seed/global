@@ -106,8 +106,14 @@ class ProjectDetailPage {
     // 変更履歴
     this.renderHistory(p.history_log);
 
-    // 編集ボタン（将来実装）
-    // document.getElementById('editBtn').style.display = 'inline-block';
+    // 編集ボタン
+    const editBtn = document.getElementById('editBtn');
+    if (editBtn) {
+      editBtn.style.display = 'inline-block';
+      editBtn.onclick = () => {
+        window.location.href = `edit.html?pj=${encodeURIComponent(this.pjNumber)}`;
+      };
+    }
   }
 
   /**

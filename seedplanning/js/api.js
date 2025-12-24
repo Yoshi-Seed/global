@@ -217,14 +217,13 @@ class SeedPlanningAPI {
 
   /**
    * プロジェクト更新
-   * @param {string} pjNumber - PJ番号
-   * @param {Object} projectData - 更新データ
+   * @param {Object} projectData - 更新データ（pj_numberを含む）
    */
-  async updateProject(pjNumber, projectData) {
-    if (!pjNumber) {
-      throw new Error('pjNumber is required');
+  async updateProject(projectData) {
+    if (!projectData.pj_number) {
+      throw new Error('pj_number is required');
     }
-    return this._post('update', projectData, { pj: pjNumber });
+    return this._post('update', projectData);
   }
 
   /**
