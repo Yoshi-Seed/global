@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Term Conversion Test</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #4CAF50; color: white; }
+    tr:nth-child(even) { background-color: #f2f2f2; }
+    .pass { color: green; font-weight: bold; }
+    .fail { color: red; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>📅 日付 → 期 変換テスト</h1>
+  <p><strong>変換ルール:</strong> 43期 = 2025/03～2026/02、44期 = 2026/03～2027/02</p>
+  
+  <h2>テスト結果</h2>
+  <table id="testResults">
+    <thead>
+      <tr>
+        <th>入力値</th>
+        <th>期待値</th>
+        <th>実際の出力</th>
+        <th>結果</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    /**
+     * 日付文字列から「期」に変換（GASと同じロジック）
+     */
+    function dateToTerm(dateInput) {
+      if (!dateInput) return '';
+      
+      // すでに「○○期」の形式なら、そのまま返す
+      if (typeof dateInput === 'string' && /^\d+期$/.test(dateInput.trim())) {
+        return dateInput.trim();
+      }
+
+      try {
+        const date = new Date(dateInput);
+        if (isNaN(date.getTime())) {
+          return String(dateInput);
+        }
+
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1; // 0-indexed
+
+        // 基準: 43期 = 2025/03 ~ 2026/02
+        const BASE_TERM = 43;
+        const BASE_START_YEAR = 2025;
+        const BASE_START_MONTH = 3;
+
+        // 期の開始年月を計算
+        let termStartYear;
+        if (month >= BASE_START_MONTH) {
+          termStartYear = year;
+        } else {
+          termStartYear = year - 1;
+        }
+
+        // 43期からの差分を計算
+        const yearDiff = termStartYear - BASE_START_YEAR;
+        const term = BASE_TERM + yearDiff;
+
+        return `${term}期`;
+      } catch (error) {
+        return String(dateInput);
+      }
+    }
+
+    // テストケース
+    const testCases = [
+      // 43期（2025/03～2026/02）
+      { input: '2025-03-01', expected: '43期', description: '43期の開始日' },
+      { input: '2025-06-15', expected: '43期', description: '43期の途中（6月）' },
+      { input: '2025-12-31', expected: '43期', description: '43期の年末' },
+      { input: '2026-01-15', expected: '43期', description: '43期の終盤（1月）' },
+      { input: '2026-02-28', expected: '43期', description: '43期の最終日' },
+      
+      // 44期（2026/03～2027/02）
+      { input: '2026-03-01', expected: '44期', description: '44期の開始日' },
+      { input: '2026-04-10', expected: '44期', description: '44期の途中（4月）' },
+      { input: '2026-12-25', expected: '44期', description: '44期のクリスマス' },
+      { input: '2027-02-28', expected: '44期', description: '44期の最終日' },
+      
+      // 45期（2027/03～2028/02）
+      { input: '2027-03-01', expected: '45期', description: '45期の開始日' },
+      { input: '2027-06-01', expected: '45期', description: '45期の途中' },
+      
+      // 42期（2024/03～2025/02）
+      { input: '2024-03-01', expected: '42期', description: '42期の開始日' },
+      { input: '2024-06-01', expected: '42期', description: '42期の途中' },
+      { input: '2025-02-28', expected: '42期', description: '42期の最終日' },
+      
+      // 41期（2023/03～2024/02）
+      { input: '2023-03-01', expected: '41期', description: '41期の開始日' },
+      { input: '2024-02-29', expected: '41期', description: '41期の最終日（閏年）' },
+      
+      // 40期（2022/03～2023/02）
+      { input: '2022-03-01', expected: '40期', description: '40期の開始日' },
+      { input: '2023-02-28', expected: '40期', description: '40期の最終日' },
+      
+      // すでに期の形式
+      { input: '43期', expected: '43期', description: 'すでに期の形式' },
+      { input: '44期', expected: '44期', description: 'すでに期の形式（44期）' },
+      
+      // 異なるフォーマット
+      { input: '2025/06/15', expected: '43期', description: 'スラッシュ区切り' },
+      
+      // エッジケース
+      { input: '', expected: '', description: '空文字列' },
+      { input: 'invalid', expected: 'invalid', description: '無効な日付' }
+    ];
+
+    // テスト実行
+    const tbody = document.querySelector('#testResults tbody');
+    let passCount = 0;
+    let failCount = 0;
+
+    testCases.forEach(testCase => {
+      const result = dateToTerm(testCase.input);
+      const pass = result === testCase.expected;
+      
+      if (pass) passCount++;
+      else failCount++;
+
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${testCase.input || '(空)'}<br><small>${testCase.description}</small></td>
+        <td><strong>${testCase.expected}</strong></td>
+        <td><strong>${result}</strong></td>
+        <td class="${pass ? 'pass' : 'fail'}">${pass ? '✅ PASS' : '❌ FAIL'}</td>
+      `;
+      tbody.appendChild(row);
+    });
+
+    // サマリー追加
+    const summary = document.createElement('div');
+    summary.style.cssText = 'margin: 20px 0; padding: 15px; background: #f0f0f0; border-radius: 5px;';
+    summary.innerHTML = `
+      <h2>テストサマリー</h2>
+      <p><span class="pass">✅ 成功: ${passCount}件</span> / <span class="fail">❌ 失敗: ${failCount}件</span> / <strong>合計: ${testCases.length}件</strong></p>
+      ${failCount === 0 ? '<p style="color: green; font-size: 1.2em;">🎉 すべてのテストが合格しました！</p>' : '<p style="color: red;">⚠️ 一部のテストが失敗しました</p>'}
+    `;
+    document.body.insertBefore(summary, document.querySelector('h2'));
+  </script>
+</body>
+</html>
