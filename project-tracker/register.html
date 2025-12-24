@@ -688,6 +688,17 @@
 
       input.addEventListener("input", () => {
         hideError();
+        const val = input.value;
+        
+        // 改行、カンマ、セミコロンなど複数の専門を示す文字が含まれている場合はクリア
+        if (val.includes('\n') || val.includes(',') || val.includes('、') || val.includes(';') || val.includes('；')) {
+          showError("複数の専門を入力することはできません。1つずつ選択してください。");
+          input.value = "";
+          hidCode.value = "";
+          hidEn.value = "";
+          return;
+        }
+        
         const items = candidates(input.value);
         // 選択が外れたら hidden をクリア
         hidCode.value = ""; hidEn.value = "";
@@ -728,13 +739,29 @@
 
       input.addEventListener("blur", () => setTimeout(hideList, 120));
 
-      // 送信時：入力があればマスタに存在するものだけ通す（空欄はOK）
+      // ペーストイベント：複数の専門がペーストされた場合は防ぐ
+      input.addEventListener("paste", (e) => {
+        const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+        
+        // 改行、カンマ、セミコロンなど複数の専門を示す文字が含まれている場合はペーストを防ぐ
+        if (pastedText.includes('\n') || pastedText.includes(',') || pastedText.includes('、') || pastedText.includes(';') || pastedText.includes('；')) {
+          e.preventDefault();
+          showError("複数の専門を一度に入力することはできません。1つずつ入力して候補から選択してください。");
+          return;
+        }
+        
+        // ペースト後は選択状態をクリア
+        hidCode.value = "";
+        hidEn.value = "";
+      });
+
+      // 送信時：入力があればマスタから選択されたものだけ通す（specialtyCodeが設定されているか確認）
       const form = input.closest("form");
       if (form) {
         form.addEventListener("submit", (e) => {
           const v = input.value.trim();
           
-          // 空欄は許可（任意項目なので）
+          // 空欄は許可（対象者種別が医師以外の場合は任意項目）
           if (!v) {
             hidCode.value = "";
             hidEn.value = "";
@@ -742,22 +769,29 @@
             return;
           }
 
-          const key = normalizeKey(v);
-          // 別名補正
-          const alias = SPECIALTY_ALIASES[v] || SPECIALTY_ALIASES[key];
-          const targetLabel = alias || v;
-
-          // マスタ検索（日本語完全一致）
-          const hit = SPECIALTIES_MASTER.find(r => r.ja === targetLabel);
-          if (!hit) {
+          // 入力があるが specialtyCode が設定されていない場合はエラー
+          // （候補から選択されていない、または手入力/コピペされた）
+          if (!hidCode.value) {
             e.preventDefault();
             e.stopPropagation();
             renderList(candidates(v));
-            showError("候補の中から選んでください（英名やコードでも検索できます）。");
+            showError("候補の中から選んでください。複数の専門を入力することはできません。");
+            input.focus();
+            return;
+          }
+
+          // specialtyCode が設定されている場合、正式名で送信
+          const hit = SPECIALTIES_MASTER.find(r => r.code === hidCode.value);
+          if (!hit) {
+            // 念のため、コードがマスタに存在するか確認
+            e.preventDefault();
+            e.stopPropagation();
+            showError("無効な専門コードです。候補から選び直してください。");
             hidCode.value = ""; hidEn.value = "";
             input.focus();
             return;
           }
+          
           // 正式名＆コード・英名で送る
           input.value   = hit.ja;
           hidCode.value = hit.code;
@@ -805,7 +839,8 @@
       const specialtyValue = specialtyInput.value.trim();
       const specialtyCode = document.getElementById('specialtyCode').value;
       
-      // 対象者種別が「医師」の場合の専門バリデーション
+      // 専門フィールドのバリデーション
+      // 1. 対象者種別が「医師」の場合の必須チェック
       if (finalTargetType === '医師') {
         if (!specialtyValue) {
           // 専門が未入力の場合
@@ -817,11 +852,16 @@
           specialtyInput.classList.add('border-red-500');
           specialtyInput.focus();
           return;
-        } else if (!specialtyCode) {
-          // 専門が入力されているがマスタから選択されていない場合（手入力のまま）
+        }
+      }
+      
+      // 2. 専門に入力がある場合は、必ず候補から選択されたものかをチェック（対象者種別に関係なく）
+      if (specialtyValue) {
+        if (!specialtyCode) {
+          // 専門が入力されているがマスタから選択されていない場合（手入力のまま、または複数コピペ）
           specialtyInput.setCustomValidity('表示された候補の中から専門（診療科）を選択してください');
           specialtyInput.reportValidity();
-          showErrorMessage('専門（診療科）は候補の中から選択してください');
+          showErrorMessage('専門（診療科）は候補の中から1つ選択してください。複数の専門を入力することはできません。');
           
           // 専門フィールドを赤枠で強調
           specialtyInput.classList.add('border-red-500');
