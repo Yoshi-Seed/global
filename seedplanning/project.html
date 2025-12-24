@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>プロジェクト詳細 - Seed Planning</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Markdown表示用（marked.js） -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
+</head>
+<body>
+  <div class="header">
+    <div class="container">
+      <h1 class="header-title" id="pageTitle">📄 プロジェクト詳細</h1>
+      <p class="header-subtitle" id="pageSubtitle">読み込み中...</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- ローディング状態 -->
+    <div id="loadingState" class="alert alert-info">
+      🔄 プロジェクト情報を読み込んでいます...
+    </div>
+
+    <!-- エラー状態 -->
+    <div id="errorState" class="alert alert-danger d-none">
+      <strong>❌ エラー</strong>
+      <p id="errorMessage"></p>
+      <button class="btn btn-secondary mt-2" onclick="location.href='projects.html'">
+        ← 一覧に戻る
+      </button>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <div id="projectContent" class="d-none">
+      <!-- ナビゲーション -->
+      <div class="card" style="margin-bottom: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <a href="projects.html" class="btn btn-secondary">
+              ← 一覧に戻る
+            </a>
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <button id="editBtn" class="btn btn-primary" style="display: none;">
+              ✏️ 編集
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 基本情報カード -->
+      <div class="card" style="margin-bottom: 2rem;">
+        <div class="card-header">
+          📋 基本情報
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">PJ番号</span>
+              <span class="info-value" id="pjNumber">-</span>
+            </div>
+            
+            <div class="info-item">
+              <span class="info-label">プロジェクト名</span>
+              <span class="info-value" id="projectName">-</span>
+            </div>
+            
+            <div class="info-item">
+              <span class="info-label">タイプ</span>
+              <span class="info-value" id="projectType">-</span>
+            </div>
+            
+            <div class="info-item">
+              <span class="info-label">カテゴリー</span>
+              <span class="info-value" id="category">-</span>
+            </div>
+            
+            <div class="info-item">
+              <span class="info-label">実施期</span>
+              <span class="info-value" id="term">-</span>
+            </div>
+            
+            <div class="info-item">
+              <span class="info-label">クライアント名</span>
+              <span class="info-value" id="clientName">-</span>
+            </div>
+            
+            <div class="info-item">
+              <span class="info-label">登録担当者</span>
+              <span class="info-value" id="registeredBy">-</span>
+            </div>
+            
+            <div class="info-item">
+              <span class="info-label">登録日</span>
+              <span class="info-value" id="registeredDate">-</span>
+            </div>
+          </div>
+
+          <!-- サマリー（全幅） -->
+          <div class="info-item" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+            <span class="info-label">サマリー</span>
+            <p class="info-value" id="summary" style="margin-top: 0.5rem; line-height: 1.6;">-</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 背景・課題 -->
+      <div id="backgroundSection" class="detail-section d-none">
+        <div class="card">
+          <div class="card-header">
+            🎯 背景・課題
+          </div>
+          <div class="card-body">
+            <div class="markdown-content" id="backgroundContent"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 目的 -->
+      <div id="purposeSection" class="detail-section d-none">
+        <div class="card">
+          <div class="card-header">
+            🎯 目的
+          </div>
+          <div class="card-body">
+            <div class="markdown-content" id="purposeContent"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 実施内容 -->
+      <div id="implementationSection" class="detail-section d-none">
+        <div class="card">
+          <div class="card-header">
+            📝 実施内容
+          </div>
+          <div class="card-body">
+            <div class="markdown-content" id="implementationContent"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 成果物・実績 -->
+      <div id="deliverablesSection" class="detail-section d-none">
+        <div class="card">
+          <div class="card-header">
+            📦 提供した成果物・実績
+          </div>
+          <div class="card-body">
+            <div class="markdown-content" id="deliverablesContent"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 参照ファイル -->
+      <div id="referenceFilesSection" class="detail-section d-none">
+        <div class="card">
+          <div class="card-header">
+            📎 参照した主なファイル
+          </div>
+          <div class="card-body">
+            <div id="referenceFilesContent" class="file-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 変更履歴 -->
+      <div id="historySection" class="detail-section d-none">
+        <div class="card">
+          <div class="card-header">
+            📜 変更履歴
+          </div>
+          <div class="card-body">
+            <div id="historyContent" class="history-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/project.js"></script>
+</body>
+</html>
