@@ -105,30 +105,47 @@ class SeedPlanningAPI {
 
   /**
    * POSTリクエスト
+   * GASの制限により、POSTはリダイレクトを正しく処理できないため、
+   * actionをボディに含めてベースURLにPOSTする
    */
   async _post(action, payload = {}, urlParams = {}) {
-    const url = this._buildURL(action, urlParams);
+    // actionをURLパラメータではなく、ボディに含める
+    const baseUrl = this.config.URL;
     
     log('POST request:', action, payload);
     
     try {
-      const response = await fetch(url, {
+      const requestBody = {
+        action: action, // actionをボディに含める
+        ...payload,
+        token: this.config.TOKEN || undefined,
+        ...urlParams // URLパラメータもボディに含める
+      };
+      
+      const response = await fetch(baseUrl, {
         method: 'POST',
-        redirect: 'follow',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          ...payload,
-          token: this.config.TOKEN || undefined
-        })
+        body: JSON.stringify(requestBody)
       });
       
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      // レスポンスのテキストを取得
+      const text = await response.text();
       
-      const data = await response.json();
+      log('POST response text:', text.substring(0, 200));
+      
+      // JSONとしてパース
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        // HTMLレスポンスの場合、エラー
+        if (text.includes('<!DOCTYPE') || text.includes('<html')) {
+          throw new Error('サーバーからHTMLレスポンスが返されました。GASのデプロイ設定を確認してください。');
+        }
+        throw new Error(`Invalid JSON response: ${text.substring(0, 100)}`);
+      }
       
       // POSTの場合、キャッシュをクリア
       this.clearCache();
