@@ -75,7 +75,7 @@ class ProjectDetailPage {
     document.title = `${p.project_name || 'プロジェクト詳細'} - Seed Planning`;
 
     // 基本情報
-    this.setText('pjNumber', p.pj_number);
+    this.setPjLink('pjNumber', p.pj_number);
     this.setText('projectName', p.project_name);
     this.setText('category', p.category);
     this.setText('term', p.term);
@@ -184,6 +184,21 @@ class ProjectDetailPage {
     const element = document.getElementById(elementId);
     if (element) {
       element.textContent = text || '-';
+    }
+  }
+
+  /**
+   * PJ番号リンク設定
+   */
+  setPjLink(elementId, pjNumber) {
+    const element = document.getElementById(elementId);
+    if (element && pjNumber) {
+      element.textContent = pjNumber;
+      element.href = `https://db.seedplanning.co.jp/project/management/update/?pj=${pjNumber}`;
+      element.title = '社内システムで詳細を表示';
+    } else if (element) {
+      element.textContent = '-';
+      element.removeAttribute('href');
     }
   }
 

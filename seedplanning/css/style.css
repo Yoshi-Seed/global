@@ -569,6 +569,24 @@ select.form-input {
   font-weight: 400;
 }
 
+/* PJ番号リンク */
+.pj-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.pj-link:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
+}
+
+.pj-link::before {
+  content: '🔗 ';
+  font-size: 0.9em;
+}
+
 /* Markdownコンテンツ */
 .markdown-content {
   line-height: 1.8;
