@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>プロジェクト一覧 - Seed Planning</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="header">
+    <div class="container">
+      <h1 class="header-title">📊 Seed Planning プロジェクト管理</h1>
+      <p class="header-subtitle">複雑案件の一覧・検索</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- 検索フィルタ -->
+    <div class="card">
+      <div class="card-header">🔍 絞り込み検索</div>
+      <div class="card-body">
+        <form id="filterForm" class="d-flex flex-wrap gap-2">
+          <div class="form-group" style="flex: 1; min-width: 150px;">
+            <label class="form-label" for="filterType">プロジェクトタイプ</label>
+            <select id="filterType" class="form-select">
+              <option value="">すべて</option>
+              <option value="公的">公的</option>
+              <option value="民間">民間</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="flex: 1; min-width: 150px;">
+            <label class="form-label" for="filterCategory">カテゴリー</label>
+            <select id="filterCategory" class="form-select">
+              <option value="">すべて</option>
+              <option value="ヘルスケア">ヘルスケア</option>
+              <option value="IT">IT</option>
+              <option value="製造">製造</option>
+              <option value="流通">流通</option>
+              <option value="その他">その他</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="flex: 1; min-width: 150px;">
+            <label class="form-label" for="filterTerm">実施期</label>
+            <select id="filterTerm" class="form-select">
+              <option value="">すべて</option>
+              <option value="40期">40期</option>
+              <option value="41期">41期</option>
+              <option value="42期">42期</option>
+              <option value="43期">43期</option>
+              <option value="44期">44期</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="flex: 1; min-width: 200px;">
+            <label class="form-label" for="filterClient">クライアント名</label>
+            <input 
+              type="text" 
+              id="filterClient" 
+              class="form-input" 
+              placeholder="例: 社協">
+          </div>
+
+          <div class="form-group" style="flex: 2; min-width: 250px;">
+            <label class="form-label" for="filterKeyword">フリーワード</label>
+            <input 
+              type="text" 
+              id="filterKeyword" 
+              class="form-input" 
+              placeholder="PJ番号、プロジェクト名、クライアント名で検索">
+          </div>
+
+          <div class="form-group d-flex align-center" style="margin-top: auto;">
+            <button type="submit" class="btn btn-primary" style="margin-right: 0.5rem;">
+              検索
+            </button>
+            <button type="button" id="resetBtn" class="btn btn-outline">
+              リセット
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- アクションバー -->
+    <div class="d-flex justify-between align-center mb-2">
+      <div>
+        <span id="resultCount" class="text-secondary">読み込み中...</span>
+      </div>
+      <div>
+        <a href="register.html" class="btn btn-success">+ 新規登録</a>
+      </div>
+    </div>
+
+    <!-- 検索結果テーブル -->
+    <div class="card">
+      <div id="loadingState" class="text-center" style="padding: 2rem;">
+        <div class="loading-spinner" style="margin: 0 auto;"></div>
+        <p class="text-secondary mt-2">データを読み込んでいます...</p>
+      </div>
+
+      <div id="errorState" class="alert alert-error d-none">
+        <strong>エラー:</strong> <span id="errorMessage"></span>
+      </div>
+
+      <div id="emptyState" class="text-center d-none" style="padding: 3rem;">
+        <p class="text-secondary" style="font-size: 1.125rem;">📭</p>
+        <p class="text-secondary">プロジェクトが見つかりませんでした</p>
+        <a href="register.html" class="btn btn-primary mt-2">最初のプロジェクトを登録</a>
+      </div>
+
+      <div id="resultsTable" class="d-none">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width: 100px;">PJ番号</th>
+              <th>プロジェクト名</th>
+              <th style="width: 80px;">タイプ</th>
+              <th style="width: 100px;">カテゴリー</th>
+              <th style="width: 70px;">実施期</th>
+              <th style="width: 150px;">クライアント</th>
+              <th style="width: 100px;">更新日</th>
+            </tr>
+          </thead>
+          <tbody id="projectsList">
+            <!-- 動的に生成 -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/projects.js"></script>
+</body>
+</html>
