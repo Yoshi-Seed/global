@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>新規プロジェクト登録 - Seed Planning</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="header">
+    <div class="container">
+      <h1 class="header-title">📝 新規プロジェクト登録</h1>
+      <p class="header-subtitle">Seed Planning プロジェクト管理システム</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- ナビゲーション -->
+    <div class="card" style="margin-bottom: 2rem;">
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a href="projects.html" class="btn btn-secondary">
+          ← 一覧に戻る
+        </a>
+      </div>
+    </div>
+
+    <!-- 説明 -->
+    <div class="alert alert-info" style="margin-bottom: 2rem;">
+      <strong>📌 登録について</strong><br>
+      プロジェクトの基本情報と詳細情報を入力してください。<br>
+      <span class="badge badge-danger">必須</span> の項目は入力必須です。
+    </div>
+
+    <!-- 登録フォーム -->
+    <form id="registerForm" class="card">
+      <div class="card-header">
+        📋 プロジェクト情報
+      </div>
+
+      <!-- 基本情報（projects_index） -->
+      <div class="form-section">
+        <h3 class="section-title">基本情報</h3>
+
+        <!-- PJ番号 -->
+        <div class="form-group">
+          <label for="pj_number" class="form-label">
+            PJ番号 <span class="badge badge-danger">必須</span>
+          </label>
+          <input
+            type="text"
+            id="pj_number"
+            name="pj_number"
+            class="form-input"
+            placeholder="例: Z04012101"
+            required
+          >
+          <p class="form-help">例: Z04012101</p>
+        </div>
+
+        <!-- プロジェクト名 -->
+        <div class="form-group">
+          <label for="project_name" class="form-label">
+            プロジェクト名 <span class="badge badge-danger">必須</span>
+          </label>
+          <input
+            type="text"
+            id="project_name"
+            name="project_name"
+            class="form-input"
+            placeholder="プロジェクト名を入力"
+            required
+          >
+        </div>
+
+        <!-- 2カラムレイアウト -->
+        <div class="form-row">
+          <!-- プロジェクトタイプ -->
+          <div class="form-group">
+            <label for="project_type" class="form-label">
+              プロジェクトタイプ <span class="badge badge-danger">必須</span>
+            </label>
+            <select id="project_type" name="project_type" class="form-input" required>
+              <option value="">選択してください</option>
+              <option value="公的">公的</option>
+              <option value="民間">民間</option>
+            </select>
+          </div>
+
+          <!-- カテゴリー -->
+          <div class="form-group">
+            <label for="category" class="form-label">
+              カテゴリー <span class="badge badge-danger">必須</span>
+            </label>
+            <select id="category" name="category" class="form-input" required>
+              <option value="">選択してください</option>
+              <option value="エネルギー・環境">エネルギー・環境</option>
+              <option value="エレクトロニクス・IT">エレクトロニクス・IT</option>
+              <option value="その他の市場分野">その他の市場分野</option>
+              <option value="ヘルスケア">ヘルスケア</option>
+              <option value="メディカル・バイオ">メディカル・バイオ</option>
+              <option value="医療IT">医療IT</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 2カラムレイアウト -->
+        <div class="form-row">
+          <!-- 実施期 -->
+          <div class="form-group">
+            <label for="term" class="form-label">
+              実施期
+            </label>
+            <input
+              type="text"
+              id="term"
+              name="term"
+              class="form-input"
+              placeholder="例: 2025-06-15 または 43期"
+            >
+            <p class="form-help">日付（例: 2025-06-15）または期（例: 43期）を入力</p>
+          </div>
+
+          <!-- クライアント名 -->
+          <div class="form-group">
+            <label for="client_name" class="form-label">
+              クライアント名
+            </label>
+            <input
+              type="text"
+              id="client_name"
+              name="client_name"
+              class="form-input"
+              placeholder="クライアント名を入力"
+            >
+          </div>
+        </div>
+
+        <!-- サマリー -->
+        <div class="form-group">
+          <label for="summary" class="form-label">
+            サマリー（80文字程度）
+          </label>
+          <textarea
+            id="summary"
+            name="summary"
+            class="form-input"
+            rows="2"
+            placeholder="プロジェクトの簡単な説明を入力"
+            maxlength="200"
+          ></textarea>
+          <p class="form-help">
+            一覧画面で表示される簡単な説明（推奨80文字、最大200文字）
+          </p>
+        </div>
+
+        <!-- 登録担当者 -->
+        <div class="form-group">
+          <label for="registered_by" class="form-label">
+            登録担当者
+          </label>
+          <input
+            type="text"
+            id="registered_by"
+            name="registered_by"
+            class="form-input"
+            placeholder="例: 山田花子"
+          >
+        </div>
+      </div>
+
+      <!-- 詳細情報（projects_detail） -->
+      <div class="form-section">
+        <h3 class="section-title">詳細情報</h3>
+
+        <!-- 背景・課題 -->
+        <div class="form-group">
+          <label for="background" class="form-label">
+            背景・課題（顧客が抱えていた課題）
+          </label>
+          <textarea
+            id="background"
+            name="background"
+            class="form-input"
+            rows="6"
+            placeholder="Markdown形式で入力できます&#10;例:&#10;## 背景・課題&#10;- 課題1&#10;- 課題2"
+          ></textarea>
+          <p class="form-help">
+            Markdown形式で入力できます（見出し: ##、箇条書き: -）
+          </p>
+        </div>
+
+        <!-- 目的 -->
+        <div class="form-group">
+          <label for="purpose" class="form-label">
+            目的（プロジェクトのゴール）
+          </label>
+          <textarea
+            id="purpose"
+            name="purpose"
+            class="form-input"
+            rows="6"
+            placeholder="Markdown形式で入力できます&#10;例:&#10;## 目的&#10;- 目標1&#10;- 目標2"
+          ></textarea>
+          <p class="form-help">
+            Markdown形式で入力できます
+          </p>
+        </div>
+
+        <!-- 実施内容 -->
+        <div class="form-group">
+          <label for="implementation" class="form-label">
+            実施内容（具体的に何を行ったか）
+          </label>
+          <textarea
+            id="implementation"
+            name="implementation"
+            class="form-input"
+            rows="6"
+            placeholder="Markdown形式で入力できます&#10;例:&#10;## 実施内容&#10;1. 項目1&#10;2. 項目2"
+          ></textarea>
+          <p class="form-help">
+            Markdown形式で入力できます
+          </p>
+        </div>
+
+        <!-- 成果物・実績 -->
+        <div class="form-group">
+          <label for="deliverables" class="form-label">
+            提供した成果物・実績
+          </label>
+          <textarea
+            id="deliverables"
+            name="deliverables"
+            class="form-input"
+            rows="6"
+            placeholder="Markdown形式で入力できます&#10;例:&#10;## 成果物&#10;- 調査報告書&#10;- 運営ガイドライン案"
+          ></textarea>
+          <p class="form-help">
+            Markdown形式で入力できます
+          </p>
+        </div>
+
+        <!-- 参照ファイル -->
+        <div class="form-group">
+          <label for="reference_files" class="form-label">
+            参照した主なファイル
+          </label>
+          <textarea
+            id="reference_files"
+            name="reference_files"
+            class="form-input"
+            rows="5"
+            placeholder="ファイル名を改行区切りで入力&#10;例:&#10;事業計画書（ver.2）.pdf&#10;入札説明書.pdf&#10;ヒアリング項目.docx"
+          ></textarea>
+          <p class="form-help">
+            ファイル名を改行区切りで入力してください
+          </p>
+        </div>
+      </div>
+
+      <!-- ボタン -->
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" id="submitBtn">
+          ✅ 登録する
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="history.back()">
+          キャンセル
+        </button>
+      </div>
+
+      <!-- ローディング表示 -->
+      <div id="loadingMessage" class="alert alert-info" style="display: none; margin-top: 1rem;">
+        🔄 登録中です。しばらくお待ちください...
+      </div>
+
+      <!-- エラー表示 -->
+      <div id="errorMessage" class="alert alert-danger" style="display: none; margin-top: 1rem;"></div>
+
+      <!-- 成功表示 -->
+      <div id="successMessage" class="alert alert-success" style="display: none; margin-top: 1rem;"></div>
+    </form>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/register.js"></script>
+</body>
+</html>

@@ -191,6 +191,14 @@ class SeedPlanningAPI {
   }
 
   /**
+   * プロジェクト新規登録（エイリアス）
+   * @param {Object} projectData - プロジェクトデータ
+   */
+  async addProject(projectData) {
+    return this.createProject(projectData);
+  }
+
+  /**
    * プロジェクト更新
    * @param {string} pjNumber - PJ番号
    * @param {Object} projectData - 更新データ
