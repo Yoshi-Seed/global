@@ -54,11 +54,11 @@ class EditPage {
       
       const response = await api.getProjectDetail(this.pjNumber);
       
-      if (!response.success || !response.data) {
+      if (!response.success || !response.project) {
         throw new Error(response.message || 'プロジェクトが見つかりません');
       }
       
-      this.projectData = response.data;
+      this.projectData = response.project;
       this.populateForm();
       this.bindEvents();
       this.showFormState();
