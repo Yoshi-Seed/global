@@ -6,7 +6,7 @@
 
 const GAS_CONFIG = {
   // ✅ GAS ウェブアプリのURL
-  URL: "https://script.google.com/macros/s/AKfycbxC6kTVyDOY4DbyLnra4w6Fj6Fes7GsI0MIwAHOZaTMUkn_LTdR5QwYMYnYYTwogKxB0g/exec",
+  URL: "https://script.google.com/macros/s/AKfycbxTw5i9L50geAVeLvAS0rkWp2DP7qWL0X6X3UKliDmaPWLoQkSyzkq-arPzu1_KnyVCxg/exec",
   
   // 🔐 トークン（GAS側のTOKENと一致させる。空文字の場合はトークンチェックなし）
   TOKEN: "",
