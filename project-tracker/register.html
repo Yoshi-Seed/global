@@ -927,6 +927,9 @@
         if (response.ok && result && result.success) {
           // 成功: 登録情報を表示
           showSuccessMessage(result);
+          
+          // ブラウザアラートで成功を通知
+          alert('✅ 正常に登録しました。入力お疲れ様でした。');
 
           // フォームをリセット
           setTimeout(() => {
