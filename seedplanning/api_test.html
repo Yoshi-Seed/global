@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>API Test</title>
+  <style>
+    body { font-family: monospace; padding: 20px; background: #f5f5f5; }
+    .result { background: white; padding: 15px; margin: 10px 0; border-radius: 5px; }
+    .success { color: green; font-weight: bold; }
+    .error { color: red; font-weight: bold; }
+    pre { background: #eee; padding: 10px; overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <h1>🔍 Seed Planning API Test</h1>
+  
+  <div id="results"></div>
+
+  <script src="js/config.js"></script>
+  <script>
+    const results = document.getElementById('results');
+    
+    async function test() {
+      // Test 1: Health Check
+      results.innerHTML += '<div class="result"><h2>Test 1: Health Check</h2><p>Loading...</p></div>';
+      
+      try {
+        const healthRes = await fetch(GAS_CONFIG.URL + '?action=health');
+        const healthData = await healthRes.json();
+        
+        const healthDiv = results.lastElementChild;
+        healthDiv.innerHTML = `
+          <h2>Test 1: Health Check</h2>
+          <p class="success">✅ SUCCESS</p>
+          <pre>${JSON.stringify(healthData, null, 2)}</pre>
+        `;
+      } catch (error) {
+        const healthDiv = results.lastElementChild;
+        healthDiv.innerHTML = `
+          <h2>Test 1: Health Check</h2>
+          <p class="error">❌ ERROR: ${error.message}</p>
+        `;
+      }
+      
+      // Test 2: List API (first 3 projects)
+      results.innerHTML += '<div class="result"><h2>Test 2: List API</h2><p>Loading...</p></div>';
+      
+      try {
+        const listRes = await fetch(GAS_CONFIG.URL + '?action=list');
+        const listData = await listRes.json();
+        
+        const listDiv = results.lastElementChild;
+        const projects = listData.projects.slice(0, 3);
+        
+        listDiv.innerHTML = `
+          <h2>Test 2: List API</h2>
+          <p class="success">✅ SUCCESS (Total: ${listData.projects.length} projects)</p>
+          <h3>First 3 Projects:</h3>
+          ${projects.map(p => `
+            <pre>
+PJ番号: ${p.pj_number}
+プロジェクト名: ${p.project_name}
+タイプ: ${p.project_type}
+カテゴリー: ${p.category}
+<strong style="color: blue;">実施期: ${p.term}</strong>
+クライアント: ${p.client_name}
+更新日: ${p.updated_at}
+            </pre>
+          `).join('')}
+        `;
+      } catch (error) {
+        const listDiv = results.lastElementChild;
+        listDiv.innerHTML = `
+          <h2>Test 2: List API</h2>
+          <p class="error">❌ ERROR: ${error.message}</p>
+        `;
+      }
+      
+      // Test 3: Term Conversion Check
+      results.innerHTML += '<div class="result"><h2>Test 3: Term Conversion Check</h2><p>Checking...</p></div>';
+      
+      try {
+        const listRes = await fetch(GAS_CONFIG.URL + '?action=list');
+        const listData = await listRes.json();
+        
+        const terms = listData.projects.slice(0, 10).map(p => p.term);
+        const converted = terms.filter(t => /^\d+期$/.test(t));
+        const notConverted = terms.filter(t => !/^\d+期$/.test(t));
+        
+        const convDiv = results.lastElementChild;
+        convDiv.innerHTML = `
+          <h2>Test 3: Term Conversion Check</h2>
+          ${converted.length === terms.length ? 
+            `<p class="success">✅ ALL TERMS CONVERTED (${converted.length}/${terms.length})</p>` :
+            `<p class="error">⚠️ SOME TERMS NOT CONVERTED (${converted.length}/${terms.length})</p>`
+          }
+          <h3>Converted Terms:</h3>
+          <pre>${converted.join(', ')}</pre>
+          ${notConverted.length > 0 ? `
+            <h3>Not Converted:</h3>
+            <pre>${notConverted.join(', ')}</pre>
+          ` : ''}
+        `;
+      } catch (error) {
+        const convDiv = results.lastElementChild;
+        convDiv.innerHTML = `
+          <h2>Test 3: Term Conversion Check</h2>
+          <p class="error">❌ ERROR: ${error.message}</p>
+        `;
+      }
+    }
+    
+    test();
+  </script>
+</body>
+</html>
