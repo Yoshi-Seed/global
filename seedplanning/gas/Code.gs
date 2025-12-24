@@ -42,7 +42,7 @@ const INDEX_HEADERS = [
   'pj_number',        // PJ番号（主キー）
   'project_name',     // プロジェクト名
   'project_type',     // プロジェクトタイプ（公的/民間）
-  'category',         // カテゴリー（ヘルスケア/IT/製造 等）
+  'category',         // カテゴリー（エネルギー・環境/エレクトロニクス・IT/その他の市場分野/ヘルスケア/メディカル・バイオ/医療IT）
   'term',             // 実施期（40期, 41期, ..., 44期）
   'client_name',      // クライアント名
   'summary',          // 1行サマリー（80文字程度）
@@ -51,15 +51,14 @@ const INDEX_HEADERS = [
   'registered_date'   // 登録日（yyyy-MM-dd）
 ];
 
-// projects_detail のカラム（8列）
+// projects_detail のカラム（7列）
 const DETAIL_HEADERS = [
   'pj_number',        // PJ番号（主キー、indexと連携）
-  'background',       // 背景・課題（Markdown形式）
-  'purpose',          // 目的（Markdown形式）
-  'implementation',   // 実施内容（Markdown形式）
-  'deliverables',     // 成果物（Markdown形式）
-  'reference_files',  // 参照ファイル（JSON配列文字列）
-  'notes',            // 備考・その他
+  'background',       // 背景・課題（顧客が抱えていた課題）
+  'purpose',          // 目的（プロジェクトのゴール）
+  'implementation',   // 実施内容（具体的に何を行ったか）
+  'deliverables',     // 提供した成果物・実績
+  'reference_files',  // 参照した主なファイル（テキスト形式）
   'history_log'       // 変更履歴（JSON配列文字列、任意）
 ];
 
@@ -237,8 +236,7 @@ function handleDetail_(params) {
     purpose: '',
     implementation: '',
     deliverables: '',
-    reference_files: [],
-    notes: '',
+    reference_files: '',
     history_log: []
   };
 
@@ -294,15 +292,13 @@ function handleAdd_(data) {
     indexSheet.appendRow(indexRow);
 
     // detail に追記
-    const referenceFiles = data.reference_files || data.referenceFiles || [];
     const detailRow = [
       pjNumber,
       data.background || '',
       data.purpose || '',
       data.implementation || '',
       data.deliverables || '',
-      JSON.stringify(referenceFiles),
-      data.notes || '',
+      data.reference_files || data.referenceFiles || '',
       JSON.stringify([{
         timestamp: updatedAt,
         action: 'created',
@@ -370,15 +366,13 @@ function handleUpdate_(pjNumber, data) {
     
     if (!detailRow) {
       // detail が存在しない場合は新規作成
-      const referenceFiles = data.reference_files || data.referenceFiles || [];
       const newDetailRow = [
         pjNumber,
         data.background || '',
         data.purpose || '',
         data.implementation || '',
         data.deliverables || '',
-        JSON.stringify(referenceFiles),
-        data.notes || '',
+        data.reference_files || data.referenceFiles || '',
         JSON.stringify([{
           timestamp: updatedAt,
           action: 'created_detail',
@@ -394,7 +388,7 @@ function handleUpdate_(pjNumber, data) {
       // 履歴ログに追加
       let historyLog = [];
       try {
-        historyLog = JSON.parse(currentDetail[7] || '[]');
+        historyLog = JSON.parse(currentDetail[6] || '[]');
       } catch (e) {
         historyLog = [];
       }
@@ -404,17 +398,13 @@ function handleUpdate_(pjNumber, data) {
         user: data.registered_by || data.registeredBy || ''
       });
       
-      const referenceFiles = data.reference_files || data.referenceFiles || 
-        (currentDetail[5] ? JSON.parse(currentDetail[5]) : []);
-      
       const updatedDetail = [
         currentDetail[0], // pj_number は変更しない
         data.background !== undefined ? data.background : currentDetail[1],
         data.purpose !== undefined ? data.purpose : currentDetail[2],
         data.implementation !== undefined ? data.implementation : currentDetail[3],
         data.deliverables !== undefined ? data.deliverables : currentDetail[4],
-        JSON.stringify(referenceFiles),
-        data.notes !== undefined ? data.notes : currentDetail[6],
+        data.reference_files !== undefined ? data.reference_files : (data.referenceFiles !== undefined ? data.referenceFiles : currentDetail[5]),
         JSON.stringify(historyLog)
       ];
       detailRange.setValues([updatedDetail]);
@@ -630,16 +620,9 @@ function rowToIndexProject_(row) {
 }
 
 function rowToDetailProject_(row) {
-  let referenceFiles = [];
-  try {
-    referenceFiles = JSON.parse(row[5] || '[]');
-  } catch (e) {
-    referenceFiles = [];
-  }
-
   let historyLog = [];
   try {
-    historyLog = JSON.parse(row[7] || '[]');
+    historyLog = JSON.parse(row[6] || '[]');
   } catch (e) {
     historyLog = [];
   }
@@ -650,8 +633,7 @@ function rowToDetailProject_(row) {
     purpose: row[2],
     implementation: row[3],
     deliverables: row[4],
-    reference_files: referenceFiles,
-    notes: row[6],
+    reference_files: row[5] || '',
     history_log: historyLog
   };
 }

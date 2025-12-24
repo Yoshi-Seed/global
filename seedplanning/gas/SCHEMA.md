@@ -18,7 +18,7 @@
 | pj_number | 文字列 | ✅ | PJ番号（主キー） | `Z04012101` |
 | project_name | 文字列 | ✅ | プロジェクト名 | `運営適正化委員会による運営監視業務に関する調査研究事業一式` |
 | project_type | 文字列 | ✅ | プロジェクトタイプ | `公的` / `民間` |
-| category | 文字列 | ✅ | カテゴリー | `ヘルスケア` / `IT` / `製造` / `流通` 等 |
+| category | 文字列 | ✅ | カテゴリー | `エネルギー・環境` / `エレクトロニクス・IT` / `その他の市場分野` / `ヘルスケア` / `メディカル・バイオ` / `医療IT` |
 | term | 文字列 |   | 実施期 | `40期` / `41期` / `42期` / `43期` / `44期` |
 | client_name | 文字列 |   | クライアント名 | `全国社会福祉協議会` |
 | summary | 文字列 |   | 1行サマリー（80文字程度） | `運営適正化委員会の運営監視業務の実態把握と標準的なガイドライン作成` |
@@ -50,18 +50,17 @@ registered_date: 2024-12-24
 | カラム名 | 型 | 必須 | 説明 | フォーマット |
 |---------|---|------|------|------------|
 | pj_number | 文字列 | ✅ | PJ番号（主キー、indexと連携） | `Z04012101` |
-| background | 文字列（長文） |   | 背景・課題 | Markdown形式推奨 |
-| purpose | 文字列（長文） |   | 目的 | Markdown形式推奨 |
-| implementation | 文字列（長文） |   | 実施内容 | Markdown形式推奨 |
-| deliverables | 文字列（長文） |   | 成果物 | Markdown形式推奨 |
-| reference_files | JSON配列文字列 |   | 参照ファイル | `[{"label":"...", "url":"..."}]` |
-| notes | 文字列 |   | 備考・その他 | 自由記述 |
+| background | 文字列（長文） |   | 背景・課題（顧客が抱えていた課題） | Markdown形式推奨 |
+| purpose | 文字列（長文） |   | 目的（プロジェクトのゴール） | Markdown形式推奨 |
+| implementation | 文字列（長文） |   | 実施内容（具体的に何を行ったか） | Markdown形式推奨 |
+| deliverables | 文字列（長文） |   | 提供した成果物・実績 | Markdown形式推奨 |
+| reference_files | 文字列（長文） |   | 参照した主なファイル | テキスト形式（ファイル名リスト） |
 | history_log | JSON配列文字列 |   | 変更履歴 | `[{"timestamp":"...", "action":"...", "user":"..."}]` |
 
 ### Markdown 形式の例（background, purpose, implementation, deliverables）
 
 ```markdown
-## 背景・課題
+## 背景・課題（顧客が抱えていた課題）
 - 社会福祉法に基づき都道府県社協に設置された運営適正化委員会は、日常生活自立支援事業（日自）の運営監視と苦情解決を担ってきた
 - 制度創設から20年以上が経過し、基本的な組織・機能の見直しが行われていない
 - 日自の利用者数は増加（平成13年度約4千人から令和5年度約5.6万人へ）
@@ -73,36 +72,26 @@ registered_date: 2024-12-24
 3. 利用者数増加に対応できていない
 ```
 
-### reference_files の JSON 形式
+### reference_files のテキスト形式
 
-```json
-[
-  {
-    "label": "事業計画書（ver.2）",
-    "url": "https://drive.google.com/file/d/XXXX/view",
-    "type": "pdf",
-    "size": "2.5MB",
-    "uploadDate": "2024-12-01"
-  },
-  {
-    "label": "入札説明書",
-    "url": "https://drive.google.com/file/d/YYYY/view",
-    "type": "pdf"
-  },
-  {
-    "label": "ヒアリング項目",
-    "url": "https://drive.google.com/file/d/ZZZZ/view",
-    "type": "docx"
-  }
-]
+ファイル名を改行区切りまたは箇条書きで記載：
+
+```
+事業計画書（ver.2）.pdf
+入札説明書（運営適正化委員会による運営監視業務に関する調査研究事業一式）.pdf
+ヒアリング項目.docx
+運営監視_アンケート調査項目（案）ver5.pdf
+プレヒアリング意見一覧表.xlsx
 ```
 
-**最小構成**（labelとurlのみ必須）:
-```json
-[
-  {"label": "事業計画書", "url": "https://..."},
-  {"label": "報告書", "url": "https://..."}
-]
+または Markdown 形式：
+
+```markdown
+- 事業計画書（ver.2）.pdf
+- 入札説明書.pdf
+- ヒアリング項目.docx
+- アンケート調査項目（案）ver5.pdf
+- プレヒアリング意見一覧表.xlsx
 ```
 
 ### history_log の JSON 形式
@@ -149,12 +138,12 @@ registered_date: 2024-12-24
 [リンクテキスト](https://example.com)
 ```
 
-### JSON フィールドの編集
+### reference_files フィールドの編集
 
-`reference_files` と `history_log` は JSON 形式です：
+`reference_files` はテキスト形式です：
 
-- **Sheets上で直接編集する場合**: JSON 文法に注意（ダブルクォート、カンマ、ブラケット）
-- **フロント画面から編集する場合**: 自動的に JSON に変換されます（推奨）
+- **Sheets上で直接編集する場合**: ファイル名を改行区切りで入力
+- **フロント画面から編集する場合**: テキストエリアに入力（推奨）
 
 ### 改行の扱い
 
