@@ -100,12 +100,15 @@ body {
   height: 60px;
   width: auto;
   flex-shrink: 0;
+  min-width: 60px;
+  object-fit: contain;
 }
 
 .header-center {
   flex: 1;
   text-align: center;
   padding: 0 var(--spacing-lg);
+  min-width: 0; /* テキストの折り返しを許可 */
 }
 
 .header-title {
@@ -113,12 +116,16 @@ body {
   font-weight: 700;
   color: var(--text-primary);
   margin: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .header-subtitle {
   font-size: var(--font-size-sm);
   color: var(--text-secondary);
   margin: var(--spacing-xs) 0 0 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 /* カード */
@@ -704,6 +711,26 @@ select.form-input {
     padding: var(--spacing-sm) var(--spacing-md);
   }
   
+  .header-content {
+    gap: var(--spacing-sm);
+  }
+  
+  .header-logo {
+    height: 50px;
+  }
+  
+  .header-center {
+    padding: 0 var(--spacing-sm);
+  }
+  
+  .header-title {
+    font-size: var(--font-size-lg);
+  }
+  
+  .header-subtitle {
+    font-size: var(--font-size-xs);
+  }
+  
   .card {
     padding: var(--spacing-md);
   }
@@ -715,5 +742,30 @@ select.form-input {
   .table th,
   .table td {
     padding: var(--spacing-xs) var(--spacing-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .header-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .header-logo {
+    height: 40px;
+    margin-bottom: var(--spacing-xs);
+  }
+  
+  .header-center {
+    padding: 0;
+  }
+  
+  .header-title {
+    font-size: var(--font-size-base);
+  }
+  
+  /* 右側スペーサーを非表示 */
+  .header-content > div[style*="width: 60px"] {
+    display: none;
   }
 }
