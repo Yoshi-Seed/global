@@ -8,16 +8,17 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "ProfessionalService",
+      "@type": "ConsultingService",
       "name": "Seed Planning",
       "description": "Healthcare and life science insights in Japan with care, rigor, and cultural fluency.",
-      "knowsAbout": ["Market Research", "Healthcare", "Japan Insights", "Pharma"]
+      "areaServed": "Japan",
+      "knowsAbout": ["Market Research", "Healthcare", "Life Science", "Global Evidence"]
     }
     </script>
 
     <style>
         :root {
-            --bg-color: #F6F2E8; /* 温かみのあるベージュ */
+            --bg-color: #F6F2E8; /* 温かいベージュ */
             --text-main: #4A3326; /* 信頼のブラウン */
             --text-sub: #706F6C;
             --accent: #5D3E2F;
@@ -33,91 +34,92 @@
         }
 
         .container { width: 90%; max-width: 900px; margin: 0 auto; padding: 60px 0; }
+        header { padding: 30px 5%; font-weight: bold; letter-spacing: 1px; }
 
-        header { padding: 30px 5%; display: flex; justify-content: space-between; align-items: center; }
-
-        .hero { margin-bottom: 100px; }
+        /* Hero Section */
+        .hero { margin-bottom: 80px; }
         h1 { font-size: 3.5rem; line-height: 1.1; margin: 0 0 30px; }
-        .lead { font-size: 1.4rem; color: var(--text-sub); max-width: 700px; }
+        .lead { font-size: 1.4rem; color: var(--text-sub); max-width: 750px; }
 
-        .section-title { 
-            font-size: 0.9rem; 
-            text-transform: uppercase; 
-            letter-spacing: 2px; 
-            border-bottom: 1px solid var(--text-main);
-            padding-bottom: 10px;
-            margin-bottom: 40px;
-        }
+        /* Buttons & Stats */
+        .btn { background: var(--accent); color: var(--white); padding: 15px 30px; border-radius: 8px; text-decoration: none; display: inline-block; font-weight: bold; margin-right: 15px; }
+        .grid-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 60px 0; }
+        .stat-card { background: var(--white); padding: 25px; border-radius: 15px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.02); }
+        .stat-num { font-size: 2.5rem; font-weight: bold; display: block; }
 
-        .philosophy-box {
+        /* Section Layout */
+        .section-title { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid var(--text-main); padding-bottom: 10px; margin: 80px 0 40px; }
+        
+        /* Philosophy Card */
+        .philosophy-card {
             background: var(--white);
             padding: 50px;
-            border-radius: 4px;
+            border-radius: 20px;
             font-size: 1.8rem;
             font-style: italic;
-            margin: 40px 0;
-            box-shadow: 0 10px 30px rgba(74, 51, 38, 0.05);
+            text-align: center;
+            margin-bottom: 30px;
         }
 
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin: 40px 0; }
-        
-        .principles { list-style: none; padding: 0; }
-        .principles li { margin-bottom: 20px; padding-left: 20px; border-left: 3px solid var(--accent); }
-        .principles b { display: block; font-size: 1.1rem; }
+        /* Lists */
+        .principles { list-style: none; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .principles li { border-left: 3px solid var(--accent); padding-left: 20px; }
+        .principles b { display: block; font-size: 1.1rem; margin-bottom: 5px; }
 
-        .footer { text-align: center; padding: 60px; color: var(--text-sub); font-size: 0.8rem; }
+        footer { text-align: center; padding: 60px; color: var(--text-sub); font-size: 0.8rem; border-top: 1px solid rgba(0,0,0,0.05); }
 
         @media (max-width: 768px) {
             h1 { font-size: 2.5rem; }
-            .grid { grid-template-columns: 1fr; }
+            .grid-stats, .principles { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-<header>
-    <div style="font-weight: bold; letter-spacing: 1px;">SEED PLANNING</div>
-</header>
+<header>SEED PLANNING | MARKET RESEARCH & CONSULTING</header>
 
 <div class="container">
     <section class="hero">
         <h1>Your trusted<br>operational partner.</h1>
-        [span_0](start_span)<p class="lead">Seed Planning supports global research teams by delivering Japan-based healthcare and life science insights with care, rigor, and cultural fluency[span_0](end_span).</p>
+        [span_0](start_span)<p class="lead">Seed Planning supports global research teams by delivering Japan-based healthcare and life science insights with care, rigor, and cultural fluency[span_0](end_span). [span_1](start_span)We focus on making complex local realities understandable and usable—without oversimplifying what matters[span_1](end_span).</p>
+        
+        <div style="margin-top: 40px;">
+            <a href="#" class="btn">Discover Our Expertise</a>
+        </div>
+
+        <div class="grid-stats">
+            <div class="stat-card"><span class="stat-num">40+</span>Years in Japan</div>
+            <div class="stat-card"><span class="stat-num">30+</span>Industries served</div>
+            <div class="stat-card"><span class="stat-num">12k</span>Expert network</div>
+        </div>
     </section>
 
     <section>
         <div class="section-title">Our Philosophy</div>
-        <div class="philosophy-box">
-            [span_1](start_span)"We do not approach Japan research as a standalone local study, but as an integral part of a global evidence set[span_1](end_span)."
+        <div class="philosophy-card">
+            [span_2](start_span)"We do not approach Japan research as a standalone local study, but as an integral part of a global evidence set[span_2](end_span)."
         </div>
-        [span_2](start_span)<p style="font-size: 1.2rem;">We focus on making complex local realities understandable and usable—without oversimplifying what matters[span_2](end_span).</p>
+        [span_3](start_span)<p style="text-align: center; font-size: 1.2rem;">We aim to be found, understood, and trusted as a partner in Japan[span_3](end_span).</p>
     </section>
 
-    <section style="margin-top: 100px;">
-        <div class="section-title">Why Local Expertise Matters</div>
-        <div class="grid">
-            <div>
-                [span_3](start_span)<p>Japan’s healthcare environment is often misunderstood when viewed only through global assumptions[span_3](end_span). [span_4](start_span)Practical realities like clinical workflows and patient access can significantly change what insights mean[span_4](end_span).</p>
-            </div>
-            <div style="font-weight: bold; font-size: 1.5rem; line-height: 1.3;">
-                [span_5](start_span)"Local execution is not just translation. It is interpretation with accountability[span_5](end_span)."
-            </div>
-        </div>
-    </section>
-
-    <section style="margin-top: 100px;">
+    <section>
         <div class="section-title">How We Work</div>
         <ul class="principles">
-            [span_6](start_span)<li><b>Fact-based and Verifiable</b>We use confirmed information only. Where uncertainty exists, we say so—clearly[span_6](end_span).</li>
-            [span_7](start_span)<li><b>Early Alerts, No Surprises</b>If recruitment becomes unrealistic, we flag it early—along with what can be adjusted[span_7](end_span).</li>
-            [span_8](start_span)<li><b>Culturally Fluent Communication</b>We bridge practical differences in clinical practice and local workflows[span_8](end_span).</li>
-            <li><b>Discreet and Trusted</b>Client names are not published. [span_9](start_span)We share outcomes as anonymized examples only[span_9](end_span).</li>
+            [span_4](start_span)<li><b>Fact-based and Verifiable</b>We use confirmed information only[span_4](end_span). [span_5](start_span)Where uncertainty exists, we say so—clearly[span_5](end_span).</li>
+            [span_6](start_span)<li><b>Quality Assurance</b>Interpretation and translation are treated as part of the insight generation process[span_6](end_span).</li>
+            [span_7](start_span)<li><b>Early Alerts</b>If recruitment becomes unrealistic, we flag it early—along with what can be adjusted[span_7](end_span).</li>
+            [span_8](start_span)<li><b>Culturally Fluent</b>We bridge practical differences in clinical practice and local workflows[span_8](end_span).</li>
         </ul>
+    </section>
+
+    <section>
+        <div class="section-title">Why Local Expertise Matters</div>
+        [span_9](start_span)<p style="font-size: 1.2rem;">Japan’s healthcare environment is often misunderstood when viewed only through global assumptions[span_9](end_span). [span_10](start_span)Local execution is not just translation; it is interpretation with accountability[span_10](end_span).</p>
     </section>
 </div>
 
-<footer class="footer">
-    <p>&copy; [span_10](start_span)[span_11](start_span)Seed Planning, Inc. All examples are anonymized[span_10](end_span)[span_11](end_span).</p>
+<footer>
+    <p>&copy; [span_11](start_span)Seed Planning, Inc. All examples are anonymized[span_11](end_span). [span_12](start_span)Specific client names and project details are intentionally omitted[span_12](end_span).</p>
 </footer>
 
 </body>
