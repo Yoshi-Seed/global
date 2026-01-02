@@ -175,7 +175,7 @@
           <label for="specialtyInput" class="block text-sm font-medium text-gray-700 mb-2">
             <i class="fas fa-user-md mr-2 text-indigo-600"></i>
             専門（診療科）<span class="text-red-500 ml-1" id="specialtyRequired" style="display: none;">*</span>
-            <span class="text-xs text-gray-500 font-normal ml-2">※対象者が医師の場合は必須</span>
+            <span class="text-xs text-gray-500 font-normal ml-2">候補にない場合は一番近い専門を選択して登録。※対象者が医師の場合は必須</span>
           </label>
 
           <input
@@ -211,7 +211,7 @@
         <div>
           <label for="recruitCount" class="block text-sm font-medium text-gray-700 mb-2">
             <i class="fas fa-user-plus mr-2 text-purple-600"></i>
-            実績数（リクルート人数） <span class="text-red-500">*</span>
+            実績数（リクルート実績人数、または確認先から回答を得た想定リクルート人数） <span class="text-red-500">*</span>
           </label>
           <input 
             type="number" 
@@ -234,7 +234,7 @@
               class="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 rounded focus:ring-purple-500 focus:ring-2"
             >
             <label for="inquiryOnly" class="ml-2 text-sm font-medium text-gray-700">
-              問合せのみ（推定回収数として記録）
+              問合せのみはチェックを入れる（推定回収数として記録）
             </label>
           </div>
           <p class="text-xs text-gray-500 mt-1">※実際のリクルートではなく、問合せ確認数の場合はチェックしてください</p>
@@ -244,7 +244,7 @@
         <div>
           <label for="targetConditions" class="block text-sm font-medium text-gray-700 mb-2">
             <i class="fas fa-filter mr-2 text-orange-600"></i>
-            対象条件（スクリーニング条件） <span class="text-red-500">*</span> 備考や注意点などもここへ
+            対象条件（スクリーニング条件） <span class="text-red-500">*</span> 備考や注意点などもここへ 「何の疾患」を「何名」「どの期間」で診療しているかなどは、後から欲しいキー情報です！
           </label>
           <textarea 
             id="targetConditions" 
@@ -261,7 +261,7 @@
         <div>
           <label for="drug" class="block text-sm font-medium text-gray-700 mb-2">
             <i class="fas fa-pills mr-2 text-pink-600"></i>
-            薬剤（任意）
+            薬剤（任意ですが、種類までは入力！ 例：IL-13 阻害薬）
           </label>
           <input 
             type="text" 
@@ -294,7 +294,7 @@
           <div>
             <label for="client" class="block text-sm font-medium text-gray-700 mb-2">
               <i class="fas fa-handshake mr-2 text-yellow-600"></i>
-              クライアント <span class="text-red-500">*</span>
+              クライアント（調査依頼元） <span class="text-red-500">*</span>
             </label>
             <input 
               type="text" 
@@ -303,7 +303,7 @@
               placeholder="例: The Link Group"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             >
-            <p class="text-xs text-gray-500 mt-1">※エンドクライアントとどちらか必須</p>
+            <p class="text-xs text-gray-500 mt-1">※エンドクライアントとどちらか必須です</p>
           </div>
         </div>
 
@@ -328,13 +328,13 @@
           <div>
             <label for="endClient" class="block text-sm font-medium text-gray-700 mb-2">
               <i class="fas fa-building mr-2 text-blue-600"></i>
-              エンドクライアント（任意）
+              エンドクライアント（任意ですが出来るだけ入力）
             </label>
             <input 
               type="text" 
               id="endClient" 
               name="endClient" 
-              placeholder="例: エーザイ"
+              placeholder="例: 大塚製薬"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             >
           </div>
@@ -402,7 +402,7 @@
         <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
           <p class="text-sm text-gray-700 text-center">
             <i class="fas fa-info-circle mr-2 text-blue-600"></i>
-            案件登録ありがとうございます。以下のボタンからPR(登録)を実行してください。
+            案件登録ありがとうございます。以下のボタンから「登録」をしてください。
           </p>
         </div>
 
@@ -413,7 +413,7 @@
             class="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition font-semibold flex items-center justify-center space-x-2"
           >
             <i class="fas fa-code-branch"></i>
-            <span>この内容で登録する</span>
+            <span>この内容で案件登録する</span>
           </button>
           <button 
             type="button" 
@@ -932,7 +932,7 @@
           showSuccessMessage(result);
           
           // ブラウザアラートで成功を通知
-          alert('✅ 正常に登録しました。入力お疲れ様でした。');
+          alert('✅ 正常に登録しました。入力ありがとうございました。');
 
           // フォームをリセット
           setTimeout(() => {
