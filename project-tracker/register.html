@@ -51,13 +51,24 @@
   <div class="container mx-auto px-4 py-8">
     <div class="max-w-4xl mx-auto">
       
+      <!-- ローディング表示 -->
+      <div id="loadingOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md mx-4">
+          <div class="flex flex-col items-center">
+            <i class="fas fa-spinner fa-spin text-6xl mb-4" style="color: #1F7A85;"></i>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">データ準備中...</h3>
+            <p class="text-gray-600 text-center">編集データを読み込んでいます。<br>しばらくお待ちください。</p>
+          </div>
+        </div>
+      </div>
+
       <!-- ヘッダー -->
       <div class="rounded-lg shadow-md p-6 mb-6" style="background: linear-gradient(135deg, #E8F0F1 0%, #d5e5e7 100%);">
-        <h2 class="text-2xl font-bold text-gray-800 flex items-center">
+        <h2 id="pageHeading" class="text-2xl font-bold text-gray-800 flex items-center">
           <i class="fas fa-plus-circle mr-3 text-green-600"></i>
           新規案件登録
         </h2>
-        <p class="text-gray-600 mt-2">リクルート済案件の実績情報を入力してください。1つのプロジェクトで複数のターゲットがあった場合はターゲットごとに入力を繰り返してください。<span class="text-red-500">*</span>が必須入力項目です。</p>
+        <p id="pageDescription" class="text-gray-600 mt-2">リクルート済案件の実績情報を入力してください。1つのプロジェクトで複数のターゲットがあった場合はターゲットごとに入力を繰り返してください。<span class="text-red-500">*</span>が必須入力項目です。</p>
       </div>
 
       <!-- 登録フォーム -->
@@ -834,25 +845,48 @@
       
       if (mode !== 'edit' || !id) return;
 
+      // ローディング表示を表示
+      const loadingOverlay = document.getElementById('loadingOverlay');
+      loadingOverlay.classList.remove('hidden');
+
       try {
         // 画面表示を編集モードへ
         document.title = '案件編集 - プロジェクト履歴管理システム';
-        const heading = document.querySelector('h2');
+        const heading = document.getElementById('pageHeading');
         if (heading) {
           heading.innerHTML = '<i class="fas fa-edit mr-3 text-blue-600"></i>案件編集';
         }
-        const description = document.querySelector('h2 + p');
+        const description = document.getElementById('pageDescription');
         if (description) {
           description.textContent = '既存案件の情報を編集します。*が必須入力項目です。';
         }
 
         // 既存データ取得（GAS action=get）
         const url = API_ENDPOINT + `?action=get&id=${encodeURIComponent(id)}`;
-        const res = await fetch(url);
+        
+        console.log('📡 データ取得開始:', url);
+        
+        const res = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+          },
+          // タイムアウトを30秒に設定
+          signal: AbortSignal.timeout(30000)
+        });
+        
+        console.log('📥 レスポンス受信:', res.status, res.statusText);
+        
+        if (!res.ok) {
+          throw new Error(`データ取得に失敗しました (${res.status}: ${res.statusText})`);
+        }
+        
         const data = await res.json();
         
+        console.log('✅ データ取得成功:', data);
+        
         if (!data.success || !data.project) {
-          throw new Error('対象データが見つかりません');
+          throw new Error(data.message || '対象データが見つかりません');
         }
 
         const p = data.project;
@@ -916,11 +950,28 @@
 
         // 成功メッセージのエリアを非表示
         document.getElementById('successMessage').classList.add('hidden');
+        
+        console.log('✅ フォーム設定完了');
 
       } catch (error) {
-        console.error('データ読み込みエラー:', error);
-        alert('データの読み込みに失敗しました: ' + error.message);
+        console.error('❌ データ読み込みエラー:', error);
+        
+        // エラーメッセージを表示
+        let errorMessage = 'データの読み込みに失敗しました。';
+        
+        if (error.name === 'AbortError' || error.name === 'TimeoutError') {
+          errorMessage = 'データ取得がタイムアウトしました。ネットワーク接続を確認して再度お試しください。';
+        } else if (error.message) {
+          errorMessage += '\n\n詳細: ' + error.message;
+        }
+        
+        alert('❌ ' + errorMessage);
+        
+        // 案件一覧へ戻る
         window.location.href = 'projects.html';
+      } finally {
+        // ローディング表示を非表示
+        loadingOverlay.classList.add('hidden');
       }
     }
 
