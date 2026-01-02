@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GAS API テスト</title>
+  <style>
+    body {
+      font-family: monospace;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      background: #1F7A85;
+      color: white;
+      font-size: 14px;
+    }
+    button:hover {
+      background: #1a6770;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f0f0f0;
+      border-radius: 4px;
+      white-space: pre-wrap;
+      word-break: break-all;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    .success {
+      background: #d4edda;
+      color: #155724;
+    }
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    input {
+      padding: 8px;
+      margin: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔧 GAS API テスト</h1>
+    
+    <div>
+      <h3>設定確認</h3>
+      <p>GAS URL: <code id="gasUrl">読み込み中...</code></p>
+      <p>TOKEN: <code id="gasToken">読み込み中...</code></p>
+    </div>
+
+    <hr>
+
+    <div>
+      <h3>テスト1: Health Check</h3>
+      <button onclick="testHealth()">Health Check</button>
+    </div>
+
+    <div>
+      <h3>テスト2: List (全件取得)</h3>
+      <button onclick="testList()">全件取得</button>
+    </div>
+
+    <div>
+      <h3>テスト3: Get (1件取得)</h3>
+      <input type="number" id="testId" placeholder="ID (例: 1)" value="1">
+      <button onclick="testGet()">1件取得</button>
+    </div>
+
+    <div>
+      <h3>テスト4: カスタムURL</h3>
+      <input type="text" id="customAction" placeholder="action (例: get)" value="get">
+      <input type="text" id="customParams" placeholder="params (例: id=1)" value="id=1">
+      <button onclick="testCustom()">実行</button>
+    </div>
+
+    <div id="result" class="result">結果がここに表示されます</div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script>
+    // 設定を表示
+    document.getElementById('gasUrl').textContent = GAS_CONFIG.URL || '未設定';
+    document.getElementById('gasToken').textContent = GAS_CONFIG.TOKEN || '未設定';
+
+    function log(message, type = 'info') {
+      const resultDiv = document.getElementById('result');
+      const timestamp = new Date().toLocaleTimeString();
+      resultDiv.textContent = `[${timestamp}] ${message}`;
+      resultDiv.className = 'result ' + type;
+      console.log(`[${timestamp}] ${message}`);
+    }
+
+    function buildUrl(action, params = {}) {
+      const url = new URL(GAS_CONFIG.URL);
+      url.searchParams.set('action', action);
+      if (GAS_CONFIG.TOKEN) {
+        url.searchParams.set('token', GAS_CONFIG.TOKEN);
+      }
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+          url.searchParams.set(key, String(value));
+        }
+      });
+      return url.toString();
+    }
+
+    async function testHealth() {
+      try {
+        log('Health Check 実行中...', 'info');
+        const url = buildUrl('health');
+        console.log('Request URL:', url);
+        
+        const res = await fetch(url);
+        const text = await res.text();
+        
+        console.log('Response Status:', res.status);
+        console.log('Response Text:', text);
+        
+        const data = JSON.parse(text);
+        
+        log(`✅ Health Check 成功\n\nStatus: ${res.status}\nResponse:\n${JSON.stringify(data, null, 2)}`, 'success');
+      } catch (error) {
+        log(`❌ Health Check 失敗\n\nError: ${error.message}\nStack: ${error.stack}`, 'error');
+      }
+    }
+
+    async function testList() {
+      try {
+        log('全件取得 実行中...', 'info');
+        const url = buildUrl('list');
+        console.log('Request URL:', url);
+        
+        const res = await fetch(url);
+        const text = await res.text();
+        
+        console.log('Response Status:', res.status);
+        console.log('Response Text:', text);
+        
+        const data = JSON.parse(text);
+        
+        log(`✅ 全件取得成功\n\nStatus: ${res.status}\n件数: ${data.count || 0}\n最初の3件:\n${JSON.stringify((data.projects || []).slice(0, 3), null, 2)}`, 'success');
+      } catch (error) {
+        log(`❌ 全件取得失敗\n\nError: ${error.message}\nStack: ${error.stack}`, 'error');
+      }
+    }
+
+    async function testGet() {
+      try {
+        const id = document.getElementById('testId').value;
+        if (!id) {
+          alert('IDを入力してください');
+          return;
+        }
+        
+        log(`1件取得 (ID: ${id}) 実行中...`, 'info');
+        const url = buildUrl('get', { id: id });
+        console.log('Request URL:', url);
+        
+        const res = await fetch(url);
+        const text = await res.text();
+        
+        console.log('Response Status:', res.status);
+        console.log('Response Text:', text);
+        
+        const data = JSON.parse(text);
+        
+        if (data.success) {
+          log(`✅ 1件取得成功\n\nStatus: ${res.status}\nProject:\n${JSON.stringify(data.project, null, 2)}`, 'success');
+        } else {
+          log(`⚠️ 取得失敗\n\nStatus: ${res.status}\nMessage: ${data.message}`, 'error');
+        }
+      } catch (error) {
+        log(`❌ 1件取得失敗\n\nError: ${error.message}\nStack: ${error.stack}`, 'error');
+      }
+    }
+
+    async function testCustom() {
+      try {
+        const action = document.getElementById('customAction').value;
+        const paramsStr = document.getElementById('customParams').value;
+        
+        const params = {};
+        if (paramsStr) {
+          paramsStr.split('&').forEach(pair => {
+            const [key, value] = pair.split('=');
+            if (key && value) {
+              params[key] = value;
+            }
+          });
+        }
+        
+        log(`カスタムリクエスト (action: ${action}) 実行中...`, 'info');
+        const url = buildUrl(action, params);
+        console.log('Request URL:', url);
+        
+        const res = await fetch(url);
+        const text = await res.text();
+        
+        console.log('Response Status:', res.status);
+        console.log('Response Text:', text);
+        
+        try {
+          const data = JSON.parse(text);
+          log(`✅ リクエスト成功\n\nStatus: ${res.status}\nResponse:\n${JSON.stringify(data, null, 2)}`, 'success');
+        } catch (e) {
+          log(`⚠️ JSONパース失敗\n\nStatus: ${res.status}\nRaw Response:\n${text}`, 'error');
+        }
+      } catch (error) {
+        log(`❌ リクエスト失敗\n\nError: ${error.message}\nStack: ${error.stack}`, 'error');
+      }
+    }
+
+    // ページ読み込み時に自動でHealth Checkを実行
+    window.addEventListener('load', () => {
+      setTimeout(testHealth, 500);
+    });
+  </script>
+</body>
+</html>

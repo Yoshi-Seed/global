@@ -893,11 +893,22 @@
         
         console.log('📥 レスポンス受信:', res.status, res.statusText);
         
+        // レスポンステキストを取得してログ出力
+        const responseText = await res.text();
+        console.log('📄 レスポンス内容:', responseText);
+        
         if (!res.ok) {
-          throw new Error(`データ取得に失敗しました (${res.status}: ${res.statusText})`);
+          throw new Error(`データ取得に失敗しました (${res.status}: ${res.statusText})\n\nレスポンス: ${responseText}`);
         }
         
-        const data = await res.json();
+        // JSONパース
+        let data;
+        try {
+          data = JSON.parse(responseText);
+        } catch (parseError) {
+          console.error('❌ JSONパースエラー:', parseError);
+          throw new Error(`JSONパースに失敗しました: ${parseError.message}\n\nレスポンス: ${responseText}`);
+        }
         
         console.log('✅ データ取得成功:', data);
         
