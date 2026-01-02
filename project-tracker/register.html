@@ -1103,8 +1103,11 @@
       const isEditMode = window.__editingId != null;
       const action = isEditMode ? 'update' : 'add';
 
+      console.log('📝 送信モード:', isEditMode ? '編集' : '新規登録');
+      console.log('📋 編集ID:', window.__editingId);
+
       try {
-        // ✅ GAS(Webアプリ) にPOST（/faq/yoshi と同じ: text/plain で JSON文字列を送る）
+        // ✅ GAS(Webアプリ) にPOST
         const payload = {
           ...formData,
           action: action,
@@ -1116,9 +1119,18 @@
           payload.id = window.__editingId;
           payload.editorName = formData.registrant;
           payload.reason = ''; // 編集理由は任意（必要なら入力フィールドを追加）
+          console.log('✏️ 編集モード: ID=' + payload.id + ', editorName=' + payload.editorName);
         }
 
-        const response = await fetch(API_ENDPOINT, {
+        // URLはGAS_CONFIG.URLを直接使用（actionはbodyで送る）
+        const requestUrl = GAS_CONFIG.TOKEN 
+          ? `${GAS_CONFIG.URL}?token=${encodeURIComponent(GAS_CONFIG.TOKEN)}`
+          : GAS_CONFIG.URL;
+
+        console.log('📡 送信先URL:', requestUrl);
+        console.log('📦 ペイロード:', JSON.stringify(payload, null, 2));
+
+        const response = await fetch(requestUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'text/plain;charset=utf-8',
@@ -1127,10 +1139,18 @@
         });
 
         // GAS からのレスポンスJSON（CORS/実装差分でjson()が失敗しても落とさない）
+        console.log('📥 レスポンスステータス:', response.status, response.statusText);
+        
+        // レスポンステキストを取得
+        const responseText = await response.text();
+        console.log('📄 レスポンス内容:', responseText);
+        
         let result = null;
         try {
-          result = await response.json();
+          result = JSON.parse(responseText);
+          console.log('✅ パース成功:', result);
         } catch (e) {
+          console.error('❌ JSONパースエラー:', e);
           result = { success: response.ok };
         }
 
