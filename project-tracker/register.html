@@ -811,6 +811,122 @@
     // ✅ Google Apps Script（Webアプリ）URL（config.jsから取得）
     const API_ENDPOINT = API.getSubmitUrl();
 
+    // URLパラメータを取得するヘルパー関数
+    function getQueryParam(name) {
+      const url = new URL(location.href);
+      return url.searchParams.get(name);
+    }
+
+    // 値をセットするヘルパー関数
+    function setValue(id, value) {
+      const el = document.getElementById(id);
+      if (el) el.value = (value ?? '');
+    }
+
+    // 編集対象のIDとregistrationIdを保持するグローバル変数
+    window.__editingId = null;
+    window.__editingRegistrationId = null;
+
+    // 編集モードの場合、既存データを読み込む
+    async function loadProjectForEdit() {
+      const mode = getQueryParam('mode');
+      const id = getQueryParam('id');
+      
+      if (mode !== 'edit' || !id) return;
+
+      try {
+        // 画面表示を編集モードへ
+        document.title = '案件編集 - プロジェクト履歴管理システム';
+        const heading = document.querySelector('h2');
+        if (heading) {
+          heading.innerHTML = '<i class="fas fa-edit mr-3 text-blue-600"></i>案件編集';
+        }
+        const description = document.querySelector('h2 + p');
+        if (description) {
+          description.textContent = '既存案件の情報を編集します。*が必須入力項目です。';
+        }
+
+        // 既存データ取得（GAS action=get）
+        const url = API_ENDPOINT + `?action=get&id=${encodeURIComponent(id)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        
+        if (!data.success || !data.project) {
+          throw new Error('対象データが見つかりません');
+        }
+
+        const p = data.project;
+
+        // 編集対象のIDとregistrationIdを保持
+        window.__editingId = p.id;
+        window.__editingRegistrationId = p.registrationId;
+
+        // フォームへ反映
+        setValue('diseaseName', p.diseaseName);
+        setValue('diseaseAbbr', p.diseaseAbbr);
+        setValue('method', p.method);
+        setValue('surveyType', p.surveyType);
+        
+        // 対象者種別の設定
+        const targetTypeSelect = document.getElementById('targetType');
+        const standardTypes = ['医師', '患者', '介護者', '医師・患者', 'KOL', '看護師', '薬剤師', 'その他'];
+        if (standardTypes.includes(p.targetType)) {
+          targetTypeSelect.value = p.targetType;
+          if (p.targetType === 'その他') {
+            // その他の場合は入力ボックスを表示
+            document.getElementById('targetTypeOtherContainer').classList.remove('hidden');
+            document.getElementById('targetTypeOther').required = true;
+          }
+        } else {
+          // 標準タイプに含まれない場合は「その他」を選択して詳細入力
+          targetTypeSelect.value = 'その他';
+          document.getElementById('targetTypeOtherContainer').classList.remove('hidden');
+          document.getElementById('targetTypeOther').required = true;
+          setValue('targetTypeOther', p.targetType);
+        }
+        
+        setValue('specialtyInput', p.specialty);
+        setValue('recruitCount', p.recruitCount);
+        document.getElementById('inquiryOnly').checked = (String(p.inquiryOnly) === 'TRUE' || p.inquiryOnly === true);
+        setValue('targetConditions', p.targetConditions);
+        setValue('drug', p.drug);
+        setValue('recruitCompany', p.recruitCompany);
+        setValue('moderator', p.moderator);
+        setValue('client', p.client);
+        setValue('endClient', p.endClient);
+        setValue('projectNumber', p.projectNumber);
+        setValue('implementationDate', p.implementationDate);
+
+        // ★登録担当は空欄にして、編集者名を入れさせる
+        setValue('registrant', '');
+        const registrantLabel = document.querySelector('label[for="registrant"]');
+        if (registrantLabel) {
+          registrantLabel.innerHTML = '<i class="fas fa-user-check mr-2 text-teal-600"></i>編集者名 <span class="text-red-500">*</span>';
+        }
+        const registrantInput = document.getElementById('registrant');
+        if (registrantInput) {
+          registrantInput.placeholder = '例: 本田';
+        }
+
+        // 送信ボタンのテキストを変更
+        const submitButton = document.querySelector('button[type="submit"]');
+        if (submitButton) {
+          submitButton.innerHTML = '<i class="fas fa-save"></i><span>この内容で更新する</span>';
+        }
+
+        // 成功メッセージのエリアを非表示
+        document.getElementById('successMessage').classList.add('hidden');
+
+      } catch (error) {
+        console.error('データ読み込みエラー:', error);
+        alert('データの読み込みに失敗しました: ' + error.message);
+        window.location.href = 'projects.html';
+      }
+    }
+
+    // ページ読み込み時に編集モードをチェック
+    window.addEventListener('DOMContentLoaded', loadProjectForEdit);
+
     // フォーム送信
     document.getElementById('projectForm').addEventListener('submit', async function(e) {
       e.preventDefault();
@@ -905,19 +1021,31 @@
         registrant: document.getElementById('registrant').value.trim()
       };
 
+      // 編集モードかどうかを判定
+      const isEditMode = window.__editingId != null;
+      const action = isEditMode ? 'update' : 'add';
+
       try {
         // ✅ GAS(Webアプリ) にPOST（/faq/yoshi と同じ: text/plain で JSON文字列を送る）
+        const payload = {
+          ...formData,
+          action: action,
+          clientTimestamp: new Date().toISOString(),
+        };
+
+        // 編集モードの場合はidとeditorNameを追加
+        if (isEditMode) {
+          payload.id = window.__editingId;
+          payload.editorName = formData.registrant;
+          payload.reason = ''; // 編集理由は任意（必要なら入力フィールドを追加）
+        }
+
         const response = await fetch(API_ENDPOINT, {
           method: 'POST',
           headers: {
             'Content-Type': 'text/plain;charset=utf-8',
           },
-          body: JSON.stringify({
-            ...formData,
-            // 将来拡張用（GAS側が action をURLから取れない場合にも備える）
-            action: 'add',
-            clientTimestamp: new Date().toISOString(),
-          }),
+          body: JSON.stringify(payload),
         });
 
         // GAS からのレスポンスJSON（CORS/実装差分でjson()が失敗しても落とさない）
@@ -929,16 +1057,23 @@
         }
 
         if (response.ok && result && result.success) {
-          // 成功: 登録情報を表示
+          // 成功: 登録/更新情報を表示
           showSuccessMessage(result);
           
           // ブラウザアラートで成功を通知
-          alert('✅ 正常に登録しました。入力ありがとうございました。');
-
-          // フォームをリセット
-          setTimeout(() => {
-            resetForm();
-          }, 800);
+          if (isEditMode) {
+            alert('✅ 正常に更新しました。');
+            // 編集モードの場合は詳細ページへ戻る
+            setTimeout(() => {
+              window.location.href = `projects.html?id=${window.__editingId}`;
+            }, 800);
+          } else {
+            alert('✅ 正常に登録しました。入力ありがとうございました。');
+            // フォームをリセット
+            setTimeout(() => {
+              resetForm();
+            }, 800);
+          }
         } else {
           // エラー: バリデーションエラーを表示
           if (result && result.details) {

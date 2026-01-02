@@ -22,6 +22,9 @@ const DELETE_REQUEST_SHEET_NAME = 'delete_requests';
 // ✅ 本削除ログ（監査用）
 const DELETE_LOG_SHEET_NAME = 'delete_logs';
 
+// ✅ 編集ログ（監査用）
+const EDIT_LOG_SHEET_NAME = 'edit_logs';
+
 // ✅ 削除確認フレーズ（フロント側の入力と一致させる）
 // ※本番では推測されにくい文字列に変更推奨
 const DELETE_CONFIRM_PHRASE = 'delete';
@@ -64,6 +67,10 @@ function doGet(e) {
 
     if (action === 'health') {
       return json_({ success: true, ok: true, version: 'mirror-gas-v1' });
+    }
+
+    if (action === 'get') {
+      return handleGet_(params);
     }
 
     if (action !== 'list') {
@@ -111,6 +118,10 @@ function doPost(e) {
       return handleAdd_(payload);
     }
 
+    if (action === 'update') {
+      return handleUpdate_(payload);
+    }
+
     if (action === 'delete') {
       return handleDelete_(payload);
     }
@@ -128,6 +139,29 @@ function doPost(e) {
 // ------------------------
 // Handlers
 // ------------------------
+
+function handleGet_(params) {
+  const id = Number(params.id);
+  const registrationId = String(params.registrationId || '').trim();
+
+  if (!id && !registrationId) {
+    return json_({ success: false, message: 'id or registrationId required' });
+  }
+
+  const sheet = getMainSheet_();
+  ensureProjectHeader_(sheet);
+
+  let rowIndex = null;
+  if (id) rowIndex = findRowIndexById_(sheet, id);
+  if (!rowIndex && registrationId) rowIndex = findRowIndexByRegistrationId_(sheet, registrationId);
+
+  if (!rowIndex) {
+    return json_({ success: false, message: 'Not found' });
+  }
+
+  const rowValues = sheet.getRange(rowIndex, 1, 1, PROJECT_HEADERS.length).getValues()[0];
+  return json_({ success: true, project: rowToProject_(rowValues) });
+}
 
 function handleAdd_(data) {
   const validation = validateProject_(data);
@@ -173,6 +207,106 @@ function handleAdd_(data) {
     registrationId,
     message: '登録しました',
   });
+}
+
+function handleUpdate_(data) {
+  const targetId = Number(data.id);
+  const editorName = String(data.editorName || data.registrant || '').trim();
+  const reason = String(data.reason || '').trim();
+
+  if (!targetId) {
+    return json_({ success: false, message: 'id は必須です' });
+  }
+  if (!editorName) {
+    return json_({ success: false, message: '編集者名は必須です' });
+  }
+
+  // 更新内容のバリデーション（登録と同じ項目群）
+  const validation = validateProject_(data);
+  if (!validation.valid) {
+    return json_({ success: false, message: 'Validation failed', details: validation.errors });
+  }
+
+  const lock = LockService.getScriptLock();
+  lock.waitLock(30000);
+
+  try {
+    const sheet = getMainSheet_();
+    ensureProjectHeader_(sheet);
+
+    const rowIndex = findRowIndexById_(sheet, targetId);
+    if (!rowIndex) {
+      return json_({ success: false, message: `更新対象が見つかりません（id=${targetId}）` });
+    }
+
+    // before
+    const beforeRow = sheet.getRange(rowIndex, 1, 1, PROJECT_HEADERS.length).getValues()[0];
+    const before = rowToProject_(beforeRow);
+
+    // after（id/registrationId/registeredDateは維持、registrantは編集者名に置き換え）
+    const afterRow = [
+      before.id,
+      before.registrationId,
+      normalizeField_(data.diseaseName || ''),
+      normalizeField_(data.diseaseAbbr || ''),
+      normalizeField_(data.method || ''),
+      normalizeField_(data.surveyType || ''),
+      normalizeField_(data.targetType || ''),
+      normalizeSpecialty_(data.specialty || ''),
+      Number(data.recruitCount || 0),
+      data.inquiryOnly ? 'TRUE' : 'FALSE',
+      normalizeField_(data.targetConditions || ''),
+      normalizeField_(data.drug || ''),
+      normalizeField_(data.recruitCompany || ''),
+      normalizeField_(data.moderator || ''),
+      normalizeField_(data.client || ''),
+      normalizeField_(data.endClient || ''),
+      normalizeField_(data.projectNumber || ''),
+      normalizeField_(data.implementationDate || ''),
+      normalizeField_(editorName),
+      before.registeredDate,
+    ];
+
+    // 本体更新
+    sheet.getRange(rowIndex, 1, 1, PROJECT_HEADERS.length).setValues([afterRow]);
+
+    // 編集ログ
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const logSheet = getOrCreateSheet_(ss, EDIT_LOG_SHEET_NAME, [
+      'timestamp',
+      'id',
+      'registrationId',
+      'editorName',
+      'reason',
+      'clientTimestamp',
+      'editedRowIndex',
+      'before_json',
+      'after_json',
+    ]);
+
+    const after = rowToProject_(afterRow);
+
+    logSheet.appendRow([
+      new Date().toISOString(),
+      before.id,
+      before.registrationId,
+      editorName,
+      reason,
+      String(data.clientTimestamp || ''),
+      rowIndex,
+      JSON.stringify(before),
+      JSON.stringify(after),
+    ]);
+
+    return json_({
+      success: true,
+      message: '更新しました',
+      id: before.id,
+      registrationId: before.registrationId
+    });
+  } finally {
+    lock.releaseLock();
+  }
 }
 
 function handleDeleteRequest_(data) {
