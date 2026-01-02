@@ -268,24 +268,24 @@
         const hour = new Date().getHours();
         let message = '';
         
-        if (hour >= 0 && hour < 6) {
-          // 🌃 明け方（0–6時）
-          message = 'Happy new year・・・🌃 静かな時間ですね。ゆっくり深呼吸。 The world\'s quiet — take a breath.';
+        if (hour >= 1 && hour < 6) {
+          // 🌃 明け方（1–5時代）
+          message = '・・・🌃 静かな時間ですね。ゆっくり深呼吸。 The world\'s quiet — take a breath.';
         } else if (hour >= 6 && hour < 11) {
           // 🌅 朝（6–11am）
-          message = '今年もあと少し！！ 🌅 おはようございます。今日もいい1日にしましょう。 Good morning — wishing you a bright start!';
-        } else if (hour >= 11 && hour < 14) {
-          // 🌞 昼（11–14時）
+          message = 'A Happy New Year! 🌅 おはようございます。今日もいい1日にしましょう。 Good morning — wishing you a bright start!';
+        } else if (hour >= 11 && hour < 15) {
+          // 🌞 昼（11–15時）
           message = '🌞 お疲れ様です。ひと息ついてくださいね。 Hope your day\'s going smoothly.';
-        } else if (hour >= 14 && hour < 19) {
-          // 🌇 夕方（14–19時）
-          message = '🎄Merry Christmas! 🌇 今日もあと少し。無理せずいきましょう。 You\'re doing great — nearly there.';
+        } else if (hour >= 15 && hour < 19) {
+          // 🌇 夕方（15–19時）
+          message = '🌇 今日もあと少し。無理せずいきましょう。 You\'re doing great — nearly there.';
         } else if (hour >= 19 && hour < 23) {
           // 🌙 夜（19–23時）
-          message = '🎅　今年もあと少し！🌙 お疲れ様です。今日もよく頑張りました。 You\'ve earned some rest.';
+          message = '🌙お疲れ様です。今日もよく頑張りましたね。 You\'ve earned some rest.';
         } else {
-          // 🌌 深夜（23–0時）
-          message = 'Happy Holidays! - 🌌 遅くまでお疲れ様です。そろそろ休みましょう。 Take it easy tonight.';
+          // 🌌 深夜（23–1時）
+          message = '🌌 遅くまでお疲れ様です。そろそろ休みましょう。 Take it easy tonight.';
         }
         
         const messageEl = document.getElementById('time-message');
