@@ -1037,34 +1037,40 @@
       const specialtyValue = specialtyInput.value.trim();
       const specialtyCode = document.getElementById('specialtyCode').value;
       
-      // 専門フィールドのバリデーション
-      // 1. 対象者種別が「医師」の場合の必須チェック
-      if (finalTargetType === '医師') {
-        if (!specialtyValue) {
-          // 専門が未入力の場合
-          specialtyInput.setCustomValidity('対象者種別が「医師」の場合、専門（診療科）の選択が必須です');
-          specialtyInput.reportValidity();
-          showErrorMessage('対象者種別が「医師」の場合、専門（診療科）を選択してください');
-          
-          // 専門フィールドを赤枠で強調
-          specialtyInput.classList.add('border-red-500');
-          specialtyInput.focus();
-          return;
-        }
-      }
+      // 編集モードの判定
+      const isEditMode = window.__editingId != null;
       
-      // 2. 専門に入力がある場合は、必ず候補から選択されたものかをチェック（対象者種別に関係なく）
-      if (specialtyValue) {
-        if (!specialtyCode) {
-          // 専門が入力されているがマスタから選択されていない場合（手入力のまま、または複数コピペ）
-          specialtyInput.setCustomValidity('表示された候補の中から専門（診療科）を選択してください');
-          specialtyInput.reportValidity();
-          showErrorMessage('専門（診療科）は候補の中から1つ選択してください。複数の専門を入力することはできません。');
-          
-          // 専門フィールドを赤枠で強調
-          specialtyInput.classList.add('border-red-500');
-          specialtyInput.focus();
-          return;
+      // 編集モードでは専門のバリデーションをスキップ（登録時にチェック済み）
+      if (!isEditMode) {
+        // 専門フィールドのバリデーション（新規登録時のみ）
+        // 1. 対象者種別が「医師」の場合の必須チェック
+        if (finalTargetType === '医師') {
+          if (!specialtyValue) {
+            // 専門が未入力の場合
+            specialtyInput.setCustomValidity('対象者種別が「医師」の場合、専門（診療科）の選択が必須です');
+            specialtyInput.reportValidity();
+            showErrorMessage('対象者種別が「医師」の場合、専門（診療科）を選択してください');
+            
+            // 専門フィールドを赤枠で強調
+            specialtyInput.classList.add('border-red-500');
+            specialtyInput.focus();
+            return;
+          }
+        }
+        
+        // 2. 専門に入力がある場合は、必ず候補から選択されたものかをチェック（対象者種別に関係なく）
+        if (specialtyValue) {
+          if (!specialtyCode) {
+            // 専門が入力されているがマスタから選択されていない場合（手入力のまま、または複数コピペ）
+            specialtyInput.setCustomValidity('表示された候補の中から専門（診療科）を選択してください');
+            specialtyInput.reportValidity();
+            showErrorMessage('専門（診療科）は候補の中から1つ選択してください。複数の専門を入力することはできません。');
+            
+            // 専門フィールドを赤枠で強調
+            specialtyInput.classList.add('border-red-500');
+            specialtyInput.focus();
+            return;
+          }
         }
       }
       
@@ -1099,8 +1105,7 @@
         registrant: document.getElementById('registrant').value.trim()
       };
 
-      // 編集モードかどうかを判定
-      const isEditMode = window.__editingId != null;
+      // 編集モード判定（上で既に実行済み）
       const action = isEditMode ? 'update' : 'add';
 
       console.log('📝 送信モード:', isEditMode ? '編集' : '新規登録');
