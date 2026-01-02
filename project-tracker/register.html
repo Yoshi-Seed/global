@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>新規プロジェクト登録 - プロジェクト履歴管理システム</title>
   <link rel="icon" type="image/png" href="SP_logo_shape_only.png">
+  <!-- Cache Busting: v2.0.1 -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
 　<script src="https://cdn.tailwindcss.com"></script>
   <!-- 以下の行を追加 -->
 　<link rel="stylesheet" href="css/style-2026.css">
@@ -1039,9 +1043,11 @@
       
       // 編集モードの判定
       const isEditMode = window.__editingId != null;
+      console.log('🔍 バリデーションチェック - 編集モード:', isEditMode, 'editingId:', window.__editingId);
       
       // 編集モードでは専門のバリデーションをスキップ（登録時にチェック済み）
       if (!isEditMode) {
+        console.log('✅ 新規登録モード: 専門のバリデーションを実行');
         // 専門フィールドのバリデーション（新規登録時のみ）
         // 1. 対象者種別が「医師」の場合の必須チェック
         if (finalTargetType === '医師') {
@@ -1072,6 +1078,8 @@
             return;
           }
         }
+      } else {
+        console.log('⏭️ 編集モード: 専門のバリデーションをスキップ');
       }
       
       // バリデーションクリア
