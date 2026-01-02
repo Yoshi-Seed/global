@@ -1,0 +1,328 @@
+/* * Neo-Glass 2026 Design Theme
+ * Project Tracker Modernization
+ */
+
+:root {
+    /* カラーパレット: 宇宙と深海をイメージした深い青と鮮やかなアクセント */
+    --primary-color: #4f46e5;
+    --primary-light: #818cf8;
+    --primary-dark: #3730a3;
+    --accent-color: #06b6d4; /* シアン */
+    --accent-gradient: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+    
+    /* 背景色 */
+    --bg-base: #f8fafc;
+    --bg-glass: rgba(255, 255, 255, 0.75);
+    --bg-glass-heavy: rgba(255, 255, 255, 0.90);
+    --bg-glass-hover: rgba(255, 255, 255, 0.95);
+    
+    /* テキストカラー */
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    
+    /* ボーダーとシャドウ */
+    --glass-border: 1px solid rgba(255, 255, 255, 0.5);
+    --glass-shine: 1px solid rgba(255, 255, 255, 0.8);
+    --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    --shadow-glow: 0 10px 25px -5px rgba(79, 70, 229, 0.15), 0 8px 10px -6px rgba(79, 70, 229, 0.1);
+    
+    /* その他 */
+    --radius-lg: 16px;
+    --radius-md: 12px;
+    --radius-sm: 8px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* =========================================
+   Base & Layout
+   ========================================= */
+
+body {
+    background-color: var(--bg-base);
+    /* 2026風: 動的な背景グラデーション */
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.10) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.10) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.05) 0px, transparent 50%),
+        radial-gradient(at 0% 100%, rgba(99, 102, 241, 0.10) 0px, transparent 50%);
+    background-attachment: fixed;
+    color: var(--text-main);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ナビゲーションバーのモダン化 */
+nav {
+    background-color: var(--bg-glass-heavy) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-bottom: var(--glass-border);
+    box-shadow: var(--shadow-sm) !important;
+}
+
+/* コンテンツコンテナ */
+.container {
+    padding-top: 2rem;
+    padding-bottom: 4rem;
+}
+
+/* =========================================
+   Cards & Panels (Glassmorphism)
+   ========================================= */
+
+/* Tailwindの bg-white と shadow クラスを持つ要素をターゲットにして上書き */
+.bg-white.shadow, 
+.bg-white.shadow-md,
+.bg-white.shadow-sm,
+.bg-white.shadow-lg,
+.bg-white.rounded-lg {
+    background-color: var(--bg-glass) !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: var(--glass-border);
+    box-shadow: var(--shadow-sm) !important;
+    border-radius: var(--radius-lg) !important;
+    transition: var(--transition);
+}
+
+/* ホバー時に浮き上がるエフェクト */
+.bg-white.shadow:hover,
+.bg-white.shadow-md:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-glow) !important;
+    background-color: var(--bg-glass-hover) !important;
+    border-color: rgba(255, 255, 255, 0.9);
+}
+
+/* =========================================
+   Typography
+   ========================================= */
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-main);
+    letter-spacing: -0.025em;
+}
+
+h1.text-3xl, h1.text-2xl {
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800 !important;
+    text-shadow: 0 2px 10px rgba(79, 70, 229, 0.2);
+}
+
+/* =========================================
+   Forms (Inputs, Selects, Search)
+   ========================================= */
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+input[type="search"],
+select,
+textarea {
+    background-color: rgba(255, 255, 255, 0.6) !important;
+    border: 1px solid rgba(203, 213, 225, 0.8) !important;
+    border-radius: var(--radius-sm) !important;
+    padding: 0.75rem 1rem !important;
+    transition: var(--transition);
+    box-shadow: none !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    background-color: #fff !important;
+    border-color: var(--primary-light) !important;
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1) !important;
+    outline: none !important;
+}
+
+/* プレースホルダーの色 */
+::placeholder {
+    color: var(--text-light) !important;
+    opacity: 0.8;
+}
+
+/* =========================================
+   Buttons & Actions
+   ========================================= */
+
+/* Primary Buttons (Tailwindの青系ボタンを上書き) */
+button.bg-blue-600,
+a.bg-blue-600,
+.btn-primary {
+    background: var(--accent-gradient) !important;
+    border: none !important;
+    border-radius: var(--radius-md) !important;
+    color: white !important;
+    font-weight: 600 !important;
+    padding: 0.6rem 1.2rem !important;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3) !important;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+button.bg-blue-600:hover,
+a.bg-blue-600:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(79, 70, 229, 0.4) !important;
+    filter: brightness(1.1);
+}
+
+/* Secondary/Gray Buttons */
+button.bg-white,
+a.bg-white,
+.btn-secondary {
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    color: var(--text-main) !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05) !important;
+}
+
+button.bg-white:hover,
+a.bg-white:hover {
+    background-color: #fff !important;
+    border-color: var(--primary-light) !important;
+    color: var(--primary-color) !important;
+}
+
+/* Red/Danger Buttons */
+button.bg-red-600,
+a.bg-red-600 {
+    background: linear-gradient(135deg, #ef4444 0%, #f43f5e 100%) !important;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3) !important;
+}
+
+/* =========================================
+   Tables
+   ========================================= */
+
+table {
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    width: 100%;
+}
+
+thead {
+    background: transparent !important;
+}
+
+th {
+    background-color: rgba(241, 245, 249, 0.5) !important;
+    color: var(--text-muted) !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    font-size: 0.75rem !important;
+    letter-spacing: 0.05em !important;
+    padding: 1rem !important;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+td {
+    padding: 1rem !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03) !important;
+    color: var(--text-main);
+    vertical-align: middle;
+}
+
+/* テーブル行のホバーエフェクト */
+tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+tbody tr:hover {
+    background-color: rgba(79, 70, 229, 0.05) !important;
+}
+
+/* ステータスバッジのスタイル強化 */
+.rounded-full {
+    padding: 0.35em 0.8em !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.02em;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Green Badge */
+.bg-green-100 {
+    background-color: rgba(220, 252, 231, 0.8) !important;
+    color: #15803d !important;
+    border: 1px solid rgba(22, 163, 74, 0.2);
+}
+
+/* Yellow Badge */
+.bg-yellow-100 {
+    background-color: rgba(254, 252, 232, 0.8) !important;
+    color: #a16207 !important;
+    border: 1px solid rgba(202, 138, 4, 0.2);
+}
+
+/* Red Badge */
+.bg-red-100 {
+    background-color: rgba(254, 226, 226, 0.8) !important;
+    color: #b91c1c !important;
+    border: 1px solid rgba(220, 38, 38, 0.2);
+}
+
+/* =========================================
+   Pagination & Navigation
+   ========================================= */
+
+/* ページネーションボタン */
+nav[aria-label="Pagination"] button,
+nav[aria-label="Pagination"] a {
+    border-radius: var(--radius-sm) !important;
+    transition: var(--transition);
+}
+
+/* アクティブなページ */
+nav[aria-label="Pagination"] .bg-indigo-50,
+nav[aria-label="Pagination"] .border-indigo-500 {
+    background-color: rgba(79, 70, 229, 0.1) !important;
+    border-color: var(--primary-color) !important;
+    color: var(--primary-color) !important;
+    font-weight: 700 !important;
+}
+
+/* =========================================
+   Utilities / Misc
+   ========================================= */
+
+/* スクロールバーのカスタマイズ（Webkit） */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.5);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(100, 116, 139, 0.8);
+}
+
+/* モーダルウィンドウ */
+.modal-content, 
+#modal {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(16px);
+    border: var(--glass-border);
+    box-shadow: var(--shadow-glow) !important;
+    border-radius: var(--radius-lg) !important;
+}
+
+/* ローディングスピナー */
+.spinner {
+    border: 3px solid rgba(79, 70, 229, 0.1);
+    border-left-color: var(--primary-color);
+}
