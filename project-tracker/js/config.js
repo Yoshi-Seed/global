@@ -14,7 +14,8 @@ const GAS_CONFIG = {
   URL: "https://script.google.com/macros/s/AKfycbxptce9pO1HdTCNjCfRI5btJ0X7zAtxy4hh68w3TyfVC-5sdzHIsMfT6bcfvAXGA7XL/exec",
 
   // 任意: 簡易トークン（GAS側の TOKEN と一致させる）
-  TOKEN: "yoshi-pt-2025-secret",
+  // GAS側でTOKEN = '' の場合は、ここも '' にする
+  TOKEN: "",
 
   // キャッシュ設定（クライアント側）
   CACHE_TTL_MS: 60000,

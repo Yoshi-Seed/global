@@ -30,7 +30,8 @@ const EDIT_LOG_SHEET_NAME = 'edit_logs';
 const DELETE_CONFIRM_PHRASE = 'delete';
 
 // ✅ 安全のため、削除はTOKEN必須にする（推奨）
-const REQUIRE_TOKEN_FOR_DELETE = true;
+// TOKEN = '' の場合は false に設定する
+const REQUIRE_TOKEN_FOR_DELETE = false;
 
 // 想定カラム（20列）
 const PROJECT_HEADERS = [
