@@ -834,6 +834,22 @@
       if (el) el.value = (value ?? '');
     }
 
+    // GAS URLを構築するヘルパー関数
+    function buildGasUrl(action, params = {}) {
+      const baseUrl = GAS_CONFIG.URL;
+      const url = new URL(baseUrl);
+      url.searchParams.set('action', action);
+      if (GAS_CONFIG.TOKEN) {
+        url.searchParams.set('token', GAS_CONFIG.TOKEN);
+      }
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+          url.searchParams.set(key, String(value));
+        }
+      });
+      return url.toString();
+    }
+
     // 編集対象のIDとregistrationIdを保持するグローバル変数
     window.__editingId = null;
     window.__editingRegistrationId = null;
@@ -862,7 +878,7 @@
         }
 
         // 既存データ取得（GAS action=get）
-        const url = API_ENDPOINT + `?action=get&id=${encodeURIComponent(id)}`;
+        const url = buildGasUrl('get', { id: id });
         
         console.log('📡 データ取得開始:', url);
         

@@ -61,6 +61,10 @@ function doGet(e) {
     const params = (e && e.parameter) || {};
     const action = (params.action || 'list').toLowerCase();
 
+    // デバッグログ
+    console.log('doGet called with params:', JSON.stringify(params));
+    console.log('action:', action);
+
     if (!isAuthorized_(params)) {
       return json_({ success: false, message: 'Unauthorized' });
     }
@@ -97,6 +101,7 @@ function doGet(e) {
       updatedAt: new Date().toISOString(),
     });
   } catch (err) {
+    console.error('doGet error:', err);
     return json_({ success: false, message: String(err && err.message ? err.message : err) });
   }
 }
@@ -141,8 +146,12 @@ function doPost(e) {
 // ------------------------
 
 function handleGet_(params) {
+  console.log('handleGet_ called with params:', JSON.stringify(params));
+  
   const id = Number(params.id);
   const registrationId = String(params.registrationId || '').trim();
+
+  console.log('Parsed id:', id, 'registrationId:', registrationId);
 
   if (!id && !registrationId) {
     return json_({ success: false, message: 'id or registrationId required' });
@@ -155,12 +164,18 @@ function handleGet_(params) {
   if (id) rowIndex = findRowIndexById_(sheet, id);
   if (!rowIndex && registrationId) rowIndex = findRowIndexByRegistrationId_(sheet, registrationId);
 
+  console.log('Found rowIndex:', rowIndex);
+
   if (!rowIndex) {
     return json_({ success: false, message: 'Not found' });
   }
 
   const rowValues = sheet.getRange(rowIndex, 1, 1, PROJECT_HEADERS.length).getValues()[0];
-  return json_({ success: true, project: rowToProject_(rowValues) });
+  const project = rowToProject_(rowValues);
+  
+  console.log('Returning project:', JSON.stringify(project));
+  
+  return json_({ success: true, project: project });
 }
 
 function handleAdd_(data) {
