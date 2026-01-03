@@ -1,12 +1,10 @@
-PMRC V2 Cover-Style Web Template (HTML/CSS only)
+PMRC V2 Template — MOBILE-FIRST
 
-How to use
-1) Unzip.
-2) Replace images in /assets with your own (keep filenames or update paths in HTML):
-   - assets/hero-hands.jpg
-   - assets/plant.jpg
-3) Open index.html locally, or deploy via GitHub Pages.
+This version is optimized primarily for smartphones:
+- Default layout is single-column stacking for easy reading.
+- Desktop two-column spreads activate at >= 980px.
 
-Notes
-- No external fonts/CDNs (fast + conference-safe).
-- Designed to clearly differentiate V2 (detail booklet) from the main landing page.
+Images:
+- Put your images into /assets (or update paths in index.html):
+  - assets/hero-hands.jpg
+  - assets/plant.jpg
