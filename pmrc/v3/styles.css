@@ -87,9 +87,59 @@ a{color:inherit} img{max-width:100%;height:auto;display:block}
 .p-buttons{display:grid;grid-template-columns:1fr;gap:10px}
 .p-btn{background:var(--paper);border:1px solid rgba(0,0,0,.06);border-radius:10px;padding:16px 14px;text-align:center;font-size:16px;font-weight:800}
 .stats{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.bubble{width:132px;height:132px;border-radius:999px;display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;font-weight:900;font-size:40px;line-height:1}
-.bubble small{display:block;font-size:13px;font-weight:800;margin-top:6px;opacity:.95}
-.bubble.purple{background:var(--accent)} .bubble.gray{background:#9a9a9a}
+/* ===== Stats bubbles (fixed) ===== */
+.stats{
+  display:flex;
+  gap: 12px;
+  justify-content:center;
+  flex-wrap: wrap;
+}
+
+.bubble{
+  width: 132px;
+  height: 132px;
+  border-radius: 999px;
+
+  display:flex;
+  flex-direction: column;
+  align-items:center;
+  justify-content:center;
+
+  text-align:center;
+  padding: 12px;
+  gap: 6px;
+
+  color:#fff;
+
+  /* これで“親のfont-size爆弾”を無効化 */
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.bubble-num{
+  font-size: 40px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.bubble-label{
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.15;
+  max-width: 9.5em;
+  white-space: normal;
+}
+
+.bubble.purple{ background: var(--accent); }
+.bubble.gray{ background: #9a9a9a; }
+
+/* Desktop */
+@media (min-width: 980px){
+  .bubble{ width: 170px; height: 170px; }
+  .bubble-num{ font-size: 54px; }
+  .bubble-label{ font-size: 18px; }
+}
+
 .p-body{margin-top:16px;font-size:16px;line-height:1.65;color:#222;text-align:center}
 .p-foot{margin-top:10px;font-size:14px;line-height:1.65;color:var(--muted);text-align:center}
 
