@@ -1,0 +1,1 @@
+Place hero-hands.jpg and plant.jpg here (or update paths in HTML).
