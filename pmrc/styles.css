@@ -942,3 +942,17 @@ img{
   /* 主役位置の微調整：hands系は少し上寄せが映えること多い */
   object-position: 50% 35%;
 }
+
+.hero-media-shape{
+  position: relative;
+}
+
+.hero-media-shape::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  /* やりすぎない薄い締め */
+  background: linear-gradient(180deg, rgba(0,0,0,0.10), rgba(0,0,0,0.00) 55%);
+  pointer-events:none;
+}
+
