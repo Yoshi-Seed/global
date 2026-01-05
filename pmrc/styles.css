@@ -916,33 +916,24 @@ img{
   }
 }
 
-/* --- Hero image: keep strong even if aspect ratio changes --- */
-.hero-media-shape{
-  /* 画像の比率に負けない「見せ場の箱」を作る */
-  overflow: hidden;
-  border-radius: 16px;        /* 既存デザインに合わせて調整OK */
-  
-  /* 強さの源：高さを確保（PCで弱くならない） */
-  height: min(72vh, 680px);
-  min-height: 460px;
+/* --- Hero image: stronger crop control without breaking the existing design --- */
+/* Keep your original rounded shape + width. Add a stable “hero frame”. */
 
-  /* 横幅は既存レイアウトに合わせる（念のため） */
-  width: 100%;
+.hero-media-shape{
+  /* 既存デザイン（幅・丸み・影・hover）を活かしたまま、高さだけ定義 */
+  aspect-ratio: 4 / 5;        /* 縦寄りの写真でも“強く”見える比率。必要なら後で調整 */
+  max-height: 640px;          /* 画面が大きい時に伸びすぎない */
 }
 
-.hero-media-shape img,
-.hero-image{
+/* 画像は枠いっぱいに。主役位置を調整できるように */
+.hero-media-shape img{
   width: 100%;
   height: 100%;
-  display: block;
-
-  /* ここが勝ち筋：箱を満たして余った分はトリミング */
   object-fit: cover;
-
-  /* 主役位置の微調整：hands系は少し上寄せが映えること多い */
   object-position: 50% 35%;
 }
 
+/* 画像に薄い締め（必要なければコメントアウトしてOK） */
 .hero-media-shape{
   position: relative;
 }
@@ -951,8 +942,8 @@ img{
   content:"";
   position:absolute;
   inset:0;
-  /* やりすぎない薄い締め */
   background: linear-gradient(180deg, rgba(0,0,0,0.10), rgba(0,0,0,0.00) 55%);
   pointer-events:none;
 }
+
 
