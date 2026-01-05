@@ -915,3 +915,30 @@ img{
     page-break-inside: avoid;
   }
 }
+
+/* --- Hero image: keep strong even if aspect ratio changes --- */
+.hero-media-shape{
+  /* 画像の比率に負けない「見せ場の箱」を作る */
+  overflow: hidden;
+  border-radius: 16px;        /* 既存デザインに合わせて調整OK */
+  
+  /* 強さの源：高さを確保（PCで弱くならない） */
+  height: min(72vh, 680px);
+  min-height: 460px;
+
+  /* 横幅は既存レイアウトに合わせる（念のため） */
+  width: 100%;
+}
+
+.hero-media-shape img,
+.hero-image{
+  width: 100%;
+  height: 100%;
+  display: block;
+
+  /* ここが勝ち筋：箱を満たして余った分はトリミング */
+  object-fit: cover;
+
+  /* 主役位置の微調整：hands系は少し上寄せが映えること多い */
+  object-position: 50% 35%;
+}
