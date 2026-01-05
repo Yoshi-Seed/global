@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seed Planning - Integrity Above All</title>
+  <meta name="description" content="Seed Planning: Your trusted market research partner in Japan. Over 40 years of expertise in Medical, Pharma, and Healthcare." />
+  
+  <!-- Fonts: Playfair Display for elegance, Inter for clarity -->
+  <!-- Designed to fallback gracefully if fonts fail to load -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      /* Brand Colors - Warm, Trustworthy, Historical */
+      --bg-color: #f6efdf;       /* Warm Ivory */
+      --surface-color: #fbf6ea;  /* Lighter Ivory */
+      --text-main: #3b302b;      /* Deep Brown */
+      --text-muted: #6b5b53;     /* Muted Earth */
+      --accent: #8c5e4d;         /* Subtle Terracotta */
+      --border-light: rgba(107, 63, 45, 0.1);
+      
+      /* Layout & Spacing */
+      --container-width: 1100px;
+      --header-height: 80px;
+    }
+
+    /* Reset & Base Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      /* Fallback fonts included for robustness */
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 {
+      /* Fallback fonts for headers */
+      font-family: 'Playfair Display', Georgia, "Times New Roman", serif;
+      font-weight: 500;
+      line-height: 1.25;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+      transition: opacity 0.3s ease, color 0.3s ease;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Utilities */
+    .container {
+      max-width: var(--container-width);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .fade-in-up {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.3s; }
+    .delay-3 { animation-delay: 0.5s; }
+    .delay-4 { animation-delay: 0.7s; }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Header */
+    header {
+      height: var(--header-height);
+      display: flex;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      background: rgba(246, 239, 223, 0.95); /* Semi-transparent bg */
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand img {
+      height: 36px;
+      width: auto;
+    }
+
+    /* Simple, clean navigation */
+    .nav-links {
+      display: flex;
+      gap: 32px;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      color: var(--text-main);
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background-color: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 80px 0 100px;
+      min-height: calc(100vh - var(--header-height));
+      display: flex;
+      align-items: center;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .hero-content {
+      max-width: 540px;
+    }
+
+    .pre-title {
+      display: block;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      margin-bottom: 24px;
+      font-weight: 600;
+    }
+
+    .hero-title {
+      font-size: clamp(42px, 5vw, 64px);
+      margin-bottom: 28px;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+    }
+
+    .hero-text {
+      font-size: 17px;
+      color: var(--text-muted);
+      margin-bottom: 40px;
+      font-weight: 300;
+      line-height: 1.8;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      padding: 14px 28px;
+      background-color: var(--text-main);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: 4px;
+      letter-spacing: 0.03em;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .btn-link {
+      font-size: 14px;
+      border-bottom: 1px solid currentColor;
+      padding-bottom: 2px;
+    }
+
+    /* Image Styling */
+    .image-frame {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(59, 48, 43, 0.08);
+    }
+
+    .image-frame img {
+      width: 100%;
+      height: auto;
+      transition: transform 1.2s ease;
+    }
+    
+    .image-frame:hover img {
+      transform: scale(1.02);
+    }
+
+    /* Philosophy / Values Section */
+    .section-philosophy {
+      background-color: var(--surface-color);
+      padding: 100px 0;
+      border-top: 1px solid var(--border-light);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .philosophy-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 40px;
+    }
+
+    .section-label {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      font-weight: 600;
+      position: relative;
+      padding-top: 20px;
+    }
+    
+    .section-label::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 40px;
+      height: 1px;
+      background-color: var(--accent);
+    }
+
+    .philosophy-statement {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      line-height: 1.6;
+      color: var(--text-main);
+      margin-bottom: 32px;
+    }
+
+    .philosophy-detail {
+      font-size: 16px;
+      color: var(--text-muted);
+      max-width: 600px;
+    }
+
+    /* Expertise Section (Concrete Keywords) */
+    .section-expertise {
+      padding: 100px 0;
+    }
+
+    .expertise-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr); /* 3 columns for desktop */
+      gap: 40px;
+      margin-top: 40px;
+    }
+
+    .expertise-card h3 {
+      font-size: 20px;
+      margin-bottom: 16px;
+      color: var(--text-main);
+      border-bottom: 1px solid var(--border-light);
+      padding-bottom: 12px;
+      display: inline-block;
+    }
+
+    .expertise-list {
+      list-style: none;
+    }
+
+    .expertise-list li {
+      margin-bottom: 10px;
+      font-size: 15px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+    }
+
+    .expertise-list li::before {
+      content: '•';
+      color: var(--accent);
+      margin-right: 10px;
+      font-size: 18px;
+    }
+
+    /* Contact / Team Teaser */
+    .section-contact {
+      padding: 80px 0 100px;
+      text-align: center;
+      background-image: linear-gradient(to bottom, var(--bg-color), #efe6d3);
+    }
+
+    .contact-inner {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .contact-title {
+      font-size: 32px;
+      margin-bottom: 16px;
+    }
+
+    .contact-text {
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+
+    /* Footer */
+    footer {
+      padding: 40px 0;
+      border-top: 1px solid var(--border-light);
+      font-size: 13px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 900px) {
+      .hero-grid, .philosophy-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+      
+      .hero {
+        padding-top: 40px;
+        text-align: left;
+      }
+
+      .hero-image-wrapper {
+        order: -1; /* Image on top for mobile */
+      }
+      
+      .expertise-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+      
+      .nav-links {
+        display: none; /* Hide nav links on mobile for simplicity */
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="container header-inner fade-in-up">
+      <a href="#" class="brand">
+        <!-- Using the uploaded logo file -->
+        <img src="seedplanning_logo.png" alt="Seed Planning">
+      </a>
+      <nav class="nav-links">
+        <a href="#philosophy">Our Philosophy</a>
+        <a href="#expertise">Expertise</a>
+        <a href="Core_Values_and_Team_Seed_Planning_20251225.pdf" target="_blank">Our Team</a>
+        <a href="mailto:medb3@seedplanning.co.jp">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero container">
+      <div class="hero-grid">
+        
+        <!-- Text Content -->
+        <div class="hero-content">
+          <span class="pre-title fade-in-up delay-1">Market Research & Consulting</span>
+          
+          <h1 class="hero-title fade-in-up delay-2">
+            Integrity<br>Above All.
+          </h1>
+          
+          <!-- Adjusted Copy: Softer, Supportive, Humble -->
+          <p class="hero-text fade-in-up delay-3">
+            With 40 years of insight and a commitment to transparency, we are here to support your journey in Japan. Let us be the partner you can rely on to navigate the complexities of the market with confidence.
+          </p>
+
+          <div class="hero-actions fade-in-up delay-4">
+            <a href="#philosophy" class="btn-primary">How We Work</a>
+            <a href="Core_Values_and_Team_Seed_Planning_20251225.pdf" target="_blank" class="btn-link">View Team Profile &rarr;</a>
+          </div>
+        </div>
+
+        <!-- Visual Content -->
+        <div class="hero-image-wrapper fade-in-up delay-2">
+          <div class="image-frame">
+            <!-- Using the 'hands' image for warmth and partnership -->
+            <img src="hero-hands.jpg" alt="Hands nurturing growth - representing partnership and care">
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Philosophy Section: "Honest Communication" -->
+    <section id="philosophy" class="section-philosophy">
+      <div class="container">
+        <div class="philosophy-grid fade-in-up">
+          <div class="section-label">Our Philosophy</div>
+          <div>
+            <p class="philosophy-statement">
+              “We believe that true partnership begins with honest communication. When feasibility is challenging, we share that reality openly—so you can make decisions grounded in fact, not just hope.”
+            </p>
+            <p class="philosophy-detail">
+              We don’t just deliver data; we aim to provide the clarity you need. By speaking up early and respecting the unique context of the Japanese market, we help ensure your projects are built on a foundation of trust.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Expertise Section: Concrete Keywords -->
+    <section id="expertise" class="section-expertise container">
+      <div class="section-label fade-in-up">Our Expertise</div>
+      <div class="expertise-grid fade-in-up delay-1">
+        
+        <!-- Card 1: Medical & Pharma -->
+        <div class="expertise-card">
+          <h3>Medical & Pharma</h3>
+          <ul class="expertise-list">
+            <li>New Drug Development</li>
+            <li>Medical Devices & DX</li>
+            <li>Rare Diseases & Oncology</li>
+            <li>Regulatory Landscape</li>
+          </ul>
+        </div>
+
+        <!-- Card 2: Research Methods -->
+        <div class="expertise-card">
+          <h3>Research Capabilities</h3>
+          <ul class="expertise-list">
+            <li>Qualitative (KOL Interviews)</li>
+            <li>Quantitative Surveys</li>
+            <li>Feasibility Studies</li>
+            <li>Patient Journey Mapping</li>
+          </ul>
+        </div>
+
+        <!-- Card 3: Market Access -->
+        <div class="expertise-card">
+          <h3>Market Strategy</h3>
+          <ul class="expertise-list">
+            <li>Market Entry Support</li>
+            <li>Competitor Analysis</li>
+            <li>Pricing & Reimbursement</li>
+            <li>Partner Identification</li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Contact / Team CTA -->
+    <section class="section-contact">
+      <div class="container contact-inner fade-in-up">
+        <h2 class="contact-title">Meet Your Partners in Japan</h2>
+        <p class="contact-text">
+          Our bilingual team is ready to listen to your challenges and find the right path forward together.
+        </p>
+        <a href="mailto:medb3@seedplanning.co.jp" class="btn-primary">Connect With Us</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 Seed Planning Inc. All rights reserved. | Tokyo, Japan</p>
+    </div>
+  </footer>
+
+</body>
+</html>
