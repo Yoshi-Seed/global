@@ -164,14 +164,54 @@
           </p>
         </div>
 
-        <div class="snapshot-grid fade-in">
-          <article class="snapshot"><div class="dot" aria-hidden="true"></div><h4>神経領域に関する調査</h4><p>臨床現場の運用を踏まえた実装視点。日本における診療フロー、モニタリング要件、患者導線が、現場実装に与える影響を整理しました。</p></article>
-          <article class="snapshot"><div class="dot" aria-hidden="true"></div><h4>早期ステージの疾患理解</h4><p>疾患マネジメントが初期段階でどう行われるかを把握。識別・紹介・フォローアップの在り方が日本でどう異なるかを検討しました。</p></article>
-          <article class="snapshot"><div class="dot" aria-hidden="true"></div><h4>代謝・慢性疾患領域</h4><p>競争環境下の治療選択ダイナミクス。治療選択のドライバー、期待、スイッチ行動を、日本の意思決定文脈で読み解きました。</p></article>
-          <article class="snapshot"><div class="dot" aria-hidden="true"></div><h4>専門医セグメント調査</h4><p>厳格なスクリーニングを伴うリクルート。早期の実現性評価と透明性の高いコミュニケーションが、品質と納期の鍵となりました。</p></article>
-          <article class="snapshot"><div class="dot" aria-hidden="true"></div><h4>医師の定量調査</h4><p>変化の速い治療領域。サンプリング設計とデータ解釈を丁寧に行い、変動の中でも信頼できる示唆を担保しました。</p></article>
-          <article class="snapshot"><div class="dot" aria-hidden="true"></div><h4>レコードベース調査</h4><p>臨床の現実に根ざした戦略づくり。レコードデータ収集により、事実ベースの臨床パターンと治療実態を捉えました。</p></article>
+        <!-- Carousel -->
+        <div class="snapshot-carousel fade-in" data-snapshots-carousel>
+          <button class="snapshots-nav prev" type="button" aria-label="前へ" data-snapshots-prev>‹</button>
+
+          <div class="snapshots-viewport" data-snapshots-viewport>
+            <div class="snapshots-track" data-snapshots-track>
+              <article class="snapshot">
+                <div class="dot" aria-hidden="true"></div>
+                <h4>神経領域に関する調査</h4>
+                <p>臨床現場の運用を踏まえた実装視点。日本における診療フロー、モニタリング要件、患者導線が、現場実装に与える影響を整理しました。</p>
+              </article>
+
+              <article class="snapshot">
+                <div class="dot" aria-hidden="true"></div>
+                <h4>早期ステージの疾患理解</h4>
+                <p>疾患マネジメントが初期段階でどう行われるかを把握。識別・紹介・フォローアップの在り方が日本でどう異なるかを検討しました。</p>
+              </article>
+
+              <article class="snapshot">
+                <div class="dot" aria-hidden="true"></div>
+                <h4>代謝・慢性疾患領域</h4>
+                <p>競争環境下の治療選択ダイナミクス。治療選択のドライバー、期待、スイッチ行動を、日本の意思決定文脈で読み解きました。</p>
+              </article>
+
+              <article class="snapshot">
+                <div class="dot" aria-hidden="true"></div>
+                <h4>専門医セグメント調査</h4>
+                <p>厳格なスクリーニングを伴うリクルート。早期の実現性評価と透明性の高いコミュニケーションが、品質と納期の鍵となりました。</p>
+              </article>
+
+              <article class="snapshot">
+                <div class="dot" aria-hidden="true"></div>
+                <h4>医師の定量調査</h4>
+                <p>変化の速い治療領域。サンプリング設計とデータ解釈を丁寧に行い、変動の中でも信頼できる示唆を担保しました。</p>
+              </article>
+
+              <article class="snapshot">
+                <div class="dot" aria-hidden="true"></div>
+                <h4>レコードベース調査</h4>
+                <p>臨床の現実に根ざした戦略づくり。レコードデータ収集により、事実ベースの臨床パターンと治療実態を捉えました。</p>
+              </article>
+            </div>
+          </div>
+
+          <button class="snapshots-nav next" type="button" aria-label="次へ" data-snapshots-next>›</button>
         </div>
+
+        <div class="snapshots-dots" aria-label="カルーセルページネーション" data-snapshots-dots></div>
       </div>
     </section>
 
@@ -349,6 +389,111 @@
         tip.style.transitionDelay = `${index * 0.1}s`;
       });
     });
+  </script>
+
+  <script>
+(() => {
+  const root = document.querySelector('[data-snapshots-carousel]');
+  if (!root) return;
+
+  const viewport = root.querySelector('[data-snapshots-viewport]');
+  const track = root.querySelector('[data-snapshots-track]');
+  const prevBtn = root.querySelector('[data-snapshots-prev]');
+  const nextBtn = root.querySelector('[data-snapshots-next]');
+  const dotsWrap = document.querySelector('[data-snapshots-dots]');
+
+  const cards = Array.from(track.children);
+  if (cards.length === 0) return;
+
+  const getStep = () => {
+    const card = cards[0].getBoundingClientRect();
+    const style = getComputedStyle(track);
+    const gap = parseFloat(style.columnGap || style.gap || 0);
+    return card.width + gap;
+  };
+
+  const getIndex = () => {
+    const step = getStep();
+    return Math.round(viewport.scrollLeft / step);
+  };
+
+  const renderDots = () => {
+    if (!dotsWrap) return;
+    dotsWrap.innerHTML = '';
+    cards.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('aria-label', `スライド ${i + 1} へ移動`);
+      b.addEventListener('click', () => {
+        viewport.scrollTo({ left: getStep() * i, behavior: 'smooth' });
+      });
+      dotsWrap.appendChild(b);
+    });
+  };
+
+  const updateUI = () => {
+    const i = getIndex();
+    const max = cards.length - 1;
+    if (prevBtn) prevBtn.disabled = i <= 0;
+    if (nextBtn) nextBtn.disabled = i >= max;
+
+    if (dotsWrap) {
+      Array.from(dotsWrap.children).forEach((d, idx) => {
+        d.setAttribute('aria-current', idx === i ? 'true' : 'false');
+      });
+    }
+  };
+
+  prevBtn?.addEventListener('click', () => {
+    viewport.scrollBy({ left: -getStep(), behavior: 'smooth' });
+  });
+
+  nextBtn?.addEventListener('click', () => {
+    viewport.scrollBy({ left: getStep(), behavior: 'smooth' });
+  });
+
+  // Drag (mouse/touch)
+  let isDown = false;
+  let startX = 0;
+  let startLeft = 0;
+
+  const down = (e) => {
+    isDown = true;
+    track.classList.add('is-dragging');
+    startX = e.pageX ?? e.touches?.[0]?.pageX ?? 0;
+    startLeft = viewport.scrollLeft;
+  };
+
+  const move = (e) => {
+    if (!isDown) return;
+    const x = e.pageX ?? e.touches?.[0]?.pageX ?? 0;
+    const dx = startX - x;
+    viewport.scrollLeft = startLeft + dx;
+  };
+
+  const up = () => {
+    if (!isDown) return;
+    isDown = false;
+    track.classList.remove('is-dragging');
+
+    const i = getIndex();
+    viewport.scrollTo({ left: getStep() * i, behavior: 'smooth' });
+  };
+
+  track.addEventListener('mousedown', down);
+  window.addEventListener('mousemove', move);
+  window.addEventListener('mouseup', up);
+
+  track.addEventListener('touchstart', down, { passive: true });
+  track.addEventListener('touchmove', move, { passive: true });
+  track.addEventListener('touchend', up);
+
+  // Init
+  renderDots();
+  updateUI();
+  viewport.addEventListener('scroll', () => requestAnimationFrame(updateUI));
+  window.addEventListener('resize', () => requestAnimationFrame(updateUI));
+})();
   </script>
 </body>
 </html>
