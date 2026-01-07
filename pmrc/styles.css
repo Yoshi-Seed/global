@@ -1128,7 +1128,7 @@ img{
 .contact-left::before{
   content:"";
   position:absolute;
-  inset:-40px -60px auto auto;
+  inset:-40px auto auto -60px;
   width: 320px;
   height: 320px;
   border-radius: 50%;
