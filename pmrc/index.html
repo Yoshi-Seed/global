@@ -455,17 +455,108 @@ If your email app doesn’t open, please contact us at:
     });
   </script>
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const track = document.querySelector('.snapshots-track');
-    const prev = document.querySelector('[data-snapshots-prev]');
-    const next = document.querySelector('[data-snapshots-next]');
-    if (!track) return;
+(() => {
+  const root = document.querySelector('[data-snapshots-carousel]');
+  if (!root) return;
 
-    const step = () => track.querySelector('.snapshot-card')?.getBoundingClientRect().width + 18 || 360;
+  const viewport = root.querySelector('[data-snapshots-viewport]');
+  const track = root.querySelector('[data-snapshots-track]');
+  const prevBtn = root.querySelector('[data-snapshots-prev]');
+  const nextBtn = root.querySelector('[data-snapshots-next]');
+  const dotsWrap = document.querySelector('[data-snapshots-dots]');
 
-    prev?.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
-    next?.addEventListener('click', () => track.scrollBy({ left:  step(), behavior: 'smooth' }));
+  const cards = Array.from(track.children);
+  if (cards.length === 0) return;
+
+  const getStep = () => {
+    const card = cards[0].getBoundingClientRect();
+    const style = getComputedStyle(track);
+    const gap = parseFloat(style.columnGap || style.gap || 0);
+    return card.width + gap;
+  };
+
+  const getIndex = () => {
+    const step = getStep();
+    return Math.round(viewport.scrollLeft / step);
+  };
+
+  const renderDots = () => {
+    if (!dotsWrap) return;
+    dotsWrap.innerHTML = '';
+    cards.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('aria-label', `Go to slide ${i + 1}`);
+      b.addEventListener('click', () => {
+        viewport.scrollTo({ left: getStep() * i, behavior: 'smooth' });
+      });
+      dotsWrap.appendChild(b);
+    });
+  };
+
+  const updateUI = () => {
+    const i = getIndex();
+    const max = cards.length - 1;
+    if (prevBtn) prevBtn.disabled = i <= 0;
+    if (nextBtn) nextBtn.disabled = i >= max;
+
+    if (dotsWrap) {
+      Array.from(dotsWrap.children).forEach((d, idx) => {
+        d.setAttribute('aria-current', idx === i ? 'true' : 'false');
+      });
+    }
+  };
+
+  prevBtn?.addEventListener('click', () => {
+    viewport.scrollBy({ left: -getStep(), behavior: 'smooth' });
   });
+
+  nextBtn?.addEventListener('click', () => {
+    viewport.scrollBy({ left: getStep(), behavior: 'smooth' });
+  });
+
+  // Drag (mouse/touch)
+  let isDown = false;
+  let startX = 0;
+  let startLeft = 0;
+
+  const down = (e) => {
+    isDown = true;
+    track.classList.add('is-dragging');
+    startX = e.pageX ?? e.touches?.[0]?.pageX ?? 0;
+    startLeft = viewport.scrollLeft;
+  };
+
+  const move = (e) => {
+    if (!isDown) return;
+    const x = e.pageX ?? e.touches?.[0]?.pageX ?? 0;
+    const dx = startX - x;
+    viewport.scrollLeft = startLeft + dx;
+  };
+
+  const up = () => {
+    if (!isDown) return;
+    isDown = false;
+    track.classList.remove('is-dragging');
+
+    const i = getIndex();
+    viewport.scrollTo({ left: getStep() * i, behavior: 'smooth' });
+  };
+
+  track.addEventListener('mousedown', down);
+  window.addEventListener('mousemove', move);
+  window.addEventListener('mouseup', up);
+
+  track.addEventListener('touchstart', down, { passive: true });
+  track.addEventListener('touchmove', move, { passive: true });
+  track.addEventListener('touchend', up);
+
+  // Init
+  renderDots();
+  updateUI();
+  viewport.addEventListener('scroll', () => requestAnimationFrame(updateUI));
+  window.addEventListener('resize', () => requestAnimationFrame(updateUI));
+})();
 </script>
 
 
