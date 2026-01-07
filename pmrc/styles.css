@@ -1291,3 +1291,36 @@ img{
   color: #2f1b12;        /* 濃いブラウン or ダークグレー */
   background-color: #ffffff;
 }
+
+/* 横スクロールのレール */
+.snapshots-track{
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  padding: 18px 6px 8px;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* スクロールバーを薄く（好み） */
+.snapshots-track::-webkit-scrollbar{ height: 10px; }
+.snapshots-track::-webkit-scrollbar-thumb{
+  background: rgba(0,0,0,0.12);
+  border-radius: 999px;
+}
+
+/* 1枚のカード：これが“溢れ”を作る */
+.snapshot-card{
+  flex: 0 0 320px;          /* ここが重要：固定幅で overflow を作る */
+  scroll-snap-align: start;
+  border: 1px solid rgba(0,0,0,0.10);
+  border-radius: 14px;
+  padding: 18px 18px 16px;
+  background: rgba(255,255,255,0.40);
+}
+
+/* PCは少し広げてもOK */
+@media (min-width: 900px){
+  .snapshot-card{ flex-basis: 360px; }
+}
