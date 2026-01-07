@@ -1310,6 +1310,7 @@ select#topic option {
 .snapshot-carousel{
   position: relative;
   margin-top: 14px;
+  padding: 0 30px; /* ボタン用のスペースを確保 */
 }
 
 .snapshots-viewport{
@@ -1389,8 +1390,8 @@ select#topic option {
   box-shadow: 0 6px 18px rgba(107, 63, 45, .25);
 }
 
-.snapshots-nav.prev{ left: 10px; }
-.snapshots-nav.next{ right: 10px; }
+.snapshots-nav.prev{ left: -20px; }
+.snapshots-nav.next{ right: -20px; }
 
 .snapshots-nav:disabled{
   opacity: 0.3;
@@ -1430,12 +1431,13 @@ select#topic option {
 
 @media (max-width: 520px){
   .snapshots-nav{ 
-    width: 44px; 
-    height: 44px;
-    font-size: 24px;
+    width: 40px; 
+    height: 40px;
+    font-size: 22px;
+    background: rgba(251, 246, 234, 0.95);
   }
-  .snapshots-nav.prev{ left: 8px; }
-  .snapshots-nav.next{ right: 8px; }
+  .snapshots-nav.prev{ left: -16px; }
+  .snapshots-nav.next{ right: -16px; }
   
   .snapshots-dots{
     margin-top: 20px;
