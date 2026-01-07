@@ -1446,3 +1446,30 @@ img{
   .snapshots-track{ scroll-behavior: auto; }
 }
 
+/* Right footer column: force vertical stacking */
+.footer-col-right {
+  display: flex;
+  justify-content: flex-end; /* optional: keeps it pushed to the right if grid is flex */
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;   /* ←縦積みの決定打 */
+  align-items: flex-start;  /* 左揃え（右揃えにしたければ flex-end） */
+  gap: 8px;
+}
+
+.footer-logo {
+  display: block;
+  max-width: 180px;
+  height: auto;
+}
+
+.footer-unit {
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.footer-email {
+  text-decoration: underline;
+}
