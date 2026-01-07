@@ -1479,6 +1479,18 @@ select#topic option {
 .footer-unit {
   font-weight: 600;
   line-height: 1.2;
+  color: var(--brand); /* 茶色 #6b3f2d */
+}
+
+.footer-link {
+  color: var(--muted);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  transition: var(--transition-fast);
+}
+
+.footer-link:hover {
+  color: var(--brand);
 }
 
 .footer-email {
