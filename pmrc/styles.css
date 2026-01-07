@@ -1292,39 +1292,6 @@ img{
   background-color: #ffffff;
 }
 
-/* 横スクロールのレール */
-.snapshots-track{
-  display: flex;
-  gap: 18px;
-  overflow-x: auto;
-  padding: 18px 6px 8px;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* スクロールバーを薄く（好み） */
-.snapshots-track::-webkit-scrollbar{ height: 10px; }
-.snapshots-track::-webkit-scrollbar-thumb{
-  background: rgba(0,0,0,0.12);
-  border-radius: 999px;
-}
-
-/* 1枚のカード：これが“溢れ”を作る */
-.snapshot-card{
-  flex: 0 0 320px;          /* ここが重要：固定幅で overflow を作る */
-  scroll-snap-align: start;
-  border: 1px solid rgba(0,0,0,0.10);
-  border-radius: 14px;
-  padding: 18px 18px 16px;
-  background: rgba(255,255,255,0.40);
-}
-
-/* PCは少し広げてもOK */
-@media (min-width: 900px){
-  .snapshot-card{ flex-basis: 360px; }
-}
-
 /* =========================
    Selected Work Snapshots Carousel
    ========================= */
@@ -1335,8 +1302,20 @@ img{
 }
 
 .snapshots-viewport{
-  overflow: hidden;
+  overflow-x: scroll;
+  overflow-y: hidden;
   border-radius: 16px;
+  position: relative;
+  scroll-behavior: smooth;
+}
+
+/* Hide scrollbar completely to force button/dot navigation */
+.snapshots-viewport::-webkit-scrollbar{
+  display: none;
+}
+.snapshots-viewport{
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .snapshots-track{
@@ -1355,60 +1334,111 @@ img{
 .section-perspective .snapshot{
   flex: 0 0 min(420px, 78vw);
   scroll-snap-align: start;
-  border: 1px solid rgba(0,0,0,0.10);
+  border: 1px solid rgba(107, 63, 45, .15);
   border-radius: 14px;
-  padding: 18px 18px 16px;
-  background: rgba(255,255,255,0.55);
+  padding: 24px;
+  background: var(--surface);
   backdrop-filter: blur(4px);
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.section-perspective .snapshot:hover{
+  transform: translateY(-6px);
+  box-shadow: var(--shadow);
+  border-color: rgba(107, 63, 45, .3);
+  background: rgba(251, 246, 234, 1);
 }
 
 .snapshots-nav{
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 42px;
-  height: 42px;
+  width: 48px;
+  height: 48px;
   border-radius: 999px;
-  border: 1px solid rgba(0,0,0,0.12);
-  background: rgba(255,255,255,0.80);
-  color: #2a1a14;
+  border: 2px solid rgba(107, 63, 45, .6);
+  background: var(--surface);
+  color: var(--brand);
   display: grid;
   place-items: center;
   cursor: pointer;
-  z-index: 2;
+  z-index: 10;
+  font-size: 28px;
+  font-weight: bold;
+  transition: var(--transition-fast);
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
 }
 
-.snapshots-nav.prev{ left: 6px; }
-.snapshots-nav.next{ right: 6px; }
+.snapshots-nav:hover:not(:disabled){
+  background: var(--brand);
+  color: white;
+  border-color: var(--brand);
+  transform: translateY(-50%) scale(1.15);
+  box-shadow: 0 6px 18px rgba(107, 63, 45, .25);
+}
+
+.snapshots-nav.prev{ left: 10px; }
+.snapshots-nav.next{ right: 10px; }
 
 .snapshots-nav:disabled{
-  opacity: 0.35;
-  cursor: default;
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .snapshots-dots{
   display: flex;
-  gap: 8px;
+  gap: 12px;
   justify-content: center;
-  margin-top: 10px;
+  margin-top: 24px;
+  padding: 8px;
 }
 
 .snapshots-dots button{
-  width: 8px;
-  height: 8px;
+  width: 12px;
+  height: 12px;
   border-radius: 999px;
   border: none;
-  background: rgba(0,0,0,0.18);
+  background: rgba(107, 63, 45, .2);
   cursor: pointer;
+  transition: var(--transition-fast);
+  padding: 0;
+}
+
+.snapshots-dots button:hover{
+  background: rgba(107, 63, 45, .4);
+  transform: scale(1.3);
 }
 
 .snapshots-dots button[aria-current="true"]{
-  background: rgba(0,0,0,0.45);
-  transform: scale(1.25);
+  background: var(--brand);
+  width: 32px;
+  border-radius: 6px;
 }
 
 @media (max-width: 520px){
-  .snapshots-nav{ width: 38px; height: 38px; }
+  .snapshots-nav{ 
+    width: 44px; 
+    height: 44px;
+    font-size: 24px;
+  }
+  .snapshots-nav.prev{ left: 8px; }
+  .snapshots-nav.next{ right: 8px; }
+  
+  .snapshots-dots{
+    margin-top: 20px;
+    gap: 10px;
+  }
+  
+  .snapshots-dots button{
+    width: 10px;
+    height: 10px;
+  }
+  
+  .snapshots-dots button[aria-current=\"true\"]{
+    width: 28px;
+  }
   .section-perspective .snapshot{ flex-basis: 86vw; }
 }
 
