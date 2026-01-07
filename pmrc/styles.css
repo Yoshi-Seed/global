@@ -77,7 +77,7 @@ img{
   position:sticky; 
   top:0; 
   z-index:50;
-  background: color-mix(in srgb, var(--bg) 92%, white 8%);
+  background: #ffffff;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(107, 63, 45, .08);
@@ -176,12 +176,31 @@ img{
 .hero-media-shape{
   width: min(440px, 100%);
   border-radius: 16px; /* 12〜22くらいで好み */
-}
-  overflow:hidden;
+  overflow: hidden;
   box-shadow: var(--shadow-lg);
   background: white;
   transition: var(--transition);
   transform-origin: center;
+
+  /* A stable “hero frame” */
+  aspect-ratio: 4 / 5;
+  max-height: 640px;
+  position: relative;
+}
+
+.hero-media-shape img{ 
+  width:100%; 
+  height:100%; 
+  object-fit: cover;
+  object-position: 50% 35%;
+}
+
+.hero-media-shape::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.10), rgba(0,0,0,0.00) 55%);
+  pointer-events:none;
 }
 
 .hero-media-shape:hover{
@@ -462,18 +481,29 @@ img{
   line-height: 1.7;
 }
 
-/* Snapshot Grid */
-.snapshot-grid{ 
-  display:grid; 
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-  gap: 28px;
+/* Selected Work Snapshots — light carousel (desktop + mobile) */
+.snapshot-grid{
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(300px, 360px);
+  gap: 20px;
   margin-top: 32px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding: 8px 4px 14px;
+  margin-left: -4px;
+  margin-right: -4px;
 }
+
+.snapshot-grid::-webkit-scrollbar{ display: none; }
+.snapshot-grid{ scrollbar-width: none; }
 
 .snapshot{ 
   padding: 16px 4px;
   transition: var(--transition);
   border-radius: 12px;
+  scroll-snap-align: start;
 }
 
 .snapshot:hover{
@@ -917,34 +947,335 @@ img{
   }
 }
 
-/* --- Hero image: stronger crop control without breaking the existing design --- */
-/* Keep your original rounded shape + width. Add a stable “hero frame”. */
-
-.hero-media-shape{
-  /* 既存デザイン（幅・丸み・影・hover）を活かしたまま、高さだけ定義 */
-  aspect-ratio: 4 / 5;        /* 縦寄りの写真でも“強く”見える比率。必要なら後で調整 */
-  max-height: 640px;          /* 画面が大きい時に伸びすぎない */
+/* ------------------------------------------------------------
+   What We Do
+------------------------------------------------------------ */
+.section-what{
+  padding-top: 64px;
+  padding-bottom: 64px;
 }
 
-/* 画像は枠いっぱいに。主役位置を調整できるように */
-.hero-media-shape img{
+.what-grid{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 26px;
+}
+
+.what-card{
+  background: color-mix(in srgb, var(--surface) 92%, white 8%);
+  border: 1px solid rgba(107,63,45,.15);
+  border-radius: var(--radius);
+  padding: 24px;
+  transition: var(--transition-fast);
+}
+
+.what-card:hover{
+  transform: translateY(-4px);
+  background: white;
+  box-shadow: var(--shadow);
+}
+
+.what-card h3{
+  margin: 0 0 10px;
+  font-family: var(--serif);
+  color: var(--brand);
+  font-size: 22px;
+  line-height: 1.25;
+}
+
+.what-card p{
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.what-link{
+  margin-top: 22px;
+}
+
+.inline-link{
+  color: var(--brand);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.inline-link:hover{
+  color: color-mix(in srgb, var(--brand) 70%, black 30%);
+}
+
+@media (max-width: 860px){
+  .what-grid{
+    grid-template-columns: 1fr;
+  }
+}
+
+
+
+/* ------------------------------------------------------------
+   Meet the Japan Team — featured block
+------------------------------------------------------------ */
+.team-feature{
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--brand) 0%, color-mix(in srgb, var(--brand) 78%, black 22%) 100%);
+  box-shadow: var(--shadow);
+}
+
+.team-media{
+  min-height: 360px;
+}
+
+.team-media img{
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 35%;
+  filter: grayscale(100%);
+  opacity: .94;
 }
 
-/* 画像に薄い締め（必要なければコメントアウトしてOK） */
-.hero-media-shape{
+.team-copy{
+  padding: 44px 42px;
+  color: rgba(255,255,255,.92);
+}
+
+.team-copy .section-title{
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.team-tagline{
+  margin: 0 0 14px;
+  font-weight: 600;
+  letter-spacing: .02em;
+  color: rgba(255,255,255,.78);
+}
+
+.team-copy .section-intro{
+  color: rgba(255,255,255,.84);
+  margin-bottom: 0;
+}
+
+.team-actions{
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 22px;
+}
+
+.team-fineprint{
+  margin-top: 18px;
+  font-size: 14px;
+  color: rgba(255,255,255,.74);
+}
+
+.team-fineprint a{
+  color: rgba(255,255,255,.92);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+@media (max-width: 900px){
+  .team-feature{
+    grid-template-columns: 1fr;
+  }
+  .team-media{
+    min-height: 260px;
+    max-height: 360px;
+  }
+  .team-copy{
+    padding: 34px 24px;
+  }
+}
+
+
+/* ------------------------------------------------------------
+   Contact — two-panel form (with gentle “no pressure” tone)
+------------------------------------------------------------ */
+.section-contact{
+  padding-top: 70px;
+  padding-bottom: 70px;
+}
+
+.contact-shell{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.contact-left{
   position: relative;
+  padding: 46px 42px;
+  color: rgba(255,255,255,.96);
+
+  /* Warm, image-like panel using layered gradients (keeps a calm, non-SaaS feel). */
+  background:
+    radial-gradient(900px 500px at 10% 20%, rgba(255,255,255,.22), rgba(255,255,255,0) 55%),
+    radial-gradient(700px 420px at 70% 20%, rgba(255,255,255,.14), rgba(255,255,255,0) 60%),
+    radial-gradient(520px 520px at 35% 85%, rgba(255,255,255,.10), rgba(255,255,255,0) 60%),
+    linear-gradient(135deg,
+      color-mix(in srgb, var(--accent) 92%, white 8%) 0%,
+      color-mix(in srgb, var(--accent) 70%, var(--brand) 30%) 100%
+    );
 }
 
-.hero-media-shape::after{
+.contact-left::before{
   content:"";
   position:absolute;
-  inset:0;
-  background: linear-gradient(180deg, rgba(0,0,0,0.10), rgba(0,0,0,0.00) 55%);
-  pointer-events:none;
+  inset:-40px -60px auto auto;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.16);
+  filter: blur(2px);
+}
+
+.contact-kicker{
+  margin: 0 0 18px;
+  font-weight: 600;
+  letter-spacing: .03em;
+  opacity: .92;
+}
+
+.contact-title{
+  margin: 0 0 16px;
+  font-family: var(--serif);
+  font-size: clamp(34px, 4.2vw, 56px);
+  line-height: 1.05;
+  color: #fff;
+}
+
+.contact-lede{
+  margin: 0 0 24px;
+  max-width: 34ch;
+  color: rgba(255,255,255,.92);
+  line-height: 1.7;
+}
+
+.contact-meta{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 18px;
+  margin-top: 28px;
+}
+
+.contact-meta a{
+  color: rgba(255,255,255,.95);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.contact-right{
+  padding: 46px 42px;
+  color: rgba(255,255,255,.92);
+  background: linear-gradient(135deg, var(--brand) 0%, color-mix(in srgb, var(--brand) 80%, black 20%) 100%);
+}
+
+.contact-form{
+  display: grid;
+  gap: 14px;
+}
+
+.field label{
+  display: block;
+  font-size: 13px;
+  margin-bottom: 8px;
+  color: rgba(255,255,255,.82);
+}
+
+.field input,
+.field select,
+.field textarea{
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.95);
+  outline: none;
+  transition: var(--transition-fast);
+}
+
+.field textarea{
+  resize: vertical;
+  min-height: 120px;
+}
+
+.field input::placeholder{
+  color: rgba(255,255,255,.62);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus{
+  border-color: rgba(255,138,61,.75);
+  box-shadow: 0 0 0 4px rgba(255,138,61,.18);
+}
+
+.contact-submit{
+  width: 100%;
+  margin-top: 6px;
+  padding: 14px 20px;
+  border-radius: 14px;
+}
+
+.form-note{
+  margin-top: 14px;
+  margin-bottom: 0;
+  color: rgba(255,255,255,.70);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.form-status{
+  margin: 10px 0 0;
+  font-size: 13px;
+  min-height: 18px;
+  color: rgba(255,255,255,.80);
+}
+
+.form-status.is-success{
+  color: rgba(255,255,255,.92);
+}
+
+.form-status.is-error{
+  color: rgba(255,255,255,.92);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+@media (max-width: 980px){
+  .contact-shell{
+    grid-template-columns: 1fr;
+  }
+  .contact-left,
+  .contact-right{
+    padding: 34px 24px;
+  }
+  .contact-lede{
+    max-width: none;
+  }
 }
 
 
+/* ------------------------------------------------------------
+   Tips — center 4 & 5 on desktop for visual balance
+------------------------------------------------------------ */
+@media (min-width: 960px){
+  .tips-grid{
+    grid-template-columns: repeat(6, 1fr);
+  }
+  .tips-grid .tip{
+    grid-column: span 2;
+  }
+  .tips-grid .tip:nth-child(4){
+    grid-column: 2 / span 2;
+  }
+  .tips-grid .tip:nth-child(5){
+    grid-column: 4 / span 2;
+  }
+}
