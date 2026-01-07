@@ -411,5 +411,20 @@ If your email app doesn’t open, please contact us at:
 
     });
   </script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const track = document.querySelector('.snapshots-track');
+    const prev = document.querySelector('[data-snapshots-prev]');
+    const next = document.querySelector('[data-snapshots-next]');
+    if (!track) return;
+
+    const step = () => track.querySelector('.snapshot-card')?.getBoundingClientRect().width + 18 || 360;
+
+    prev?.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+    next?.addEventListener('click', () => track.scrollBy({ left:  step(), behavior: 'smooth' }));
+  });
+</script>
+
+
 </body>
 </html>
