@@ -26,6 +26,7 @@ html{
   scroll-behavior:smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  scroll-padding-top: 100px; /* ヘッダー分の余白を確保 */
 }
 
 body{
@@ -310,6 +311,7 @@ img{
 /* Sections */
 .section{ 
   padding: 80px 0;
+  scroll-margin-top: 100px; /* アンカーリンク時のオフセット */
 }
 
 .section-title{
