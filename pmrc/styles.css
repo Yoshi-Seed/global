@@ -1281,15 +1281,24 @@ img{
 }
 
 /* select 本体（閉じているとき） */
-.form-panel select {
-  color: #ffffff;
-  background-color: rgba(255,255,255,0.06);
+.field select {
+  color: rgba(255,255,255,.95);
+  background: rgba(255,255,255,.06);
 }
 
-/* ドロップダウンの中身 */
-.form-panel select option {
-  color: #2f1b12;        /* 濃いブラウン or ダークグレー */
-  background-color: #ffffff;
+/* ドロップダウンの中身 - より強力なセレクタで確実に適用 */
+.field select option,
+.contact-form select option,
+select#topic option {
+  color: #2f1b12 !important;        /* 濃いブラウン - 読みやすい */
+  background-color: #ffffff !important;
+}
+
+/* デフォルト選択肢（Please select）も見えるように */
+.field select option[disabled],
+.contact-form select option[disabled] {
+  color: #999999 !important;
+  background-color: #f5f5f5 !important;
 }
 
 /* =========================
