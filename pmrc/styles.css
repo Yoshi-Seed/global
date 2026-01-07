@@ -1279,3 +1279,15 @@ img{
     grid-column: 4 / span 2;
   }
 }
+
+/* select 本体（閉じているとき） */
+.form-panel select {
+  color: #ffffff;
+  background-color: rgba(255,255,255,0.06);
+}
+
+/* ドロップダウンの中身 */
+.form-panel select option {
+  color: #2f1b12;        /* 濃いブラウン or ダークグレー */
+  background-color: #ffffff;
+}
