@@ -1,0 +1,101 @@
+[
+  {
+    "min": 0,
+    "max": 20001,
+    "level": "critical",
+    "recommended": {
+      "jp": "0〜2名（現実的には0〜1名の可能性も）",
+      "en": "0–2 interviews (sometimes 0–1 may be realistic)"
+    },
+    "jp": "非常に患者数が少ないため、リクルートが現実的ではありません。SNS経由で長期リクルート期間を確保する必要があります。",
+    "en": "The recruitable population is extremely small, so recruitment is not realistic through standard panels. You will likely need a long recruitment window and SNS/social-media outreach."
+  },
+  {
+    "min": 20001,
+    "max": 50001,
+    "level": "critical",
+    "recommended": {
+      "jp": "2〜3名",
+      "en": "~2–3 interviews"
+    },
+    "jp": "非常に患者数が少ないため、リクルートがかなり厳しいです。罹患しているという条件のみでも見込み数は数人程度です。",
+    "en": "The population is very small, so recruitment will be extremely challenging. Even with only the diagnosis criterion, you may only get a handful of candidates."
+  },
+  {
+    "min": 50001,
+    "max": 80001,
+    "level": "warning",
+    "recommended": {
+      "jp": "3〜4名",
+      "en": "~3–4 interviews"
+    },
+    "jp": "患者数が少ないため、パネルに登録されていなければリクルートは現実的ではありません。過去に3名程度の実績があります。3Hや医師の紹介、SNSターゲットを併用しても3〜4人が現実的な数字です。",
+    "en": "Because the population is small, recruitment is not realistic unless patients are already registered in a panel. We have past experience of recruiting around 3 participants in conditions of this size. Even when combining 3H, physician referral, and targeted SNS, ~3–4 interviews is a realistic expectation."
+  },
+  {
+    "min": 80001,
+    "max": 120001,
+    "level": "warning",
+    "recommended": {
+      "jp": "5名程度",
+      "en": "~5 interviews"
+    },
+    "jp": "希少疾患ほどではありませんが、患者数が少ない疾患です。パネルに登録されていなかった場合はリクルートが難航します。同規模の患者数の疾患で5名程度の過去実績があります。",
+    "en": "Not as rare as ultra-rare diseases, but still a small population. If patients are not registered in panels, recruitment may be difficult. We have past experience of recruiting ~5 participants for conditions with a similar population size."
+  },
+  {
+    "min": 120001,
+    "max": 150001,
+    "level": "caution",
+    "recommended": {
+      "jp": "5〜6名",
+      "en": "~5–6 interviews"
+    },
+    "jp": "患者数は限定的で、条件が増えると難易度が一気に上がります。パネル登録状況と併用チャネル（医師紹介／SNS等）次第で、5〜6名が目安です。",
+    "en": "The population is still limited, and adding more eligibility criteria can quickly increase recruitment difficulty. Depending on panel availability and complementary channels (physician referral / SNS, etc.), ~5–6 interviews may be feasible."
+  },
+  {
+    "min": 150001,
+    "max": 200001,
+    "level": "caution",
+    "recommended": {
+      "jp": "6〜7名",
+      "en": "~6–7 interviews"
+    },
+    "jp": "一定の患者数はありますが、条件が厳しい場合は難航する可能性があります。パネル＋補完施策の併用で6〜7名が目安です。",
+    "en": "There is a meaningful patient base, but recruitment can still be difficult if criteria are strict. With panels plus additional channels, ~6–7 interviews may be feasible."
+  },
+  {
+    "min": 200001,
+    "max": 250001,
+    "level": "good",
+    "recommended": {
+      "jp": "7〜8名",
+      "en": "~7–8 interviews"
+    },
+    "jp": "患者数の観点ではリクルートは比較的現実的です。条件が極端に厳しくなければ、7〜8名が目安です。",
+    "en": "From a population perspective, recruitment is relatively feasible. Unless the criteria are extremely strict, ~7–8 interviews may be achievable."
+  },
+  {
+    "min": 250001,
+    "max": 500001,
+    "level": "good",
+    "recommended": {
+      "jp": "8名",
+      "en": "8 interviews"
+    },
+    "jp": "患者数の観点では、標準的なリクルート方法で8名のリクルートが可能です（条件が増える場合は要調整）。",
+    "en": "From a population perspective, 8 interviews should be feasible with standard recruitment methods (adjust as criteria become more specific)."
+  },
+  {
+    "min": 500001,
+    "max": null,
+    "level": "goodplus",
+    "recommended": {
+      "jp": "10名以上",
+      "en": "10+ interviews"
+    },
+    "jp": "患者数の観点では十分な規模です。条件が極端に厳しくなければ、10名以上のリクルートが可能です。",
+    "en": "The population size is sufficient. Unless the criteria are extremely strict, 10+ interviews should be feasible."
+  }
+]

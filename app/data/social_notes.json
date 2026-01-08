@@ -1,0 +1,58 @@
+{
+  "B24": {
+    "tag": {
+      "jp": "社会的センシティブ",
+      "en": "Socially sensitive"
+    },
+    "jp": "HIVは社会的センシティブな疾患のため、自己申告ベースのパネルではリクルートが不安定になりやすいです。スクリーニング設計・倫理配慮を強め、医師紹介やコミュニティ経由などのチャネルも検討してください。",
+    "en": "HIV is socially sensitive. Recruitment via self-report panels can be unstable. Use robust screening and ethics considerations, and consider physician referral or community-based channels."
+  },
+  "A539": {
+    "tag": {
+      "jp": "社会的センシティブ",
+      "en": "Socially sensitive"
+    },
+    "jp": "性感染症（梅毒）はセンシティブ領域のため、回答・参加のハードルが上がりがちです。匿名性の担保、スクリーニング、説明文の配慮が重要です。",
+    "en": "STIs (e.g., syphilis) can be highly sensitive. Participation and disclosure barriers may be high; anonymity, careful screening, and sensitive wording are important."
+  },
+  "A540": {
+    "tag": {
+      "jp": "社会的センシティブ",
+      "en": "Socially sensitive"
+    },
+    "jp": "性感染症（淋菌）はセンシティブ領域のため、パネルだけでは難航する可能性があります。医師紹介・SNSなど複数チャネルを検討してください。",
+    "en": "STIs (e.g., gonorrhea) are sensitive; panel-only recruitment may be difficult. Consider multi-channel approaches such as physician referral and targeted SNS."
+  },
+  "A545": {
+    "tag": {
+      "jp": "社会的センシティブ",
+      "en": "Socially sensitive"
+    },
+    "jp": "性感染症（淋菌）はセンシティブ領域のため、参加者の自己開示が限定される可能性があります。スクリーニングの工夫が必要です。",
+    "en": "STIs (e.g., gonorrhea) are sensitive; self-disclosure may be limited. Careful screening design is recommended."
+  },
+  "A560": {
+    "tag": {
+      "jp": "社会的センシティブ",
+      "en": "Socially sensitive"
+    },
+    "jp": "性感染症（クラミジア）はセンシティブ領域のため、パネルでの自己申告に限界がある可能性があります。調査設計・募集文面の配慮が必要です。",
+    "en": "STIs (e.g., chlamydia) are sensitive; self-report panels may have limitations. Careful study design and recruitment wording are recommended."
+  },
+  "A564": {
+    "tag": {
+      "jp": "社会的センシティブ",
+      "en": "Socially sensitive"
+    },
+    "jp": "性感染症（クラミジア）はセンシティブ領域です。匿名性や負担感の低い参加導線を検討してください。",
+    "en": "STIs (e.g., chlamydia) are sensitive. Consider participation paths that preserve anonymity and minimize burden."
+  },
+  "A749": {
+    "tag": {
+      "jp": "社会的センシティブ",
+      "en": "Socially sensitive"
+    },
+    "jp": "性感染症（クラミジア関連）はセンシティブ領域のため、自己申告ベースのスクリーニングには注意が必要です。",
+    "en": "STIs (chlamydia-related) are sensitive; be cautious with self-report screening."
+  }
+}

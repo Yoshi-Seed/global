@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Japan Patient Feasibility Quick Check</title>
+  <link rel="stylesheet" href="./assets/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__title">
+      <div class="app-title">Patient Feasibility Quick Check</div>
+      <div class="app-subtitle">Japan • 疾患名を検索して即チェック</div>
+    </div>
+
+    <div class="topbar__actions">
+      <button id="modeToggle" class="btn btn--ghost" type="button" aria-label="Toggle language display">
+        JP+EN
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="searchView" class="view">
+      <div class="card">
+        <label class="label" for="searchInput">疾患名（日本語 / English）</label>
+        <input
+          id="searchInput"
+          class="search"
+          type="search"
+          placeholder="例：関節リウマチ / rheumatoid / A540 …"
+          autocomplete="off"
+          inputmode="search"
+        />
+        <div id="hint" class="hint">
+          入力すると候補が出ます。候補をタップすると詳細が開きます。
+        </div>
+
+        <ul id="suggestions" class="suggestions" role="listbox" aria-label="Search suggestions"></ul>
+      </div>
+
+      <div class="footer-note">
+        ※ 本ツールは「推定患者数」と係数（必要に応じて）からリクルート難易度の目安メッセージを表示します。<br/>
+        ※ 数字はあくまで目安です。条件設定・チャネル・期間で大きく変わります。
+      </div>
+    </section>
+
+    <section id="detailView" class="view hidden" aria-live="polite">
+      <div class="card">
+        <div class="detail-header">
+          <button id="backBtn" class="btn btn--ghost" type="button">← 検索に戻る</button>
+          <div class="pill" id="icdPill">ICD10</div>
+        </div>
+
+        <div class="disease-names">
+          <div class="jp big" id="diseaseJp">疾患名</div>
+          <div class="en" id="diseaseEn">Disease</div>
+        </div>
+
+        <div class="numbers">
+          <div class="stat">
+            <div class="stat__label jp">日本の推定患者数（総数）</div>
+            <div class="stat__label en">Estimated patient population (Japan)</div>
+            <div class="stat__value" id="patientsTotal">—</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat__label jp">考慮条件適用後の推定リクルート可能数</div>
+            <div class="stat__label en">Estimated recruitable population (after adjustments)</div>
+            <div class="stat__value" id="recruitable">—</div>
+          </div>
+        </div>
+
+        <div id="messageBox" class="message">
+          <div class="message__title jp">リクルート難易度の目安</div>
+          <div class="message__title en">Recruitment feasibility (quick guidance)</div>
+
+          <div class="message__recommended">
+            <span class="jp">推奨リクルート人数（目安）：</span>
+            <span class="en">Suggested achievable interviews:</span>
+            <span id="recommendedN" class="message__recommended__value">—</span>
+          </div>
+
+          <div class="jp message__body" id="msgJp"></div>
+          <div class="en message__body" id="msgEn"></div>
+
+          <div class="copy-row">
+            <button id="copyEnBtn" class="btn btn--primary" type="button">Copy English</button>
+            <span id="copyToast" class="toast" role="status" aria-live="polite"></span>
+          </div>
+        </div>
+
+        <div id="socialNote" class="note hidden">
+          <div class="note__title">
+            <span id="socialTag" class="tag">Note</span>
+            <span class="jp">追加注意</span>
+            <span class="en">Additional caution</span>
+          </div>
+          <div class="jp note__body" id="socialJp"></div>
+          <div class="en note__body" id="socialEn"></div>
+        </div>
+
+        <details class="details">
+          <summary class="details__summary">
+            係数（必要なら調整） / Optional coefficients
+          </summary>
+
+          <div class="coeff-grid">
+            <div class="coeff">
+              <div class="coeff__label">リクルート係数 / Recruit</div>
+              <input id="coefRecruit" class="coef__input" type="number" step="0.05" min="0" max="1" value="1.00" />
+            </div>
+
+            <div class="coeff">
+              <div class="coeff__label">難易度係数 / Difficulty</div>
+              <input id="coefDifficulty" class="coef__input" type="number" step="0.05" min="0" max="1" value="1.00" />
+            </div>
+
+            <div class="coeff">
+              <div class="coeff__label">社会係数 / Social</div>
+              <input id="coefSocial" class="coef__input" type="number" step="0.05" min="0" max="1" value="1.00" />
+            </div>
+
+            <div class="coeff">
+              <div class="coeff__label">SNS係数 / SNS</div>
+              <input id="coefSNS" class="coef__input" type="number" step="0.05" min="0" max="1" value="1.00" />
+            </div>
+          </div>
+
+          <div class="details__help">
+            <div class="jp">計算：推定患者数 × 各係数（0〜1）</div>
+            <div class="en">Calculation: patient population × coefficients (0–1)</div>
+          </div>
+
+          <div class="details__actions">
+            <button id="resetCoefBtn" class="btn btn--ghost" type="button">Reset</button>
+          </div>
+        </details>
+      </div>
+
+      <div class="footer-note">
+        共有用：このページはURL末尾の「#ICD10」で直接開けます（例：#B24）。
+      </div>
+    </section>
+  </main>
+
+  <script src="./assets/app.js"></script>
+</body>
+</html>
