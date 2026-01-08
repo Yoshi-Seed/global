@@ -1,0 +1,1809 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>患者リクルート可能性チェッカー | Patient Recruitment Feasibility</title>
+  <style>
+    :root {
+      --canvas-bg: #f5f0e8;
+      --canvas-light: #faf7f2;
+      --brown-dark: #3d2b1f;
+      --brown-medium: #5d4037;
+      --brown-light: #8d6e63;
+      --accent-green: #4caf50;
+      --accent-orange: #ff9800;
+      --accent-red: #f44336;
+      --accent-blue: #2196f3;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+      background: var(--canvas-bg);
+      color: var(--brown-dark);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      padding: 30px 0;
+      border-bottom: 2px solid var(--brown-light);
+      margin-bottom: 30px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--brown-dark);
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--brown-medium);
+    }
+
+    .search-section {
+      position: relative;
+      margin-bottom: 30px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 18px 20px;
+      font-size: 1.1rem;
+      border: 2px solid var(--brown-light);
+      border-radius: 12px;
+      background: var(--canvas-light);
+      color: var(--brown-dark);
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .search-input:focus {
+      border-color: var(--brown-dark);
+      box-shadow: 0 4px 12px rgba(61, 43, 31, 0.15);
+    }
+
+    .search-input::placeholder {
+      color: var(--brown-light);
+    }
+
+    .search-hint {
+      font-size: 0.8rem;
+      color: var(--brown-light);
+      margin-top: 8px;
+      padding: 0 5px;
+    }
+
+    .suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--canvas-light);
+      border: 2px solid var(--brown-light);
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+      max-height: 300px;
+      overflow-y: auto;
+      z-index: 100;
+      display: none;
+      box-shadow: 0 8px 20px rgba(61, 43, 31, 0.2);
+    }
+
+    .suggestions.active {
+      display: block;
+    }
+
+    .suggestion-item {
+      padding: 15px 20px;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(141, 110, 99, 0.2);
+      transition: background 0.2s;
+    }
+
+    .suggestion-item:hover,
+    .suggestion-item.selected {
+      background: rgba(141, 110, 99, 0.15);
+    }
+
+    .suggestion-item:last-child {
+      border-bottom: none;
+    }
+
+    .suggestion-name {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .suggestion-english {
+      font-size: 0.85rem;
+      color: var(--brown-medium);
+    }
+
+    .suggestion-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 6px;
+      font-size: 0.8rem;
+    }
+
+    .suggestion-icd {
+      background: var(--brown-light);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    .suggestion-count {
+      color: var(--brown-medium);
+      font-weight: 500;
+    }
+
+    .result-card {
+      background: var(--canvas-light);
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 4px 20px rgba(61, 43, 31, 0.1);
+      display: none;
+    }
+
+    .result-card.active {
+      display: block;
+    }
+
+    .disease-header {
+      text-align: center;
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--brown-light);
+      margin-bottom: 20px;
+    }
+
+    .disease-name {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--brown-dark);
+      margin-bottom: 8px;
+    }
+
+    .disease-english {
+      font-size: 1rem;
+      color: var(--brown-medium);
+      margin-bottom: 8px;
+    }
+
+    .icd-code {
+      display: inline-block;
+      background: var(--brown-light);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+    }
+
+    .patient-count-section {
+      text-align: center;
+      padding: 25px;
+      background: rgba(141, 110, 99, 0.1);
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    .patient-label {
+      font-size: 1rem;
+      color: var(--brown-medium);
+      margin-bottom: 8px;
+    }
+
+    .patient-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--brown-dark);
+    }
+
+    .patient-unit {
+      font-size: 1.2rem;
+      color: var(--brown-medium);
+    }
+
+    .recruitment-section {
+      margin-bottom: 20px;
+    }
+
+    .recruitment-box {
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+    }
+
+    .recruitment-box.green {
+      background: rgba(76, 175, 80, 0.15);
+      border-left: 5px solid var(--accent-green);
+    }
+
+    .recruitment-box.orange {
+      background: rgba(255, 152, 0, 0.15);
+      border-left: 5px solid var(--accent-orange);
+    }
+
+    .recruitment-box.red {
+      background: rgba(244, 67, 54, 0.15);
+      border-left: 5px solid var(--accent-red);
+    }
+
+    .recruitment-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .recruitment-title .icon {
+      font-size: 1.3rem;
+    }
+
+    .recruitment-message {
+      font-size: 1rem;
+      line-height: 1.7;
+      margin-bottom: 15px;
+    }
+
+    .recruitment-english {
+      font-size: 0.9rem;
+      color: var(--brown-medium);
+      line-height: 1.6;
+      padding-top: 12px;
+      border-top: 1px dashed var(--brown-light);
+    }
+
+    .alert-box {
+      padding: 15px 20px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      display: none;
+    }
+
+    .alert-box.active {
+      display: block;
+    }
+
+    .alert-box.warning {
+      background: rgba(255, 152, 0, 0.2);
+      border: 2px solid var(--accent-orange);
+    }
+
+    .alert-box.danger {
+      background: rgba(244, 67, 54, 0.2);
+      border: 2px solid var(--accent-red);
+    }
+
+    .alert-box.social {
+      background: rgba(156, 39, 176, 0.15);
+      border: 2px solid #9c27b0;
+    }
+
+    .alert-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .alert-message {
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .recruitment-estimate {
+      text-align: center;
+      padding: 20px;
+      background: var(--brown-dark);
+      color: var(--canvas-light);
+      border-radius: 12px;
+      margin-top: 20px;
+    }
+
+    .estimate-label {
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      opacity: 0.9;
+    }
+
+    .estimate-number {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .reset-btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      margin-top: 25px;
+      background: var(--brown-medium);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .reset-btn:hover {
+      background: var(--brown-dark);
+    }
+
+    /* Severity Warning Styles */
+    .alert-box.severity {
+      background: rgba(33, 150, 243, 0.15);
+      border: 2px solid var(--accent-blue);
+    }
+
+    /* Past Records Styles */
+    .history-section {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 2px dashed var(--brown-light);
+    }
+
+    .history-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, #4caf50, #2e7d32);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-bottom: 15px;
+    }
+
+    .history-badge:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+    }
+
+    .history-summary {
+      background: rgba(76, 175, 80, 0.1);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .history-summary-title {
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--brown-dark);
+    }
+
+    .history-stats {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .history-stat {
+      background: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+
+    .history-stat-label {
+      color: var(--brown-medium);
+      font-size: 0.8rem;
+    }
+
+    .history-stat-value {
+      font-weight: 700;
+      color: var(--brown-dark);
+    }
+
+    .history-detail-btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: var(--accent-blue);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .history-detail-btn:hover {
+      background: #1976d2;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 1000;
+      display: none;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--canvas-light);
+      border-radius: 16px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      margin-top: 20px;
+    }
+
+    .modal-header {
+      padding: 20px;
+      border-bottom: 2px solid var(--brown-light);
+      position: sticky;
+      top: 0;
+      background: var(--canvas-light);
+      z-index: 10;
+    }
+
+    .modal-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--brown-dark);
+      margin-bottom: 5px;
+    }
+
+    .modal-subtitle {
+      font-size: 0.9rem;
+      color: var(--brown-medium);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: var(--brown-light);
+      color: white;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    .history-card {
+      background: white;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-left: 4px solid var(--accent-blue);
+    }
+
+    .history-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .history-card-date {
+      font-size: 0.85rem;
+      color: var(--brown-medium);
+    }
+
+    .history-card-count {
+      background: var(--accent-green);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .history-card-method {
+      display: inline-block;
+      background: var(--brown-light);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      margin-bottom: 8px;
+    }
+
+    .history-card-condition {
+      font-size: 0.9rem;
+      color: var(--brown-dark);
+      line-height: 1.5;
+      margin-bottom: 10px;
+      padding: 10px;
+      background: rgba(141, 110, 99, 0.08);
+      border-radius: 8px;
+    }
+
+    .history-card-meta {
+      font-size: 0.8rem;
+      color: var(--brown-medium);
+    }
+
+    .no-history {
+      text-align: center;
+      padding: 20px;
+      color: var(--brown-medium);
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      color: var(--brown-light);
+      font-size: 0.85rem;
+    }
+
+    .for-hayato {
+      font-style: italic;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 15px;
+      }
+
+      h1 {
+        font-size: 1.3rem;
+      }
+
+      .search-input {
+        font-size: 1rem;
+        padding: 15px;
+      }
+
+      .patient-number {
+        font-size: 2rem;
+      }
+
+      .disease-name {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>患者リクルート可能性チェッカー</h1>
+      <p class="subtitle">Patient Recruitment Feasibility Checker</p>
+    </header>
+
+    <div class="search-section">
+      <input 
+        type="text" 
+        class="search-input" 
+        id="searchInput" 
+        placeholder="NSCLC, cancer lung, 糖尿病..."
+        autocomplete="off"
+      >
+      <div class="search-hint" id="searchHint">
+        💡 略語OK: NSCLC, COPD, T2DM, RA, CKD... | 複数キーワード: cancer prostate
+      </div>
+      <div class="suggestions" id="suggestions"></div>
+    </div>
+
+    <div class="result-card" id="resultCard">
+      <div class="disease-header">
+        <div class="disease-name" id="diseaseName"></div>
+        <div class="disease-english" id="diseaseEnglish"></div>
+        <span class="icd-code" id="icdCode"></span>
+      </div>
+
+      <div class="patient-count-section">
+        <div class="patient-label">日本の推定患者数 / Estimated Patients in Japan</div>
+        <div class="patient-number" id="patientNumber"></div>
+        <div class="patient-unit">人 / patients</div>
+      </div>
+
+      <div class="alert-box social" id="socialAlert">
+        <div class="alert-title">
+          <span>⚠️</span>
+          <span>社会的配慮が必要な疾患 / Socially Sensitive Condition</span>
+        </div>
+        <div class="alert-message" id="socialMessage"></div>
+      </div>
+
+      <div class="alert-box severity" id="severityAlert">
+        <div class="alert-title">
+          <span>📊</span>
+          <span>重症度に関する注意 / Severity Note</span>
+        </div>
+        <div class="alert-message" id="severityMessage"></div>
+      </div>
+
+      <div class="history-section" id="historySection" style="display: none;">
+        <div class="history-badge" onclick="showHistoryModal()">
+          📋 過去のリクルート実績あり / Past recruitment records available
+        </div>
+        <div class="history-summary" id="historySummary"></div>
+        <button class="history-detail-btn" onclick="showHistoryModal()">
+          詳細を確認 / View Details →
+        </button>
+      </div>
+
+      <div class="recruitment-section" id="recruitmentSection">
+        <!-- Will be populated by JavaScript -->
+      </div>
+
+      <div class="recruitment-estimate">
+        <div class="estimate-label">推定リクルート可能数 / Est. Recruitable</div>
+        <div class="estimate-number" id="estimateNumber"></div>
+      </div>
+
+      <button class="reset-btn" onclick="resetSearch()">
+        別の疾患を検索 / Search Another Disease
+      </button>
+    </div>
+
+    <footer>
+      <div>© 2025 PMRC Patient Feasibility Tool</div>
+      <div class="for-hayato">For 駿人君 🎯</div>
+    </footer>
+  </div>
+
+  <!-- History Modal -->
+  <div class="modal-overlay" id="historyModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="modal-close" onclick="closeHistoryModal()">×</button>
+        <div class="modal-title" id="modalTitle">過去のリクルート実績</div>
+        <div class="modal-subtitle" id="modalSubtitle">Past Recruitment Records</div>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Populated by JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let diseases = [];
+    let projectHistory = [];
+    let currentHistoryRecords = [];
+    let selectedIndex = -1;
+
+    // Severity warnings for specific diseases
+    const severityWarnings = {
+      'copd': {
+        keywords: ['COPD', '慢性閉塞性肺疾患', '肺気腫', 'chronic obstructive pulmonary', 'emphysema', '慢性気管支炎'],
+        jp: '⚠️ COPDは軽度患者が大多数を占めます。「中等度」「重度」に限定すると患者数が激減し、リクルートが非常に困難になります。過去実績では「重症と診断されても、憎悪／再燃がなし」という対象者のみ実績があります。',
+        en: '⚠️ Mild COPD patients are the majority. Restricting to "moderate" or "severe" dramatically reduces the pool. Past success was limited to "severe diagnosis but without exacerbation/relapse" patients only.'
+      },
+      'asthma': {
+        keywords: ['喘息', 'asthma', 'ぜんそく'],
+        jp: '⚠️ 喘息も軽度・コントロール良好な患者が多いです。「重症」「コントロール不良」に限定すると対象者が大幅に減少します。',
+        en: '⚠️ Most asthma patients are mild or well-controlled. Restricting to "severe" or "uncontrolled" significantly reduces the target population.'
+      },
+      'diabetes': {
+        keywords: ['糖尿病', 'diabetes', 'T2DM', 'T1DM', 'T2D', 'T1D', 'DM'],
+        jp: '⚠️ 糖尿病は軽度～中等度の患者が多数です。HbA1cが高い、合併症あり、インスリン使用者などに限定すると対象者が減少します。',
+        en: '⚠️ Most diabetes patients are mild to moderate. Restricting to high HbA1c, with complications, or insulin users significantly reduces the pool.'
+      },
+      'hypertension': {
+        keywords: ['高血圧', 'hypertension', 'HTN', '血圧'],
+        jp: '⚠️ 高血圧は軽度・コントロール良好な患者が大多数です。重症や治療抵抗性に限定すると対象者が激減します。',
+        en: '⚠️ Most hypertension patients are mild or well-controlled. Restricting to severe or treatment-resistant cases dramatically reduces availability.'
+      },
+      'depression': {
+        keywords: ['うつ病', 'depression', 'depressive', '大うつ病', 'MDD'],
+        jp: '⚠️ うつ病は軽度～中等度が多く、「重度」「治療抵抗性」に限定すると大幅に減少します。また精神疾患特有の社会的配慮も必要です。',
+        en: '⚠️ Most depression patients are mild to moderate. "Severe" or "treatment-resistant" cases are much fewer. Social sensitivity considerations also apply.'
+      },
+      'alzheimer': {
+        keywords: ['アルツハイマー', 'alzheimer', '認知症', 'dementia', 'MCI', '軽度認知障害'],
+        jp: '⚠️ 認知症は軽度・MCI段階の患者が調査に参加しやすいです。中等度以上になると本人の同意取得が困難になり、介護者経由のリクルートが必要です。',
+        en: '⚠️ Mild/MCI patients are easier to recruit. Moderate or severe patients require consent through caregivers, adding complexity.'
+      },
+      'heart_failure': {
+        keywords: ['心不全', 'heart failure', 'CHF', 'HF', 'HFrEF', 'HFpEF'],
+        jp: '⚠️ 心不全はNYHA分類I-IIの軽度患者が多いです。NYHA III-IVの重症患者に限定すると対象者が大幅に減少します。',
+        en: '⚠️ Most heart failure patients are NYHA class I-II. Restricting to NYHA III-IV severely limits the available pool.'
+      },
+      'ckd': {
+        keywords: ['慢性腎臓病', 'CKD', '腎不全', 'chronic kidney', 'renal'],
+        jp: '⚠️ CKDはステージ1-3の軽度患者が多いです。ステージ4-5や透析患者に限定すると対象者が大幅に減少します。',
+        en: '⚠️ Most CKD patients are stage 1-3. Restricting to stage 4-5 or dialysis patients significantly reduces availability.'
+      },
+      'cancer': {
+        keywords: ['がん', '癌', 'cancer', 'carcinoma', 'malignant', '悪性'],
+        jp: '⚠️ がん患者は進行度（ステージ）、治療ライン、特定の遺伝子変異などで細分化されます。条件を絞りすぎると対象者が激減するため、条件の優先順位を確認してください。',
+        en: '⚠️ Cancer patients are segmented by stage, treatment line, and genetic mutations. Over-specifying conditions dramatically reduces the pool. Confirm condition priorities.'
+      },
+      'ra': {
+        keywords: ['関節リウマチ', 'rheumatoid arthritis', 'RA'],
+        jp: '⚠️ 関節リウマチは生物学的製剤未使用の患者が多いです。バイオ製剤使用者、特定の薬剤経験者に限定すると対象者が減少します。',
+        en: '⚠️ Many RA patients are biologic-naïve. Restricting to biologic users or specific drug history significantly reduces availability.'
+      }
+    };
+
+    // Medical abbreviation dictionary - maps abbreviations to search terms
+    const abbreviations = {
+      // ===== ONCOLOGY - Solid Tumors =====
+      // Lung
+      'nsclc': ['non-small cell lung', 'non small cell lung', 'lung cancer', 'bronchus', '非小細胞肺', '肺癌', '肺がん'],
+      'sclc': ['small cell lung', 'lung cancer', 'bronchus', '小細胞肺', '肺癌'],
+      'lc': ['lung cancer', 'bronchus', '肺癌', '肺がん'],
+      
+      // Head & Neck
+      'hnscc': ['head and neck', 'pharyn', 'laryn', 'oral cancer', 'tongue', 'oropharyn', 'nasopharyn', 'hypopharyn', '頭頸部', '咽頭', '喉頭', '口腔', '舌'],
+      'hnc': ['head and neck', 'pharyn', 'laryn', '頭頸部', '咽頭', '喉頭'],
+      'opc': ['oropharyngeal', 'oropharynx', '中咽頭'],
+      'npc': ['nasopharyngeal', 'nasopharynx', '鼻咽頭', '上咽頭'],
+      'hpc': ['hypopharyngeal', 'hypopharynx', '下咽頭'],
+      'oscc': ['oral squamous cell', 'oral cancer', '口腔癌', '口腔がん'],
+      
+      // GI Cancers
+      'hcc': ['hepatocellular carcinoma', 'liver cancer', 'hepatic', '肝細胞癌', '肝臓癌', '肝がん'],
+      'crc': ['colorectal cancer', 'colon cancer', 'rectal cancer', '大腸癌', '結腸癌', '直腸癌'],
+      'gc': ['gastric cancer', 'stomach cancer', '胃癌', '胃がん'],
+      'pc': ['pancreatic cancer', '膵臓癌', '膵癌', '膵がん'],
+      'pdac': ['pancreatic ductal adenocarcinoma', 'pancreatic cancer', '膵管腺癌', '膵臓癌'],
+      'ec': ['esophageal cancer', '食道癌', '食道がん'],
+      'cca': ['cholangiocarcinoma', 'bile duct cancer', '胆管癌', '胆道癌'],
+      'btc': ['biliary tract cancer', '胆道癌'],
+      'gist': ['gastrointestinal stromal tumor', '消化管間質腫瘍'],
+      'gej': ['gastroesophageal junction', '食道胃接合部'],
+      
+      // Urological
+      'rcc': ['renal cell carcinoma', 'kidney cancer', '腎細胞癌', '腎臓癌', '腎がん'],
+      'uc2': ['urothelial carcinoma', 'bladder cancer', '尿路上皮癌', '膀胱癌'],
+      'bc': ['bladder cancer', '膀胱癌', '膀胱がん'],
+      'pca': ['prostate cancer', '前立腺癌', '前立腺がん'],
+      'mcrpc': ['metastatic castration-resistant prostate', '転移性去勢抵抗性前立腺'],
+      'mhspc': ['metastatic hormone-sensitive prostate', '転移性ホルモン感受性前立腺'],
+      
+      // Gynecological
+      'oc': ['ovarian cancer', '卵巣癌', '卵巣がん'],
+      'eoc': ['epithelial ovarian cancer', '上皮性卵巣癌'],
+      'cc': ['cervical cancer', '子宮頸癌', '子宮頸がん'],
+      'endc': ['endometrial cancer', '子宮体癌', '子宮内膜癌'],
+      
+      // Breast
+      'bc2': ['breast cancer', '乳癌', '乳がん'],
+      'tnbc': ['triple negative breast cancer', 'breast cancer', 'トリプルネガティブ乳癌'],
+      'her2': ['her2 positive', 'breast cancer', 'HER2陽性'],
+      'hr': ['hormone receptor', 'ホルモン受容体'],
+      'mbc': ['metastatic breast cancer', '転移性乳癌'],
+      
+      // Skin
+      'mel': ['melanoma', 'メラノーマ', '悪性黒色腫'],
+      'bcc': ['basal cell carcinoma', '基底細胞癌'],
+      'cscc': ['cutaneous squamous cell carcinoma', '皮膚扁平上皮癌'],
+      'mcc': ['merkel cell carcinoma', 'メルケル細胞癌'],
+      
+      // Brain
+      'gbm': ['glioblastoma', 'glioblastoma multiforme', '膠芽腫', 'グリオブラストーマ'],
+      'lgg': ['low grade glioma', '低悪性度神経膠腫'],
+      'hgg': ['high grade glioma', '高悪性度神経膠腫'],
+      
+      // Sarcoma
+      'sts': ['soft tissue sarcoma', '軟部肉腫'],
+      'os': ['osteosarcoma', '骨肉腫'],
+      'es': ['ewing sarcoma', 'ユーイング肉腫'],
+      'rms': ['rhabdomyosarcoma', '横紋筋肉腫'],
+      
+      // Thyroid
+      'dtc': ['differentiated thyroid cancer', '分化型甲状腺癌'],
+      'ptc': ['papillary thyroid cancer', '乳頭状甲状腺癌'],
+      'ftc': ['follicular thyroid cancer', '濾胞性甲状腺癌'],
+      'mtc': ['medullary thyroid cancer', '甲状腺髄様癌'],
+      'atc': ['anaplastic thyroid cancer', '未分化甲状腺癌'],
+      
+      // ===== ONCOLOGY - Hematological =====
+      'aml': ['acute myeloid leukemia', 'acute myelogenous', '急性骨髄性白血病'],
+      'cml': ['chronic myeloid leukemia', 'chronic myelogenous', '慢性骨髄性白血病'],
+      'all': ['acute lymphoblastic leukemia', 'acute lymphocytic', '急性リンパ性白血病'],
+      'cll': ['chronic lymphocytic leukemia', '慢性リンパ性白血病'],
+      'dlbcl': ['diffuse large b-cell lymphoma', 'びまん性大細胞型B細胞リンパ腫'],
+      'fl': ['follicular lymphoma', '濾胞性リンパ腫'],
+      'mcl': ['mantle cell lymphoma', 'マントル細胞リンパ腫'],
+      'mzl': ['marginal zone lymphoma', '辺縁帯リンパ腫'],
+      'nhl': ['non-hodgkin lymphoma', '非ホジキンリンパ腫'],
+      'hl': ['hodgkin lymphoma', 'hodgkin disease', 'ホジキンリンパ腫'],
+      'mm': ['multiple myeloma', '多発性骨髄腫'],
+      'wm': ['waldenstrom macroglobulinemia', 'ワルデンストレームマクログロブリン血症'],
+      'mds': ['myelodysplastic syndrome', '骨髄異形成症候群'],
+      'mpn': ['myeloproliferative neoplasm', '骨髄増殖性腫瘍'],
+      'et': ['essential thrombocythemia', '本態性血小板血症'],
+      'pv': ['polycythemia vera', '真性多血症'],
+      'mf': ['myelofibrosis', '骨髄線維症'],
+      'cmml': ['chronic myelomonocytic leukemia', '慢性骨髄単球性白血病'],
+      
+      // Biomarkers/Mutations
+      'egfr': ['egfr mutation', 'EGFR変異', '肺癌'],
+      'alk': ['alk positive', 'alk fusion', 'ALK陽性', 'ALK融合'],
+      'ros1': ['ros1 positive', 'ros1 fusion', 'ROS1陽性'],
+      'braf': ['braf mutation', 'BRAF変異'],
+      'kras': ['kras mutation', 'KRAS変異'],
+      'ntrk': ['ntrk fusion', 'NTRK融合'],
+      'ret': ['ret fusion', 'RET融合'],
+      'met': ['met exon 14', 'METエクソン14'],
+      'brca': ['brca mutation', 'BRCA変異', 'breast cancer', 'ovarian cancer'],
+      'msi': ['microsatellite instability', 'マイクロサテライト不安定性'],
+      'msih': ['msi high', 'MSI-H'],
+      'tmb': ['tumor mutational burden', '腫瘍遺伝子変異量'],
+      'pdl1': ['pd-l1', 'PD-L1'],
+      
+      // ===== NEUROLOGY =====
+      // Demyelinating
+      'cidp': ['chronic inflammatory demyelinating', 'inflammatory polyneuropathy', 'polyradiculoneuropathy', '慢性炎症性脱髄', '多発神経炎', '多発根神経炎', '炎症性多発', 'ニューロパチー', 'ニューロパチ'],
+      'gbs': ['guillain-barre', 'guillain', 'ギランバレー', 'ギラン・バレー', '急性炎症性脱髄性多発神経炎'],
+      'ms': ['multiple sclerosis', '多発性硬化症'],
+      'nmo': ['neuromyelitis optica', '視神経脊髄炎'],
+      'nmosd': ['neuromyelitis optica spectrum disorder', '視神経脊髄炎スペクトラム障害'],
+      'adem': ['acute disseminated encephalomyelitis', '急性散在性脳脊髄炎'],
+      
+      // Neurodegenerative
+      'ad': ['alzheimer disease', 'alzheimer\'s', 'アルツハイマー', '認知症'],
+      'pd': ['parkinson disease', 'parkinson\'s', 'パーキンソン'],
+      'als': ['amyotrophic lateral sclerosis', '筋萎縮性側索硬化症', 'ALS'],
+      'mnd': ['motor neuron disease', '運動ニューロン疾患'],
+      'hd': ['huntington disease', 'huntington\'s', 'ハンチントン'],
+      'psp': ['progressive supranuclear palsy', '進行性核上性麻痺'],
+      'msa': ['multiple system atrophy', '多系統萎縮症'],
+      'cbd': ['corticobasal degeneration', '大脳皮質基底核変性症'],
+      'dlb': ['dementia with lewy bodies', 'レビー小体型認知症'],
+      'ftd': ['frontotemporal dementia', '前頭側頭型認知症'],
+      'mci': ['mild cognitive impairment', '軽度認知障害'],
+      
+      // Neuromuscular
+      'mg': ['myasthenia gravis', '重症筋無力症'],
+      'gmg': ['generalized myasthenia gravis', '全身型重症筋無力症'],
+      'sma': ['spinal muscular atrophy', '脊髄性筋萎縮症'],
+      'dmd': ['duchenne muscular dystrophy', 'デュシェンヌ型筋ジストロフィー'],
+      'bmd': ['becker muscular dystrophy', 'ベッカー型筋ジストロフィー'],
+      'fshd': ['facioscapulohumeral muscular dystrophy', '顔面肩甲上腕型筋ジストロフィー'],
+      'lgmd': ['limb-girdle muscular dystrophy', '肢帯型筋ジストロフィー'],
+      'dm3': ['myotonic dystrophy', '筋強直性ジストロフィー'],
+      'cmt': ['charcot-marie-tooth', 'シャルコー・マリー・トゥース'],
+      
+      // Epilepsy & Seizures
+      'epi': ['epilepsy', 'てんかん'],
+      'dre': ['drug resistant epilepsy', '難治性てんかん'],
+      'lgs': ['lennox-gastaut syndrome', 'レノックス・ガストー症候群'],
+      'ds': ['dravet syndrome', 'ドラベ症候群'],
+      
+      // Headache
+      'mig': ['migraine', '片頭痛'],
+      'cm': ['chronic migraine', '慢性片頭痛'],
+      'em': ['episodic migraine', '反復性片頭痛'],
+      'ch': ['cluster headache', '群発頭痛'],
+      
+      // Other Neuro
+      'tbi': ['traumatic brain injury', '外傷性脳損傷'],
+      'sci': ['spinal cord injury', '脊髄損傷'],
+      'np': ['neuropathic pain', '神経障害性疼痛'],
+      'pn': ['peripheral neuropathy', '末梢神経障害', 'ニューロパチー'],
+      'dpn': ['diabetic peripheral neuropathy', '糖尿病性末梢神経障害'],
+      
+      // ===== IMMUNOLOGY & RHEUMATOLOGY =====
+      'ra': ['rheumatoid arthritis', '関節リウマチ'],
+      'sle': ['systemic lupus erythematosus', 'lupus', 'ループス', '全身性エリテマトーデス'],
+      'as': ['ankylosing spondylitis', '強直性脊椎炎'],
+      'psa': ['psoriatic arthritis', '乾癬性関節炎'],
+      'axspa': ['axial spondyloarthritis', '体軸性脊椎関節炎'],
+      'nraxspa': ['non-radiographic axial spondyloarthritis', '非X線体軸性脊椎関節炎'],
+      'jia': ['juvenile idiopathic arthritis', '若年性特発性関節炎'],
+      'sjia': ['systemic juvenile idiopathic arthritis', '全身型若年性特発性関節炎'],
+      'ss': ['sjogren syndrome', 'シェーグレン症候群'],
+      'ssc': ['systemic sclerosis', 'scleroderma', '強皮症', '全身性強皮症'],
+      'pm': ['polymyositis', '多発性筋炎'],
+      'dm4': ['dermatomyositis', '皮膚筋炎'],
+      'iim': ['idiopathic inflammatory myopathy', '特発性炎症性筋疾患'],
+      'gpa': ['granulomatosis with polyangiitis', 'wegener', '多発血管炎性肉芽腫症'],
+      'egpa': ['eosinophilic granulomatosis with polyangiitis', '好酸球性多発血管炎性肉芽腫症'],
+      'mpa': ['microscopic polyangiitis', '顕微鏡的多発血管炎'],
+      'anca': ['anca vasculitis', 'anca associated', 'ANCA関連血管炎'],
+      'tak': ['takayasu arteritis', '高安動脈炎'],
+      'gca': ['giant cell arteritis', '巨細胞性動脈炎'],
+      'pан': ['polyarteritis nodosa', '結節性多発動脈炎'],
+      'behcet': ['behcet disease', 'ベーチェット病'],
+      'fmf': ['familial mediterranean fever', '家族性地中海熱'],
+      'still': ['adult onset still disease', '成人発症スチル病', 'スティル病'],
+      'aosd': ['adult onset still disease', '成人スチル病'],
+      'caps': ['cryopyrin associated periodic syndrome', 'クリオピリン関連周期性症候群'],
+      
+      // ===== GASTROENTEROLOGY =====
+      'ibd': ['inflammatory bowel disease', '炎症性腸疾患'],
+      'uc': ['ulcerative colitis', '潰瘍性大腸炎'],
+      'cd': ['crohn disease', 'crohn\'s disease', 'クローン病'],
+      'gerd': ['gastroesophageal reflux', '胃食道逆流症'],
+      'ibs': ['irritable bowel syndrome', '過敏性腸症候群'],
+      'ibsd': ['ibs with diarrhea', '下痢型IBS'],
+      'ibsc': ['ibs with constipation', '便秘型IBS'],
+      'sibo': ['small intestinal bacterial overgrowth', '小腸内細菌異常増殖'],
+      'eoe': ['eosinophilic esophagitis', '好酸球性食道炎'],
+      'pud': ['peptic ulcer disease', '消化性潰瘍'],
+      'celiac': ['celiac disease', 'セリアック病'],
+      'pss': ['short bowel syndrome', '短腸症候群'],
+      
+      // ===== HEPATOLOGY =====
+      'hbv': ['hepatitis b', 'B型肝炎'],
+      'hcv': ['hepatitis c', 'C型肝炎'],
+      'hav': ['hepatitis a', 'A型肝炎'],
+      'hev': ['hepatitis e', 'E型肝炎'],
+      'aih': ['autoimmune hepatitis', '自己免疫性肝炎'],
+      'pbc': ['primary biliary cholangitis', '原発性胆汁性胆管炎'],
+      'psc': ['primary sclerosing cholangitis', '原発性硬化性胆管炎'],
+      'nafld': ['non-alcoholic fatty liver', '非アルコール性脂肪性肝疾患'],
+      'nash': ['non-alcoholic steatohepatitis', '非アルコール性脂肪肝炎'],
+      'masld': ['metabolic dysfunction-associated steatotic liver disease', '代謝機能障害関連脂肪性肝疾患'],
+      'mash': ['metabolic dysfunction-associated steatohepatitis', '代謝機能障害関連脂肪肝炎'],
+      'ald': ['alcoholic liver disease', 'アルコール性肝疾患'],
+      'hwe': ['hepatic encephalopathy', '肝性脳症'],
+      
+      // ===== RESPIRATORY =====
+      'copd': ['chronic obstructive pulmonary disease', '慢性閉塞性肺疾患', '肺気腫', '慢性気管支炎'],
+      'ild': ['interstitial lung disease', '間質性肺疾患'],
+      'ipf': ['idiopathic pulmonary fibrosis', '特発性肺線維症'],
+      'ppf': ['progressive pulmonary fibrosis', '進行性肺線維症'],
+      'hp': ['hypersensitivity pneumonitis', '過敏性肺炎'],
+      'nsip': ['nonspecific interstitial pneumonia', '非特異性間質性肺炎'],
+      'ards': ['acute respiratory distress syndrome', '急性呼吸窮迫症候群'],
+      'osa': ['obstructive sleep apnea', '閉塞性睡眠時無呼吸'],
+      'csa': ['central sleep apnea', '中枢性睡眠時無呼吸'],
+      'cf': ['cystic fibrosis', '嚢胞性線維症'],
+      'nbe': ['non-cf bronchiectasis', '非CF気管支拡張症'],
+      'be': ['bronchiectasis', '気管支拡張症'],
+      'abpa': ['allergic bronchopulmonary aspergillosis', 'アレルギー性気管支肺アスペルギルス症'],
+      'sarcoid': ['sarcoidosis', 'サルコイドーシス'],
+      'pah': ['pulmonary arterial hypertension', '肺動脈性肺高血圧症'],
+      'ph': ['pulmonary hypertension', '肺高血圧症'],
+      'cteph': ['chronic thromboembolic pulmonary hypertension', '慢性血栓塞栓性肺高血圧症'],
+      
+      // Asthma
+      'asthma': ['asthma', '喘息', 'ぜんそく'],
+      'sa': ['severe asthma', '重症喘息'],
+      'sea': ['severe eosinophilic asthma', '重症好酸球性喘息'],
+      'aa': ['allergic asthma', 'アレルギー性喘息'],
+      
+      // ===== CARDIOLOGY =====
+      'chf': ['congestive heart failure', 'heart failure', 'うっ血性心不全'],
+      'hf': ['heart failure', '心不全'],
+      'hfref': ['heart failure reduced ejection fraction', '駆出率低下型心不全'],
+      'hfpef': ['heart failure preserved ejection fraction', '駆出率維持型心不全'],
+      'hfmref': ['heart failure mildly reduced ejection fraction', '駆出率軽度低下型心不全'],
+      'af': ['atrial fibrillation', '心房細動'],
+      'afib': ['atrial fibrillation', '心房細動'],
+      'afl': ['atrial flutter', '心房粗動'],
+      'vt': ['ventricular tachycardia', '心室頻拍'],
+      'vf': ['ventricular fibrillation', '心室細動'],
+      'mi': ['myocardial infarction', '心筋梗塞'],
+      'ami': ['acute myocardial infarction', '急性心筋梗塞'],
+      'acs': ['acute coronary syndrome', '急性冠症候群'],
+      'nstemi': ['non-st elevation myocardial infarction', '非ST上昇型心筋梗塞'],
+      'stemi': ['st elevation myocardial infarction', 'ST上昇型心筋梗塞'],
+      'cad': ['coronary artery disease', '冠動脈疾患'],
+      'chd': ['coronary heart disease', '冠状動脈性心疾患'],
+      'ihd': ['ischemic heart disease', '虚血性心疾患'],
+      'pad': ['peripheral artery disease', '末梢動脈疾患'],
+      'cli': ['critical limb ischemia', '重症下肢虚血'],
+      'clti': ['chronic limb-threatening ischemia', '慢性下肢虚血'],
+      'aaa': ['abdominal aortic aneurysm', '腹部大動脈瘤'],
+      'dvt': ['deep vein thrombosis', '深部静脈血栓症'],
+      'pe': ['pulmonary embolism', '肺塞栓症'],
+      'vte': ['venous thromboembolism', '静脈血栓塞栓症'],
+      'htn': ['hypertension', '高血圧'],
+      'hcm': ['hypertrophic cardiomyopathy', '肥大型心筋症'],
+      'dcm': ['dilated cardiomyopathy', '拡張型心筋症'],
+      'arvc': ['arrhythmogenic right ventricular cardiomyopathy', '不整脈原性右室心筋症'],
+      'attr': ['transthyretin amyloidosis', 'トランスサイレチンアミロイドーシス'],
+      'attrwt': ['wild-type transthyretin amyloidosis', '野生型TTRアミロイドーシス'],
+      'attrv': ['hereditary transthyretin amyloidosis', '遺伝性TTRアミロイドーシス'],
+      'al': ['al amyloidosis', 'ALアミロイドーシス'],
+      
+      // ===== NEPHROLOGY =====
+      'ckd': ['chronic kidney disease', '慢性腎臓病', '慢性腎不全'],
+      'aki': ['acute kidney injury', '急性腎障害'],
+      'esrd': ['end stage renal disease', '末期腎不全'],
+      'eskd': ['end stage kidney disease', '末期腎臓病'],
+      'igan': ['iga nephropathy', 'IgA腎症'],
+      'fsgs': ['focal segmental glomerulosclerosis', '巣状分節性糸球体硬化症'],
+      'mgn': ['membranous nephropathy', '膜性腎症'],
+      'mpgn': ['membranoproliferative glomerulonephritis', '膜性増殖性糸球体腎炎'],
+      'atin': ['acute tubulointerstitial nephritis', '急性尿細管間質性腎炎'],
+      'rpgn': ['rapidly progressive glomerulonephritis', '急速進行性糸球体腎炎'],
+      'pckd': ['polycystic kidney disease', '多発性嚢胞腎'],
+      'adpkd': ['autosomal dominant polycystic kidney disease', '常染色体優性多発性嚢胞腎'],
+      'arpkd': ['autosomal recessive polycystic kidney disease', '常染色体劣性多発性嚢胞腎'],
+      'dn': ['diabetic nephropathy', '糖尿病性腎症'],
+      'dkd': ['diabetic kidney disease', '糖尿病性腎臓病'],
+      'htn2': ['hypertensive nephrosclerosis', '高血圧性腎硬化症'],
+      'ln': ['lupus nephritis', 'ループス腎炎'],
+      'ahus': ['atypical hemolytic uremic', 'hemolytic uremic syndrome', 'hemolytic-uremic', '非典型溶血性尿毒症', '溶血性尿毒症症候群', '溶血性尿毒症'],
+      'hus2': ['hemolytic uremic syndrome', 'hemolytic-uremic', '溶血性尿毒症症候群', '溶血性尿毒症'],
+      
+      // ===== DIABETES & METABOLIC =====
+      't1dm': ['type 1 diabetes', 'insulin dependent', '1型糖尿病', 'IDDM'],
+      't2dm': ['type 2 diabetes', 'non-insulin dependent', '2型糖尿病', 'NIDDM'],
+      't1d': ['type 1 diabetes', '1型糖尿病'],
+      't2d': ['type 2 diabetes', '2型糖尿病'],
+      'dm': ['diabetes mellitus', '糖尿病'],
+      'gdm': ['gestational diabetes', '妊娠糖尿病'],
+      'lada': ['latent autoimmune diabetes', '緩徐進行1型糖尿病'],
+      'mody': ['maturity onset diabetes of the young', '若年発症成人型糖尿病'],
+      'pcos': ['polycystic ovary syndrome', '多嚢胞性卵巣症候群'],
+      'obesity': ['obesity', '肥満症', '肥満'],
+      'gout': ['gout', '痛風'],
+      'fh': ['familial hypercholesterolemia', '家族性高コレステロール血症'],
+      'hefe': ['heterozygous familial hypercholesterolemia', 'ヘテロ接合体家族性高コレステロール血症'],
+      'hofe': ['homozygous familial hypercholesterolemia', 'ホモ接合体家族性高コレステロール血症'],
+      'lp': ['lipoprotein(a)', 'リポプロテイン'],
+      'hypertrig': ['hypertriglyceridemia', '高トリグリセリド血症'],
+      'hypothyroid': ['hypothyroidism', '甲状腺機能低下症'],
+      'hyperthyroid': ['hyperthyroidism', '甲状腺機能亢進症'],
+      'graves': ['graves disease', 'バセドウ病'],
+      'hashimoto': ['hashimoto thyroiditis', '橋本病'],
+      'acromegaly': ['acromegaly', '先端巨大症'],
+      'cushing': ['cushing syndrome', 'クッシング症候群'],
+      'addison': ['addison disease', 'アジソン病'],
+      'pheo': ['pheochromocytoma', '褐色細胞腫'],
+      'hyperparathyroid': ['hyperparathyroidism', '副甲状腺機能亢進症'],
+      
+      // ===== DERMATOLOGY =====
+      'ad3': ['atopic dermatitis', 'アトピー性皮膚炎'],
+      'pso': ['psoriasis', '乾癬'],
+      'pso2': ['plaque psoriasis', '尋常性乾癬'],
+      'csu': ['chronic spontaneous urticaria', '慢性特発性蕁麻疹'],
+      'ciu': ['chronic idiopathic urticaria', '慢性特発性蕁麻疹'],
+      'hs': ['hidradenitis suppurativa', '化膿性汗腺炎'],
+      'aa2': ['alopecia areata', '円形脱毛症'],
+      'aga': ['androgenetic alopecia', '男性型脱毛症'],
+      'vit': ['vitiligo', '白斑', '尋常性白斑'],
+      'bp': ['bullous pemphigoid', '水疱性類天疱瘡'],
+      'pv2': ['pemphigus vulgaris', '尋常性天疱瘡'],
+      'sjs': ['stevens-johnson syndrome', 'スティーブンス・ジョンソン症候群'],
+      'ten': ['toxic epidermal necrolysis', '中毒性表皮壊死症'],
+      'le': ['lupus erythematosus', 'エリテマトーデス'],
+      'dle': ['discoid lupus erythematosus', '円板状エリテマトーデス'],
+      'scle': ['subacute cutaneous lupus', '亜急性皮膚エリテマトーデス'],
+      'rosacea': ['rosacea', '酒さ'],
+      'prurigo': ['prurigo nodularis', '結節性痒疹'],
+      'pn2': ['prurigo nodularis', '結節性痒疹'],
+      
+      // ===== OPHTHALMOLOGY =====
+      'amd': ['age-related macular degeneration', '加齢黄斑変性'],
+      'wamd': ['wet age-related macular degeneration', '滲出型加齢黄斑変性'],
+      'damd': ['dry age-related macular degeneration', '萎縮型加齢黄斑変性'],
+      'ga': ['geographic atrophy', '地図状萎縮'],
+      'dme': ['diabetic macular edema', '糖尿病黄斑浮腫'],
+      'dr': ['diabetic retinopathy', '糖尿病網膜症'],
+      'pdr': ['proliferative diabetic retinopathy', '増殖糖尿病網膜症'],
+      'npdr': ['nonproliferative diabetic retinopathy', '非増殖糖尿病網膜症'],
+      'rvo': ['retinal vein occlusion', '網膜静脈閉塞症'],
+      'brvo': ['branch retinal vein occlusion', '網膜静脈分枝閉塞症'],
+      'crvo': ['central retinal vein occlusion', '網膜中心静脈閉塞症'],
+      'ded': ['dry eye disease', 'ドライアイ'],
+      'uvea': ['uveitis', 'ぶどう膜炎'],
+      'glc': ['glaucoma', '緑内障'],
+      'poag': ['primary open angle glaucoma', '原発開放隅角緑内障'],
+      'rp': ['retinitis pigmentosa', '網膜色素変性症'],
+      'lca': ['leber congenital amaurosis', 'レーバー先天黒内障'],
+      'sta': ['stargardt disease', 'スターガルト病'],
+      'to': ['thyroid eye disease', '甲状腺眼症'],
+      'ted': ['thyroid eye disease', '甲状腺眼症'],
+      
+      // ===== HEMATOLOGY (Non-Oncology) =====
+      'itp': ['immune thrombocytopenia', '免疫性血小板減少症'],
+      'tma': ['thrombotic microangiopathy', '血栓性微小血管障害症'],
+      'ttp': ['thrombotic thrombocytopenic purpura', '血栓性血小板減少性紫斑病'],
+      'hus': ['hemolytic uremic syndrome', 'hemolytic-uremic', '溶血性尿毒症症候群', '溶血性尿毒症'],
+      'pnh': ['paroxysmal nocturnal hemoglobinuria', '発作性夜間ヘモグロビン尿症'],
+      'aiha': ['autoimmune hemolytic anemia', '自己免疫性溶血性貧血'],
+      'scd': ['sickle cell disease', '鎌状赤血球症'],
+      'thal': ['thalassemia', 'サラセミア'],
+      'hemo': ['hemophilia', '血友病'],
+      'hema': ['hemophilia a', '血友病A'],
+      'hemb': ['hemophilia b', '血友病B'],
+      'vwd': ['von willebrand disease', 'フォン・ヴィレブランド病'],
+      'aa3': ['aplastic anemia', '再生不良性貧血'],
+      'dba': ['diamond blackfan anemia', 'ダイアモンド・ブラックファン貧血'],
+      'fanconi': ['fanconi anemia', 'ファンコニ貧血'],
+      'cad2': ['cold agglutinin disease', '寒冷凝集素症'],
+      
+      // ===== RARE / GENETIC DISEASES =====
+      'cf2': ['cystic fibrosis', '嚢胞性線維症'],
+      'fabry': ['fabry disease', 'ファブリー病'],
+      'gaucher': ['gaucher disease', 'ゴーシェ病'],
+      'pompe': ['pompe disease', 'ポンペ病'],
+      'mps': ['mucopolysaccharidosis', 'ムコ多糖症'],
+      'pku': ['phenylketonuria', 'フェニルケトン尿症'],
+      'hae': ['hereditary angioedema', '遺伝性血管性浮腫'],
+      'aat': ['alpha-1 antitrypsin deficiency', 'α1アンチトリプシン欠損症'],
+      'porphyria': ['porphyria', 'ポルフィリン症'],
+      'ahp': ['acute hepatic porphyria', '急性肝性ポルフィリン症'],
+      'aip': ['acute intermittent porphyria', '急性間欠性ポルフィリア'],
+      'hht': ['hereditary hemorrhagic telangiectasia', '遺伝性出血性毛細血管拡張症'],
+      'xla': ['x-linked agammaglobulinemia', 'X連鎖無ガンマグロブリン血症'],
+      'cvid': ['common variable immunodeficiency', '分類不能型免疫不全症'],
+      'scid': ['severe combined immunodeficiency', '重症複合免疫不全症'],
+      'oi': ['osteogenesis imperfecta', '骨形成不全症'],
+      'tsc': ['tuberous sclerosis', '結節性硬化症'],
+      'nf1': ['neurofibromatosis type 1', '神経線維腫症1型'],
+      'nf2': ['neurofibromatosis type 2', '神経線維腫症2型'],
+      'pws': ['prader-willi syndrome', 'プラダー・ウィリー症候群'],
+      'angelman': ['angelman syndrome', 'アンジェルマン症候群'],
+      'rett': ['rett syndrome', 'レット症候群'],
+      'fragile': ['fragile x syndrome', '脆弱X症候群'],
+      'marfan': ['marfan syndrome', 'マルファン症候群'],
+      'eds': ['ehlers-danlos syndrome', 'エーラス・ダンロス症候群'],
+      'ards2': ['ards', '急性呼吸窮迫症候群'],
+      
+      // ===== PSYCHIATRY =====
+      'mdd': ['major depressive disorder', '大うつ病性障害', 'うつ病'],
+      'trd': ['treatment resistant depression', '治療抵抗性うつ病'],
+      'gad': ['generalized anxiety disorder', '全般性不安障害'],
+      'sad': ['social anxiety disorder', '社会不安障害'],
+      'panic': ['panic disorder', 'パニック障害'],
+      'ptsd': ['post-traumatic stress disorder', '心的外傷後ストレス障害'],
+      'ocd': ['obsessive compulsive disorder', '強迫性障害'],
+      'bpd': ['bipolar disorder', '双極性障害'],
+      'bp1': ['bipolar i disorder', '双極I型障害'],
+      'bp2': ['bipolar ii disorder', '双極II型障害'],
+      'scz': ['schizophrenia', '統合失調症'],
+      'sz': ['schizophrenia', '統合失調症'],
+      'adhd': ['attention deficit hyperactivity disorder', '注意欠如・多動症'],
+      'asd2': ['autism spectrum disorder', '自閉スペクトラム症'],
+      'an': ['anorexia nervosa', '神経性やせ症'],
+      'bn': ['bulimia nervosa', '神経性過食症'],
+      'bed': ['binge eating disorder', '過食性障害'],
+      'insomnia': ['insomnia', '不眠症'],
+      'sud': ['substance use disorder', '物質使用障害'],
+      'aud': ['alcohol use disorder', 'アルコール使用障害'],
+      'oud': ['opioid use disorder', 'オピオイド使用障害'],
+      
+      // ===== OTHER COMMON =====
+      'bph': ['benign prostatic hyperplasia', '前立腺肥大症'],
+      'oab': ['overactive bladder', '過活動膀胱'],
+      'ic': ['interstitial cystitis', '間質性膀胱炎'],
+      'bps': ['bladder pain syndrome', '膀胱痛症候群'],
+      'ed': ['erectile dysfunction', '勃起障害'],
+      'luts': ['lower urinary tract symptoms', '下部尿路症状'],
+      'oa': ['osteoarthritis', '変形性関節症'],
+      'op': ['osteoporosis', '骨粗鬆症'],
+      'fms': ['fibromyalgia', '線維筋痛症'],
+      'cfs': ['chronic fatigue syndrome', '慢性疲労症候群'],
+      'me': ['myalgic encephalomyelitis', '筋痛性脳脊髄炎'],
+      'mecfs': ['me/cfs', '筋痛性脳脊髄炎/慢性疲労症候群'],
+      'endo': ['endometriosis', '子宮内膜症'],
+      'adenomyosis': ['adenomyosis', '子宮腺筋症'],
+      'uf': ['uterine fibroids', '子宮筋腫'],
+      'crps': ['complex regional pain syndrome', '複合性局所疼痛症候群'],
+      'anaphylaxis': ['anaphylaxis', 'アナフィラキシー'],
+      'mastocytosis': ['mastocytosis', '肥満細胞症'],
+      'narco': ['narcolepsy', 'ナルコレプシー'],
+      'rls': ['restless legs syndrome', 'むずむず脚症候群'],
+      'gi': ['gastrointestinal', '消化器'],
+      'ge': ['gastroenteritis', '胃腸炎'],
+    };
+
+    // Synonym dictionary for common medical terms
+    const synonyms = {
+      'cancer': ['carcinoma', 'malignant', 'neoplasm', 'tumor', 'tumour', 'oncology', 'がん', '癌', '悪性'],
+      'heart': ['cardiac', 'cardiovascular', 'cardio', '心臓', '心'],
+      'kidney': ['renal', 'nephro', '腎臓', '腎'],
+      'liver': ['hepatic', 'hepato', '肝臓', '肝'],
+      'lung': ['pulmonary', 'respiratory', '肺'],
+      'brain': ['cerebral', 'neuro', '脳'],
+      'stomach': ['gastric', '胃'],
+      'intestine': ['bowel', 'colon', 'colonic', 'enteric', '腸'],
+      'skin': ['derma', 'cutaneous', '皮膚'],
+      'bone': ['osteo', 'skeletal', '骨'],
+      'blood': ['hema', 'hemato', '血液'],
+      'nerve': ['neuro', 'neural', '神経'],
+      'muscle': ['muscular', 'myo', '筋肉', '筋'],
+      'joint': ['arthr', 'articular', '関節'],
+      'eye': ['ocular', 'ophthalm', '眼', '目'],
+      'ear': ['otic', 'aural', '耳'],
+      'diabetes': ['diabetic', '糖尿病'],
+      'infection': ['infectious', 'infective', '感染'],
+      'inflammation': ['inflammatory', 'itis', '炎症'],
+      'chronic': ['long-term', 'persistent', '慢性'],
+      'acute': ['sudden', 'rapid', '急性'],
+      'pain': ['algia', 'ache', '痛み', '疼痛'],
+      'high': ['hyper', 'elevated', '高'],
+      'low': ['hypo', 'decreased', '低'],
+      'breast': ['mammary', '乳房', '乳腺'],
+      'prostate': ['prostatic', '前立腺'],
+      'thyroid': ['thyroidal', '甲状腺'],
+      'pancreas': ['pancreatic', '膵臓', '膵'],
+      'bladder': ['vesical', '膀胱'],
+      'uterus': ['uterine', '子宮'],
+      'ovary': ['ovarian', '卵巣'],
+    };
+
+    // Social sensitivity keywords and messages
+    const socialKeywords = {
+      hiv: {
+        keywords: ['HIV', 'エイズ', 'AIDS', '免疫不全ウイルス'],
+        jp: 'HIVに関連する疾患は、日本では社会的なスティグマが強く、調査への参加に抵抗を持つ患者が多いです。患者数があっても実際のリクルートは困難です。',
+        en: 'HIV-related conditions carry significant social stigma in Japan. Despite patient numbers, actual recruitment is challenging due to privacy concerns.'
+      },
+      sti: {
+        keywords: ['梅毒', '淋病', 'クラミジア', '性感染', '性行為感染', 'ヘルペス', '尖圭', 'STD', 'STI', 'genital', 'sexually', 'syphilis', 'gonorrhea', 'chlamydia'],
+        jp: '性感染症は社会的に恥ずかしいとされる疾患のため、日本では調査対象として向いていません。自己申告を避ける患者が多く、実際のリクルートは非常に困難です。',
+        en: 'STIs are considered socially embarrassing in Japan. Patients often avoid self-disclosure, making recruitment extremely difficult regardless of patient numbers.'
+      },
+      mental: {
+        keywords: ['精神', '統合失調', 'うつ病', '躁うつ', '双極性', '認知症', '依存症', 'アルコール依存', '薬物依存', 'schizophrenia', 'depression', 'bipolar', 'dementia', 'addiction'],
+        jp: '精神疾患は日本では偏見が根強く、患者やその家族が調査参加に消極的なことが多いです。特に重度の精神疾患では同意取得も課題となります。',
+        en: 'Mental health conditions face strong prejudice in Japan. Patients and families are often reluctant to participate. Consent acquisition can also be challenging for severe cases.'
+      },
+      obesity: {
+        keywords: ['肥満', '過体重', 'obesity', 'overweight'],
+        jp: '肥満に関連する疾患は、日本では外見的な恥ずかしさから自己申告を避ける傾向があります。',
+        en: 'Obesity-related conditions in Japan face self-disclosure reluctance due to appearance-related embarrassment.'
+      },
+      incontinence: {
+        keywords: ['失禁', '排尿障害', '便失禁', 'incontinence', 'enuresis'],
+        jp: '失禁関連の疾患は、日本では恥ずかしいとされ、特に高齢者において調査参加への抵抗が強いです。',
+        en: 'Incontinence-related conditions are considered embarrassing in Japan, with strong resistance to participation especially among elderly patients.'
+      }
+    };
+
+    // Recruitment messages based on patient count
+    function getRecruitmentInfo(count) {
+      if (count < 20000) {
+        return {
+          level: 'red',
+          icon: '🚨',
+          title: '極めて困難 / Extremely Difficult',
+          jp: '非常に患者数が少ないため、リクルートが現実的ではありません。SNS経由で長期リクルート期間を確保する必要があります。患者会やKOL医師ネットワークの活用が必須です。',
+          en: 'Very low patient numbers make recruitment unrealistic through standard methods. Long-term SNS-based recruitment is necessary. Patient associations and KOL physician networks are essential.',
+          estimate: '0-2人 / 0-2 patients'
+        };
+      } else if (count < 50000) {
+        return {
+          level: 'red',
+          icon: '⚠️',
+          title: 'かなり困難 / Very Difficult',
+          jp: '非常に患者数が少ないため、リクルートがかなり厳しいです。罹患しているという条件のみで見込み数は数人程度です。3H、医師の紹介、SNSターゲットの併用を推奨します。',
+          en: 'Very low patient numbers make recruitment very difficult. Expected recruits are only a few patients with disease condition alone. Recommend combining 3H, physician referrals, and SNS targeting.',
+          estimate: '2-3人 / 2-3 patients'
+        };
+      } else if (count < 80000) {
+        return {
+          level: 'orange',
+          icon: '⚠️',
+          title: '困難 / Difficult',
+          jp: '患者数が少ないため、パネルに登録されていなければリクルートは現実的ではありませんが、過去に3名程度の実績があります。3Hや医師の紹介、SNSターゲットを併用しても3-4人が現実的な数字です。',
+          en: 'Low patient numbers mean panel registration is necessary. Historical success: approximately 3 patients. Even with 3H, physician referrals, and SNS targeting, 3-4 patients is realistic.',
+          estimate: '3-4人 / 3-4 patients'
+        };
+      } else if (count < 120000) {
+        return {
+          level: 'orange',
+          icon: '📊',
+          title: 'やや困難 / Somewhat Difficult',
+          jp: '希少疾患ほどではありませんが、患者数が少ない疾患です。パネルに登録されていなかった場合はリクルートが難航します。同じ規模の患者数の疾患で5名程度の過去の実績はあります。',
+          en: 'Not as rare as orphan diseases, but patient numbers are still low. Without panel registration, recruitment will be challenging. Historical success with similar patient populations: approximately 5 patients.',
+          estimate: '4-5人 / 4-5 patients'
+        };
+      } else if (count < 150000) {
+        return {
+          level: 'orange',
+          icon: '📊',
+          title: '中程度 / Moderate',
+          jp: '患者数はやや少ないですが、パネル内に該当者がいる可能性があります。過去の同規模疾患での実績は5-6名程度です。条件を絞りすぎなければリクルート可能です。',
+          en: 'Patient numbers are somewhat low, but panel matches are possible. Historical success with similar diseases: 5-6 patients. Recruitment is feasible if conditions are not too restrictive.',
+          estimate: '5-6人 / 5-6 patients'
+        };
+      } else if (count < 200000) {
+        return {
+          level: 'green',
+          icon: '✅',
+          title: '実現可能 / Feasible',
+          jp: '標準的なリクルートが可能な患者数です。パネルを活用すれば6-7名程度のリクルートが期待できます。追加条件によっては難易度が上がる可能性があります。',
+          en: 'Standard recruitment is possible with this patient population. Using panels, 6-7 patients can be expected. Additional conditions may increase difficulty.',
+          estimate: '6-7人 / 6-7 patients'
+        };
+      } else if (count < 250000) {
+        return {
+          level: 'green',
+          icon: '✅',
+          title: '良好 / Good',
+          jp: 'リクルートしやすい患者数です。パネルを活用すれば7-8名程度のリクルートが期待できます。多少の追加条件があっても対応可能です。',
+          en: 'Patient population supports good recruitment. Using panels, 7-8 patients can be expected. Some additional conditions can be accommodated.',
+          estimate: '7-8人 / 7-8 patients'
+        };
+      } else if (count < 500000) {
+        return {
+          level: 'green',
+          icon: '👍',
+          title: '容易 / Easy',
+          jp: '十分な患者数があり、8名程度のリクルートが可能です。条件を追加しても柔軟に対応できます。複数条件の組み合わせも検討可能です。',
+          en: 'Sufficient patient population for recruiting approximately 8 patients. Flexible with additional conditions. Multiple condition combinations can be considered.',
+          estimate: '8人以上 / 8+ patients'
+        };
+      } else {
+        return {
+          level: 'green',
+          icon: '🎯',
+          title: '非常に容易 / Very Easy',
+          jp: '大規模な患者集団があり、10名以上のリクルートが可能です。複数の追加条件があっても対応可能で、セグメント別の調査も検討できます。',
+          en: 'Large patient population supports recruiting 10+ patients. Multiple additional conditions can be accommodated. Segmented studies are also possible.',
+          estimate: '10人以上 / 10+ patients'
+        };
+      }
+    }
+
+    // Check for social sensitivity
+    function checkSocialSensitivity(diseaseName, diseaseEnglish) {
+      const combined = (diseaseName + ' ' + diseaseEnglish).toLowerCase();
+      
+      for (const [key, config] of Object.entries(socialKeywords)) {
+        for (const keyword of config.keywords) {
+          if (combined.includes(keyword.toLowerCase())) {
+            return config;
+          }
+        }
+      }
+      return null;
+    }
+
+    // Format number with commas
+    function formatNumber(num) {
+      return num.toLocaleString('ja-JP');
+    }
+
+    // Load disease data
+    async function loadDiseases() {
+      try {
+        const response = await fetch('disease_data.json');
+        diseases = await response.json();
+        console.log(`Loaded ${diseases.length} diseases`);
+      } catch (error) {
+        console.error('Error loading disease data:', error);
+      }
+    }
+
+    // Load project history
+    async function loadProjectHistory() {
+      try {
+        const response = await fetch('project_history.json');
+        projectHistory = await response.json();
+        console.log(`Loaded ${projectHistory.length} project records`);
+      } catch (error) {
+        console.error('Error loading project history:', error);
+      }
+    }
+
+    // Check severity warning
+    function checkSeverityWarning(diseaseName, diseaseEnglish) {
+      const combined = (diseaseName + ' ' + diseaseEnglish).toLowerCase();
+      
+      for (const [key, config] of Object.entries(severityWarnings)) {
+        for (const keyword of config.keywords) {
+          if (combined.includes(keyword.toLowerCase())) {
+            return config;
+          }
+        }
+      }
+      return null;
+    }
+
+    // Find matching project history
+    function findProjectHistory(diseaseName, diseaseEnglish) {
+      const searchTerms = [
+        diseaseName.toLowerCase(),
+        diseaseEnglish.toLowerCase()
+      ];
+      
+      // Extract keywords for matching
+      const keywords = [];
+      if (diseaseName) {
+        keywords.push(...diseaseName.split(/[／\/\s]+/).filter(k => k.length > 2));
+      }
+      if (diseaseEnglish) {
+        keywords.push(...diseaseEnglish.split(/[\s,]+/).filter(k => k.length > 2));
+      }
+      
+      return projectHistory.filter(record => {
+        const recordName = (record.disease_jp || '').toLowerCase();
+        const recordAbbr = (record.disease_abbr || '').toLowerCase();
+        
+        // Direct match
+        for (const term of searchTerms) {
+          if (recordName.includes(term) || term.includes(recordName)) return true;
+          if (recordAbbr.includes(term)) return true;
+        }
+        
+        // Keyword match
+        for (const keyword of keywords) {
+          const kw = keyword.toLowerCase();
+          if (recordName.includes(kw) || recordAbbr.includes(kw)) return true;
+        }
+        
+        return false;
+      });
+    }
+
+    // Display history section
+    function displayHistorySection(records) {
+      const section = document.getElementById('historySection');
+      const summary = document.getElementById('historySummary');
+      
+      if (records.length === 0) {
+        section.style.display = 'none';
+        return;
+      }
+      
+      currentHistoryRecords = records;
+      
+      // Calculate summary stats
+      const totalCount = records.reduce((sum, r) => sum + (r.count || 0), 0);
+      const methods = [...new Set(records.map(r => r.method).filter(m => m))];
+      const subjectTypes = [...new Set(records.map(r => r.subject_type).filter(t => t))];
+      
+      summary.innerHTML = `
+        <div class="history-summary-title">📊 実績サマリー / Summary</div>
+        <div class="history-stats">
+          <div class="history-stat">
+            <div class="history-stat-label">プロジェクト数</div>
+            <div class="history-stat-value">${records.length}件</div>
+          </div>
+          <div class="history-stat">
+            <div class="history-stat-label">総リクルート数</div>
+            <div class="history-stat-value">${totalCount}名</div>
+          </div>
+          <div class="history-stat">
+            <div class="history-stat-label">手法</div>
+            <div class="history-stat-value">${methods.slice(0, 2).join(', ')}${methods.length > 2 ? '...' : ''}</div>
+          </div>
+        </div>
+      `;
+      
+      section.style.display = 'block';
+    }
+
+    // Show history modal
+    function showHistoryModal() {
+      const modal = document.getElementById('historyModal');
+      const modalBody = document.getElementById('modalBody');
+      
+      if (currentHistoryRecords.length === 0) {
+        modalBody.innerHTML = '<div class="no-history">過去の実績データがありません。</div>';
+      } else {
+        modalBody.innerHTML = currentHistoryRecords.map(record => `
+          <div class="history-card">
+            <div class="history-card-header">
+              <div class="history-card-date">📅 ${record.date || 'N/A'}</div>
+              <div class="history-card-count">👥 ${record.count || 0}名</div>
+            </div>
+            <div class="history-card-method">${record.method || 'N/A'} / ${record.subject_type || 'N/A'}</div>
+            <div class="history-card-condition">
+              <strong>対象条件:</strong><br>
+              ${record.conditions || '条件詳細なし'}
+            </div>
+            <div class="history-card-meta">
+              ${record.drug ? `💊 ${record.drug}` : ''}<br>
+              ${record.end_client ? `🏢 ${record.end_client}` : ''}
+              ${record.recruiter ? ` / via ${record.recruiter}` : ''}
+            </div>
+          </div>
+        `).join('');
+      }
+      
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // Close history modal
+    function closeHistoryModal() {
+      document.getElementById('historyModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // Expand query with abbreviations and synonyms
+    function expandQuery(query) {
+      const lowerQuery = query.toLowerCase().trim();
+      let expandedTerms = [lowerQuery];
+      
+      // Check if query matches an abbreviation
+      if (abbreviations[lowerQuery]) {
+        expandedTerms = expandedTerms.concat(abbreviations[lowerQuery]);
+      }
+      
+      // Check synonyms for each word in the query
+      const words = lowerQuery.split(/\s+/);
+      words.forEach(word => {
+        // Check if word is an abbreviation
+        if (abbreviations[word]) {
+          expandedTerms = expandedTerms.concat(abbreviations[word]);
+        }
+        // Check if word has synonyms
+        for (const [key, syns] of Object.entries(synonyms)) {
+          if (word === key || syns.some(s => s.toLowerCase() === word)) {
+            expandedTerms.push(key);
+            expandedTerms = expandedTerms.concat(syns);
+          }
+        }
+      });
+      
+      return [...new Set(expandedTerms)]; // Remove duplicates
+    }
+
+    // Search diseases with advanced matching
+    function searchDiseases(query) {
+      if (!query || query.length < 1) return [];
+      
+      const lowerQuery = query.toLowerCase().trim();
+      
+      // Split query into keywords for AND search
+      const keywords = lowerQuery.split(/\s+/).filter(k => k.length > 0);
+      
+      // Expand each keyword
+      const expandedKeywordSets = keywords.map(k => expandQuery(k));
+      
+      // Score-based search for better ranking
+      const results = diseases.map(d => {
+        const jp = (d.disease_jp || '').toLowerCase();
+        const en = (d.disease_en || '').toLowerCase();
+        const icd = (d.icd10 || '').toLowerCase();
+        const combined = `${jp} ${en} ${icd}`;
+        
+        let score = 0;
+        let matchedAllKeywords = true;
+        
+        // Check each keyword set (AND logic between keywords)
+        for (const expandedTerms of expandedKeywordSets) {
+          let keywordMatched = false;
+          
+          for (const term of expandedTerms) {
+            if (combined.includes(term.toLowerCase())) {
+              keywordMatched = true;
+              // Higher score for exact matches
+              if (en.includes(term.toLowerCase())) score += 10;
+              if (jp.includes(term.toLowerCase())) score += 10;
+              if (icd.includes(term.toLowerCase())) score += 15;
+              // Bonus for matching at start
+              if (en.startsWith(term.toLowerCase()) || jp.startsWith(term.toLowerCase())) score += 5;
+            }
+          }
+          
+          if (!keywordMatched) {
+            matchedAllKeywords = false;
+            break;
+          }
+        }
+        
+        // Bonus for higher patient count (more relevant diseases)
+        if (matchedAllKeywords && d.patient_count > 100000) score += 2;
+        if (matchedAllKeywords && d.patient_count > 500000) score += 3;
+        
+        return { disease: d, score, matched: matchedAllKeywords };
+      })
+      .filter(r => r.matched && r.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 30)
+      .map(r => r.disease);
+      
+      return results;
+    }
+
+    // Display suggestions
+    function displaySuggestions(results) {
+      const container = document.getElementById('suggestions');
+      
+      if (results.length === 0) {
+        container.classList.remove('active');
+        return;
+      }
+
+      container.innerHTML = results.map((d, i) => `
+        <div class="suggestion-item" data-index="${i}" onclick="selectDisease(${diseases.indexOf(d)})">
+          <div class="suggestion-name">${d.disease_jp}</div>
+          <div class="suggestion-english">${d.disease_en}</div>
+          <div class="suggestion-meta">
+            <span class="suggestion-icd">${d.icd10}</span>
+            <span class="suggestion-count">👥 ${formatNumber(d.patient_count)}人</span>
+          </div>
+        </div>
+      `).join('');
+
+      container.classList.add('active');
+      selectedIndex = -1;
+    }
+
+    // Select a disease
+    function selectDisease(index) {
+      const disease = diseases[index];
+      displayResult(disease);
+      document.getElementById('suggestions').classList.remove('active');
+      document.getElementById('searchInput').value = disease.disease_jp;
+    }
+
+    // Display result
+    function displayResult(disease) {
+      document.getElementById('diseaseName').textContent = disease.disease_jp;
+      document.getElementById('diseaseEnglish').textContent = disease.disease_en;
+      document.getElementById('icdCode').textContent = disease.icd10;
+      document.getElementById('patientNumber').textContent = formatNumber(disease.patient_count);
+
+      // Check social sensitivity
+      const socialInfo = checkSocialSensitivity(disease.disease_jp, disease.disease_en);
+      const socialAlert = document.getElementById('socialAlert');
+      
+      if (socialInfo) {
+        document.getElementById('socialMessage').innerHTML = `
+          <p style="margin-bottom: 10px;">${socialInfo.jp}</p>
+          <p style="color: var(--brown-medium); font-style: italic;">${socialInfo.en}</p>
+        `;
+        socialAlert.classList.add('active');
+      } else {
+        socialAlert.classList.remove('active');
+      }
+
+      // Check severity warning
+      const severityInfo = checkSeverityWarning(disease.disease_jp, disease.disease_en);
+      const severityAlert = document.getElementById('severityAlert');
+      
+      if (severityInfo) {
+        document.getElementById('severityMessage').innerHTML = `
+          <p style="margin-bottom: 10px;">${severityInfo.jp}</p>
+          <p style="color: var(--brown-medium); font-style: italic;">${severityInfo.en}</p>
+        `;
+        severityAlert.classList.add('active');
+      } else {
+        severityAlert.classList.remove('active');
+      }
+
+      // Check project history
+      const historyRecords = findProjectHistory(disease.disease_jp, disease.disease_en);
+      displayHistorySection(historyRecords);
+
+      // Get recruitment info
+      const recruitInfo = getRecruitmentInfo(disease.patient_count);
+      
+      document.getElementById('recruitmentSection').innerHTML = `
+        <div class="recruitment-box ${recruitInfo.level}">
+          <div class="recruitment-title">
+            <span class="icon">${recruitInfo.icon}</span>
+            <span>${recruitInfo.title}</span>
+          </div>
+          <div class="recruitment-message">${recruitInfo.jp}</div>
+          <div class="recruitment-english">${recruitInfo.en}</div>
+        </div>
+      `;
+
+      document.getElementById('estimateNumber').textContent = recruitInfo.estimate;
+
+      // Show result card
+      document.getElementById('resultCard').classList.add('active');
+
+      // Scroll to result
+      document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // Reset search
+    function resetSearch() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('resultCard').classList.remove('active');
+      document.getElementById('suggestions').classList.remove('active');
+      document.getElementById('searchInput').focus();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Keyboard navigation
+    function handleKeydown(e) {
+      const suggestions = document.getElementById('suggestions');
+      const items = suggestions.querySelectorAll('.suggestion-item');
+      
+      if (!suggestions.classList.contains('active') || items.length === 0) return;
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+        updateSelection(items);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        selectedIndex = Math.max(selectedIndex - 1, 0);
+        updateSelection(items);
+      } else if (e.key === 'Enter' && selectedIndex >= 0) {
+        e.preventDefault();
+        items[selectedIndex].click();
+      } else if (e.key === 'Escape') {
+        suggestions.classList.remove('active');
+      }
+    }
+
+    function updateSelection(items) {
+      items.forEach((item, i) => {
+        item.classList.toggle('selected', i === selectedIndex);
+        if (i === selectedIndex) {
+          item.scrollIntoView({ block: 'nearest' });
+        }
+      });
+    }
+
+    // Event listeners
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      const results = searchDiseases(e.target.value);
+      displaySuggestions(results);
+    });
+
+    document.getElementById('searchInput').addEventListener('keydown', handleKeydown);
+
+    document.getElementById('searchInput').addEventListener('focus', (e) => {
+      if (e.target.value) {
+        const results = searchDiseases(e.target.value);
+        displaySuggestions(results);
+      }
+    });
+
+    // Click outside to close suggestions
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.search-section')) {
+        document.getElementById('suggestions').classList.remove('active');
+      }
+    });
+
+    // Close modal on overlay click
+    document.getElementById('historyModal').addEventListener('click', (e) => {
+      if (e.target.classList.contains('modal-overlay')) {
+        closeHistoryModal();
+      }
+    });
+
+    // Close modal on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeHistoryModal();
+      }
+    });
+
+    // Initialize
+    loadDiseases();
+    loadProjectHistory();
+  </script>
+</body>
+</html>

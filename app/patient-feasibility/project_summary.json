@@ -1,0 +1,622 @@
+{
+  "アルツハイマー型認知症": {
+    "total_count": 4,
+    "project_count": 2,
+    "abbreviations": [
+      "Alzheimer's Disease, AD"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "介護者"
+    ]
+  },
+  "プレクリニカルアルツハイマー病": {
+    "total_count": 60,
+    "project_count": 6,
+    "abbreviations": [
+      "Preclinical Alzheimer's Disease, PCAD/Mild Cognitive Impairment, MCI",
+      "Preclinical Alzheimer’s Disease",
+      "Preclinical Alzheimer's Disease, PCAD"
+    ],
+    "methods": [
+      "会場調査・IDI",
+      "IDI"
+    ],
+    "subject_types": [
+      "介護者",
+      "患者"
+    ]
+  },
+  "鼻茸を伴う慢性副鼻腔炎": {
+    "total_count": 19,
+    "project_count": 4,
+    "abbreviations": [
+      "Chronic Rhinosinusitis with Nasal Polyps, CRSwNP",
+      "CRSwNP"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "IgA腎症": {
+    "total_count": 4,
+    "project_count": 2,
+    "abbreviations": [
+      "IgA nephropathy, IgAN"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "アルコール・タバコ使用障害": {
+    "total_count": 16,
+    "project_count": 2,
+    "abbreviations": [
+      "Alcohol and Tobacco Use Disorders"
+    ],
+    "methods": [
+      "会場調査・IDI"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "クローン病": {
+    "total_count": 8,
+    "project_count": 2,
+    "abbreviations": [
+      "Crohn's disease, CD"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "統合失調症": {
+    "total_count": 8,
+    "project_count": 2,
+    "abbreviations": [
+      "Schizophrenia"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "介護者",
+      "患者"
+    ]
+  },
+  "アルツハイマー型認知症／軽度認知障害": {
+    "total_count": 127,
+    "project_count": 20,
+    "abbreviations": [
+      "Alzheimer's Disease, AD/MCI",
+      "Alzheimer's Disease, AD/Mild Cognitive Impairment, MCI"
+    ],
+    "methods": [
+      "会場調査・IDI",
+      "会場調査・Dyad",
+      "IDI",
+      "会場調査・Group",
+      "Dyad"
+    ],
+    "subject_types": [
+      "介護者",
+      "患者"
+    ]
+  },
+  "2型糖尿病": {
+    "total_count": 54,
+    "project_count": 5,
+    "abbreviations": [
+      "T2D",
+      "Type 2 Diabetes Mellitus, T2DM"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "アルツハイマー病": {
+    "total_count": 4,
+    "project_count": 1,
+    "abbreviations": [
+      "Alzheimer's Disease, AD"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "介護者"
+    ]
+  },
+  "転移性前立腺がん": {
+    "total_count": 21,
+    "project_count": 4,
+    "abbreviations": [
+      "Metastatic Prostate Cancer"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "動脈硬化性心疾患": {
+    "total_count": 9,
+    "project_count": 2,
+    "abbreviations": [
+      "Atherosclerotic Cardiovascular Disease, ASCVD"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "肥満症": {
+    "total_count": 47,
+    "project_count": 4,
+    "abbreviations": [
+      "Obesity"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "慢性炎症性脱髄性多発根神経炎": {
+    "total_count": 6,
+    "project_count": 1,
+    "abbreviations": [
+      "CIDP"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "ナルコレプシー": {
+    "total_count": 5,
+    "project_count": 1,
+    "abbreviations": [
+      "Narcolepsy"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "局所進行性切除不能膵がん": {
+    "total_count": 4,
+    "project_count": 1,
+    "abbreviations": [
+      "Locally advanced unresectable pancreatic cancer"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "慢性閉塞性肺疾患": {
+    "total_count": 33,
+    "project_count": 4,
+    "abbreviations": [
+      "COPD"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "介護者",
+      "患者"
+    ]
+  },
+  "非閉塞性肥大型心筋症": {
+    "total_count": 1,
+    "project_count": 1,
+    "abbreviations": [
+      "nHCM"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "局所進行結腸がん": {
+    "total_count": 7,
+    "project_count": 2,
+    "abbreviations": [
+      "Locally advanced colon cancer"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "介護者",
+      "患者"
+    ]
+  },
+  "COPD": {
+    "total_count": 8,
+    "project_count": 1,
+    "abbreviations": [
+      "COPD"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "気管支拡張症": {
+    "total_count": 5,
+    "project_count": 1,
+    "abbreviations": [
+      "BE"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "遺伝性出血性毛細血管拡張症": {
+    "total_count": 2,
+    "project_count": 2,
+    "abbreviations": [
+      "HHT"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "介護者",
+      "患者"
+    ]
+  },
+  "フォン・ヴィルブランド病": {
+    "total_count": 1,
+    "project_count": 1,
+    "abbreviations": [
+      "VWD"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "腹膜透析": {
+    "total_count": 3,
+    "project_count": 1,
+    "abbreviations": [
+      "PD"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "非小細胞肺がん": {
+    "total_count": 4,
+    "project_count": 2,
+    "abbreviations": [
+      "NSCLC / Non-Small Cell Lung Cancer"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "介護者",
+      "患者"
+    ]
+  },
+  "びまん性大細胞型B細胞リンパ腫": {
+    "total_count": 12,
+    "project_count": 2,
+    "abbreviations": [
+      "DLBCL",
+      "DLBCL / Diffuse Large B-Cell Lymphoma"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "介護者",
+      "患者"
+    ]
+  },
+  "転移性食道がん": {
+    "total_count": 3,
+    "project_count": 1,
+    "abbreviations": [
+      "Esophageal Cancer"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "潰瘍性大腸炎（UC）": {
+    "total_count": 10,
+    "project_count": 1,
+    "abbreviations": [
+      "UC / Ulcerative Colitis"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "早期乳がん": {
+    "total_count": 12,
+    "project_count": 1,
+    "abbreviations": [
+      "EBC / early breast cancer"
+    ],
+    "methods": [
+      "会場調査"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "プレクリニカル期アルツハイマー型認知症、軽度アルツハイマー型認知症": {
+    "total_count": 18,
+    "project_count": 2,
+    "abbreviations": [
+      "PCAD,Preclinical,Mild AD,Mild Alzheimer's Disease"
+    ],
+    "methods": [
+      "会場調査"
+    ],
+    "subject_types": [
+      "介護者",
+      "患者"
+    ]
+  },
+  "血友病": {
+    "total_count": 4,
+    "project_count": 1,
+    "abbreviations": [
+      "Hemophilia"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "アトピー性皮膚炎": {
+    "total_count": 12,
+    "project_count": 2,
+    "abbreviations": [
+      "Atopic Dermatitis"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "介護者",
+      "患者"
+    ]
+  },
+  "びまん性大細胞型B細胞リンパ腫(D": {
+    "total_count": 4,
+    "project_count": 1,
+    "abbreviations": [
+      "DLBCL"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "ドライアイ": {
+    "total_count": 5,
+    "project_count": 1,
+    "abbreviations": [
+      "Dry Eye"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "原発性胆汁性胆管炎": {
+    "total_count": 3,
+    "project_count": 1,
+    "abbreviations": [
+      "Primary Biliary Chlangitis、PBC"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "デュシェンヌ型筋ジストロフィー": {
+    "total_count": 7,
+    "project_count": 1,
+    "abbreviations": [
+      "Duchenne Muscular Dystrophy、DMD"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "介護者"
+    ]
+  },
+  "転移性去勢抵抗性前立腺がん": {
+    "total_count": 6,
+    "project_count": 2,
+    "abbreviations": [
+      "mCRPC"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "介護者",
+      "患者"
+    ]
+  },
+  "慢性腎臓病": {
+    "total_count": 12,
+    "project_count": 1,
+    "abbreviations": [
+      "CKD"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "脳卒中二次予防": {
+    "total_count": 4,
+    "project_count": 2,
+    "abbreviations": [
+      "Secondary Stroke Prevention (SSP)"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "介護者",
+      "患者"
+    ]
+  },
+  "白斑": {
+    "total_count": 2,
+    "project_count": 1,
+    "abbreviations": [
+      "Vitiligo"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "自己注射デバイス": {
+    "total_count": 12,
+    "project_count": 2,
+    "abbreviations": [],
+    "methods": [
+      "会場調査"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "慢性特発性蕁麻疹": {
+    "total_count": 2,
+    "project_count": 1,
+    "abbreviations": [
+      "CSU"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "結節性痒疹": {
+    "total_count": 2,
+    "project_count": 1,
+    "abbreviations": [
+      "PN"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "全身性エリテマトーデス": {
+    "total_count": 10,
+    "project_count": 1,
+    "abbreviations": [
+      "SLE"
+    ],
+    "methods": [
+      "IDI"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "尋常性乾癬": {
+    "total_count": 10,
+    "project_count": 1,
+    "abbreviations": [
+      "psoriasis (PsO)"
+    ],
+    "methods": [
+      "TDI"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  },
+  "動脈硬化性心血管疾患": {
+    "total_count": 92,
+    "project_count": 2,
+    "abbreviations": [
+      "ASCVD"
+    ],
+    "methods": [
+      "アンケート",
+      "IDI"
+    ],
+    "subject_types": [
+      "患者"
+    ]
+  }
+}
