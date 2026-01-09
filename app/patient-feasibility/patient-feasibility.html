@@ -1398,7 +1398,7 @@
     // Load disease data
     async function loadDiseases() {
       try {
-        const response = await fetch('disease_data.json');
+        const response = await fetch('disease_data.json?v=' + Date.now());
         diseases = await response.json();
         console.log(`Loaded ${diseases.length} diseases`);
       } catch (error) {
@@ -1409,7 +1409,7 @@
     // Load project history
     async function loadProjectHistory() {
       try {
-        const response = await fetch('project_history.json');
+        const response = await fetch('project_history.json?v=' + Date.now());
         projectHistory = await response.json();
         console.log(`Loaded ${projectHistory.length} project records`);
       } catch (error) {
