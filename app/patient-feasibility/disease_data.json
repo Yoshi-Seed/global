@@ -559,464 +559,464 @@
   },
   {
     "icd10": "C01",
-    "disease_jp": "舌根＜基底＞部の悪性新生物＜腫瘍＞",
-    "disease_en": "Malignant neoplasm (tumor) of the base of the tongue",
+    "disease_jp": "舌根＜基底＞部のがん",
+    "disease_en": "Cancer (tumor) of the base of the tongue",
     "patient_count": 2000
   },
   {
     "icd10": "C021",
-    "disease_jp": "舌のその他及び部位不明の悪性新生物＜腫瘍＞ 舌縁",
-    "disease_en": "Malignant neoplasm of other and unspecified parts of tongue, tongue edge",
+    "disease_jp": "舌のその他及び部位不明のがん 舌縁",
+    "disease_en": "Cancer of other and unspecified parts of tongue, tongue edge",
     "patient_count": 5000
   },
   {
     "icd10": "C029",
-    "disease_jp": "舌のその他及び部位不明の悪性新生物＜腫瘍＞ 舌，部位不明",
+    "disease_jp": "舌のその他及び部位不明のがん 舌，部位不明",
     "disease_en": "Tongue cancer",
     "patient_count": 20000
   },
   {
     "icd10": "C030",
-    "disease_jp": "歯肉の悪性新生物＜腫瘍＞ 上顎歯肉",
-    "disease_en": "Malignant neoplasm of gingiva, upper jaw gingiva",
+    "disease_jp": "歯肉のがん 上顎歯肉",
+    "disease_en": "Cancer of gingiva, upper jaw gingiva",
     "patient_count": 6000
   },
   {
     "icd10": "C031",
-    "disease_jp": "歯肉の悪性新生物＜腫瘍＞ 下顎歯肉",
-    "disease_en": "Malignant neoplasm of gum, mandibular",
+    "disease_jp": "歯肉のがん 下顎歯肉",
+    "disease_en": "Cancer of gum, mandibular",
     "patient_count": 6000
   },
   {
     "icd10": "C041",
-    "disease_jp": "口（腔）底の悪性新生物＜腫瘍＞ 側部口（腔）底",
-    "disease_en": "Malignant neoplasm (tumor) of the floor of the mouth, lateral floor of the mouth",
+    "disease_jp": "口（腔）底のがん 側部口（腔）底",
+    "disease_en": "Cancer (tumor) of the floor of the mouth, lateral floor of the mouth",
     "patient_count": 1000
   },
   {
     "icd10": "C049",
-    "disease_jp": "口（腔）底の悪性新生物＜腫瘍＞ 口（腔）底，部位不明",
-    "disease_en": "Malignant neoplasm of floor of mouth, part unspecified",
+    "disease_jp": "口（腔）底のがん 口（腔）底，部位不明",
+    "disease_en": "Cancer of floor of mouth, part unspecified",
     "patient_count": 1000
   },
   {
     "icd10": "C051",
-    "disease_jp": "口蓋の悪性新生物＜腫瘍＞ 軟口蓋",
-    "disease_en": "Malignant neoplasm of palate, soft palate (or Soft palate cancer)",
+    "disease_jp": "口蓋のがん 軟口蓋",
+    "disease_en": "Cancer of palate, soft palate (or Soft palate cancer)",
     "patient_count": 1000
   },
   {
     "icd10": "C059",
-    "disease_jp": "口蓋の悪性新生物＜腫瘍＞ 口蓋，部位不明",
-    "disease_en": "Malignant neoplasm of the palate, unspecified site",
+    "disease_jp": "口蓋のがん 口蓋，部位不明",
+    "disease_en": "Cancer of the palate, unspecified site",
     "patient_count": 1000
   },
   {
     "icd10": "C060",
-    "disease_jp": "その他及び部位不明の口腔の悪性新生物＜腫瘍＞ 頬粘膜",
-    "disease_en": "Malignant neoplasm of the buccal mucosa (unspecified site of mouth)",
+    "disease_jp": "その他及び部位不明の口腔のがん 頬粘膜",
+    "disease_en": "Cancer of the buccal mucosa (unspecified site of mouth)",
     "patient_count": 2000
   },
   {
     "icd10": "C069",
-    "disease_jp": "その他及び部位不明の口腔の悪性新生物＜腫瘍＞ 口腔，部位不明",
+    "disease_jp": "その他及び部位不明の口腔のがん 口腔，部位不明",
     "disease_en": "Oral cancer, unspecified site",
     "patient_count": 1000
   },
   {
     "icd10": "C07",
-    "disease_jp": "耳下腺の悪性新生物＜腫瘍＞",
+    "disease_jp": "耳下腺のがん",
     "disease_en": "Malignant parotid tumor",
     "patient_count": 4000
   },
   {
     "icd10": "C080",
-    "disease_jp": "その他及び部位不明の大唾液腺の悪性新生物＜腫瘍＞ 顎下腺",
-    "disease_en": "Malignant neoplasm of other and unspecified major salivary glands, submandibular gland",
+    "disease_jp": "その他及び部位不明の大唾液腺のがん 顎下腺",
+    "disease_en": "Cancer of other and unspecified major salivary glands, submandibular gland",
     "patient_count": 3000
   },
   {
     "icd10": "C100",
-    "disease_jp": "中咽頭の悪性新生物＜腫瘍＞ 喉頭蓋谷",
-    "disease_en": "Malignant neoplasm of the oropharynx, vallecula",
+    "disease_jp": "中咽頭のがん 喉頭蓋谷",
+    "disease_en": "Cancer of the oropharynx, vallecula",
     "patient_count": 1000
   },
   {
     "icd10": "C102",
-    "disease_jp": "中咽頭の悪性新生物＜腫瘍＞ 中咽頭側壁",
+    "disease_jp": "中咽頭のがん 中咽頭側壁",
     "disease_en": "Oropharyngeal cancer (lateral wall of the oropharynx)",
     "patient_count": 5000
   },
   {
     "icd10": "C109",
-    "disease_jp": "中咽頭の悪性新生物＜腫瘍＞ 中咽頭，部位不明",
-    "disease_en": "Malignant neoplasm of oropharynx, oropharynx, unspecified site",
+    "disease_jp": "中咽頭のがん 中咽頭，部位不明",
+    "disease_en": "Cancer of oropharynx, oropharynx, unspecified site",
     "patient_count": 11000
   },
   {
     "icd10": "C112",
-    "disease_jp": "鼻＜上＞咽頭の悪性新生物＜腫瘍＞ 鼻＜上＞咽頭側壁",
+    "disease_jp": "鼻＜上＞咽頭のがん 鼻＜上＞咽頭側壁",
     "disease_en": "Nasopharyngeal cancer",
     "patient_count": 1000
   },
   {
     "icd10": "C119",
-    "disease_jp": "鼻＜上＞咽頭の悪性新生物＜腫瘍＞ 鼻＜上＞咽頭，部位不明",
-    "disease_en": "Malignant neoplasm: Nasopharynx, unspecified",
+    "disease_jp": "鼻＜上＞咽頭のがん 鼻＜上＞咽頭，部位不明",
+    "disease_en": "Cancer: Nasopharynx, unspecified",
     "patient_count": 4000
   },
   {
     "icd10": "C12",
-    "disease_jp": "梨状陥凹＜洞＞の悪性新生物＜腫瘍＞",
-    "disease_en": "Malignant neoplasm of piriform sinus (or fossa)",
+    "disease_jp": "梨状陥凹＜洞＞のがん",
+    "disease_en": "Cancer of piriform sinus (or fossa)",
     "patient_count": 3000
   },
   {
     "icd10": "C132",
-    "disease_jp": "下咽頭の悪性新生物＜腫瘍＞ 下咽頭後壁",
-    "disease_en": "Malignant neoplasm of hypopharynx, posterior wall of hypopharynx",
+    "disease_jp": "下咽頭のがん 下咽頭後壁",
+    "disease_en": "Cancer of hypopharynx, posterior wall of hypopharynx",
     "patient_count": 2000
   },
   {
     "icd10": "C139",
-    "disease_jp": "下咽頭の悪性新生物＜腫瘍＞ 下咽頭，部位不明",
-    "disease_en": "Malignant neoplasm of hypopharynx, hypopharynx, unspecified site",
+    "disease_jp": "下咽頭のがん 下咽頭，部位不明",
+    "disease_en": "Cancer of hypopharynx, hypopharynx, unspecified site",
     "patient_count": 12000
   },
   {
     "icd10": "C140",
-    "disease_jp": "その他及び部位不明確の口唇，口腔及び咽頭の悪性新生物＜腫瘍＞ 咽頭，部位不明",
-    "disease_en": "Malignant neoplasm of other and ill-defined sites of lip, oral cavity and pharynx, pharynx, site unspecified",
+    "disease_jp": "その他及び部位不明確の口唇，口腔及び咽頭のがん 咽頭，部位不明",
+    "disease_en": "Cancer of other and ill-defined sites of lip, oral cavity and pharynx, pharynx, site unspecified",
     "patient_count": 2000
   },
   {
     "icd10": "C150",
-    "disease_jp": "食道の悪性新生物＜腫瘍＞ 頚部食道",
+    "disease_jp": "食道のがん 頚部食道",
     "disease_en": "Esophageal cancer",
     "patient_count": 2000
   },
   {
     "icd10": "C151",
-    "disease_jp": "食道の悪性新生物＜腫瘍＞ 胸部食道",
+    "disease_jp": "食道のがん 胸部食道",
     "disease_en": "Esophageal cancer",
     "patient_count": 21000
   },
   {
     "icd10": "C152",
-    "disease_jp": "食道の悪性新生物＜腫瘍＞ 腹部食道",
-    "disease_en": "Esophageal cancer (Malignant neoplasm of abdominal esophagus)",
+    "disease_jp": "食道のがん 腹部食道",
+    "disease_en": "Esophageal cancer (Cancer of abdominal esophagus)",
     "patient_count": 2000
   },
   {
     "icd10": "C154",
-    "disease_jp": "食道の悪性新生物＜腫瘍＞ 中部食道",
+    "disease_jp": "食道のがん 中部食道",
     "disease_en": "Esophageal Cancer, mid-esophagus",
     "patient_count": 1000
   },
   {
     "icd10": "C155",
-    "disease_jp": "食道の悪性新生物＜腫瘍＞ 下部食道",
+    "disease_jp": "食道のがん 下部食道",
     "disease_en": "Esophageal cancer",
     "patient_count": 2000
   },
   {
     "icd10": "C159",
-    "disease_jp": "食道の悪性新生物＜腫瘍＞ 食道，部位不明",
+    "disease_jp": "食道のがん 食道，部位不明",
     "disease_en": "Esophageal cancer",
     "patient_count": 29000
   },
   {
     "icd10": "C160",
-    "disease_jp": "胃の悪性新生物＜腫瘍＞ 噴門",
-    "disease_en": "Malignant neoplasm of stomach, cardia (or Malignant tumor of stomach, cardia)",
+    "disease_jp": "胃のがん 噴門",
+    "disease_en": "Cancer of stomach, cardia (or Malignant tumor of stomach, cardia)",
     "patient_count": 10000
   },
   {
     "icd10": "C162",
-    "disease_jp": "胃の悪性新生物＜腫瘍＞ 胃体部",
+    "disease_jp": "胃のがん 胃体部",
     "disease_en": "Stomach cancer (Cancer of the stomach body)",
     "patient_count": 48000
   },
   {
     "icd10": "C163",
-    "disease_jp": "胃の悪性新生物＜腫瘍＞ 幽門前庭",
-    "disease_en": "Malignant neoplasm of stomach, pyloric antrum",
+    "disease_jp": "胃のがん 幽門前庭",
+    "disease_en": "Cancer of stomach, pyloric antrum",
     "patient_count": 25000
   },
   {
     "icd10": "C164",
-    "disease_jp": "胃の悪性新生物＜腫瘍＞ 幽門",
-    "disease_en": "Malignant neoplasm of stomach, pylorus",
+    "disease_jp": "胃のがん 幽門",
+    "disease_en": "Cancer of stomach, pylorus",
     "patient_count": 5000
   },
   {
     "icd10": "C165",
-    "disease_jp": "胃の悪性新生物＜腫瘍＞ 胃小弯，部位不明",
+    "disease_jp": "胃のがん 胃小弯，部位不明",
     "disease_en": "Gastric cancer or Stomach cancer",
     "patient_count": 1000
   },
   {
     "icd10": "C169",
-    "disease_jp": "胃の悪性新生物＜腫瘍＞ 胃，部位不明",
+    "disease_jp": "胃のがん 胃，部位不明",
     "disease_en": "Stomach cancer",
     "patient_count": 190000
   },
   {
     "icd10": "C170",
-    "disease_jp": "小腸の悪性新生物＜腫瘍＞ 十二指腸",
-    "disease_en": "Malignant neoplasm of small intestine (duodenum)",
+    "disease_jp": "小腸のがん 十二指腸",
+    "disease_en": "Cancer of small intestine (duodenum)",
     "patient_count": 4000
   },
   {
     "icd10": "C171",
-    "disease_jp": "小腸の悪性新生物＜腫瘍＞ 空腸",
-    "disease_en": "Malignant neoplasm (tumor) of the small intestine, jejunum",
+    "disease_jp": "小腸のがん 空腸",
+    "disease_en": "Cancer (tumor) of the small intestine, jejunum",
     "patient_count": 1000
   },
   {
     "icd10": "C179",
-    "disease_jp": "小腸の悪性新生物＜腫瘍＞ 小腸，部位不明",
-    "disease_en": "Malignant neoplasm of small intestine, small intestine, unspecified part",
+    "disease_jp": "小腸のがん 小腸，部位不明",
+    "disease_en": "Cancer of small intestine, small intestine, unspecified part",
     "patient_count": 2000
   },
   {
     "icd10": "C180",
-    "disease_jp": "結腸の悪性新生物＜腫瘍＞ 盲腸",
-    "disease_en": "Malignant neoplasm of the colon, cecum",
+    "disease_jp": "結腸のがん 盲腸",
+    "disease_en": "Cancer of the colon, cecum",
     "patient_count": 32000
   },
   {
     "icd10": "C181",
-    "disease_jp": "結腸の悪性新生物＜腫瘍＞ 虫垂",
-    "disease_en": "Malignant neoplasm of colon, including appendix",
+    "disease_jp": "結腸のがん 虫垂",
+    "disease_en": "Cancer of colon, including appendix",
     "patient_count": 5000
   },
   {
     "icd10": "C182",
-    "disease_jp": "結腸の悪性新生物＜腫瘍＞ 上行結腸",
-    "disease_en": "Malignant neoplasm of colon, ascending colon",
+    "disease_jp": "結腸のがん 上行結腸",
+    "disease_en": "Cancer of colon, ascending colon",
     "patient_count": 67000
   },
   {
     "icd10": "C184",
-    "disease_jp": "結腸の悪性新生物＜腫瘍＞ 横行結腸",
-    "disease_en": "Malignant neoplasm of the colon, transverse colon",
+    "disease_jp": "結腸のがん 横行結腸",
+    "disease_en": "Cancer of the colon, transverse colon",
     "patient_count": 41000
   },
   {
     "icd10": "C186",
-    "disease_jp": "結腸の悪性新生物＜腫瘍＞ 下行結腸",
-    "disease_en": "Malignant neoplasm of the descending colon",
+    "disease_jp": "結腸のがん 下行結腸",
+    "disease_en": "Cancer of the descending colon",
     "patient_count": 26000
   },
   {
     "icd10": "C187",
-    "disease_jp": "結腸の悪性新生物＜腫瘍＞ Ｓ状結腸",
+    "disease_jp": "結腸のがん Ｓ状結腸",
     "disease_en": "Sigmoid colon cancer",
     "patient_count": 114000
   },
   {
     "icd10": "C189",
-    "disease_jp": "結腸の悪性新生物＜腫瘍＞ 結腸，部位不明",
-    "disease_en": "Malignant neoplasm of colon, colon unspecified",
+    "disease_jp": "結腸のがん 結腸，部位不明",
+    "disease_en": "Cancer of colon, colon unspecified",
     "patient_count": 104000
   },
   {
     "icd10": "C19",
-    "disease_jp": "直腸Ｓ状結腸移行部の悪性新生物＜腫瘍＞",
-    "disease_en": "Malignant neoplasm of rectosigmoid junction",
+    "disease_jp": "直腸Ｓ状結腸移行部のがん",
+    "disease_en": "Cancer of rectosigmoid junction",
     "patient_count": 17000
   },
   {
     "icd10": "C20",
-    "disease_jp": "直腸の悪性新生物＜腫瘍＞",
-    "disease_en": "Malignant neoplasm of rectum",
+    "disease_jp": "直腸のがん",
+    "disease_en": "Cancer of rectum",
     "patient_count": 158000
   },
   {
     "icd10": "C210",
-    "disease_jp": "肛門及び肛門管の悪性新生物＜腫瘍＞ 肛門，部位不明",
+    "disease_jp": "肛門及び肛門管のがん 肛門，部位不明",
     "disease_en": "Anal cancer",
     "patient_count": 1000
   },
   {
     "icd10": "C211",
-    "disease_jp": "肛門及び肛門管の悪性新生物＜腫瘍＞ 肛門管",
+    "disease_jp": "肛門及び肛門管のがん 肛門管",
     "disease_en": "Anal cancer",
     "patient_count": 2000
   },
   {
     "icd10": "C220",
-    "disease_jp": "肝及び肝内胆管の悪性新生物＜腫瘍＞ 肝細胞癌",
+    "disease_jp": "肝及び肝内胆管のがん 肝細胞癌",
     "disease_en": "Hepatocellular carcinoma (HCC)",
     "patient_count": 76000
   },
   {
     "icd10": "C221",
-    "disease_jp": "肝及び肝内胆管の悪性新生物＜腫瘍＞ 肝内胆管癌",
-    "disease_en": "Malignant neoplasm of liver and intrahepatic bile duct (tumor): Intrahepatic cholangiocarcinoma",
+    "disease_jp": "肝及び肝内胆管のがん 肝内胆管癌",
+    "disease_en": "Cancer of liver and intrahepatic bile duct (tumor): Intrahepatic cholangiocarcinoma",
     "patient_count": 5000
   },
   {
     "icd10": "C23",
-    "disease_jp": "胆のう＜嚢＞の悪性新生物＜腫瘍＞",
+    "disease_jp": "胆のう＜嚢＞のがん",
     "disease_en": "Gallbladder cancer",
     "patient_count": 8000
   },
   {
     "icd10": "C240",
-    "disease_jp": "その他及び部位不明の胆道の悪性新生物＜腫瘍＞ 肝外胆管",
+    "disease_jp": "その他及び部位不明の胆道のがん 肝外胆管",
     "disease_en": "Other and unspecified malignant neoplasm of biliary tract, extrahepatic bile duct",
     "patient_count": 19000
   },
   {
     "icd10": "C241",
-    "disease_jp": "その他及び部位不明の胆道の悪性新生物＜腫瘍＞ ファーター＜Vater＞乳頭膨大部",
-    "disease_en": "Malignant neoplasm of other and unspecified parts of bile duct, ampulla of Vater",
+    "disease_jp": "その他及び部位不明の胆道のがん ファーター＜Vater＞乳頭膨大部",
+    "disease_en": "Cancer of other and unspecified parts of bile duct, ampulla of Vater",
     "patient_count": 7000
   },
   {
     "icd10": "C250",
-    "disease_jp": "膵の悪性新生物＜腫瘍＞ 膵頭部",
-    "disease_en": "Malignant neoplasm of pancreas, head of pancreas (or Pancreatic head cancer)",
+    "disease_jp": "膵のがん 膵頭部",
+    "disease_en": "Cancer of pancreas, head of pancreas (or Pancreatic head cancer)",
     "patient_count": 26000
   },
   {
     "icd10": "C251",
-    "disease_jp": "膵の悪性新生物＜腫瘍＞ 膵体部",
+    "disease_jp": "膵のがん 膵体部",
     "disease_en": "Pancreatic cancer (body)",
     "patient_count": 11000
   },
   {
     "icd10": "C252",
-    "disease_jp": "膵の悪性新生物＜腫瘍＞ 膵尾部",
-    "disease_en": "Malignant neoplasm of the pancreas, tail of pancreas (or Pancreatic tail cancer)",
+    "disease_jp": "膵のがん 膵尾部",
+    "disease_en": "Cancer of the pancreas, tail of pancreas (or Pancreatic tail cancer)",
     "patient_count": 6000
   },
   {
     "icd10": "C253",
-    "disease_jp": "膵の悪性新生物＜腫瘍＞ 膵管",
-    "disease_en": "Malignant neoplasm of pancreas, pancreatic duct (or Pancreatic ductal carcinoma)",
+    "disease_jp": "膵のがん 膵管",
+    "disease_en": "Cancer of pancreas, pancreatic duct (or Pancreatic ductal carcinoma)",
     "patient_count": 4000
   },
   {
     "icd10": "C254",
-    "disease_jp": "膵の悪性新生物＜腫瘍＞ 内分泌膵",
+    "disease_jp": "膵のがん 内分泌膵",
     "disease_en": "Pancreatic neuroendocrine neoplasm (PanNEN)",
     "patient_count": 3000
   },
   {
     "icd10": "C258",
-    "disease_jp": "膵の悪性新生物＜腫瘍＞ 膵の境界部病巣",
+    "disease_jp": "膵のがん 膵の境界部病巣",
     "disease_en": "Pancreatic cancer/Pancreatic tumor and Borderline Pancreatic Lesions",
     "patient_count": 1000
   },
   {
     "icd10": "C259",
-    "disease_jp": "膵の悪性新生物＜腫瘍＞ 膵，部位不明",
+    "disease_jp": "膵のがん 膵，部位不明",
     "disease_en": "Pancreatic cancer, unspecified part of pancreas",
     "patient_count": 39000
   },
   {
     "icd10": "C269",
-    "disease_jp": "その他及び部位不明確の消化器の悪性新生物＜腫瘍＞ 消化器系，部位不明確",
-    "disease_en": "Malignant neoplasm of digestive organs, unspecified and ill-defined sites, digestive system, unspecified site",
+    "disease_jp": "その他及び部位不明確の消化器のがん 消化器系，部位不明確",
+    "disease_en": "Cancer of digestive organs, unspecified and ill-defined sites, digestive system, unspecified site",
     "patient_count": 1000
   },
   {
     "icd10": "C300",
-    "disease_jp": "鼻腔及び中耳の悪性新生物＜腫瘍＞ 鼻腔",
-    "disease_en": "Malignant neoplasm of nasal cavity and middle ear, nasal cavity",
+    "disease_jp": "鼻腔及び中耳のがん 鼻腔",
+    "disease_en": "Cancer of nasal cavity and middle ear, nasal cavity",
     "patient_count": 3000
   },
   {
     "icd10": "C310",
-    "disease_jp": "副鼻腔の悪性新生物＜腫瘍＞ 上顎洞",
-    "disease_en": "Malignant neoplasm of accessory sinuses, maxillary sinus",
+    "disease_jp": "副鼻腔のがん 上顎洞",
+    "disease_en": "Cancer of accessory sinuses, maxillary sinus",
     "patient_count": 2000
   },
   {
     "icd10": "C320",
-    "disease_jp": "喉頭の悪性新生物＜腫瘍＞ 声門",
+    "disease_jp": "喉頭のがん 声門",
     "disease_en": "Glottic Laryngeal Cancer",
     "patient_count": 6000
   },
   {
     "icd10": "C321",
-    "disease_jp": "喉頭の悪性新生物＜腫瘍＞ 声門上部",
+    "disease_jp": "喉頭のがん 声門上部",
     "disease_en": "Supraglottic laryngeal cancer",
     "patient_count": 3000
   },
   {
     "icd10": "C329",
-    "disease_jp": "喉頭の悪性新生物＜腫瘍＞ 喉頭，部位不明",
-    "disease_en": "Malignant neoplasm of larynx, unspecified site",
+    "disease_jp": "喉頭のがん 喉頭，部位不明",
+    "disease_en": "Cancer of larynx, unspecified site",
     "patient_count": 11000
   },
   {
     "icd10": "C340",
-    "disease_jp": "気管支及び肺の悪性新生物＜腫瘍＞ 主気管支",
-    "disease_en": "Malignant neoplasm of bronchus and lung, main bronchus",
+    "disease_jp": "気管支及び肺のがん 主気管支",
+    "disease_en": "Cancer of bronchus and lung, main bronchus",
     "patient_count": 4000
   },
   {
     "icd10": "C341",
-    "disease_jp": "気管支及び肺の悪性新生物＜腫瘍＞ 上葉，気管支又は肺",
-    "disease_en": "Malignant neoplasm of bronchus and lung, upper lobe, bronchus or lung",
+    "disease_jp": "気管支及び肺のがん 上葉，気管支又は肺",
+    "disease_en": "Cancer of bronchus and lung, upper lobe, bronchus or lung",
     "patient_count": 112000
   },
   {
     "icd10": "C342",
-    "disease_jp": "気管支及び肺の悪性新生物＜腫瘍＞ 中葉，気管支又は肺",
-    "disease_en": "Malignant neoplasm of bronchus and lung, middle lobe, bronchus or lung",
+    "disease_jp": "気管支及び肺のがん 中葉，気管支又は肺",
+    "disease_en": "Cancer of bronchus and lung, middle lobe, bronchus or lung",
     "patient_count": 12000
   },
   {
     "icd10": "C343",
-    "disease_jp": "気管支及び肺の悪性新生物＜腫瘍＞ 下葉，気管支又は肺",
-    "disease_en": "Malignant neoplasm of bronchus and lung, middle lobe, bronchus or lung",
+    "disease_jp": "気管支及び肺のがん 下葉，気管支又は肺",
+    "disease_en": "Cancer of bronchus and lung, middle lobe, bronchus or lung",
     "patient_count": 75000
   },
   {
     "icd10": "C349",
-    "disease_jp": "気管支及び肺の悪性新生物＜腫瘍＞ 気管支又は肺，部位不明",
-    "disease_en": "Malignant neoplasm of bronchus and lung, unspecified part",
+    "disease_jp": "気管支及び肺のがん 気管支又は肺，部位不明",
+    "disease_en": "Cancer of bronchus and lung, unspecified part",
     "patient_count": 130000
   },
   {
     "icd10": "C37",
-    "disease_jp": "胸腺の悪性新生物＜腫瘍＞",
-    "disease_en": "Malignant neoplasm of thymus (Thymoma)",
+    "disease_jp": "胸腺のがん",
+    "disease_en": "Cancer of thymus (Thymoma)",
     "patient_count": 3000
   },
   {
     "icd10": "C381",
-    "disease_jp": "心臓，縦隔及び胸膜の悪性新生物＜腫瘍＞ 前縦隔",
+    "disease_jp": "心臓，縦隔及び胸膜のがん 前縦隔",
     "disease_en": "Malignant Neoplasm of the Heart, Mediastinum, and Pleura, Anterior Mediastinum (Malignant Tumor of the Heart, Mediastinum, and Pleura, Anterior Mediastinum)",
     "patient_count": 1000
   },
   {
     "icd10": "C383",
-    "disease_jp": "心臓，縦隔及び胸膜の悪性新生物＜腫瘍＞ 縦隔，部位不明",
-    "disease_en": "Malignant neoplasm of heart, mediastinum and pleura, mediastinum, unspecified site",
+    "disease_jp": "心臓，縦隔及び胸膜のがん 縦隔，部位不明",
+    "disease_en": "Cancer of heart, mediastinum and pleura, mediastinum, unspecified site",
     "patient_count": 1000
   },
   {
     "icd10": "C402",
-    "disease_jp": "（四）肢の骨及び関節軟骨の悪性新生物＜腫瘍＞ 下肢の長骨",
-    "disease_en": "Malignant neoplasm of bone and articular cartilage of the limbs, long bones of the lower limb",
+    "disease_jp": "（四）肢の骨及び関節軟骨のがん 下肢の長骨",
+    "disease_en": "Cancer of bone and articular cartilage of the limbs, long bones of the lower limb",
     "patient_count": 1000
   },
   {
     "icd10": "C412",
-    "disease_jp": "その他及び部位不明の骨及び関節軟骨の悪性新生物＜腫瘍＞ 脊柱",
-    "disease_en": "Malignant neoplasm of bone and articular cartilage, unspecified site, spine (or spinal column)",
+    "disease_jp": "その他及び部位不明の骨及び関節軟骨のがん 脊柱",
+    "disease_en": "Cancer of bone and articular cartilage, unspecified site, spine (or spinal column)",
     "patient_count": 1000
   },
   {
     "icd10": "C414",
-    "disease_jp": "その他及び部位不明の骨及び関節軟骨の悪性新生物＜腫瘍＞ 骨盤骨，仙骨及び尾骨",
-    "disease_en": "Malignant neoplasm of bone and articular cartilage of pelvis, sacrum, and coccyx (NOS)",
+    "disease_jp": "その他及び部位不明の骨及び関節軟骨のがん 骨盤骨，仙骨及び尾骨",
+    "disease_en": "Cancer of bone and articular cartilage of pelvis, sacrum, and coccyx (NOS)",
     "patient_count": 1000
   },
   {
@@ -1051,50 +1051,50 @@
   },
   {
     "icd10": "C441",
-    "disease_jp": "皮膚のその他の悪性新生物＜腫瘍＞ 眼瞼の皮膚，眼角を含む",
+    "disease_jp": "皮膚のその他のがん 眼瞼の皮膚，眼角を含む",
     "disease_en": "Other malignant neoplasms of skin, including skin of eyelid, and canthus",
     "patient_count": 2000
   },
   {
     "icd10": "C442",
-    "disease_jp": "皮膚のその他の悪性新生物＜腫瘍＞ 耳及び外耳道の皮膚",
+    "disease_jp": "皮膚のその他のがん 耳及び外耳道の皮膚",
     "disease_en": "Other malignant neoplasm of skin, skin of ear and external ear canal",
     "patient_count": 3000
   },
   {
     "icd10": "C443",
-    "disease_jp": "皮膚のその他の悪性新生物＜腫瘍＞ その他及び部位不明の顔面の皮膚",
+    "disease_jp": "皮膚のその他のがん その他及び部位不明の顔面の皮膚",
     "disease_en": "Other malignant neoplasm of skin and unspecified site of skin of face",
     "patient_count": 11000
   },
   {
     "icd10": "C444",
-    "disease_jp": "皮膚のその他の悪性新生物＜腫瘍＞ 頭皮及び頚部の皮膚",
+    "disease_jp": "皮膚のその他のがん 頭皮及び頚部の皮膚",
     "disease_en": "Other malignant neoplasm of skin of scalp and neck",
     "patient_count": 2000
   },
   {
     "icd10": "C445",
-    "disease_jp": "皮膚のその他の悪性新生物＜腫瘍＞ 体幹の皮膚",
+    "disease_jp": "皮膚のその他のがん 体幹の皮膚",
     "disease_en": "Other malignant neoplasm of skin, skin of trunk",
     "patient_count": 4000
   },
   {
     "icd10": "C446",
-    "disease_jp": "皮膚のその他の悪性新生物＜腫瘍＞ 上肢の皮膚，肩を含む",
+    "disease_jp": "皮膚のその他のがん 上肢の皮膚，肩を含む",
     "disease_en": "Other malignant neoplasm of skin of upper limb, including shoulder skin",
     "patient_count": 3000
   },
   {
     "icd10": "C447",
-    "disease_jp": "皮膚のその他の悪性新生物＜腫瘍＞ 下肢の皮膚，股関節部を含む",
+    "disease_jp": "皮膚のその他のがん 下肢の皮膚，股関節部を含む",
     "disease_en": "Other malignant neoplasms of skin, skin of lower limb, including hip",
     "patient_count": 2000
   },
   {
     "icd10": "C449",
-    "disease_jp": "皮膚のその他の悪性新生物＜腫瘍＞ 皮膚の悪性新生物＜腫瘍＞，部位不明",
-    "disease_en": "Other malignant neoplasm of skin, Malignant neoplasm of skin, unspecified site",
+    "disease_jp": "皮膚のその他のがん 皮膚のがん，部位不明",
+    "disease_en": "Other malignant neoplasm of skin, Cancer of skin, unspecified site",
     "patient_count": 5000
   },
   {
@@ -1111,440 +1111,440 @@
   },
   {
     "icd10": "C480",
-    "disease_jp": "後腹膜及び腹膜の悪性新生物＜腫瘍＞ 後腹膜",
-    "disease_en": "Malignant neoplasm of retroperitoneum and peritoneum, retroperitoneum",
+    "disease_jp": "後腹膜及び腹膜のがん 後腹膜",
+    "disease_en": "Cancer of retroperitoneum and peritoneum, retroperitoneum",
     "patient_count": 2000
   },
   {
     "icd10": "C482",
-    "disease_jp": "後腹膜及び腹膜の悪性新生物＜腫瘍＞ 腹膜，部位不明",
-    "disease_en": "Malignant neoplasm of retroperitoneum and peritoneum, peritoneum, unspecified site",
+    "disease_jp": "後腹膜及び腹膜のがん 腹膜，部位不明",
+    "disease_en": "Cancer of retroperitoneum and peritoneum, peritoneum, unspecified site",
     "patient_count": 4000
   },
   {
     "icd10": "C490",
-    "disease_jp": "その他の結合組織及び軟部組織の悪性新生物＜腫瘍＞ 頭部，顔面及び頚部の結合組織及び軟部組織",
+    "disease_jp": "その他の結合組織及び軟部組織のがん 頭部，顔面及び頚部の結合組織及び軟部組織",
     "disease_en": "Other malignant neoplasms of connective and soft tissue of head, face, and neck",
     "patient_count": 1000
   },
   {
     "icd10": "C491",
-    "disease_jp": "その他の結合組織及び軟部組織の悪性新生物＜腫瘍＞ 上肢の結合組織及び軟部組織，肩を含む",
-    "disease_en": "Malignant neoplasm of other connective and soft tissue, including connective and soft tissue of upper limb and shoulder",
+    "disease_jp": "その他の結合組織及び軟部組織のがん 上肢の結合組織及び軟部組織，肩を含む",
+    "disease_en": "Cancer of other connective and soft tissue, including connective and soft tissue of upper limb and shoulder",
     "patient_count": 1000
   },
   {
     "icd10": "C492",
-    "disease_jp": "その他の結合組織及び軟部組織の悪性新生物＜腫瘍＞ 下肢の結合組織及び軟部組織，股関節部を含む",
-    "disease_en": "Malignant neoplasm of other connective and soft tissue, including connective and soft tissue of lower limb and hip region",
+    "disease_jp": "その他の結合組織及び軟部組織のがん 下肢の結合組織及び軟部組織，股関節部を含む",
+    "disease_en": "Cancer of other connective and soft tissue, including connective and soft tissue of lower limb and hip region",
     "patient_count": 3000
   },
   {
     "icd10": "C494",
-    "disease_jp": "その他の結合組織及び軟部組織の悪性新生物＜腫瘍＞ 腹部の結合組織及び軟部組織",
-    "disease_en": "Malignant neoplasm of other connective and soft tissue, connective and soft tissue of the abdomen",
+    "disease_jp": "その他の結合組織及び軟部組織のがん 腹部の結合組織及び軟部組織",
+    "disease_en": "Cancer of other connective and soft tissue, connective and soft tissue of the abdomen",
     "patient_count": 1000
   },
   {
     "icd10": "C495",
-    "disease_jp": "その他の結合組織及び軟部組織の悪性新生物＜腫瘍＞ 骨盤の結合組織及び軟部組織",
-    "disease_en": "Malignant neoplasm of other connective and soft tissue, connective and soft tissue of pelvis",
+    "disease_jp": "その他の結合組織及び軟部組織のがん 骨盤の結合組織及び軟部組織",
+    "disease_en": "Cancer of other connective and soft tissue, connective and soft tissue of pelvis",
     "patient_count": 1000
   },
   {
     "icd10": "C496",
-    "disease_jp": "その他の結合組織及び軟部組織の悪性新生物＜腫瘍＞ 体幹の結合組織及び軟部組織，部位不明",
-    "disease_en": "Malignant neoplasm of other connective and soft tissue, connective and soft tissue of trunk, unspecified site",
+    "disease_jp": "その他の結合組織及び軟部組織のがん 体幹の結合組織及び軟部組織，部位不明",
+    "disease_en": "Cancer of other connective and soft tissue, connective and soft tissue of trunk, unspecified site",
     "patient_count": 1000
   },
   {
     "icd10": "C499",
-    "disease_jp": "その他の結合組織及び軟部組織の悪性新生物＜腫瘍＞ 結合組織及び軟部組織，部位不明",
+    "disease_jp": "その他の結合組織及び軟部組織のがん 結合組織及び軟部組織，部位不明",
     "disease_en": "Other malignant neoplasms of connective and soft tissue, connective and soft tissue, site unspecified",
     "patient_count": 1000
   },
   {
     "icd10": "C500",
-    "disease_jp": "乳房の悪性新生物＜腫瘍＞ 乳頭部及び乳輪",
-    "disease_en": "Malignant neoplasm of breast: nipple and areola",
+    "disease_jp": "乳房のがん 乳頭部及び乳輪",
+    "disease_en": "Cancer of breast: nipple and areola",
     "patient_count": 2000
   },
   {
     "icd10": "C501",
-    "disease_jp": "乳房の悪性新生物＜腫瘍＞ 乳房中央部",
-    "disease_en": "Malignant neoplasm of breast, central portion",
+    "disease_jp": "乳房のがん 乳房中央部",
+    "disease_en": "Cancer of breast, central portion",
     "patient_count": 20000
   },
   {
     "icd10": "C502",
-    "disease_jp": "乳房の悪性新生物＜腫瘍＞ 乳房上内側４分の１",
-    "disease_en": "Malignant neoplasm of breast, upper-inner quadrant",
+    "disease_jp": "乳房のがん 乳房上内側４分の１",
+    "disease_en": "Cancer of breast, upper-inner quadrant",
     "patient_count": 50000
   },
   {
     "icd10": "C503",
-    "disease_jp": "乳房の悪性新生物＜腫瘍＞ 乳房下内側４分の１",
-    "disease_en": "Malignant neoplasm of breast, lower-inner quadrant",
+    "disease_jp": "乳房のがん 乳房下内側４分の１",
+    "disease_en": "Cancer of breast, lower-inner quadrant",
     "patient_count": 20000
   },
   {
     "icd10": "C504",
-    "disease_jp": "乳房の悪性新生物＜腫瘍＞ 乳房上外側４分の１",
-    "disease_en": "Malignant neoplasm of breast, upper-outer quadrant",
+    "disease_jp": "乳房のがん 乳房上外側４分の１",
+    "disease_en": "Cancer of breast, upper-outer quadrant",
     "patient_count": 116000
   },
   {
     "icd10": "C505",
-    "disease_jp": "乳房の悪性新生物＜腫瘍＞ 乳房下外側４分の１",
-    "disease_en": "Malignant neoplasm of breast, lower-outer quadrant",
+    "disease_jp": "乳房のがん 乳房下外側４分の１",
+    "disease_en": "Cancer of breast, lower-outer quadrant",
     "patient_count": 32000
   },
   {
     "icd10": "C506",
-    "disease_jp": "乳房の悪性新生物＜腫瘍＞ 乳腺腋窩尾部＜Axillary tail of breast＞",
-    "disease_en": "Malignant neoplasm of breast, axillary tail of breast",
+    "disease_jp": "乳房のがん 乳腺腋窩尾部＜Axillary tail of breast＞",
+    "disease_en": "Cancer of breast, axillary tail of breast",
     "patient_count": 1000
   },
   {
     "icd10": "C508",
-    "disease_jp": "乳房の悪性新生物＜腫瘍＞ 乳房の境界部病巣",
-    "disease_en": "Malignant neoplasm of breast, lesion of contiguous sites of breast",
+    "disease_jp": "乳房のがん 乳房の境界部病巣",
+    "disease_en": "Cancer of breast, lesion of contiguous sites of breast",
     "patient_count": 8000
   },
   {
     "icd10": "C509",
-    "disease_jp": "乳房の悪性新生物＜腫瘍＞ 乳房，部位不明",
+    "disease_jp": "乳房のがん 乳房，部位不明",
     "disease_en": "Malignant Neoplasm of Breast, Unspecified Part",
     "patient_count": 542000
   },
   {
     "icd10": "C519",
-    "disease_jp": "外陰（部）の悪性新生物＜腫瘍＞ 外陰（部），部位不明",
+    "disease_jp": "外陰（部）のがん 外陰（部），部位不明",
     "disease_en": "Vulvar cancer",
     "patient_count": 1000
   },
   {
     "icd10": "C52",
-    "disease_jp": "腟の悪性新生物＜腫瘍＞",
+    "disease_jp": "腟のがん",
     "disease_en": "Vaginal cancer",
     "patient_count": 1000
   },
   {
     "icd10": "C530",
-    "disease_jp": "子宮頚部の悪性新生物＜腫瘍＞ 子宮頚内膜＜endocervix＞",
-    "disease_en": "Malignant neoplasm of cervix uteri, endocervix",
+    "disease_jp": "子宮頚部のがん 子宮頚内膜＜endocervix＞",
+    "disease_en": "Cancer of cervix uteri, endocervix",
     "patient_count": 2000
   },
   {
     "icd10": "C531",
-    "disease_jp": "子宮頚部の悪性新生物＜腫瘍＞ 子宮頚外部＜exocervix＞",
-    "disease_en": "Malignant neoplasm of cervix uteri, exocervix",
+    "disease_jp": "子宮頚部のがん 子宮頚外部＜exocervix＞",
+    "disease_en": "Cancer of cervix uteri, exocervix",
     "patient_count": 3000
   },
   {
     "icd10": "C539",
-    "disease_jp": "子宮頚部の悪性新生物＜腫瘍＞ 子宮頚（部），部位不明",
-    "disease_en": "Malignant neoplasm of cervix uteri, cervix uteri, unspecified part",
+    "disease_jp": "子宮頚部のがん 子宮頚（部），部位不明",
+    "disease_en": "Cancer of cervix uteri, cervix uteri, unspecified part",
     "patient_count": 52000
   },
   {
     "icd10": "C541",
-    "disease_jp": "子宮体部の悪性新生物＜腫瘍＞ 子宮内膜",
+    "disease_jp": "子宮体部のがん 子宮内膜",
     "disease_en": "Endometrial cancer",
     "patient_count": 11000
   },
   {
     "icd10": "C542",
-    "disease_jp": "子宮体部の悪性新生物＜腫瘍＞ 子宮筋層",
+    "disease_jp": "子宮体部のがん 子宮筋層",
     "disease_en": "Endometrial cancer",
     "patient_count": 1000
   },
   {
     "icd10": "C549",
-    "disease_jp": "子宮体部の悪性新生物＜腫瘍＞ 子宮体部，部位不明",
+    "disease_jp": "子宮体部のがん 子宮体部，部位不明",
     "disease_en": "Endometrial cancer",
     "patient_count": 54000
   },
   {
     "icd10": "C55",
-    "disease_jp": "子宮の悪性新生物＜腫瘍＞，部位不明",
-    "disease_en": "Malignant neoplasm of uterus, unspecified",
+    "disease_jp": "子宮のがん，部位不明",
+    "disease_en": "Cancer of uterus, unspecified",
     "patient_count": 5000
   },
   {
     "icd10": "C56",
-    "disease_jp": "卵巣の悪性新生物＜腫瘍＞",
+    "disease_jp": "卵巣のがん",
     "disease_en": "Ovarian cancer",
     "patient_count": 48000
   },
   {
     "icd10": "C570",
-    "disease_jp": "その他及び部位不明の女性生殖器の悪性新生物＜腫瘍＞ 卵管",
+    "disease_jp": "その他及び部位不明の女性生殖器のがん 卵管",
     "disease_en": "Other and unspecified malignant neoplasm of female genital organs, Fallopian tube",
     "patient_count": 2000
   },
   {
     "icd10": "C58",
-    "disease_jp": "胎盤の悪性新生物＜腫瘍＞",
-    "disease_en": "Malignant neoplasm of placenta",
+    "disease_jp": "胎盤のがん",
+    "disease_en": "Cancer of placenta",
     "patient_count": 1000
   },
   {
     "icd10": "C609",
-    "disease_jp": "陰茎の悪性新生物＜腫瘍＞ 陰茎，部位不明",
-    "disease_en": "Malignant neoplasm of penis, unspecified part",
+    "disease_jp": "陰茎のがん 陰茎，部位不明",
+    "disease_en": "Cancer of penis, unspecified part",
     "patient_count": 1000
   },
   {
     "icd10": "C61",
-    "disease_jp": "前立腺の悪性新生物＜腫瘍＞",
+    "disease_jp": "前立腺のがん",
     "disease_en": "Prostate cancer",
     "patient_count": 600000
   },
   {
     "icd10": "C629",
-    "disease_jp": "精巣＜睾丸＞の悪性新生物＜腫瘍＞ 精巣＜睾丸＞，部位不明",
-    "disease_en": "Malignant neoplasm of testis, unspecified site",
+    "disease_jp": "精巣＜睾丸＞のがん 精巣＜睾丸＞，部位不明",
+    "disease_en": "Cancer of testis, unspecified site",
     "patient_count": 5000
   },
   {
     "icd10": "C639",
-    "disease_jp": "その他及び部位不明の男性生殖器の悪性新生物＜腫瘍＞ 男性生殖器，部位不明",
-    "disease_en": "Malignant neoplasm of other and unspecified male genital organs, unspecified site",
+    "disease_jp": "その他及び部位不明の男性生殖器のがん 男性生殖器，部位不明",
+    "disease_en": "Cancer of other and unspecified male genital organs, unspecified site",
     "patient_count": 1000
   },
   {
     "icd10": "C64",
-    "disease_jp": "腎盂を除く腎の悪性新生物＜腫瘍＞",
+    "disease_jp": "腎盂を除く腎のがん",
     "disease_en": "Renal cell carcinoma (RCC)",
     "patient_count": 66000
   },
   {
     "icd10": "C65",
-    "disease_jp": "腎盂の悪性新生物＜腫瘍＞",
-    "disease_en": "Malignant neoplasm of renal pelvis (or) Renal pelvis cancer",
+    "disease_jp": "腎盂のがん",
+    "disease_en": "Cancer of renal pelvis (or) Renal pelvis cancer",
     "patient_count": 15000
   },
   {
     "icd10": "C66",
-    "disease_jp": "尿管の悪性新生物＜腫瘍＞",
+    "disease_jp": "尿管のがん",
     "disease_en": "ureteral cancer",
     "patient_count": 10000
   },
   {
     "icd10": "C670",
-    "disease_jp": "膀胱の悪性新生物＜腫瘍＞ 膀胱三角",
-    "disease_en": "Malignant neoplasm of bladder, trigone of bladder",
+    "disease_jp": "膀胱のがん 膀胱三角",
+    "disease_en": "Cancer of bladder, trigone of bladder",
     "patient_count": 2000
   },
   {
     "icd10": "C671",
-    "disease_jp": "膀胱の悪性新生物＜腫瘍＞ 膀胱円蓋",
+    "disease_jp": "膀胱のがん 膀胱円蓋",
     "disease_en": "Bladder cancer",
     "patient_count": 1000
   },
   {
     "icd10": "C672",
-    "disease_jp": "膀胱の悪性新生物＜腫瘍＞ 膀胱側壁",
-    "disease_en": "Malignant neoplasm of bladder, lateral wall of bladder",
+    "disease_jp": "膀胱のがん 膀胱側壁",
+    "disease_en": "Cancer of bladder, lateral wall of bladder",
     "patient_count": 25000
   },
   {
     "icd10": "C673",
-    "disease_jp": "膀胱の悪性新生物＜腫瘍＞ 膀胱前壁",
+    "disease_jp": "膀胱のがん 膀胱前壁",
     "disease_en": "Bladder cancer (anterior wall of the bladder)",
     "patient_count": 2000
   },
   {
     "icd10": "C674",
-    "disease_jp": "膀胱の悪性新生物＜腫瘍＞ 膀胱後壁",
+    "disease_jp": "膀胱のがん 膀胱後壁",
     "disease_en": "Bladder cancer",
     "patient_count": 8000
   },
   {
     "icd10": "C675",
-    "disease_jp": "膀胱の悪性新生物＜腫瘍＞ 膀胱頚部",
-    "disease_en": "Malignant neoplasm of bladder neck",
+    "disease_jp": "膀胱のがん 膀胱頚部",
+    "disease_en": "Cancer of bladder neck",
     "patient_count": 5000
   },
   {
     "icd10": "C676",
-    "disease_jp": "膀胱の悪性新生物＜腫瘍＞ 尿管口",
-    "disease_en": "Malignant neoplasm of the bladder, ureteral orifice",
+    "disease_jp": "膀胱のがん 尿管口",
+    "disease_en": "Cancer of the bladder, ureteral orifice",
     "patient_count": 4000
   },
   {
     "icd10": "C679",
-    "disease_jp": "膀胱の悪性新生物＜腫瘍＞ 膀胱，部位不明",
+    "disease_jp": "膀胱のがん 膀胱，部位不明",
     "disease_en": "Bladder cancer",
     "patient_count": 138000
   },
   {
     "icd10": "C680",
-    "disease_jp": "その他及び部位不明の尿路の悪性新生物＜腫瘍＞ 尿道",
-    "disease_en": "Malignant neoplasm of other and unspecified urinary organs, urethra",
+    "disease_jp": "その他及び部位不明の尿路のがん 尿道",
+    "disease_en": "Cancer of other and unspecified urinary organs, urethra",
     "patient_count": 1000
   },
   {
     "icd10": "C692",
-    "disease_jp": "眼及び付属器の悪性新生物＜腫瘍＞ 網膜",
-    "disease_en": "Malignant neoplasm of eye and adnexa, retina",
+    "disease_jp": "眼及び付属器のがん 網膜",
+    "disease_en": "Cancer of eye and adnexa, retina",
     "patient_count": 2000
   },
   {
     "icd10": "C700",
-    "disease_jp": "髄膜の悪性新生物＜腫瘍＞ 脳髄膜",
-    "disease_en": "Malignant neoplasm of cerebral meninges",
+    "disease_jp": "髄膜のがん 脳髄膜",
+    "disease_en": "Cancer of cerebral meninges",
     "patient_count": 1000
   },
   {
     "icd10": "C710",
-    "disease_jp": "脳の悪性新生物＜腫瘍＞ 脳葉及び脳室を除く大脳",
-    "disease_en": "Malignant neoplasm of the cerebrum, excluding lobes and ventricles (Brain tumor)",
+    "disease_jp": "脳のがん 脳葉及び脳室を除く大脳",
+    "disease_en": "Cancer of the cerebrum, excluding lobes and ventricles (Brain tumor)",
     "patient_count": 1000
   },
   {
     "icd10": "C711",
-    "disease_jp": "脳の悪性新生物＜腫瘍＞ 前頭葉",
-    "disease_en": "Malignant neoplasm of brain (tumor), frontal lobe",
+    "disease_jp": "脳のがん 前頭葉",
+    "disease_en": "Cancer of brain (tumor), frontal lobe",
     "patient_count": 4000
   },
   {
     "icd10": "C712",
-    "disease_jp": "脳の悪性新生物＜腫瘍＞ 側頭葉",
-    "disease_en": "Malignant neoplasm of brain (tumor) - Temporal lobe",
+    "disease_jp": "脳のがん 側頭葉",
+    "disease_en": "Cancer of brain (tumor) - Temporal lobe",
     "patient_count": 2000
   },
   {
     "icd10": "C716",
-    "disease_jp": "脳の悪性新生物＜腫瘍＞ 小脳",
-    "disease_en": "Malignant neoplasm of the cerebellum (Brain tumor)",
+    "disease_jp": "脳のがん 小脳",
+    "disease_en": "Cancer of the cerebellum (Brain tumor)",
     "patient_count": 1000
   },
   {
     "icd10": "C717",
-    "disease_jp": "脳の悪性新生物＜腫瘍＞ 脳幹",
+    "disease_jp": "脳のがん 脳幹",
     "disease_en": "Malignant brain tumor, brainstem (or Brainstem malignant neoplasm)",
     "patient_count": 1000
   },
   {
     "icd10": "C719",
-    "disease_jp": "脳の悪性新生物＜腫瘍＞ 脳，部位不明",
+    "disease_jp": "脳のがん 脳，部位不明",
     "disease_en": "Malignant brain tumor",
     "patient_count": 4000
   },
   {
     "icd10": "C73",
-    "disease_jp": "甲状腺の悪性新生物＜腫瘍＞",
+    "disease_jp": "甲状腺のがん",
     "disease_en": "malignant thyroid tumor",
     "patient_count": 82000
   },
   {
     "icd10": "C749",
-    "disease_jp": "副腎の悪性新生物＜腫瘍＞ 副腎，部位不明",
-    "disease_en": "Malignant neoplasm of adrenal gland, unspecified part of adrenal gland",
+    "disease_jp": "副腎のがん 副腎，部位不明",
+    "disease_en": "Cancer of adrenal gland, unspecified part of adrenal gland",
     "patient_count": 1000
   },
   {
     "icd10": "C760",
-    "disease_jp": "その他及び部位不明確の悪性新生物＜腫瘍＞ 頭部，顔面及び頚部",
+    "disease_jp": "その他及び部位不明確のがん 頭部，顔面及び頚部",
     "disease_en": "Other and ill-defined malignant neoplasms of head, face, and neck",
     "patient_count": 1000
   },
   {
     "icd10": "C770",
-    "disease_jp": "リンパ節の続発性及び部位不明の悪性新生物＜腫瘍＞ 頭部，顔面及び頚部リンパ節",
+    "disease_jp": "リンパ節の続発性及び部位不明のがん 頭部，顔面及び頚部リンパ節",
     "disease_en": "Secondary and unspecified malignant neoplasm of lymph nodes, lymph nodes of head, face, and neck",
     "patient_count": 3000
   },
   {
     "icd10": "C771",
-    "disease_jp": "リンパ節の続発性及び部位不明の悪性新生物＜腫瘍＞ 胸腔内リンパ節",
+    "disease_jp": "リンパ節の続発性及び部位不明のがん 胸腔内リンパ節",
     "disease_en": "Secondary and unspecified malignant neoplasm of lymph nodes, intrathoracic lymph nodes",
     "patient_count": 1000
   },
   {
     "icd10": "C772",
-    "disease_jp": "リンパ節の続発性及び部位不明の悪性新生物＜腫瘍＞ 腹腔内リンパ節",
+    "disease_jp": "リンパ節の続発性及び部位不明のがん 腹腔内リンパ節",
     "disease_en": "Secondary and unspecified malignant neoplasm of lymph nodes, intra-abdominal lymph nodes",
     "patient_count": 1000
   },
   {
     "icd10": "C773",
-    "disease_jp": "リンパ節の続発性及び部位不明の悪性新生物＜腫瘍＞ 腋窩及び上肢リンパ節",
+    "disease_jp": "リンパ節の続発性及び部位不明のがん 腋窩及び上肢リンパ節",
     "disease_en": "Secondary and unspecified malignant neoplasm of lymph nodes of axilla and upper limb lymph nodes",
     "patient_count": 1000
   },
   {
     "icd10": "C774",
-    "disease_jp": "リンパ節の続発性及び部位不明の悪性新生物＜腫瘍＞ そけい＜鼠径＞及び下肢リンパ節",
+    "disease_jp": "リンパ節の続発性及び部位不明のがん そけい＜鼠径＞及び下肢リンパ節",
     "disease_en": "Secondary and unspecified malignant neoplasm of lymph nodes, inguinal and lower limb lymph nodes",
     "patient_count": 1000
   },
   {
     "icd10": "C779",
-    "disease_jp": "リンパ節の続発性及び部位不明の悪性新生物＜腫瘍＞ リンパ節，部位不明",
+    "disease_jp": "リンパ節の続発性及び部位不明のがん リンパ節，部位不明",
     "disease_en": "Secondary and unspecified malignant neoplasm of lymph nodes, unspecified site",
     "patient_count": 2000
   },
   {
     "icd10": "C780",
-    "disease_jp": "呼吸器及び消化器の続発性悪性新生物＜腫瘍＞ 肺の続発性悪性新生物＜腫瘍＞",
+    "disease_jp": "呼吸器及び消化器の続発性がん 肺の続発性がん",
     "disease_en": "Secondary malignant neoplasm of respiratory and digestive organs, Secondary malignant neoplasm of lung",
     "patient_count": 17000
   },
   {
     "icd10": "C782",
-    "disease_jp": "呼吸器及び消化器の続発性悪性新生物＜腫瘍＞ 胸膜の続発性悪性新生物＜腫瘍＞",
+    "disease_jp": "呼吸器及び消化器の続発性がん 胸膜の続発性がん",
     "disease_en": "Secondary malignant neoplasm of respiratory and digestive organs, secondary malignant neoplasm of pleura",
     "patient_count": 3000
   },
   {
     "icd10": "C786",
-    "disease_jp": "呼吸器及び消化器の続発性悪性新生物＜腫瘍＞ 後腹膜及び腹膜の続発性悪性新生物＜腫瘍＞",
+    "disease_jp": "呼吸器及び消化器の続発性がん 後腹膜及び腹膜の続発性がん",
     "disease_en": "Secondary malignant neoplasm of respiratory and digestive organs, secondary malignant neoplasm of retroperitoneum and peritoneum",
     "patient_count": 2000
   },
   {
     "icd10": "C787",
-    "disease_jp": "呼吸器及び消化器の続発性悪性新生物＜腫瘍＞ 肝及び肝内胆管の続発性悪性新生物＜腫瘍＞",
+    "disease_jp": "呼吸器及び消化器の続発性がん 肝及び肝内胆管の続発性がん",
     "disease_en": "Secondary malignant neoplasm of respiratory and digestive organs; Secondary malignant neoplasm of liver and intrahepatic bile duct",
     "patient_count": 11000
   },
   {
     "icd10": "C793",
-    "disease_jp": "その他の部位及び部位不明の続発性悪性新生物＜腫瘍＞ 脳及び脳髄膜の続発性悪性新生物＜腫瘍＞",
+    "disease_jp": "その他の部位及び部位不明の続発性がん 脳及び脳髄膜の続発性がん",
     "disease_en": "Malignant secondary neoplasm of other and unspecified sites, and malignant secondary neoplasm of brain and cerebral meninges",
     "patient_count": 13000
   },
   {
     "icd10": "C795",
-    "disease_jp": "その他の部位及び部位不明の続発性悪性新生物＜腫瘍＞ 骨及び骨髄の続発性悪性新生物＜腫瘍＞",
+    "disease_jp": "その他の部位及び部位不明の続発性がん 骨及び骨髄の続発性がん",
     "disease_en": "Secondary malignant neoplasm of other and unspecified sites, secondary malignant neoplasm of bone and bone marrow",
     "patient_count": 12000
   },
   {
     "icd10": "C798",
-    "disease_jp": "その他の部位及び部位不明の続発性悪性新生物＜腫瘍＞ その他の明示された部位の続発性悪性新生物＜腫瘍＞",
+    "disease_jp": "その他の部位及び部位不明の続発性がん その他の明示された部位の続発性がん",
     "disease_en": "Secondary malignant neoplasm of other and unspecified sites, secondary malignant neoplasm of other specified sites",
     "patient_count": 1000
   },
   {
     "icd10": "C799",
-    "disease_jp": "その他の部位及び部位不明の続発性悪性新生物＜腫瘍＞ 続発性悪性新生物＜腫瘍＞，部位不明",
+    "disease_jp": "その他の部位及び部位不明の続発性がん 続発性がん，部位不明",
     "disease_en": "Secondary malignant neoplasm of other and unspecified sites, secondary malignant neoplasm, unspecified site",
     "patient_count": 1000
   },
   {
     "icd10": "C800",
-    "disease_jp": "悪性新生物＜腫瘍＞，部位が明示されていないもの 悪性新生物＜腫瘍＞，原発部位不明と記載されたもの",
-    "disease_en": "Malignant neoplasm, unspecified site; Malignant neoplasm, unknown primary site",
+    "disease_jp": "がん，部位が明示されていないもの がん，原発部位不明と記載されたもの",
+    "disease_en": "Cancer, unspecified site; Cancer, unknown primary site",
     "patient_count": 4000
   },
   {
     "icd10": "C809",
-    "disease_jp": "悪性新生物＜腫瘍＞，部位が明示されていないもの 悪性新生物＜腫瘍＞，原発部位詳細不明",
-    "disease_en": "Malignant neoplasm of unspecified site",
+    "disease_jp": "がん，部位が明示されていないもの がん，原発部位詳細不明",
+    "disease_en": "Cancer of unspecified site",
     "patient_count": 6000
   },
   {
@@ -1747,7 +1747,7 @@
   },
   {
     "icd10": "C966",
-    "disease_jp": "リンパ組織，造血組織及び関連組織のその他及び詳細不明の悪性新生物＜腫瘍＞ 単局性ランゲルハンス＜Langerhans＞細胞組織球症",
+    "disease_jp": "リンパ組織，造血組織及び関連組織のその他及び詳細不明のがん 単局性ランゲルハンス＜Langerhans＞細胞組織球症",
     "disease_en": "Single-system Langerhans Cell Histiocytosis",
     "patient_count": 1000
   },
