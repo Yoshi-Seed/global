@@ -838,6 +838,33 @@
       if (el) el.value = (value ?? '');
     }
 
+    // 実施年月をYYYY/MM形式にフォーマット
+    function formatImplementationDateForInput(value) {
+      if (!value) return '';
+      
+      // 既にYYYY/MM または YYYY/MM/DD 形式の場合
+      if (/^\d{4}\/\d{1,2}(\/\d{1,2})?$/.test(value)) {
+        // YYYY/MM/DD の場合は YYYY/MM に変換
+        const parts = value.split('/');
+        if (parts.length === 3) {
+          return `${parts[0]}/${parts[1].padStart(2, '0')}`;
+        }
+        // YYYY/MM の場合はそのまま
+        return value;
+      }
+      
+      // ISO形式 (2024-12-01T08:00:00.000Z) や他の日付形式の場合
+      const date = new Date(value);
+      if (!isNaN(date.getTime())) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        return `${year}/${month}`;
+      }
+      
+      // パースできない場合は空文字を返す
+      return '';
+    }
+
     // GAS URLを構築するヘルパー関数
     function buildGasUrl(action, params = {}) {
       const baseUrl = GAS_CONFIG.URL;
@@ -960,7 +987,8 @@
         setValue('client', p.client);
         setValue('endClient', p.endClient);
         setValue('projectNumber', p.projectNumber);
-        setValue('implementationDate', p.implementationDate);
+        // 実施年月はYYYY/MM形式にフォーマット
+        setValue('implementationDate', formatImplementationDateForInput(p.implementationDate));
 
         // ★登録担当は空欄にして、編集者名を入れさせる
         setValue('registrant', '');
