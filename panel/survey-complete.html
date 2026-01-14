@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>アンケート回答完了 - 医師パネル管理システム</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes checkmark {
+            0% { stroke-dashoffset: 100; }
+            100% { stroke-dashoffset: 0; }
+        }
+        @keyframes scaleIn {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes coinDrop {
+            0% { transform: translateY(-50px) rotate(0deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(0) rotate(360deg); opacity: 1; }
+        }
+        .checkmark {
+            animation: scaleIn 0.5s ease-out;
+        }
+        .checkmark-path {
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+            animation: checkmark 0.5s ease-out 0.3s forwards;
+        }
+        .coin-animation {
+            animation: coinDrop 0.8s ease-out 0.5s forwards;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-yellow-50 to-orange-50 min-h-screen flex items-center justify-center px-4">
+    <div class="max-w-md w-full">
+        <div class="bg-white rounded-lg shadow-2xl p-8 text-center">
+            <!-- チェックマークアイコン -->
+            <div class="flex justify-center mb-6 checkmark">
+                <div class="bg-green-100 rounded-full p-4">
+                    <svg class="h-20 w-20 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path class="checkmark-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">
+                ご回答ありがとうございました！
+            </h1>
+            
+            <p class="text-gray-600 mb-6">
+                アンケートへのご協力、誠にありがとうございます。<br>
+                いただいたご意見は今後の医療の発展に役立てられます。
+            </p>
+
+            <!-- ポイント獲得表示 -->
+            <div class="bg-gradient-to-r from-yellow-100 to-yellow-50 border-2 border-yellow-300 rounded-lg p-6 mb-6 coin-animation">
+                <div class="flex justify-center mb-3">
+                    <svg class="h-16 w-16 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <p class="text-sm font-semibold text-yellow-900 mb-2">ポイントを獲得しました！</p>
+                <p class="text-4xl font-bold text-yellow-700">+800 pt</p>
+                <p class="text-sm text-yellow-800 mt-2">自動的にアカウントに追加されました</p>
+            </div>
+
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-left">
+                <h3 class="text-sm font-semibold text-blue-900 mb-3">完了内容</h3>
+                <ul class="space-y-2 text-sm text-blue-800">
+                    <li class="flex items-start">
+                        <svg class="h-5 w-5 text-blue-600 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span><strong>アンケート:</strong> 新薬の臨床評価に関するアンケート</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="h-5 w-5 text-blue-600 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span><strong>回答日時:</strong> 2026年1月14日 14:35</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="h-5 w-5 text-blue-600 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span><strong>所要時間:</strong> 14分32秒</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+                <p class="text-sm text-green-800">
+                    💡 現在のポイント残高: <strong class="text-lg">13,300 pt</strong>
+                </p>
+                <p class="text-xs text-green-700 mt-2">
+                    3,000ptからポイント交換が可能です
+                </p>
+            </div>
+
+            <a
+                href="dashboard.html"
+                class="block w-full py-3 px-4 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition duration-150 mb-3"
+            >
+                ダッシュボードへ戻る
+            </a>
+
+            <a
+                href="points.html"
+                class="block w-full py-3 px-4 border border-gray-300 text-gray-700 font-medium rounded-md hover:bg-gray-50 transition duration-150"
+            >
+                ポイント詳細を見る
+            </a>
+        </div>
+
+        <div class="mt-6 text-center">
+            <p class="text-sm text-gray-600 mb-4">他にも回答可能なアンケートがあります</p>
+            <a href="dashboard.html" class="text-blue-600 hover:text-blue-700 font-medium text-sm">
+                新着アンケートを確認する →
+            </a>
+        </div>
+    </div>
+</body>
+</html>
