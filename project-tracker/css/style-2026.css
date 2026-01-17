@@ -317,6 +317,13 @@ nav[aria-label="Pagination"] .border-indigo-500 {
     transition: var(--transition);
 }
 
+/* 明示的に背景色を確実に適用 */
+a.bg-sp-primary,
+button.bg-sp-primary {
+    background-color: #1F7A85 !important;
+    color: white !important;
+}
+
 .bg-sp-primary:hover,
 .btn-sp-primary:hover {
     background-color: var(--sp-primary-dark) !important;
