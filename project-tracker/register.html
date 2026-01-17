@@ -494,6 +494,11 @@
 
   <!-- 専門フィールド オートコンプリート -->
   <script>
+    // グローバルスコープで変数を定義
+    let SPECIALTIES_MASTER = [];
+    let SPECIALTIES_INDEX = [];
+    let SPECIALTY_ALIASES = {};
+    
     // DOMContentLoadedを待ってから実行
     document.addEventListener('DOMContentLoaded', function() {
       console.log('=== Specialty Autocomplete Debug ===');
@@ -507,12 +512,12 @@
       // ===== 新しい統一マスターを使用 =====
       // specialties-master.js から SpecialtyMaster を使用
     
-    // 後方互換性のため、既存の変数名にマッピング
-    const SPECIALTIES_MASTER = SpecialtyMaster.getAllSpecialties().map(s => ({
-      code: s.code,
-      ja: s.ja,
-      en: s.en
-    }));
+      // 後方互換性のため、既存の変数名にマッピング
+      SPECIALTIES_MASTER = SpecialtyMaster.getAllSpecialties().map(s => ({
+        code: s.code,
+        ja: s.ja,
+        en: s.en
+      }));
     
     /* 旧マスター定義（コメントアウト）
     const SPECIALTIES_MASTER_OLD = [
@@ -594,20 +599,20 @@
     ];
     */
     
-    // ---- 2) よくある表記の「別名 → 正式名」マップ（新マスターから自動生成） ----
-    const SPECIALTY_ALIASES = {};
+      // ---- 2) よくある表記の「別名 → 正式名」マップ（新マスターから自動生成） ----
+      SPECIALTY_ALIASES = {};
+      
+      // 新マスターから別名マップを生成
+      SpecialtyMaster.getAllSpecialties().forEach(specialty => {
+        if (specialty.aliases && Array.isArray(specialty.aliases)) {
+          specialty.aliases.forEach(alias => {
+            SPECIALTY_ALIASES[alias] = specialty.ja;
+          });
+        }
+      });
     
-    // 新マスターから別名マップを生成
-    SpecialtyMaster.getAllSpecialties().forEach(specialty => {
-      if (specialty.aliases && Array.isArray(specialty.aliases)) {
-        specialty.aliases.forEach(alias => {
-          SPECIALTY_ALIASES[alias] = specialty.ja;
-        });
-      }
-    });
-    
-    // 旧定義も一部追加（後方互換性のため）
-    Object.assign(SPECIALTY_ALIASES, {
+      // 旧定義も一部追加（後方互換性のため）
+      Object.assign(SPECIALTY_ALIASES, {
       // 内科系
       "一般内科": "内科",
       "消化器科": "消化器内科",
@@ -652,49 +657,50 @@
       "救急": "救急科",
       "ICU": "救急科",
       "緩和": "緩和ケア科",
-      "病理": "病理科",
-    });
-
-    // ---- 3) 正規化関数 ----
-    const normalizeKey = (s) => (s || "").toString().trim().toLowerCase()
-                 .replace(/\s+/g, "").normalize("NFKC");
-    
-    // デバッグ用: データ構造を確認
-    console.log('SPECIALTIES_MASTER count:', SPECIALTIES_MASTER.length);
-    console.log('SPECIALTIES_INDEX sample:', SPECIALTIES_INDEX.slice(0, 3));
-    console.log('SPECIALTY_ALIASES sample:', Object.keys(SPECIALTY_ALIASES).slice(0, 5));
-
-    // 検索キーを増やす（日本語・英名・コード）
-    // 新マスターの構造に合わせて修正
-    const SPECIALTIES_INDEX = [];
-    
-    // SpecialtyMasterが存在することを確認
-    if (typeof SpecialtyMaster !== 'undefined' && SpecialtyMaster.getAllSpecialties) {
-      const allSpecialties = SpecialtyMaster.getAllSpecialties();
-      console.log('Loading specialties from SpecialtyMaster:', allSpecialties.length);
-      
-      allSpecialties.forEach(r => {
-        SPECIALTIES_INDEX.push({
-          code: r.code,
-          ja: r.ja,
-          en: r.en || '',
-          key_ja: normalizeKey(r.ja),
-          key_en: normalizeKey(r.en || ''),
-          key_code: normalizeKey(r.code),
-        });
+        "病理": "病理科",
       });
-    } else {
-      console.error('SpecialtyMaster not found! Using fallback data.');
-      // フォールバック: 最小限のデータ
-      SPECIALTIES_INDEX.push(
-        { code: 'IM', ja: '内科', en: 'Internal Medicine', key_ja: normalizeKey('内科'), key_en: normalizeKey('Internal Medicine'), key_code: normalizeKey('IM') },
-        { code: 'SURG', ja: '外科', en: 'Surgery', key_ja: normalizeKey('外科'), key_en: normalizeKey('Surgery'), key_code: normalizeKey('SURG') },
-        { code: 'PED', ja: '小児科', en: 'Pediatrics', key_ja: normalizeKey('小児科'), key_en: normalizeKey('Pediatrics'), key_code: normalizeKey('PED') }
-      );
-    }
 
-    // ---- 4) UI ロジック ----
-    (function setupSpecialtyCombobox() {
+      // ---- 3) 正規化関数 ----
+      const normalizeKey = (s) => (s || "").toString().trim().toLowerCase()
+                   .replace(/\s+/g, "").normalize("NFKC");
+      
+      // 検索キーを増やす（日本語・英名・コード）
+      // 新マスターの構造に合わせて修正
+      SPECIALTIES_INDEX = [];
+      
+      // SpecialtyMasterが存在することを確認
+      if (typeof SpecialtyMaster !== 'undefined' && SpecialtyMaster.getAllSpecialties) {
+        const allSpecialties = SpecialtyMaster.getAllSpecialties();
+        console.log('Loading specialties from SpecialtyMaster:', allSpecialties.length);
+        
+        allSpecialties.forEach(r => {
+          SPECIALTIES_INDEX.push({
+            code: r.code,
+            ja: r.ja,
+            en: r.en || '',
+            key_ja: normalizeKey(r.ja),
+            key_en: normalizeKey(r.en || ''),
+            key_code: normalizeKey(r.code),
+          });
+        });
+      } else {
+        console.error('SpecialtyMaster not found! Using fallback data.');
+        // フォールバック: 最小限のデータ
+        SPECIALTIES_INDEX.push(
+          { code: 'IM', ja: '内科', en: 'Internal Medicine', key_ja: normalizeKey('内科'), key_en: normalizeKey('Internal Medicine'), key_code: normalizeKey('IM') },
+          { code: 'SURG', ja: '外科', en: 'Surgery', key_ja: normalizeKey('外科'), key_en: normalizeKey('Surgery'), key_code: normalizeKey('SURG') },
+          { code: 'PED', ja: '小児科', en: 'Pediatrics', key_ja: normalizeKey('小児科'), key_en: normalizeKey('Pediatrics'), key_code: normalizeKey('PED') }
+        );
+      }
+      
+      // デバッグ用: データ構造を確認
+      console.log('SPECIALTIES_MASTER count:', SPECIALTIES_MASTER.length);
+      console.log('SPECIALTIES_INDEX count:', SPECIALTIES_INDEX.length);
+      console.log('SPECIALTIES_INDEX sample:', SPECIALTIES_INDEX.slice(0, 3));
+      console.log('SPECIALTY_ALIASES sample:', Object.keys(SPECIALTY_ALIASES).slice(0, 5));
+
+      // ---- 4) UI ロジック ----
+      (function setupSpecialtyCombobox() {
       const input = document.getElementById("specialtyInput");
       const list  = document.getElementById("specialtyList");
       const err   = document.getElementById("specialtyError");
@@ -883,8 +889,8 @@
           hideError();
         });
       }
-    })();
-    
+      })();
+      
     }); // DOMContentLoaded の終了
   </script>
 
