@@ -16,6 +16,24 @@
   <script src="js/data/specialties-master.js"></script>
   <script src="js/config.js"></script>
   <script src="js/database.js"></script>
+  
+  <!-- モジュール読み込み -->
+  <script type="module">
+    import { FilterManager } from './js/modules/filters.js';
+    import { PaginationManager } from './js/modules/pagination.js';
+    import { modalManager } from './js/modules/modal.js';
+    import { projectDisplayManager } from './js/modules/project-display.js';
+    import { csvExportManager } from './js/modules/csv-export.js';
+    import { dataAggregationManager } from './js/modules/data-aggregation.js';
+    
+    // グローバルに公開（後方互換性のため）
+    window.FilterManager = FilterManager;
+    window.PaginationManager = PaginationManager;
+    window.modalManager = modalManager;
+    window.projectDisplayManager = projectDisplayManager;
+    window.csvExportManager = csvExportManager;
+    window.dataAggregationManager = dataAggregationManager;
+  </script>
   <style>
     body {
       font-size: 13px;
