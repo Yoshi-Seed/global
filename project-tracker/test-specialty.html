@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>専門科オートコンプリート テスト</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/style-2026.css">
+  <link rel="stylesheet" href="css/components.css">
+  <script src="js/utils.js"></script>
+  <script src="js/data/specialties-master.js"></script>
+</head>
+<body class="bg-gray-50 p-8">
+  <div class="container mx-auto max-w-4xl">
+    <h1 class="text-2xl font-bold mb-8">専門科オートコンプリート動作テスト</h1>
+    
+    <!-- 入力フィールド -->
+    <div class="mb-8 bg-white p-6 rounded-lg shadow">
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        専門（診療科）
+      </label>
+      <div class="relative">
+        <input
+          type="text"
+          id="specialtyInput"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="診療科を入力してください（例：内科、循環器）"
+          autocomplete="off"
+        />
+        <ul
+          id="specialtyList"
+          class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto hidden"
+        ></ul>
+      </div>
+      <div id="specialtyError" class="mt-2 text-sm text-red-600 hidden"></div>
+      <div class="mt-2">
+        <p class="text-sm text-gray-600">
+          選択された値: <span id="selectedValue" class="font-bold">なし</span>
+        </p>
+      </div>
+    </div>
+    
+    <!-- データ確認 -->
+    <div class="bg-white p-6 rounded-lg shadow">
+      <h2 class="text-lg font-bold mb-4">データ確認</h2>
+      <div id="dataCheck"></div>
+    </div>
+  </div>
+  
+  <script>
+    // データ確認
+    const checkDiv = document.getElementById('dataCheck');
+    const specialties = SpecialtyMaster.getAllSpecialties();
+    
+    checkDiv.innerHTML = `
+      <p class="mb-2">✓ 専門科マスター読み込み: <span class="font-bold text-green-600">${specialties.length}件</span></p>
+      <p class="mb-2">✓ サンプルデータ:</p>
+      <ul class="ml-4 text-sm">
+        ${specialties.slice(0, 5).map(s => `
+          <li class="mb-1">
+            <span class="font-medium">${s.ja}</span> 
+            <span class="text-gray-500">(${s.en || 'N/A'})</span>
+            <span class="text-gray-400 text-xs">#${s.code}</span>
+          </li>
+        `).join('')}
+      </ul>
+    `;
+    
+    // オートコンプリート実装
+    const input = document.getElementById('specialtyInput');
+    const list = document.getElementById('specialtyList');
+    const error = document.getElementById('specialtyError');
+    const selectedValue = document.getElementById('selectedValue');
+    
+    let currentItems = [];
+    let activeIndex = -1;
+    
+    // 正規化関数
+    const normalizeKey = (s) => (s || '').toString().trim().toLowerCase();
+    
+    // 候補を取得
+    function getCandidates(query) {
+      if (!query) return [];
+      
+      const q = normalizeKey(query);
+      const results = [];
+      
+      specialties.forEach(s => {
+        const jaMatch = normalizeKey(s.ja).includes(q);
+        const enMatch = s.en && normalizeKey(s.en).includes(q);
+        const aliasMatch = s.aliases && s.aliases.some(a => normalizeKey(a).includes(q));
+        
+        if (jaMatch || enMatch || aliasMatch) {
+          results.push(s);
+        }
+      });
+      
+      return results.slice(0, 20);
+    }
+    
+    // リストをレンダリング
+    function renderList(items) {
+      if (items.length === 0) {
+        list.classList.add('hidden');
+        return;
+      }
+      
+      list.innerHTML = items.map((item, idx) => `
+        <li class="px-3 py-2 cursor-pointer hover:bg-blue-50 ${idx === activeIndex ? 'bg-blue-100' : ''}"
+            data-index="${idx}">
+          <span class="font-medium">${item.ja}</span>
+          <span class="text-gray-500 ml-2">${item.en ? `(${item.en})` : ''}</span>
+          <span class="text-gray-400 ml-2 text-xs">#${item.code}</span>
+        </li>
+      `).join('');
+      
+      list.classList.remove('hidden');
+      currentItems = items;
+    }
+    
+    // アイテムを選択
+    function selectItem(index) {
+      const item = currentItems[index];
+      if (!item) return;
+      
+      input.value = item.ja;
+      selectedValue.textContent = `${item.ja} (${item.code})`;
+      list.classList.add('hidden');
+      error.classList.add('hidden');
+    }
+    
+    // イベントリスナー
+    input.addEventListener('input', (e) => {
+      const value = e.target.value;
+      const candidates = getCandidates(value);
+      renderList(candidates);
+      activeIndex = -1;
+    });
+    
+    input.addEventListener('blur', () => {
+      setTimeout(() => {
+        list.classList.add('hidden');
+      }, 200);
+    });
+    
+    input.addEventListener('keydown', (e) => {
+      if (!list.classList.contains('hidden')) {
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          activeIndex = Math.min(activeIndex + 1, currentItems.length - 1);
+          renderList(currentItems);
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          activeIndex = Math.max(activeIndex - 1, -1);
+          renderList(currentItems);
+        } else if (e.key === 'Enter' && activeIndex >= 0) {
+          e.preventDefault();
+          selectItem(activeIndex);
+        }
+      }
+    });
+    
+    list.addEventListener('click', (e) => {
+      const li = e.target.closest('li');
+      if (li) {
+        const index = parseInt(li.dataset.index);
+        selectItem(index);
+      }
+    });
+  </script>
+</body>
+</html>

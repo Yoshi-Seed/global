@@ -9,11 +9,17 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-　<script src="https://cdn.tailwindcss.com"></script>
-  <!-- 以下の行を追加 -->
-　<link rel="stylesheet" href="css/style-2026.css">
- 
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Project Tracker スタイルシート -->
+  <link rel="stylesheet" href="css/style-2026.css">
+  <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- 共通ユーティリティ関数 -->
+  <script src="js/utils.js"></script>
+  <script src="js/data/specialties-master.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/database.js"></script>
 </head>
 <body class="bg-gray-50">
   <!-- ナビゲーション -->
@@ -488,8 +494,28 @@
 
   <!-- 専門フィールド オートコンプリート -->
   <script>
-    // ---- 1) 正式マスタ（診療科一覧） ----
-    const SPECIALTIES_MASTER = [
+    // DOMContentLoadedを待ってから実行
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('=== Specialty Autocomplete Debug ===');
+      console.log('SpecialtyMaster available:', typeof SpecialtyMaster !== 'undefined');
+      
+      if (typeof SpecialtyMaster === 'undefined') {
+        console.error('SpecialtyMaster is not loaded! Check if specialties-master.js is properly loaded.');
+        return;
+      }
+      
+      // ===== 新しい統一マスターを使用 =====
+      // specialties-master.js から SpecialtyMaster を使用
+    
+    // 後方互換性のため、既存の変数名にマッピング
+    const SPECIALTIES_MASTER = SpecialtyMaster.getAllSpecialties().map(s => ({
+      code: s.code,
+      ja: s.ja,
+      en: s.en
+    }));
+    
+    /* 旧マスター定義（コメントアウト）
+    const SPECIALTIES_MASTER_OLD = [
       // 内科系
       { code: "001", ja: "内科", en: "Internal Medicine" },
       { code: "340", ja: "呼吸器内科", en: "Respiratory Medicine (Internal)" },
@@ -566,9 +592,22 @@
       { code: "700", ja: "基礎医学系", en: "Basic Medical Sciences" },
       { code: "999", ja: "その他", en: "Other" },
     ];
-
-    // ---- 2) よくある表記の「別名 → 正式名」マップ ----
-    const SPECIALTY_ALIASES = {
+    */
+    
+    // ---- 2) よくある表記の「別名 → 正式名」マップ（新マスターから自動生成） ----
+    const SPECIALTY_ALIASES = {};
+    
+    // 新マスターから別名マップを生成
+    SpecialtyMaster.getAllSpecialties().forEach(specialty => {
+      if (specialty.aliases && Array.isArray(specialty.aliases)) {
+        specialty.aliases.forEach(alias => {
+          SPECIALTY_ALIASES[alias] = specialty.ja;
+        });
+      }
+    });
+    
+    // 旧定義も一部追加（後方互換性のため）
+    Object.assign(SPECIALTY_ALIASES, {
       // 内科系
       "一般内科": "内科",
       "消化器科": "消化器内科",
@@ -614,19 +653,45 @@
       "ICU": "救急科",
       "緩和": "緩和ケア科",
       "病理": "病理科",
-    };
+    });
 
     // ---- 3) 正規化関数 ----
     const normalizeKey = (s) => (s || "").toString().trim().toLowerCase()
                  .replace(/\s+/g, "").normalize("NFKC");
+    
+    // デバッグ用: データ構造を確認
+    console.log('SPECIALTIES_MASTER count:', SPECIALTIES_MASTER.length);
+    console.log('SPECIALTIES_INDEX sample:', SPECIALTIES_INDEX.slice(0, 3));
+    console.log('SPECIALTY_ALIASES sample:', Object.keys(SPECIALTY_ALIASES).slice(0, 5));
 
     // 検索キーを増やす（日本語・英名・コード）
-    const SPECIALTIES_INDEX = SPECIALTIES_MASTER.map(r => ({
-      ...r,
-      key_ja: normalizeKey(r.ja),
-      key_en: normalizeKey(r.en),
-      key_code: normalizeKey(r.code),
-    }));
+    // 新マスターの構造に合わせて修正
+    const SPECIALTIES_INDEX = [];
+    
+    // SpecialtyMasterが存在することを確認
+    if (typeof SpecialtyMaster !== 'undefined' && SpecialtyMaster.getAllSpecialties) {
+      const allSpecialties = SpecialtyMaster.getAllSpecialties();
+      console.log('Loading specialties from SpecialtyMaster:', allSpecialties.length);
+      
+      allSpecialties.forEach(r => {
+        SPECIALTIES_INDEX.push({
+          code: r.code,
+          ja: r.ja,
+          en: r.en || '',
+          key_ja: normalizeKey(r.ja),
+          key_en: normalizeKey(r.en || ''),
+          key_code: normalizeKey(r.code),
+        });
+      });
+    } else {
+      console.error('SpecialtyMaster not found! Using fallback data.');
+      // フォールバック: 最小限のデータ
+      SPECIALTIES_INDEX.push(
+        { code: 'IM', ja: '内科', en: 'Internal Medicine', key_ja: normalizeKey('内科'), key_en: normalizeKey('Internal Medicine'), key_code: normalizeKey('IM') },
+        { code: 'SURG', ja: '外科', en: 'Surgery', key_ja: normalizeKey('外科'), key_en: normalizeKey('Surgery'), key_code: normalizeKey('SURG') },
+        { code: 'PED', ja: '小児科', en: 'Pediatrics', key_ja: normalizeKey('小児科'), key_en: normalizeKey('Pediatrics'), key_code: normalizeKey('PED') }
+      );
+    }
 
     // ---- 4) UI ロジック ----
     (function setupSpecialtyCombobox() {
@@ -819,6 +884,8 @@
         });
       }
     })();
+    
+    }); // DOMContentLoaded の終了
   </script>
 
   <!-- フォームロジック -->

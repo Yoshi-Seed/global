@@ -7,12 +7,17 @@
   <!-- Version: 2025-11-09-final 期間比較分析システム本番版 -->
   <link rel="icon" type="image/png" href="SP_logo_shape_only.png">
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- 以下の行を追加 -->
-<link rel="stylesheet" href="css/style-2026.css">
+  <!-- Project Tracker スタイルシート -->
+  <link rel="stylesheet" href="css/style-2026.css">
+  <link rel="stylesheet" href="css/components.css">
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Chart.js for interactive visualizations -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  
+  <!-- 共通ユーティリティ関数 -->
+  <script src="js/utils.js"></script>
+  <script src="js/data/specialties-master.js"></script>
 </head>
 <body class="bg-gray-50">
   <!-- ナビゲーション -->
@@ -27,7 +32,7 @@
         
         <!-- ナビゲーションボタン -->
         <div class="flex flex-wrap gap-1 sm:gap-2">
-          <a href="index.html" class="px-2 sm:px-4 py-2 text-xs sm:text-sm text-white rounded-lg transition flex items-center" style="background-color: #1F7A85;">
+          <a href="index.html" class="px-2 sm:px-4 py-2 text-xs sm:text-sm text-white rounded-lg transition flex items-center bg-sp-primary">
             <i class="fas fa-home sm:mr-2"></i><span class="hidden sm:inline ml-1">ホーム</span>
           </a>
           <a href="register.html" class="px-2 sm:px-4 py-2 text-xs sm:text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center">
@@ -954,24 +959,9 @@
       });
     }
 
-    // 対象者タイプバッジのクラス
-    function getTargetTypeBadgeClass(type) {
-      const classes = {
-        '医師': 'bg-blue-100 text-blue-800',
-        '患者': 'bg-green-100 text-green-800',
-        '介護者': 'bg-yellow-100 text-yellow-800',
-        '看護師': 'bg-pink-100 text-pink-800',
-        'KOL': 'bg-indigo-100 text-indigo-800',
-        '医師・患者': 'bg-purple-100 text-purple-800'
-      };
-      return classes[type] || 'bg-gray-100 text-gray-800';
-    }
-
-    // テキスト切り詰め
-    function truncate(text, length) {
-      if (!text) return '';
-      return text.length > length ? text.substring(0, length) + '...' : text;
-    }
+    // === ユーティリティ関数は共通utils.jsを使用 ===
+    const getTargetTypeBadgeClass = ProjectUtils.getTargetTypeBadgeClass;
+    const truncate = ProjectUtils.truncate;
 
     // ==========================================
     // Phase 3: Chart.js インタラクティブチャート

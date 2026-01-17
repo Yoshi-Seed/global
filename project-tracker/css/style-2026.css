@@ -3,7 +3,19 @@
  */
 
 :root {
-    /* カラーパレット: 宇宙と深海をイメージした深い青と鮮やかなアクセント */
+    /* プロジェクトトラッカー プライマリカラー (Seed Planning ブランドカラー) */
+    --sp-primary: #1F7A85;         /* Seed Planning メインカラー */
+    --sp-primary-dark: #1a6770;    /* ダークバリエーション */
+    --sp-primary-light: #2a8a95;   /* ライトバリエーション */
+    --sp-primary-alpha-10: rgba(31, 122, 133, 0.1);
+    --sp-primary-alpha-20: rgba(31, 122, 133, 0.2);
+    --sp-gradient: linear-gradient(135deg, #1F7A85 0%, #1a6770 100%);
+    
+    /* セカンダリカラー */
+    --sp-secondary: #E8F0F1;       /* 薄いグレーブルー背景 */
+    --sp-secondary-dark: #d5e5e7;  /* グラデーション用 */
+    
+    /* Neo-Glass 2026 デザインテーマ (既存) */
     --primary-color: #4f46e5;
     --primary-light: #818cf8;
     --primary-dark: #3730a3;
@@ -286,6 +298,77 @@ nav[aria-label="Pagination"] .border-indigo-500 {
     border-color: var(--primary-color) !important;
     color: var(--primary-color) !important;
     font-weight: 700 !important;
+}
+
+/* =========================================
+   Seed Planning Brand Specific Styles
+   ========================================= */
+
+/* SP プライマリボタン */
+.bg-sp-primary,
+.btn-sp-primary {
+    background-color: var(--sp-primary) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: var(--radius-md) !important;
+    font-weight: 600 !important;
+    padding: 0.5rem 1rem !important;
+    box-shadow: 0 4px 12px var(--sp-primary-alpha-20) !important;
+    transition: var(--transition);
+}
+
+.bg-sp-primary:hover,
+.btn-sp-primary:hover {
+    background-color: var(--sp-primary-dark) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px var(--sp-primary-alpha-20) !important;
+}
+
+/* SP グラデーション背景 */
+.bg-sp-gradient {
+    background: var(--sp-gradient) !important;
+}
+
+/* SP セカンダリ背景 */
+.bg-sp-secondary {
+    background: linear-gradient(135deg, var(--sp-secondary) 0%, var(--sp-secondary-dark) 100%) !important;
+}
+
+/* SP テキストカラー */
+.text-sp-primary {
+    color: var(--sp-primary) !important;
+}
+
+/* SP ボーダー */
+.border-sp-primary {
+    border-color: var(--sp-primary) !important;
+}
+
+/* SP フォーカス状態 */
+.focus-sp:focus {
+    border-color: var(--sp-primary) !important;
+    box-shadow: 0 0 0 4px var(--sp-primary-alpha-10) !important;
+    outline: none !important;
+}
+
+/* SPローディングインジケーター */
+.sp-loading-icon {
+    color: var(--sp-primary);
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.sp-loading-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--sp-primary);
+}
+
+/* ナビゲーションアクティブ状態 */
+nav .nav-active,
+nav .active-page {
+    background-color: var(--sp-primary) !important;
+    color: white !important;
 }
 
 /* =========================================

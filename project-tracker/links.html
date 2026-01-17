@@ -6,9 +6,13 @@
   <title>リンク集 - プロジェクト履歴管理システム</title>
   <link rel="icon" type="image/png" href="SP_logo_shape_only.png">
   <script src="https://cdn.tailwindcss.com"></script>
-      <!-- 以下の行を追加 -->
-<link rel="stylesheet" href="css/style-2026.css">
+  <!-- Project Tracker スタイルシート -->
+  <link rel="stylesheet" href="css/style-2026.css">
+  <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- 共通ユーティリティ関数 -->
+  <script src="js/utils.js"></script>
   <style>
     .link-card {
       transition: all 0.3s ease;
@@ -85,7 +89,7 @@
           <a href="projects.html" class="px-2 sm:px-4 py-2 text-xs sm:text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center">
             <i class="fas fa-search sm:mr-2"></i><span class="hidden sm:inline ml-1">案件検索</span>
           </a>
-          <a href="links.html" class="px-2 sm:px-4 py-2 text-xs sm:text-sm text-white rounded-lg transition flex items-center" style="background-color: #1F7A85;">
+          <a href="links.html" class="px-2 sm:px-4 py-2 text-xs sm:text-sm text-white rounded-lg transition flex items-center bg-sp-primary">
             <i class="fas fa-link sm:mr-2"></i><span class="hidden sm:inline ml-1">リンク集</span>
           </a>
           <a href="https://seedplanning.monday.com/boards/2723929863" target="_blank" rel="noopener noreferrer" class="px-2 sm:px-4 py-2 text-xs sm:text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center">

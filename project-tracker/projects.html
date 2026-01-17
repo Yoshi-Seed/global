@@ -5,10 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>案件検索 - プロジェクト履歴管理システム</title>
   <link rel="icon" type="image/png" href="SP_logo_shape_only.png">
-<script src="https://cdn.tailwindcss.com"></script>
-  <!-- 以下の行を追加 -->
-<link rel="stylesheet" href="css/style-2026.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Project Tracker スタイルシート -->
+  <link rel="stylesheet" href="css/style-2026.css">
+  <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- 共通ユーティリティ関数 -->
+  <script src="js/utils.js"></script>
+  <script src="js/data/specialties-master.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/database.js"></script>
   <style>
     body {
       font-size: 13px;
@@ -40,8 +47,8 @@
 
     .filter-btn.active {
       background: #FFFFFF !important;
-      border: 2px solid #1F7A85 !important;
-      box-shadow: 0 4px 12px rgba(31, 122, 133, 0.3) !important;
+      border: 2px solid var(--sp-primary) !important;
+      box-shadow: 0 4px 12px var(--sp-primary-alpha-20) !important;
       transform: scale(1.05) !important;
       font-weight: bold;
     }
@@ -62,7 +69,7 @@
     }
 
     .step-number {
-      background: linear-gradient(135deg, #1F7A85 0%, #1a6770 100%);
+      background: var(--sp-gradient);
       width: 24px;
       height: 24px;
       font-size: 12px;
@@ -2045,30 +2052,10 @@ ${result.message || '削除しました。'}
     }
 
     // ユーティリティ関数
-    function getTargetTypeBadgeClass(type) {
-      const classes = {
-        '医師': 'bg-blue-100 text-blue-800',
-        '患者': 'bg-green-100 text-green-800',
-        '介護者': 'bg-yellow-100 text-yellow-800',
-        '看護師': 'bg-pink-100 text-pink-800',
-        'KOL': 'bg-indigo-100 text-indigo-800',
-        '医師・患者': 'bg-purple-100 text-purple-800'
-      };
-      return classes[type] || 'bg-gray-100 text-gray-800';
-    }
-
-    function truncate(text, length) {
-      if (!text) return '';
-      return text.length > length ? text.substring(0, length) + '...' : text;
-    }
-
-    function escapeCSVField(field) {
-      if (typeof field !== 'string') return field;
-      if (field.includes(',') || field.includes('"') || field.includes('\n')) {
-        return `"${field.replace(/"/g, '""')}"`;
-      }
-      return field;
-    }
+    // === 共通ユーティリティ関数はutils.jsを使用 ===
+    const getTargetTypeBadgeClass = ProjectUtils.getTargetTypeBadgeClass;
+    const truncate = ProjectUtils.truncate;
+    const escapeCSVField = ProjectUtils.escapeCSVField;
 
     function compareProjectDates(first, second) {
       // registrationIdで比較（YYYYMMDD-XXXX形式）
@@ -2127,11 +2114,8 @@ ${result.message || '削除しました。'}
       return null;
     }
 
-    function formatDateString(value) {
-      const date = new Date(value);
-      if (Number.isNaN(date.getTime())) return value;
-      return date.toLocaleDateString('ja-JP');
-    }
+    // formatDateStringも共通utils.jsを使用
+    const formatDateString = ProjectUtils.formatDateString;
 
     // 実施年月をフォーマット（日にちまで、時間は除く）
     function formatImplementationDate(value) {

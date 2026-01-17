@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>新構造テスト - Project Tracker</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Project Tracker スタイルシート -->
+  <link rel="stylesheet" href="css/style-2026.css">
+  <link rel="stylesheet" href="css/components.css">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- 共通ユーティリティ関数 -->
+  <script src="js/utils.js"></script>
+  <script src="js/data/specialties-master.js"></script>
+</head>
+<body class="bg-gray-50 p-8">
+  <div class="container mx-auto max-w-6xl">
+    <h1 class="text-3xl font-bold mb-8">新構造動作テスト</h1>
+    
+    <!-- CSS変数テスト -->
+    <section class="mb-8">
+      <h2 class="text-xl font-bold mb-4">1. CSS変数とクラステスト</h2>
+      <div class="grid grid-cols-3 gap-4">
+        <button class="bg-sp-primary text-white px-4 py-2 rounded">
+          <i class="fas fa-check mr-2"></i>SP Primary
+        </button>
+        <button class="btn btn-primary">
+          <i class="fas fa-star mr-2"></i>Button Primary
+        </button>
+        <button class="btn btn-secondary">
+          <i class="fas fa-cog mr-2"></i>Button Secondary
+        </button>
+      </div>
+      
+      <div class="mt-4 p-4 bg-sp-secondary rounded-lg">
+        <p class="text-sp-primary font-bold">SPセカンダリ背景とプライマリテキスト</p>
+      </div>
+    </section>
+    
+    <!-- コンポーネントテスト -->
+    <section class="mb-8">
+      <h2 class="text-xl font-bold mb-4">2. コンポーネントクラステスト</h2>
+      
+      <!-- カード -->
+      <div class="grid grid-cols-3 gap-4 mb-4">
+        <div class="stat-card">
+          <p class="stat-card-label">総案件数</p>
+          <p class="stat-card-value text-sp-primary">125</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-card-label">今月の案件</p>
+          <p class="stat-card-value text-green-600">12</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-card-label">平均リクルート</p>
+          <p class="stat-card-value text-blue-600">8.5</p>
+        </div>
+      </div>
+      
+      <!-- バッジ -->
+      <div class="flex gap-2 mb-4">
+        <span class="badge badge-doctor">医師</span>
+        <span class="badge badge-patient">患者</span>
+        <span class="badge badge-caregiver">介護者</span>
+        <span class="badge badge-qualitative">定性</span>
+        <span class="badge badge-quantitative">定量</span>
+      </div>
+      
+      <!-- アラート -->
+      <div class="alert alert-info mb-2">
+        <i class="fas fa-info-circle mr-2"></i>情報: これは情報メッセージです。
+      </div>
+      <div class="alert alert-success mb-2">
+        <i class="fas fa-check-circle mr-2"></i>成功: 操作が完了しました。
+      </div>
+      <div class="alert alert-warning mb-2">
+        <i class="fas fa-exclamation-triangle mr-2"></i>警告: 注意が必要です。
+      </div>
+      <div class="alert alert-error">
+        <i class="fas fa-times-circle mr-2"></i>エラー: 問題が発生しました。
+      </div>
+    </section>
+    
+    <!-- JavaScriptテスト -->
+    <section class="mb-8">
+      <h2 class="text-xl font-bold mb-4">3. JavaScript ユーティリティテスト</h2>
+      <div class="bg-white rounded-lg shadow p-4">
+        <div id="js-test-results"></div>
+      </div>
+    </section>
+    
+    <!-- 専門科マスターテスト -->
+    <section class="mb-8">
+      <h2 class="text-xl font-bold mb-4">4. 専門科マスターテスト</h2>
+      <div class="bg-white rounded-lg shadow p-4">
+        <div id="specialty-test-results"></div>
+      </div>
+    </section>
+  </div>
+  
+  <script>
+    // JavaScriptユーティリティのテスト
+    function testUtils() {
+      const results = [];
+      
+      // truncateテスト
+      const longText = "これは非常に長いテキストで、切り詰められるべきものです。";
+      const truncated = ProjectUtils.truncate(longText, 10);
+      results.push(`✓ truncate: "${truncated}"`);
+      
+      // formatDateStringテスト
+      const formatted = ProjectUtils.formatDateString(new Date());
+      results.push(`✓ formatDateString: ${formatted}`);
+      
+      // formatNumberテスト
+      const formattedNum = ProjectUtils.formatNumber(12345);
+      results.push(`✓ formatNumber: ${formattedNum}`);
+      
+      // getTargetTypeBadgeClassテスト
+      const badgeClass = ProjectUtils.getTargetTypeBadgeClass('医師');
+      results.push(`✓ getTargetTypeBadgeClass('医師'): ${badgeClass}`);
+      
+      // generateIdテスト
+      const newId = ProjectUtils.generateId('test');
+      results.push(`✓ generateId: ${newId}`);
+      
+      // deepCopyテスト
+      const obj = { a: 1, b: { c: 2 } };
+      const copied = ProjectUtils.deepCopy(obj);
+      copied.b.c = 3;
+      results.push(`✓ deepCopy: original=${obj.b.c}, copied=${copied.b.c}`);
+      
+      document.getElementById('js-test-results').innerHTML = results.join('<br>');
+    }
+    
+    // 専門科マスターのテスト
+    function testSpecialtyMaster() {
+      const results = [];
+      
+      // 全専門科数
+      const all = SpecialtyMaster.getAllSpecialties();
+      results.push(`✓ 全専門科数: ${all.length}件`);
+      
+      // カテゴリー取得
+      const categories = SpecialtyMaster.getCategories();
+      results.push(`✓ カテゴリー数: ${categories.length}`);
+      
+      // 名前検索
+      const found = SpecialtyMaster.findSpecialtyByName('内科');
+      results.push(`✓ '内科'検索: ${found ? found.ja : 'not found'}`);
+      
+      // 略語検索
+      const byAbbr = SpecialtyMaster.getSpecialtyByAbbr('CARD');
+      results.push(`✓ 'CARD'略語検索: ${byAbbr ? byAbbr.ja : 'not found'}`);
+      
+      // カテゴリー別取得
+      const internal = SpecialtyMaster.getSpecialtiesByCategory('内科系');
+      results.push(`✓ '内科系'カテゴリー: ${internal.length}件`);
+      
+      // 高速検索
+      const quick = SpecialtyMaster.quickSearch('循環器');
+      results.push(`✓ '循環器'高速検索: ${quick ? quick.ja : 'not found'}`);
+      
+      // グループ化
+      const grouped = SpecialtyMaster.getSpecialtiesGrouped();
+      results.push(`✓ グループ化: ${Object.keys(grouped).length}グループ`);
+      
+      document.getElementById('specialty-test-results').innerHTML = results.join('<br>');
+    }
+    
+    // テスト実行
+    window.addEventListener('DOMContentLoaded', () => {
+      testUtils();
+      testSpecialtyMaster();
+    });
+  </script>
+</body>
+</html>
