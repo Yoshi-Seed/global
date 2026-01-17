@@ -664,7 +664,8 @@
 
       // ---- 3) 検索キーを増やす（日本語・英名・コード） ----
       // 新マスターの構造に合わせて修正
-      SPECIALTIES_INDEX = [];
+      // グローバル変数のSPECIALTIES_INDEXをクリアして再構築
+      SPECIALTIES_INDEX.length = 0;  // 配列をクリア
       
       // SpecialtyMasterが存在することを確認
       if (typeof SpecialtyMaster !== 'undefined' && SpecialtyMaster.getAllSpecialties) {
@@ -696,6 +697,9 @@
       console.log('SPECIALTIES_INDEX count:', SPECIALTIES_INDEX.length);
       console.log('SPECIALTIES_INDEX sample:', SPECIALTIES_INDEX.slice(0, 3));
       console.log('SPECIALTY_ALIASES sample:', Object.keys(SPECIALTY_ALIASES).slice(0, 5));
+      
+      // グローバル変数として明示的に設定（念のため）
+      window.SPECIALTIES_INDEX = SPECIALTIES_INDEX;
 
       // ---- 4) UI ロジック ----
       // setupSpecialtyCombobox を直接実行
@@ -777,6 +781,15 @@
         console.log('SPECIALTIES_INDEX length:', SPECIALTIES_INDEX.length);
         console.log('normalizeKey type:', typeof normalizeKey);
         
+        // グローバル変数を確実に参照
+        const index = window.SPECIALTIES_INDEX || SPECIALTIES_INDEX;
+        console.log('Using index with length:', index.length);
+        
+        if (index.length === 0) {
+          console.error('SPECIALTIES_INDEX is empty!');
+          return [];
+        }
+        
         let q = normalizeKey(qRaw);
         // 別名 → 正式名に寄せる
         if (SPECIALTY_ALIASES[qRaw]) q = normalizeKey(SPECIALTY_ALIASES[qRaw]);
@@ -784,7 +797,7 @@
         // 先頭一致を最優先、次に部分一致
         const starts = [];
         const parts  = [];
-        for (const r of SPECIALTIES_INDEX) {
+        for (const r of index) {
           const hitStart = r.key_ja.startsWith(q) || r.key_en.startsWith(q) || r.key_code.startsWith(q);
           const hitPart  = !hitStart && (r.key_ja.includes(q) || r.key_en.includes(q) || r.key_code.includes(q));
           if (hitStart) starts.push(r);

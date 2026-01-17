@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>診療科オートコンプリート ライブデバッグ</title>
+  <link rel="icon" type="image/png" href="SP_logo_shape_only.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/style-2026.css">
+  <link rel="stylesheet" href="css/components.css">
+  <script src="js/utils.js"></script>
+  <script src="js/data/specialties-master.js"></script>
+</head>
+<body class="bg-gray-50">
+  <div class="max-w-4xl mx-auto p-8">
+    <h1 class="text-2xl font-bold mb-6">診療科オートコンプリート ライブデバッグ</h1>
+    
+    <!-- リアルタイムログ表示 -->
+    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+      <h2 class="font-bold text-yellow-800 mb-2">⚠️ リアルタイムデバッグ情報</h2>
+      <pre id="debug-log" class="text-xs text-gray-700 max-h-40 overflow-y-auto"></pre>
+    </div>
+    
+    <!-- 診療科入力フォーム -->
+    <div class="bg-white rounded-lg shadow p-6 mb-6">
+      <div class="relative" id="specialty-combobox">
+        <label for="specialtyInput" class="block text-sm font-medium text-gray-700 mb-2">
+          専門（診療科）
+        </label>
+        
+        <input
+          id="specialtyInput"
+          type="text"
+          autocomplete="off"
+          placeholder="入力してください（例：内科、循環器）"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+        />
+        
+        <ul id="specialtyList" 
+            class="hidden absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-auto">
+        </ul>
+        
+        <div id="specialtyError" class="hidden mt-2 text-sm text-red-600"></div>
+        
+        <input type="hidden" id="specialtyCode" name="specialty_code">
+        <input type="hidden" id="specialtyEn" name="specialty_en">
+      </div>
+    </div>
+    
+    <!-- データ状態 -->
+    <div class="bg-white rounded-lg shadow p-6 mb-6">
+      <h2 class="text-lg font-semibold mb-4">データ状態チェック</h2>
+      <div id="data-status" class="space-y-2"></div>
+    </div>
+    
+    <!-- 詳細ログ -->
+    <div class="bg-gray-900 text-gray-300 rounded-lg p-4">
+      <h2 class="text-lg font-semibold mb-2">詳細ログ</h2>
+      <pre id="detailed-log" class="text-xs overflow-x-auto"></pre>
+    </div>
+  </div>
+
+  <script>
+    // デバッグログ関数
+    const debugLog = document.getElementById('debug-log');
+    const detailedLog = document.getElementById('detailed-log');
+    const logs = [];
+    
+    function log(message, data = null) {
+      const timestamp = new Date().toTimeString().substring(0, 8);
+      const logMessage = `[${timestamp}] ${message}`;
+      logs.push(logMessage);
+      if (data) {
+        logs.push('  → ' + JSON.stringify(data, null, 2));
+      }
+      debugLog.textContent = logs.slice(-10).join('\n');
+      detailedLog.textContent = logs.join('\n');
+      console.log(message, data || '');
+    }
+    
+    // グローバル変数の初期化を確認
+    log('=== 初期化開始 ===');
+    
+    // 変数の存在チェック
+    if (typeof SPECIALTIES_INDEX === 'undefined') {
+      var SPECIALTIES_INDEX = [];
+      log('SPECIALTIES_INDEX を初期化');
+    }
+    
+    if (typeof SPECIALTY_ALIASES === 'undefined') {
+      var SPECIALTY_ALIASES = {};
+      log('SPECIALTY_ALIASES を初期化');
+    }
+    
+    // 正規化関数
+    if (typeof normalizeKey === 'undefined') {
+      var normalizeKey = (s) => (s || "").toString().trim().toLowerCase()
+                   .replace(/\s+/g, "").normalize("NFKC");
+      log('normalizeKey 関数を定義');
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      log('DOMContentLoaded イベント発火');
+      
+      // データ状態チェック
+      const dataStatus = document.getElementById('data-status');
+      const checks = [
+        { 
+          name: 'SpecialtyMaster', 
+          check: typeof SpecialtyMaster !== 'undefined',
+          detail: typeof SpecialtyMaster !== 'undefined' ? 
+            `${SpecialtyMaster.getAllSpecialties().length}件のデータ` : 'undefined'
+        },
+        { 
+          name: 'SPECIALTIES_INDEX', 
+          check: typeof SPECIALTIES_INDEX !== 'undefined',
+          detail: typeof SPECIALTIES_INDEX !== 'undefined' ? 
+            `${SPECIALTIES_INDEX.length}件のインデックス` : 'undefined'
+        },
+        { 
+          name: 'normalizeKey関数', 
+          check: typeof normalizeKey === 'function',
+          detail: typeof normalizeKey
+        },
+        { 
+          name: 'specialtyInput要素', 
+          check: !!document.getElementById('specialtyInput'),
+          detail: !!document.getElementById('specialtyInput') ? '存在' : '見つからない'
+        }
+      ];
+      
+      dataStatus.innerHTML = checks.map(c => `
+        <div class="flex items-center justify-between p-2 ${c.check ? 'bg-green-50' : 'bg-red-50'} rounded">
+          <span class="${c.check ? 'text-green-700' : 'text-red-700'}">
+            ${c.check ? '✓' : '✗'} ${c.name}
+          </span>
+          <span class="text-sm text-gray-600">${c.detail}</span>
+        </div>
+      `).join('');
+      
+      // SpecialtyMasterが存在する場合のみ処理
+      if (typeof SpecialtyMaster === 'undefined') {
+        log('エラー: SpecialtyMaster が読み込まれていません', null);
+        return;
+      }
+      
+      // インデックスの作成
+      log('SPECIALTIES_INDEX の作成開始');
+      SPECIALTIES_INDEX = [];
+      const allSpecialties = SpecialtyMaster.getAllSpecialties();
+      log(`SpecialtyMaster から ${allSpecialties.length} 件のデータを取得`);
+      
+      allSpecialties.forEach((r, index) => {
+        SPECIALTIES_INDEX.push({
+          code: r.code,
+          ja: r.ja,
+          en: r.en || '',
+          key_ja: normalizeKey(r.ja),
+          key_en: normalizeKey(r.en || ''),
+          key_code: normalizeKey(r.code),
+        });
+        if (index < 3) {
+          log(`サンプル[${index}]`, { code: r.code, ja: r.ja });
+        }
+      });
+      
+      log(`SPECIALTIES_INDEX 作成完了: ${SPECIALTIES_INDEX.length} 件`);
+      
+      // UI要素の取得
+      const input = document.getElementById('specialtyInput');
+      const list = document.getElementById('specialtyList');
+      const hidCode = document.getElementById('specialtyCode');
+      const hidEn = document.getElementById('specialtyEn');
+      
+      if (!input || !list) {
+        log('エラー: 必要な要素が見つかりません', { input: !!input, list: !!list });
+        return;
+      }
+      
+      log('UI要素の取得成功');
+      
+      // 候補検索関数
+      function searchCandidates(query) {
+        if (!query) {
+          log('検索クエリが空');
+          return [];
+        }
+        
+        log(`検索開始: "${query}"`);
+        const q = normalizeKey(query);
+        log(`正規化後: "${q}"`);
+        
+        const results = [];
+        
+        for (const item of SPECIALTIES_INDEX) {
+          if (item.key_ja.includes(q) || 
+              item.key_en.includes(q) || 
+              item.key_code.includes(q)) {
+            results.push(item);
+          }
+        }
+        
+        log(`検索結果: ${results.length} 件`);
+        if (results.length > 0 && results.length <= 5) {
+          log('結果サンプル', results.map(r => r.ja));
+        }
+        
+        return results.slice(0, 30);
+      }
+      
+      // リスト表示関数
+      function showList(items) {
+        log(`リスト表示: ${items.length} 件`);
+        
+        if (items.length === 0) {
+          list.classList.add('hidden');
+          return;
+        }
+        
+        list.innerHTML = '';
+        items.forEach((item, idx) => {
+          const li = document.createElement('li');
+          li.className = 'px-3 py-2 cursor-pointer hover:bg-indigo-50 text-sm';
+          li.innerHTML = `
+            <span class="font-medium">${item.ja}</span>
+            <span class="text-gray-500 ml-2">(${item.en})</span>
+            <span class="text-gray-400 ml-2 text-xs">#${item.code}</span>
+          `;
+          li.addEventListener('click', function() {
+            log(`選択: ${item.ja}`, item);
+            input.value = item.ja;
+            hidCode.value = item.code;
+            hidEn.value = item.en;
+            list.classList.add('hidden');
+          });
+          list.appendChild(li);
+        });
+        
+        list.classList.remove('hidden');
+      }
+      
+      // 入力イベント
+      input.addEventListener('input', function() {
+        const value = this.value;
+        log(`入力イベント: "${value}"`);
+        
+        if (!value) {
+          list.classList.add('hidden');
+          return;
+        }
+        
+        const candidates = searchCandidates(value);
+        showList(candidates);
+      });
+      
+      // フォーカスイベント
+      input.addEventListener('focus', function() {
+        log('フォーカスイベント');
+        if (this.value) {
+          const candidates = searchCandidates(this.value);
+          showList(candidates);
+        }
+      });
+      
+      // クリックアウトで閉じる
+      document.addEventListener('click', function(e) {
+        if (!e.target.closest('#specialty-combobox')) {
+          list.classList.add('hidden');
+        }
+      });
+      
+      log('=== セットアップ完了 ===');
+      
+      // テスト用：自動で「内科」を入力
+      setTimeout(() => {
+        log('テスト: "内" を自動入力');
+        input.value = '内';
+        input.dispatchEvent(new Event('input'));
+      }, 1000);
+    });
+  </script>
+</body>
+</html>
