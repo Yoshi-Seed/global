@@ -492,9 +492,8 @@
   <!-- 専門フィールド オートコンプリート -->
   <script>
     // グローバルスコープで変数と関数を定義（既存の場合は再利用）
-    if (typeof SPECIALTIES_MASTER === 'undefined') {
-      var SPECIALTIES_MASTER = [];
-    }
+    // SPECIALTIES_MASTERは既にspecialties-master.jsで定義済みなので削除
+    
     if (typeof SPECIALTIES_INDEX === 'undefined') {
       var SPECIALTIES_INDEX = [];
     }
@@ -520,13 +519,7 @@
       
       // ===== 新しい統一マスターを使用 =====
       // specialties-master.js から SpecialtyMaster を使用
-    
-      // 後方互換性のため、既存の変数名にマッピング
-      SPECIALTIES_MASTER = SpecialtyMaster.getAllSpecialties().map(s => ({
-        code: s.code,
-        ja: s.ja,
-        en: s.en
-      }));
+      // SPECIALTIES_MASTERは既に定義済みなので、直接SpecialtyMasterを使用
     
     /* 旧マスター定義（コメントアウト）
     const SPECIALTIES_MASTER_OLD = [
@@ -699,7 +692,7 @@
       }
       
       // デバッグ用: データ構造を確認
-      console.log('SPECIALTIES_MASTER count:', SPECIALTIES_MASTER.length);
+      console.log('SpecialtyMaster count:', SpecialtyMaster.getAllSpecialties().length);
       console.log('SPECIALTIES_INDEX count:', SPECIALTIES_INDEX.length);
       console.log('SPECIALTIES_INDEX sample:', SPECIALTIES_INDEX.slice(0, 3));
       console.log('SPECIALTY_ALIASES sample:', Object.keys(SPECIALTY_ALIASES).slice(0, 5));
@@ -900,7 +893,7 @@
           }
 
           // specialtyCode が設定されている場合、正式名で送信
-          const hit = SPECIALTIES_MASTER.find(r => r.code === hidCode.value);
+          const hit = SpecialtyMaster.getAllSpecialties().find(r => r.code === hidCode.value);
           if (!hit) {
             // 念のため、コードがマスタに存在するか確認
             e.preventDefault();
