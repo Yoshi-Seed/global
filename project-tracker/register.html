@@ -489,19 +489,24 @@
     </div>
   </div>
 
-  <!-- 共通設定 -->
-  <script src="js/config.js"></script>
-
   <!-- 専門フィールド オートコンプリート -->
   <script>
-    // グローバルスコープで変数と関数を定義
-    let SPECIALTIES_MASTER = [];
-    let SPECIALTIES_INDEX = [];
-    let SPECIALTY_ALIASES = {};
+    // グローバルスコープで変数と関数を定義（既存の場合は再利用）
+    if (typeof SPECIALTIES_MASTER === 'undefined') {
+      var SPECIALTIES_MASTER = [];
+    }
+    if (typeof SPECIALTIES_INDEX === 'undefined') {
+      var SPECIALTIES_INDEX = [];
+    }
+    if (typeof SPECIALTY_ALIASES === 'undefined') {
+      var SPECIALTY_ALIASES = {};
+    }
     
-    // 正規化関数もグローバルスコープに定義
-    const normalizeKey = (s) => (s || "").toString().trim().toLowerCase()
-                 .replace(/\s+/g, "").normalize("NFKC");
+    // 正規化関数もグローバルスコープに定義（既存の場合は再利用）
+    if (typeof normalizeKey === 'undefined') {
+      var normalizeKey = (s) => (s || "").toString().trim().toLowerCase()
+                   .replace(/\s+/g, "").normalize("NFKC");
+    }
     
     // DOMContentLoadedを待ってから実行
     document.addEventListener('DOMContentLoaded', function() {
