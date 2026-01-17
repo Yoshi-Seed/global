@@ -494,10 +494,14 @@
 
   <!-- 専門フィールド オートコンプリート -->
   <script>
-    // グローバルスコープで変数を定義
+    // グローバルスコープで変数と関数を定義
     let SPECIALTIES_MASTER = [];
     let SPECIALTIES_INDEX = [];
     let SPECIALTY_ALIASES = {};
+    
+    // 正規化関数もグローバルスコープに定義
+    const normalizeKey = (s) => (s || "").toString().trim().toLowerCase()
+                 .replace(/\s+/g, "").normalize("NFKC");
     
     // DOMContentLoadedを待ってから実行
     document.addEventListener('DOMContentLoaded', function() {
@@ -660,11 +664,7 @@
         "病理": "病理科",
       });
 
-      // ---- 3) 正規化関数 ----
-      const normalizeKey = (s) => (s || "").toString().trim().toLowerCase()
-                   .replace(/\s+/g, "").normalize("NFKC");
-      
-      // 検索キーを増やす（日本語・英名・コード）
+      // ---- 3) 検索キーを増やす（日本語・英名・コード） ----
       // 新マスターの構造に合わせて修正
       SPECIALTIES_INDEX = [];
       
@@ -700,12 +700,25 @@
       console.log('SPECIALTY_ALIASES sample:', Object.keys(SPECIALTY_ALIASES).slice(0, 5));
 
       // ---- 4) UI ロジック ----
-      (function setupSpecialtyCombobox() {
+      // setupSpecialtyCombobox を直接実行
       const input = document.getElementById("specialtyInput");
       const list  = document.getElementById("specialtyList");
       const err   = document.getElementById("specialtyError");
       const hidCode = document.getElementById("specialtyCode");
       const hidEn   = document.getElementById("specialtyEn");
+      
+      console.log('UI elements found:', {
+        input: !!input,
+        list: !!list,
+        err: !!err,
+        hidCode: !!hidCode,
+        hidEn: !!hidEn
+      });
+      
+      if (!input || !list) {
+        console.error('Required elements not found!');
+        return;
+      }
 
       let activeIndex = -1;
       let currentItems = [];
@@ -760,6 +773,12 @@
       // 入力 → 候補生成
       function candidates(qRaw) {
         if (!qRaw) return [];
+        
+        // デバッグログ
+        console.log('candidates called with:', qRaw);
+        console.log('SPECIALTIES_INDEX length:', SPECIALTIES_INDEX.length);
+        console.log('normalizeKey type:', typeof normalizeKey);
+        
         let q = normalizeKey(qRaw);
         // 別名 → 正式名に寄せる
         if (SPECIALTY_ALIASES[qRaw]) q = normalizeKey(SPECIALTY_ALIASES[qRaw]);
@@ -773,10 +792,14 @@
           if (hitStart) starts.push(r);
           else if (hitPart) parts.push(r);
         }
-        return [...starts, ...parts].slice(0, 30);
+        
+        const results = [...starts, ...parts].slice(0, 30);
+        console.log('candidates found:', results.length);
+        return results;
       }
 
       input.addEventListener("input", () => {
+        console.log('Input event fired, value:', input.value);
         hideError();
         const val = input.value;
         
@@ -790,6 +813,7 @@
         }
         
         const items = candidates(input.value);
+        console.log('Items to render:', items.length);
         // 選択が外れたら hidden をクリア
         hidCode.value = ""; hidEn.value = "";
         renderList(items);
@@ -889,7 +913,6 @@
           hideError();
         });
       }
-      })();
       
     }); // DOMContentLoaded の終了
   </script>
