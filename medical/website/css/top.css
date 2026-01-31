@@ -185,6 +185,18 @@
   font-weight: bold;
 }
 
+/* Keyboard Focus States - PPT品質準拠 */
+.option-card:focus-visible {
+  outline: 2px solid var(--accent-brown);
+  outline-offset: 2px;
+  box-shadow: 0 4px 16px rgba(115, 82, 64, 0.25);
+}
+
+.option-card.active:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 2px;
+}
+
 /* Right Column: Content Display */
 .why-seed-content {
   background-color: #f5ebe0;
