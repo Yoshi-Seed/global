@@ -5,7 +5,6 @@
 document.addEventListener('DOMContentLoaded', function() {
   // Initialize all interactive features
   initWhySeedInteraction();
-  initSmoothScroll();
   initVideoControl();
   initVideoCrossfade();
 });
@@ -21,11 +20,15 @@ function initWhySeedInteraction() {
     card.addEventListener('click', function() {
       const target = this.getAttribute('data-target');
       
-      // Remove active class from all cards
-      optionCards.forEach(c => c.classList.remove('active'));
+      // Remove active class from all cards and update aria-selected
+      optionCards.forEach(c => {
+        c.classList.remove('active');
+        c.setAttribute('aria-selected', 'false');
+      });
       
-      // Add active class to clicked card
+      // Add active class to clicked card and update aria-selected
       this.classList.add('active');
+      this.setAttribute('aria-selected', 'true');
       
       // Hide all content details
       contentDetails.forEach(content => content.classList.remove('active'));
@@ -42,35 +45,6 @@ function initWhySeedInteraction() {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         this.click();
-      }
-    });
-  });
-}
-
-// SMOOTH SCROLL - For anchor links
-function initSmoothScroll() {
-  const smoothScrollLinks = document.querySelectorAll('a[href^="#"]');
-  
-  smoothScrollLinks.forEach(link => {
-    link.addEventListener('click', function(e) {
-      const href = this.getAttribute('href');
-      
-      // Skip if it's just "#"
-      if (href === '#') return;
-      
-      e.preventDefault();
-      
-      const targetId = href.substring(1);
-      const targetElement = document.getElementById(targetId);
-      
-      if (targetElement) {
-        const headerHeight = document.querySelector('.site-header')?.offsetHeight || 70;
-        const targetPosition = targetElement.offsetTop - headerHeight;
-        
-        window.scrollTo({
-          top: targetPosition,
-          behavior: 'smooth'
-        });
       }
     });
   });
