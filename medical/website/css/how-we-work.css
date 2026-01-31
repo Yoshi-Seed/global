@@ -180,24 +180,51 @@
 }
 
 /* ===================================
-   タイムライン画像（拡大可能）
+   タイムラインSVG（Gemini統合版）
    =================================== */
 
-.timeline-image-wrapper {
+.timeline-svg-wrapper {
   position: relative;
   margin-bottom: 24px;
+  cursor: zoom-in;
+  transition: transform 200ms ease-out;
 }
 
-.timeline-diagram {
+.timeline-svg-wrapper:hover {
+  transform: scale(1.01);
+}
+
+/* SVG自体のレスポンシブ設定 */
+.timeline-svg {
   width: 100%;
   height: auto;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: opacity 200ms ease-out;
+  display: block;
 }
 
-.timeline-diagram:hover {
-  opacity: 0.9;
+/* SVG内部の文字スタイル */
+.svg-text {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.svg-title { 
+  font-weight: 800; 
+  fill: #5b1a06; 
+}
+
+.svg-label { 
+  font-weight: 700; 
+  fill: #ffffff; 
+}
+
+.svg-note { 
+  font-weight: 600; 
+  fill: #735240; 
+}
+
+.svg-small { 
+  font-weight: 500; 
+  fill: #735240; 
+  font-size: 14px; 
 }
 
 .zoom-btn {
@@ -225,7 +252,7 @@
 }
 
 /* ===================================
-   モーダル（タイムライン拡大表示）
+   モーダル（SVG拡大表示）
    =================================== */
 
 .modal {
@@ -254,7 +281,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0.85);
   cursor: pointer;
 }
 
@@ -264,16 +291,32 @@
   max-width: 95vw;
   max-height: 95vh;
   padding: 20px;
-  background-color: #fff;
-  border-radius: 12px;
+  background-color: #fff6ea;
+  border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  overflow: auto; /* モバイルで横スクロール可能 */
 }
 
-.modal-content img {
+/* モーダル内のSVGコンテナ */
+.modal-svg-container {
   width: 100%;
-  height: auto;
-  max-height: 85vh;
-  object-fit: contain;
+  overflow-x: auto; /* 横スクロール可能 */
+}
+
+/* モバイル: SVGの最小幅を確保してスクロールさせる */
+@media (max-width: 768px) {
+  .modal-svg-container svg {
+    min-width: 800px; /* スマホでもこの幅を確保＝文字が読める */
+    height: auto;
+  }
+}
+
+/* デスクトップ: SVGは画面に収める */
+@media (min-width: 769px) {
+  .modal-svg-container svg {
+    width: 100%;
+    height: auto;
+  }
 }
 
 .modal-close {
@@ -290,10 +333,24 @@
   line-height: 1;
   cursor: pointer;
   transition: background-color 200ms ease-out;
+  z-index: 10001;
 }
 
 .modal-close:hover {
   background-color: rgba(0, 0, 0, 0.9);
+}
+
+/* スクリーンリーダー専用（視覚的に隠す） */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 
 /* ===================================

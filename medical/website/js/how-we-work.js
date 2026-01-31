@@ -64,19 +64,21 @@ function initHowWorkAccordion() {
   }
 }
 
-// TIMELINE MODAL - 画像拡大表示（スマホ対応）
+// TIMELINE MODAL - SVG拡大表示（スマホ対応・アクセシビリティ対応）
 function initTimelineModal() {
-  const timelineImg = document.getElementById('timeline-img');
+  const timelineSvg = document.querySelector('.timeline-svg');
   const zoomBtn = document.querySelector('.zoom-btn');
   const modal = document.getElementById('timeline-modal');
   
-  if (!timelineImg || !zoomBtn || !modal) return;
+  if (!timelineSvg || !zoomBtn || !modal) return;
   
   const modalOverlay = modal.querySelector('.modal-overlay');
   const modalClose = modal.querySelector('.modal-close');
+  const modalSvgContainer = document.getElementById('modal-svg-container');
   
-  // 画像クリックでモーダル表示
-  timelineImg.addEventListener('click', openModal);
+  // SVGクリックでモーダル表示（モバイル推奨、PCもOK）
+  timelineSvg.addEventListener('click', openModal);
+  timelineSvg.style.cursor = 'pointer'; // カーソルをポインターに
   
   // ズームボタンクリックでモーダル表示
   zoomBtn.addEventListener('click', openModal);
@@ -85,7 +87,7 @@ function initTimelineModal() {
   modalOverlay.addEventListener('click', closeModal);
   modalClose.addEventListener('click', closeModal);
   
-  // ESCキーで閉じる
+  // ESCキーで閉じる（アクセシビリティ）
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && !modal.hasAttribute('hidden')) {
       closeModal();
@@ -93,12 +95,28 @@ function initTimelineModal() {
   });
   
   function openModal() {
+    // SVGをモーダルにクローン
+    if (modalSvgContainer) {
+      modalSvgContainer.innerHTML = ''; // 既存コンテンツをクリア
+      const svgClone = timelineSvg.cloneNode(true);
+      svgClone.removeAttribute('id'); // ID重複を避ける
+      svgClone.classList.add('modal-timeline-svg');
+      modalSvgContainer.appendChild(svgClone);
+    }
+    
     modal.removeAttribute('hidden');
-    document.body.style.overflow = 'hidden'; // スクロール防止
+    modal.setAttribute('aria-modal', 'true');
+    document.body.style.overflow = 'hidden'; // 背景スクロール固定
+    
+    // 簡易フォーカストラップ：モーダル閉じるボタンにフォーカス
+    if (modalClose) {
+      modalClose.focus();
+    }
   }
   
   function closeModal() {
     modal.setAttribute('hidden', '');
+    modal.removeAttribute('aria-modal');
     document.body.style.overflow = ''; // スクロール復元
   }
 }
