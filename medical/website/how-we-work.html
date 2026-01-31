@@ -92,8 +92,76 @@
           <div class="accordion-panel" id="panel-timeline" hidden>
             <div class="panel-card">
               <h3 class="panel-title">Typical timeline</h3>
-              <div class="timeline-image-wrapper">
-                <img src="../assets/typical_timeline.png" alt="Typical Project Timeline" class="timeline-diagram" id="timeline-img">
+              <div class="timeline-svg-wrapper" onclick="openTimelineSVGModal()">
+                <svg class="timeline-svg" viewBox="0 0 1000 480" xmlns="http://www.w3.org/2000/svg" aria-label="Typical project timeline diagram">
+                  <!-- Title -->
+                  <text x="500" y="60" text-anchor="middle" font-size="36" class="svg-text svg-title">Typical timeline</text>
+
+                  <!-- Background shape -->
+                  <path d="M 380,120 L 850,120 L 920,240 L 850,360 L 380,360 Z" fill="#f4ece6" stroke="none" />
+
+                  <!-- Timeline markers with vertical lines -->
+                  <line x1="150" y1="130" x2="150" y2="180" stroke="#a68b80" stroke-width="2" stroke-dasharray="6,4" />
+                  <text x="150" y="110" text-anchor="middle" font-size="16" class="svg-text svg-note">5 weeks</text>
+
+                  <line x1="310" y1="110" x2="310" y2="180" stroke="#a68b80" stroke-width="2" stroke-dasharray="6,4" />
+                  <text x="310" y="90" text-anchor="middle" font-size="14" class="svg-text svg-small" fill="#d47f63">prior to the 1st</text>
+                  <text x="310" y="106" text-anchor="middle" font-size="14" class="svg-text svg-small" fill="#d47f63">interview</text>
+
+                  <line x1="470" y1="130" x2="470" y2="180" stroke="#a68b80" stroke-width="2" stroke-dasharray="6,4" />
+                  <text x="470" y="110" text-anchor="middle" font-size="16" class="svg-text svg-note">3 weeks</text>
+
+                  <line x1="790" y1="130" x2="790" y2="180" stroke="#a68b80" stroke-width="2" stroke-dasharray="6,4" />
+                  <text x="790" y="90" text-anchor="middle" font-size="14" class="svg-text svg-note">~ 1 - 2</text>
+                  <text x="790" y="110" text-anchor="middle" font-size="16" class="svg-text svg-note">weeks</text>
+
+                  <!-- Kick Off badge -->
+                  <g transform="translate(165, 135)">
+                    <path d="M 0,0 L 70,0 L 90,20 L 70,40 L 0,40 L 15,20 Z" fill="#f4bca7" />
+                    <text x="45" y="26" text-anchor="middle" font-size="16" class="svg-text" fill="#ffffff" font-weight="700">Kick Off</text>
+                  </g>
+
+                  <!-- Main process boxes -->
+                  <g transform="translate(0, 180)">
+                    <rect x="80" y="0" width="140" height="110" rx="12" fill="#583228" />
+                    <text x="150" y="50" text-anchor="middle" font-size="18" class="svg-text svg-label">Project</text>
+                    <text x="150" y="75" text-anchor="middle" font-size="18" class="svg-text svg-label">Greenlight</text>
+
+                    <rect x="240" y="0" width="140" height="110" rx="12" fill="#583228" />
+                    <text x="310" y="50" text-anchor="middle" font-size="18" class="svg-text svg-label">Approval</text>
+                    <text x="310" y="75" text-anchor="middle" font-size="18" class="svg-text svg-label">to recruit</text>
+
+                    <rect x="400" y="0" width="140" height="110" rx="12" fill="#583228" />
+                    <text x="470" y="65" text-anchor="middle" font-size="18" class="svg-text svg-label">Recruiting</text>
+
+                    <rect x="560" y="0" width="140" height="110" rx="12" fill="#9c5437" />
+                    <text x="630" y="65" text-anchor="middle" font-size="18" class="svg-text svg-label">Fieldwork</text>
+
+                    <rect x="720" y="0" width="140" height="110" rx="12" fill="#583228" />
+                    <text x="790" y="50" text-anchor="middle" font-size="18" class="svg-text svg-label">Output</text>
+                    <text x="790" y="75" text-anchor="middle" font-size="18" class="svg-text svg-label">delivery</text>
+                  </g>
+
+                  <!-- Translation boxes (bottom) -->
+                  <line x1="355" y1="300" x2="355" y2="440" stroke="#a68b80" stroke-width="2" stroke-dasharray="6,4" />
+                  <line x1="573" y1="380" x2="573" y2="400" stroke="#a68b80" stroke-width="2" stroke-dasharray="6,4" />
+
+                  <g transform="translate(355, 335)">
+                    <path d="M 0,0 L 95,0 L 115,25 L 95,50 L 0,50 Z" fill="#583228" />
+                    <text x="50" y="20" text-anchor="middle" font-size="14" class="svg-text svg-label">Screener</text>
+                    <text x="50" y="38" text-anchor="middle" font-size="14" class="svg-text svg-label">Translation</text>
+                    <text x="57" y="75" text-anchor="middle" font-size="14" class="svg-text" fill="#9c5437" font-style="italic">3–4 days</text>
+                    <line x1="57" y1="55" x2="57" y2="62" stroke="#a68b80" stroke-width="1.5" stroke-dasharray="3,2" />
+                  </g>
+
+                  <g transform="translate(518, 335)">
+                    <path d="M 0,0 L 95,0 L 115,25 L 95,50 L 0,50 Z" fill="#9c5437" />
+                    <text x="50" y="20" text-anchor="middle" font-size="14" class="svg-text svg-label">DG/Stim</text>
+                    <text x="50" y="38" text-anchor="middle" font-size="14" class="svg-text svg-label">Translation</text>
+                    <text x="57" y="75" text-anchor="middle" font-size="14" class="svg-text" fill="#9c5437" font-style="italic">5 days</text>
+                    <line x1="57" y1="55" x2="57" y2="62" stroke="#a68b80" stroke-width="1.5" stroke-dasharray="3,2" />
+                  </g>
+                </svg>
                 <button class="zoom-btn" aria-label="Click to enlarge timeline">🔍 Click to enlarge</button>
               </div>
               <p class="timeline-note">Timelines vary based on project scope and methodology. We provide detailed timelines during planning.</p>
@@ -121,11 +189,13 @@
   </section>
 
   <!-- タイムライン拡大モーダル -->
-  <div class="modal" id="timeline-modal" hidden>
+  <!-- タイムライン拡大モーダル -->
+  <div class="modal" id="timeline-modal" hidden role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <div class="modal-overlay" aria-label="Close modal"></div>
     <div class="modal-content">
       <button class="modal-close" aria-label="Close">&times;</button>
-      <img src="../assets/typical_timeline.png" alt="Typical Project Timeline (Enlarged)">
+      <h2 id="modal-title" class="sr-only">Typical Timeline (Enlarged)</h2>
+      <div id="modal-svg-container" class="modal-svg-container"></div>
     </div>
   </div>
 
