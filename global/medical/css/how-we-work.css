@@ -1,0 +1,316 @@
+/* ===================================
+   How We Work Page Specific Styles
+   =================================== */
+
+/* HERO SECTION */
+.how-hero-section {
+  background-color: var(--bg-brown);
+  padding: calc(var(--spacing-xl) + 70px) 0 var(--spacing-xl) 0;
+  text-align: center;
+}
+
+.how-hero-section h1 {
+  font-size: 4rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.how-hero-section .subtitle {
+  font-family: var(--font-body);
+  font-size: 1.4rem;
+  opacity: 0.9;
+}
+
+/* PROCESS OVERVIEW SECTION */
+.process-overview-section {
+  background-color: var(--bg-brown);
+  padding: var(--spacing-lg) 0;
+}
+
+.overview-content {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.overview-content h2 {
+  font-size: 2.5rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.overview-content p {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: var(--spacing-sm);
+}
+
+/* PROCESS STEPS SECTION */
+.process-steps-section {
+  background-color: var(--bg-brown);
+  padding: var(--spacing-xl) 0;
+}
+
+.process-steps-section .accordion-header {
+  background-color: var(--bg-brown);
+  border: 2px solid var(--light-text);
+  padding: var(--spacing-md) var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
+}
+
+.process-steps-section .accordion-header:hover {
+  background-color: rgba(115, 82, 64, 0.8);
+  border-color: var(--white-text);
+}
+
+.process-steps-section .accordion-header h3 {
+  font-size: 1.6rem;
+  color: var(--light-text);
+}
+
+.process-steps-section .accordion-icon {
+  font-size: 2rem;
+  color: var(--light-text);
+  font-weight: bold;
+}
+
+.process-steps-section .accordion-content {
+  background-color: var(--bg-ivory);
+  border-left: 4px solid var(--light-text);
+  margin-bottom: var(--spacing-md);
+}
+
+.process-steps-section .accordion-body {
+  padding: var(--spacing-lg);
+}
+
+/* STEP CONTENT LAYOUT */
+.step-content {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: var(--spacing-lg);
+  align-items: start;
+}
+
+.step-image img {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.step-text h4 {
+  font-size: 1.8rem;
+  color: var(--primary-text);
+  margin-bottom: var(--spacing-md);
+}
+
+.step-text p {
+  font-family: var(--font-body);
+  color: var(--primary-text);
+  line-height: 1.8;
+  margin-bottom: var(--spacing-md);
+}
+
+.step-text ul {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: var(--spacing-md);
+}
+
+.step-text ul li {
+  font-family: var(--font-body);
+  color: var(--primary-text);
+  line-height: 1.8;
+  padding-left: 2rem;
+  position: relative;
+  margin-bottom: 0.75rem;
+}
+
+.step-text ul li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--bg-dark-olive);
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+/* TIMELINE SECTION */
+.timeline-section {
+  background-color: var(--bg-brown);
+  padding: var(--spacing-xl) 0;
+  border-top: 2px solid rgba(249, 229, 193, 0.2);
+}
+
+.timeline-section h2 {
+  font-size: 2.8rem;
+  margin-bottom: var(--spacing-lg);
+}
+
+.timeline-image {
+  max-width: 1000px;
+  margin: 0 auto var(--spacing-md);
+  background-color: white;
+  padding: var(--spacing-md);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.timeline-image img {
+  width: 100%;
+  display: block;
+}
+
+.timeline-note {
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-style: italic;
+  opacity: 0.85;
+}
+
+/* QUALITY ASSURANCE SECTION */
+.quality-section {
+  background-color: var(--bg-brown);
+  padding: var(--spacing-xl) 0;
+  border-top: 2px solid rgba(249, 229, 193, 0.2);
+}
+
+.quality-section h2 {
+  font-size: 2.8rem;
+  margin-bottom: var(--spacing-lg);
+}
+
+.quality-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-lg);
+}
+
+.quality-card {
+  background-color: rgba(249, 229, 193, 0.1);
+  padding: var(--spacing-md);
+  border: 2px solid var(--light-text);
+  border-radius: 8px;
+  transition: var(--transition-normal);
+}
+
+.quality-card:hover {
+  background-color: rgba(249, 229, 193, 0.15);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.quality-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: var(--spacing-sm);
+}
+
+.quality-card p {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* CTA SECTION */
+.cta-section-how {
+  background: linear-gradient(
+    135deg,
+    var(--bg-brown) 0%,
+    var(--bg-dark-olive) 100%
+  );
+  padding: var(--spacing-xl) 0;
+  text-align: center;
+}
+
+.cta-section-how h2 {
+  font-size: 3rem;
+  margin-bottom: var(--spacing-sm);
+}
+
+.cta-section-how .subtitle {
+  font-size: 1.3rem;
+  margin-bottom: var(--spacing-lg);
+  opacity: 0.9;
+}
+
+.cta-section-how .btn {
+  font-size: 1.2rem;
+  padding: 1.2rem 3rem;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 1024px) {
+  .step-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .quality-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .how-hero-section {
+    padding: calc(var(--spacing-lg) + 70px) 0 var(--spacing-lg) 0;
+  }
+  
+  .how-hero-section h1 {
+    font-size: 2.5rem;
+  }
+  
+  .how-hero-section .subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .overview-content h2,
+  .timeline-section h2,
+  .quality-section h2 {
+    font-size: 2rem;
+  }
+  
+  .process-steps-section .accordion-header h3 {
+    font-size: 1.2rem;
+  }
+  
+  .process-steps-section .accordion-body {
+    padding: var(--spacing-md);
+  }
+  
+  .step-text h4 {
+    font-size: 1.4rem;
+  }
+  
+  .cta-section-how h2 {
+    font-size: 2rem;
+  }
+  
+  .cta-section-how .subtitle {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .how-hero-section h1 {
+    font-size: 2rem;
+  }
+  
+  .process-steps-section .accordion-header {
+    padding: var(--spacing-sm);
+  }
+  
+  .process-steps-section .accordion-header h3 {
+    font-size: 1rem;
+  }
+  
+  .step-text ul li {
+    padding-left: 1.5rem;
+    font-size: 0.95rem;
+  }
+  
+  .timeline-image {
+    padding: var(--spacing-sm);
+  }
+}
