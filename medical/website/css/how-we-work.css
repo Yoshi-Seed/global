@@ -334,6 +334,15 @@
   overflow-x: auto; /* 横スクロール可能 */
 }
 
+/* モーダル内のSVGサイズ調整 */
+.modal-svg-container svg {
+  /* デフォルト: 元のサイズを維持（拡大表示） */
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  /* SVGの実際のサイズに基づく表示 */
+}
+
 /* モバイル: SVGの最小幅を確保してスクロールさせる */
 @media (max-width: 768px) {
   .modal-svg-container svg {
@@ -342,11 +351,19 @@
   }
 }
 
-/* デスクトップ: SVGは画面に収める */
-@media (min-width: 769px) {
+/* デスクトップ大画面: より大きく表示 */
+@media (min-width: 1200px) {
+  .modal-content {
+    max-width: 90vw;
+    max-height: 90vh;
+  }
+  
   .modal-svg-container svg {
-    width: 100%;
+    /* 大画面では元のサイズまたはそれ以上に拡大 */
+    width: auto;
     height: auto;
+    max-width: none; /* 制限なし */
+    max-height: 80vh; /* 画面の80%まで */
   }
 }
 
