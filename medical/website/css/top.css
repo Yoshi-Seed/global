@@ -412,7 +412,7 @@
   opacity: 1;
 }
 
-/* 部分マスク：下段だけ少し暗く、上段は明るく保つ */
+/* 部分マスク：下段だけ"極薄く"暗く、上段は完全に明るく保つ */
 .gbu-background::after {
   content: '';
   position: absolute;
@@ -422,12 +422,18 @@
   height: 100%;
   background: linear-gradient(
     to bottom,
-    rgba(0, 0, 0, 0.00) 0%,
-    rgba(0, 0, 0, 0.15) 50%,
-    rgba(0, 0, 0, 0.35) 100%
+    rgba(0, 0, 0, 0.00) 0%,     /* 上段: 完全に明るい */
+    rgba(0, 0, 0, 0.08) 60%,    /* 中段: 極薄く */
+    rgba(0, 0, 0, 0.22) 100%    /* 下段: 必要最小限 */
   );
   z-index: 2;
 }
+
+/* 診断用：overlayを完全OFFにする場合はこのコメントを解除
+.gbu-background::after {
+  display: none;
+}
+*/
 
 /* コンテンツ領域 */
 .gbu-inner {
