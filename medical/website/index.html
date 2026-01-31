@@ -67,34 +67,38 @@
   </section>
 
   <!-- WHY SEED SECTION -->
-  <section class="why-seed-section bg-light-beige" id="why-seed">
+  <section class="why-seed-section" id="why-seed">
     <div class="container">
-      <div class="why-seed-grid">
-        <!-- Left Column: Interactive Options -->
-        <div class="why-seed-options">
-          <div class="option-card active" data-target="different" role="button" tabindex="0" aria-selected="true">
-            <h3>What makes us different</h3>
-            <div class="option-arrow">→</div>
-          </div>
-          <div class="option-card" data-target="quality" role="button" tabindex="0" aria-selected="false">
-            <h3>Quality, ethics, and security</h3>
-            <div class="option-arrow">→</div>
-          </div>
-          <div class="option-card" data-target="proof" role="button" tabindex="0" aria-selected="false">
-            <h3>Proof &amp; partner voice</h3>
-            <div class="option-arrow">→</div>
-          </div>
+      <div class="why-seed-layout">
+        <!-- Left Column: Tab List -->
+        <div class="why-seed-tabs" role="tablist" aria-label="Why Seed Planning options">
+          <button class="tab-item active" role="tab" id="tab-01" aria-selected="true" aria-controls="panel-01" data-tab="01">
+            <span class="tab-indicator"></span>
+            <span class="tab-label">What makes us different</span>
+          </button>
+          <button class="tab-item" role="tab" id="tab-02" aria-selected="false" aria-controls="panel-02" data-tab="02">
+            <span class="tab-indicator"></span>
+            <span class="tab-label">Quality, ethics, and security</span>
+          </button>
+          <button class="tab-item" role="tab" id="tab-03" aria-selected="false" aria-controls="panel-03" data-tab="03">
+            <span class="tab-indicator"></span>
+            <span class="tab-label">Proof &amp; partner voice</span>
+          </button>
         </div>
         
-        <!-- Right Column: Content Display -->
-        <div class="why-seed-content">
-          <div class="content-header">
-            <h2><span class="italic">Why</span> Seed Planning</h2>
-            <p class="content-subtitle">A clear, transparent approach to Japan healthcare research — built on ethics, nuance, and operational rigor.</p>
+        <!-- Center: Vertical Divider -->
+        <div class="why-seed-divider"></div>
+        
+        <!-- Right Column: Content Panel -->
+        <div class="why-seed-panels">
+          <div class="panel-header">
+            <h2 class="panel-title"><span class="italic">Why</span> Seed Planning</h2>
+            <p class="panel-subtitle">A clear, transparent approach to Japan healthcare research — built on ethics, nuance, and operational rigor.</p>
           </div>
           
-          <div class="content-details active" id="different-content">
-            <ul class="details-list">
+          <div class="panel-content active" role="tabpanel" id="panel-01" aria-labelledby="tab-01" data-number="01">
+            <span class="panel-number">01</span>
+            <ul class="panel-list">
               <li>Japan expertise with healthcare focus (40+ years as the organization legacy).</li>
               <li>Fully bilingual execution — fieldwork, analysis, and deliverables.</li>
               <li>Rare disease reach — patient segments and sensitive journeys.</li>
@@ -102,23 +106,23 @@
             </ul>
           </div>
           
-          <div class="content-details" id="quality-content">
-            <ul class="details-list">
+          <div class="panel-content" role="tabpanel" id="panel-02" aria-labelledby="tab-02" data-number="02">
+            <span class="panel-number">02</span>
+            <ul class="panel-list">
               <li>ISO 27001 certified information security management system.</li>
               <li>Privacy Mark accreditation for personal data protection.</li>
               <li>Full compliance with GDPR, HIPAA, and Japanese APPI regulations.</li>
               <li>Regular third-party audits and quality assurance processes.</li>
-              <li>Secure data handling and encrypted communication channels.</li>
             </ul>
           </div>
           
-          <div class="content-details" id="proof-content">
-            <ul class="details-list">
+          <div class="panel-content" role="tabpanel" id="panel-03" aria-labelledby="tab-03" data-number="03">
+            <span class="panel-number">03</span>
+            <ul class="panel-list">
               <li>Trusted by leading global pharmaceutical companies.</li>
               <li>Member of ESOMAR, EphMRA, and JMRA professional associations.</li>
               <li>Over 1,000 successfully completed medical research projects.</li>
               <li>95% client retention rate with long-term partnerships.</li>
-              <li>Published case studies and client testimonials available.</li>
             </ul>
           </div>
         </div>

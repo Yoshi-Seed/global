@@ -4,51 +4,70 @@
 
 document.addEventListener('DOMContentLoaded', function() {
   // Initialize all interactive features
-  initWhySeedInteraction();
+  initWhySeedTabs();
   initVideoControl();
   initVideoCrossfade();
 });
 
-// WHY SEED SECTION - Interactive option cards
-function initWhySeedInteraction() {
-  const optionCards = document.querySelectorAll('.option-card');
-  const contentDetails = document.querySelectorAll('.content-details');
+// WHY SEED SECTION - Tab-based interface (PPT準拠)
+function initWhySeedTabs() {
+  const tabs = document.querySelectorAll('.tab-item');
+  const panels = document.querySelectorAll('.panel-content');
   
-  if (!optionCards.length || !contentDetails.length) return;
+  if (!tabs.length || !panels.length) return;
   
-  optionCards.forEach(card => {
-    card.addEventListener('click', function() {
-      const target = this.getAttribute('data-target');
-      
-      // Remove active class from all cards and update aria-selected
-      optionCards.forEach(c => {
-        c.classList.remove('active');
-        c.setAttribute('aria-selected', 'false');
-      });
-      
-      // Add active class to clicked card and update aria-selected
-      this.classList.add('active');
-      this.setAttribute('aria-selected', 'true');
-      
-      // Hide all content details
-      contentDetails.forEach(content => content.classList.remove('active'));
-      
-      // Show target content with fade animation
-      const targetContent = document.getElementById(`${target}-content`);
-      if (targetContent) {
-        targetContent.classList.add('active');
-      }
+  tabs.forEach((tab, index) => {
+    // Click handler
+    tab.addEventListener('click', function() {
+      activateTab(index);
     });
     
-    // Keyboard accessibility
-    card.addEventListener('keydown', function(e) {
+    // Keyboard navigation
+    tab.addEventListener('keydown', function(e) {
+      let newIndex = index;
+      
+      // Enter or Space - activate tab
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        this.click();
+        activateTab(index);
+      }
+      // Arrow keys - navigate between tabs
+      else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        e.preventDefault();
+        newIndex = (index + 1) % tabs.length;
+        tabs[newIndex].focus();
+        activateTab(newIndex);
+      }
+      else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        newIndex = (index - 1 + tabs.length) % tabs.length;
+        tabs[newIndex].focus();
+        activateTab(newIndex);
       }
     });
   });
+  
+  function activateTab(index) {
+    // Deactivate all tabs
+    tabs.forEach(tab => {
+      tab.classList.remove('active');
+      tab.setAttribute('aria-selected', 'false');
+    });
+    
+    // Hide all panels
+    panels.forEach(panel => {
+      panel.classList.remove('active');
+    });
+    
+    // Activate selected tab
+    tabs[index].classList.add('active');
+    tabs[index].setAttribute('aria-selected', 'true');
+    
+    // Show corresponding panel
+    panels[index].classList.add('active');
+  }
 }
+
 
 // VIDEO BACKGROUND - Auto play/pause based on visibility
 function initVideoControl() {
