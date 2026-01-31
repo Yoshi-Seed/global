@@ -47,285 +47,87 @@
     </div>
   </header>
 
-  <!-- HERO SECTION -->
-  <section class="how-hero-section">
+  <!-- HOW WE WORK SECTION - PPT準拠 -->
+  <section class="how-work-section">
     <div class="container">
-      <h1 class="text-light">
-        <span class="italic">How</span> We Work
-      </h1>
-      <p class="subtitle text-light">
-        A proven process delivering excellence in medical research
-      </p>
-    </div>
-  </section>
-
-  <!-- PROCESS OVERVIEW SECTION -->
-  <section class="process-overview-section">
-    <div class="container">
-      <div class="overview-content">
-        <h2 class="text-light">Our Research Process</h2>
-        <p class="text-light">
-          We follow a structured, quality-driven approach that ensures every research project delivers reliable insights. Our process is built on decades of experience in medical research, combining rigorous methodology with flexible execution.
-        </p>
-        <p class="text-light">
-          From initial consultation to final reporting, we maintain the highest standards of quality, compliance, and client communication.
-        </p>
+      <!-- タイトル＋サブコピー -->
+      <div class="how-work-header">
+        <h1 class="how-work-title">
+          <span class="italic">How</span> We Work
+        </h1>
+        <p class="how-work-subtitle">A practical, step-by-step operating model</p>
+        <p class="how-work-subtitle">— so global teams can plan with confidence.</p>
       </div>
-    </div>
-  </section>
 
-  <!-- PROCESS STEPS ACCORDION -->
-  <section class="process-steps-section">
-    <div class="container">
-      <div class="accordion" data-multiple="false">
+      
+      <!-- 3行アコーディオン -->
+      <div class="how-work-accordion">
         
-        <!-- Step 1: Consultation & Planning -->
-        <div class="accordion-item">
-          <div class="accordion-header">
-            <h3 class="montserrat">01. Consultation & Planning</h3>
-            <span class="accordion-icon">↑</span>
-          </div>
-          <div class="accordion-content">
-            <div class="accordion-body">
-              <div class="step-content">
-                <div class="step-image">
-                  <img src="../assets/seed_consultation.png" alt="Consultation">
-                </div>
-                <div class="step-text">
-                  <h4 class="montserrat-bold">Understanding Your Needs</h4>
-                  <p>
-                    We begin every project with an in-depth consultation to understand your research objectives, target population, and specific requirements. Our team works closely with you to:
-                  </p>
-                  <ul>
-                    <li>Define clear research objectives and success criteria</li>
-                    <li>Identify the most appropriate methodology</li>
-                    <li>Assess feasibility across target markets</li>
-                    <li>Develop comprehensive project timelines</li>
-                    <li>Establish budget parameters and resource allocation</li>
-                  </ul>
-                  <p>
-                    This collaborative planning phase ensures alignment between your goals and our execution strategy, setting the foundation for project success.
-                  </p>
-                </div>
-              </div>
+        <!-- Item 1: End-to-end workflow -->
+        <div class="accordion-item" data-accordion="workflow">
+          <button class="accordion-trigger" aria-expanded="false" aria-controls="panel-workflow">
+            <span class="trigger-text">End-to-end workflow</span>
+            <span class="trigger-icon" aria-hidden="true">▼</span>
+          </button>
+          <div class="accordion-panel" id="panel-workflow" hidden>
+            <div class="panel-card">
+              <h3 class="panel-title">End-to-end workflow</h3>
+              <ul class="panel-list">
+                <li>Study design & alignment</li>
+                <li>Recruitment & feasibility</li>
+                <li>Fieldwork (IDI / FGD / online)</li>
+                <li>Translation / interpretation (if needed)</li>
+                <li>Analysis & reporting</li>
+              </ul>
             </div>
           </div>
         </div>
-
-        <!-- Step 2: Protocol Development -->
-        <div class="accordion-item">
-          <div class="accordion-header">
-            <h3 class="montserrat">02. Protocol Development</h3>
-            <span class="accordion-icon">↑</span>
-          </div>
-          <div class="accordion-content">
-            <div class="accordion-body">
-              <div class="step-content">
-                <div class="step-image">
-                  <img src="../assets/notetaking.png" alt="Protocol Development">
-                </div>
-                <div class="step-text">
-                  <h4 class="montserrat-bold">Designing Robust Research</h4>
-                  <p>
-                    Our experienced research team develops detailed protocols that meet all regulatory and ethical requirements while addressing your specific research questions.
-                  </p>
-                  <ul>
-                    <li>Scientific protocol design following ICH-GCP guidelines</li>
-                    <li>Development of screening questionnaires and discussion guides</li>
-                    <li>Ethics committee submission and approval management</li>
-                    <li>Regulatory compliance documentation</li>
-                    <li>Risk assessment and mitigation planning</li>
-                  </ul>
-                  <p>
-                    Every protocol undergoes multiple rounds of internal review before client approval, ensuring scientific rigor and practical feasibility.
-                  </p>
-                </div>
+        
+        <!-- Item 2: Typical timeline -->
+        <div class="accordion-item" data-accordion="timeline">
+          <button class="accordion-trigger" aria-expanded="false" aria-controls="panel-timeline">
+            <span class="trigger-text">Typical timeline</span>
+            <span class="trigger-icon" aria-hidden="true">▼</span>
+          </button>
+          <div class="accordion-panel" id="panel-timeline" hidden>
+            <div class="panel-card">
+              <h3 class="panel-title">Typical timeline</h3>
+              <div class="timeline-image-wrapper">
+                <img src="../assets/typical_timeline.png" alt="Typical Project Timeline" class="timeline-diagram" id="timeline-img">
+                <button class="zoom-btn" aria-label="Click to enlarge timeline">🔍 Click to enlarge</button>
               </div>
+              <p class="timeline-note">Timelines vary based on project scope and methodology. We provide detailed timelines during planning.</p>
             </div>
           </div>
         </div>
-
-        <!-- Step 3: Participant Recruitment -->
-        <div class="accordion-item">
-          <div class="accordion-header">
-            <h3 class="montserrat">03. Participant Recruitment</h3>
-            <span class="accordion-icon">↑</span>
-          </div>
-          <div class="accordion-content">
-            <div class="accordion-body">
-              <div class="step-content">
-                <div class="step-image">
-                  <img src="../assets/scheduling.png" alt="Recruitment">
-                </div>
-                <div class="step-text">
-                  <h4 class="montserrat-bold">Accessing Hard-to-Reach Populations</h4>
-                  <p>
-                    Our extensive network and specialized recruitment strategies enable us to efficiently identify and engage appropriate research participants, including rare disease populations.
-                  </p>
-                  <ul>
-                    <li>Multi-channel recruitment approach (medical institutions, patient organizations, databases)</li>
-                    <li>Rigorous screening to ensure eligibility</li>
-                    <li>Clear communication of study requirements and participant rights</li>
-                    <li>Informed consent process management</li>
-                    <li>Continuous recruitment monitoring and adjustment</li>
-                  </ul>
-                  <p>
-                    We maintain transparent communication throughout recruitment, providing regular updates on progress and any necessary strategy adjustments.
-                  </p>
-                </div>
-              </div>
+        
+        <!-- Item 3: Transparency in scope changes -->
+        <div class="accordion-item" data-accordion="transparency">
+          <button class="accordion-trigger" aria-expanded="false" aria-controls="panel-transparency">
+            <span class="trigger-text">Transparency in scope changes</span>
+            <span class="trigger-icon" aria-hidden="true">▼</span>
+          </button>
+          <div class="accordion-panel" id="panel-transparency" hidden>
+            <div class="panel-card">
+              <h3 class="panel-title">Transparency in scope changes</h3>
+              <p class="panel-text">Explain how changes after a certain point are handled (and why).</p>
+              <p class="panel-text">This builds trust.</p>
             </div>
           </div>
         </div>
-
-        <!-- Step 4: Data Collection -->
-        <div class="accordion-item">
-          <div class="accordion-header">
-            <h3 class="montserrat">04. Data Collection</h3>
-            <span class="accordion-icon">↑</span>
-          </div>
-          <div class="accordion-content">
-            <div class="accordion-body">
-              <div class="step-content">
-                <div class="step-image">
-                  <img src="../assets/seed_discussion.png" alt="Data Collection">
-                </div>
-                <div class="step-text">
-                  <h4 class="montserrat-bold">Professional Research Execution</h4>
-                  <p>
-                    Our trained moderators and interviewers conduct research sessions with professionalism and sensitivity, ensuring high-quality data collection.
-                  </p>
-                  <ul>
-                    <li>Experienced medical research moderators and interviewers</li>
-                    <li>Real-time quality monitoring and supervision</li>
-                    <li>Audio/video recording (with consent) for accuracy</li>
-                    <li>Secure data handling and storage protocols</li>
-                    <li>Participant welfare prioritization throughout</li>
-                  </ul>
-                  <p>
-                    Whether conducting in-depth interviews, focus groups, or surveys, we maintain consistent quality standards across all data collection activities.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Step 5: Analysis & Insights -->
-        <div class="accordion-item">
-          <div class="accordion-header">
-            <h3 class="montserrat">05. Analysis & Insights</h3>
-            <span class="accordion-icon">↑</span>
-          </div>
-          <div class="accordion-content">
-            <div class="accordion-body">
-              <div class="step-content">
-                <div class="step-image">
-                  <img src="../assets/seed_office.png" alt="Analysis">
-                </div>
-                <div class="step-text">
-                  <h4 class="montserrat-bold">Transforming Data into Actionable Intelligence</h4>
-                  <p>
-                    Our analytical team applies both quantitative and qualitative techniques to extract meaningful insights from research data.
-                  </p>
-                  <ul>
-                    <li>Systematic data coding and categorization</li>
-                    <li>Statistical analysis using industry-standard software</li>
-                    <li>Thematic analysis for qualitative data</li>
-                    <li>Cross-market comparison and benchmarking</li>
-                    <li>Strategic recommendations development</li>
-                  </ul>
-                  <p>
-                    We go beyond descriptive analysis to provide strategic insights that inform business decisions and support your commercial objectives.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Step 6: Reporting & Delivery -->
-        <div class="accordion-item">
-          <div class="accordion-header">
-            <h3 class="montserrat">06. Reporting & Delivery</h3>
-            <span class="accordion-icon">↑</span>
-          </div>
-          <div class="accordion-content">
-            <div class="accordion-body">
-              <div class="step-content">
-                <div class="step-image">
-                  <img src="../assets/get_in_touch.png" alt="Reporting">
-                </div>
-                <div class="step-text">
-                  <h4 class="montserrat-bold">Clear Communication of Findings</h4>
-                  <p>
-                    We deliver comprehensive reports that present findings clearly and support decision-making with actionable recommendations.
-                  </p>
-                  <ul>
-                    <li>Executive summary highlighting key findings</li>
-                    <li>Detailed methodology documentation</li>
-                    <li>Visual presentation of data and insights</li>
-                    <li>Strategic recommendations with supporting evidence</li>
-                    <li>Client presentation and discussion sessions</li>
-                  </ul>
-                  <p>
-                    Our reports are designed to be accessible to both technical and non-technical audiences, ensuring insights can be effectively shared across your organization.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
+        
       </div>
     </div>
   </section>
 
-  <!-- TIMELINE SECTION -->
-  <section class="timeline-section">
-    <div class="container">
-      <h2 class="text-light text-center">Typical Project Timeline</h2>
-      <div class="timeline-image">
-        <img src="../assets/typical_timeline.png" alt="Typical Project Timeline">
-      </div>
-      <p class="text-light text-center timeline-note">
-        Timelines vary based on project scope, methodology, and target population. We provide detailed timelines during the planning phase.
-      </p>
+  <!-- タイムライン拡大モーダル -->
+  <div class="modal" id="timeline-modal" hidden>
+    <div class="modal-overlay" aria-label="Close modal"></div>
+    <div class="modal-content">
+      <button class="modal-close" aria-label="Close">&times;</button>
+      <img src="../assets/typical_timeline.png" alt="Typical Project Timeline (Enlarged)">
     </div>
-  </section>
-
-  <!-- QUALITY ASSURANCE SECTION -->
-  <section class="quality-section">
-    <div class="container">
-      <h2 class="text-light text-center">Quality Assurance</h2>
-      <div class="quality-grid">
-        <div class="quality-card">
-          <h3 class="montserrat-bold text-light">Multi-Level Review</h3>
-          <p class="text-light">
-            Every deliverable undergoes multiple stages of quality review before client delivery, ensuring accuracy and consistency.
-          </p>
-        </div>
-        <div class="quality-card">
-          <h3 class="montserrat-bold text-light">Regulatory Compliance</h3>
-          <p class="text-light">
-            All research activities comply with relevant regulations including ICH-GCP, GDPR, and local data protection laws.
-          </p>
-        </div>
-        <div class="quality-card">
-          <h3 class="montserrat-bold text-light">Continuous Monitoring</h3>
-          <p class="text-light">
-            Real-time project monitoring enables early identification and resolution of any issues, keeping projects on track.
-          </p>
-        </div>
-        <div class="quality-card">
-          <h3 class="montserrat-bold text-light">Client Communication</h3>
-          <p class="text-light">
-            Regular status updates and transparent communication ensure you're always informed of project progress.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
+  </div>
 
   <!-- CTA SECTION -->
   <section class="cta-section-how">
@@ -397,6 +199,6 @@
 
   <!-- Scripts -->
   <script src="js/main.js"></script>
-  <script src="js/accordion.js"></script>
+  <script src="js/how-we-work.js"></script>
 </body>
 </html>
