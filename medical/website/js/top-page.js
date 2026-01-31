@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initWhySeedTabs();
   initVideoControl();
   initVideoCrossfade();
+  initSmoothScroll(); // START HEREボタン用スムーススクロール
 });
 
 // WHY SEED SECTION - Tab-based interface (PPT準拠)
@@ -191,6 +192,30 @@ function initVideoCrossfade() {
   
   // Prepare second video
   setupVideo(video2);
+}
+
+// SMOOTH SCROLL - START HEREボタン用（固定ヘッダーのオフセット対応）
+function initSmoothScroll() {
+  const startButton = document.querySelector('.btn-start-here');
+  
+  if (!startButton) return;
+  
+  startButton.addEventListener('click', function(e) {
+    e.preventDefault();
+    
+    const targetId = this.getAttribute('href').substring(1); // "#global-units" → "global-units"
+    const targetSection = document.getElementById(targetId);
+    
+    if (targetSection) {
+      const headerHeight = document.querySelector('.site-header')?.offsetHeight || 70;
+      const targetPosition = targetSection.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+      
+      window.scrollTo({
+        top: targetPosition,
+        behavior: 'smooth'
+      });
+    }
+  });
 }
 
 // FORM HANDLING - Simple form submission (if contact form exists on page)

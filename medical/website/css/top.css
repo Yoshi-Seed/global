@@ -59,12 +59,14 @@
 }
 
 .hero-title {
-  font-family: var(--font-primary);
-  font-size: clamp(3rem, 7vw, 5.5rem);
-  font-weight: 400;
-  line-height: 1.2;
+  font-family: 'Times New Roman', Times, serif; /* PPT準拠：クラシック */
+  font-size: clamp(2.75rem, 6vw, 5.5rem); /* 44px〜88px */
+  font-weight: 400; /* 太らせない */
+  line-height: 1.05; /* タイト */
+  letter-spacing: -0.02em; /* わずかに詰める */
+  max-width: 12ch; /* 2行で気持ちよく折れる */
   margin-bottom: var(--spacing-md);
-  color: #ffffff;
+  color: #f9e5c1; /* PPT準拠：クリーム色（白はNG） */
 }
 
 .hero-title .italic {
@@ -72,39 +74,46 @@
 }
 
 .hero-subtitle {
-  font-family: var(--font-body);
-  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  font-family: 'Helvetica', Arial, sans-serif; /* PPT準拠 */
+  font-size: clamp(1rem, 1.8vw, 1.375rem); /* 16px〜22px */
+  line-height: 1.6; /* 余白優先 */
   margin-bottom: var(--spacing-md);
-  opacity: 0.95;
+  color: #f9e5c1; /* PPT準拠：クリーム色 */
 }
 
 .hero-question {
-  font-family: var(--font-body);
-  font-size: clamp(1rem, 2vw, 1.2rem);
+  font-family: 'Helvetica', Arial, sans-serif; /* PPT準拠 */
+  font-size: clamp(0.9rem, 1.5vw, 1.1rem); /* 控えめサイズ */
+  line-height: 1.6;
+  margin-top: var(--spacing-sm); /* 詰めない */
   margin-bottom: var(--spacing-lg);
-  opacity: 0.9;
+  color: #f9e5c1; /* PPT準拠：クリーム色 */
+}
+
+.hero-question em {
+  font-style: italic; /* 補足行のitalic */
 }
 
 .btn-start-here {
   display: inline-block;
   padding: 1rem 2.5rem;
-  background-color: #4a4f0c;
-  color: #f9e5c1;
-  font-family: var(--font-body);
+  background-color: #444f0c; /* PPT準拠：深い緑 */
+  color: #f9e5c1; /* PPT準拠：クリーム色 */
+  font-family: 'Helvetica', Arial, sans-serif;
   font-size: 1rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border-radius: 4px;
-  transition: var(--transition-normal);
+  border-radius: 10px; /* 控えめな角丸 */
+  transition: all 0.18s ease-out; /* 150-200ms */
   border: none;
   cursor: pointer;
 }
 
 .btn-start-here:hover {
-  background-color: #5b6015;
+  background-color: #556314; /* 少し明るく（控えめ） */
   transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25); /* 派手すぎないシャドウ */
 }
 
 .btn-start-here:focus-visible {
@@ -722,9 +731,7 @@
 }
 
 @media (max-width: 768px) {
-  .hero-title {
-    font-size: 2.5rem;
-  }
+  /* hero-titleはclampで自動調整されるため、固定値は不要 */
   
   .content-header h2 {
     font-size: 2rem;
