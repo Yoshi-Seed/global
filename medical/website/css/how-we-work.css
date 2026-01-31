@@ -77,8 +77,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 0; /* 左右余白なし（行として見せる） */
-  background: none; /* 背景色なし（PPT準拠） */
+  padding: 20px 0 !important; /* 左右余白なし（行として見せる） */
+  background: none !important; /* 背景色なし（PPT準拠・最優先） */
+  background-color: transparent !important; /* 確実に透明 */
   border: none;
   cursor: pointer;
   transition: all 180ms ease-out;
@@ -87,7 +88,7 @@
 
 .accordion-trigger:hover {
   /* 控えめなhover（背景色を少しだけ） */
-  background-color: rgba(249, 229, 193, 0.05);
+  background-color: rgba(249, 229, 193, 0.05) !important;
   padding-left: 8px; /* 微かに右にシフト */
 }
 
@@ -99,7 +100,7 @@
 
 /* Active状態（開いている時） */
 .accordion-item.active .accordion-trigger {
-  background-color: transparent; /* 開いても背景色なし */
+  background-color: transparent !important; /* 開いても背景色なし */
 }
 
 .accordion-item.active .trigger-text {
