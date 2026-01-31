@@ -384,66 +384,113 @@
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* RARE DISEASE SECTION */
+/* RARE DISEASE INITIATIVE SECTION */
 .rare-disease-section {
-  padding: var(--spacing-lg) 0;
-  background-color: var(--bg-light-beige);
+  padding: var(--spacing-xl) 0;
+  background-color: #b5bf84;
+  text-align: center;
 }
 
-.rare-disease-section .content-wrapper {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-lg);
-  align-items: center;
+.rare-disease-header {
+  max-width: 800px;
+  margin: 0 auto;
 }
 
-.text-content h2 {
-  color: var(--primary-text);
+.rare-disease-header h2 {
+  font-family: var(--font-primary);
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  color: #5b1a06;
   margin-bottom: var(--spacing-md);
 }
 
-.text-content p {
-  color: var(--primary-text);
-  line-height: 1.8;
-  margin-bottom: var(--spacing-sm);
+.rare-disease-header h2 .italic {
+  font-style: italic;
 }
 
-.image-content img {
-  width: 100%;
-  border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-}
-
-/* PROCESS TEASER SECTION */
-.process-teaser-section {
-  padding: var(--spacing-xl) 0;
-  background-color: #735240;
-}
-
-.process-teaser-section h2 {
-  font-size: 3rem;
-  margin-bottom: var(--spacing-sm);
-}
-
-.process-teaser-section .subtitle {
-  margin-bottom: var(--spacing-lg);
-}
-
-.btn-tertiary {
-  background-color: #f9e5c1;
-  color: var(--primary-text);
-  padding: 1rem 2rem;
-  border-radius: 4px;
+.rare-subtitle {
   font-family: var(--font-body);
-  font-weight: 600;
-  transition: var(--transition-normal);
+  font-size: 1.1rem;
+  color: #5b1a06;
+  margin-bottom: var(--spacing-lg);
+  line-height: 1.6;
+}
+
+.btn-visit-microsite {
   display: inline-block;
+  padding: 0.9rem 2rem;
+  background-color: #5b1a06;
+  color: #fff6ea;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 4px;
+  transition: var(--transition-normal);
   text-decoration: none;
 }
 
-.btn-tertiary:hover {
-  background-color: #fff6ea;
+.btn-visit-microsite:hover {
+  background-color: #6e2108;
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-visit-microsite:focus-visible {
+  outline: 3px solid #5b1a06;
+  outline-offset: 3px;
+}
+
+/* OUR INDUSTRY COVERAGE SECTION */
+.industry-coverage-section {
+  padding: var(--spacing-xl) 0;
+  background-color: #fff6ea;
+}
+
+.industry-coverage-section .section-header h2 {
+  font-family: var(--font-primary);
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  color: #5b1a06;
+  margin-bottom: var(--spacing-xl);
+}
+
+.industry-coverage-section .section-header h2 .italic {
+  font-style: italic;
+}
+
+.coverage-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-lg);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.coverage-card {
+  background-color: #ffffff;
+  padding: var(--spacing-lg);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: var(--transition-normal);
+  text-align: center;
+}
+
+.coverage-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.coverage-title {
+  font-family: var(--font-accent);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #5b1a06;
+  margin-bottom: var(--spacing-sm);
+}
+
+.coverage-description {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: #5b1a06;
+  line-height: 1.6;
 }
 
 /* CONTACT SECTION */
@@ -477,11 +524,11 @@
     grid-template-columns: 1fr;
   }
   
-  .contact-wrapper {
+  .coverage-grid {
     grid-template-columns: 1fr;
   }
   
-  .rare-disease-section .content-wrapper {
+  .contact-wrapper {
     grid-template-columns: 1fr;
   }
   
