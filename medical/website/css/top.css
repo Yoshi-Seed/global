@@ -152,10 +152,10 @@
 }
 
 .option-card h3 {
-  font-family: var(--font-body);
-  font-size: 1.3rem;
+  font-family: var(--font-accent);
+  font-size: 1.2rem;
   color: var(--primary-text);
-  font-weight: 600;
+  font-weight: 400;
   margin: 0;
 }
 
@@ -175,8 +175,9 @@
 }
 
 .option-card.active {
-  border-color: var(--accent-brown);
-  background-color: #f9f2e8;
+  border-color: transparent;
+  background-color: #d4a5d8;
+  background: linear-gradient(135deg, #d4a5d8 0%, #c399c7 100%);
 }
 
 .option-card.active .option-arrow {
@@ -186,7 +187,7 @@
 
 /* Right Column: Content Display */
 .why-seed-content {
-  background-color: #ffffff;
+  background-color: #f5ebe0;
   padding: var(--spacing-lg);
   border-radius: 12px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
@@ -195,8 +196,8 @@
 
 .content-header h2 {
   font-family: var(--font-primary);
-  font-size: 3rem;
-  color: var(--primary-text);
+  font-size: 2.5rem;
+  color: #735240;
   margin-bottom: var(--spacing-sm);
 }
 
@@ -206,11 +207,11 @@
 
 .content-subtitle {
   font-family: var(--font-body);
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   color: #5b1a06;
-  opacity: 0.85;
+  opacity: 1;
   margin-bottom: var(--spacing-lg);
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 .content-details {
@@ -230,7 +231,7 @@
 
 .details-list li {
   font-family: var(--font-body);
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: var(--primary-text);
   padding: var(--spacing-sm) 0;
   padding-left: 1.5rem;
