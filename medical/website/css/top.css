@@ -279,11 +279,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    to bottom,
-    rgba(91, 26, 6, 0.15) 0%,
-    rgba(115, 82, 64, 0.2) 100%
-  );
+  background: transparent;
   z-index: 2;
 }
 
@@ -303,6 +299,7 @@
   font-size: clamp(2.5rem, 5vw, 4rem);
   color: #ffffff;
   margin-bottom: var(--spacing-sm);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 .global-title .italic {
@@ -315,6 +312,7 @@
   color: #ffffff;
   opacity: 0.95;
   line-height: 1.6;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
 .global-cards {
@@ -326,9 +324,9 @@
 }
 
 .global-card {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
+  border: 2px solid rgba(255, 255, 255, 0.4);
   border-radius: 12px;
   padding: var(--spacing-lg);
   text-align: center;
@@ -339,8 +337,8 @@
 }
 
 .global-card:hover {
-  background: rgba(255, 255, 255, 0.25);
-  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.6);
   transform: translateY(-5px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
@@ -355,6 +353,7 @@
   font-size: 1.8rem;
   color: #ffffff;
   margin-bottom: var(--spacing-sm);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .card-title .italic {
@@ -366,6 +365,7 @@
   font-size: 1rem;
   color: #f9e5c1;
   opacity: 0.95;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 /* RARE DISEASE SECTION */
