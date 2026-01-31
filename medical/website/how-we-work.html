@@ -47,48 +47,46 @@
     </div>
   </header>
 
-  <!-- HOW WE WORK SECTION - PPT準拠 -->
+  <!-- HOW WE WORK SECTION - PPT準拠（2カラム構図） -->
   <section class="how-work-section">
     <div class="container">
-      <!-- タイトル＋サブコピー -->
-      <div class="how-work-header">
-        <h1 class="how-work-title">
-          <span class="italic">How</span> We Work
-        </h1>
-        <p class="how-work-subtitle">A practical, step-by-step operating model</p>
-        <p class="how-work-subtitle">— so global teams can plan with confidence.</p>
-      </div>
-
       
-      <!-- 3行アコーディオン -->
-      <div class="how-work-accordion">
+      <!-- 2カラムグリッド -->
+      <div class="how-work-grid">
         
-        <!-- Item 1: End-to-end workflow -->
-        <div class="accordion-item" data-accordion="workflow">
-          <button class="accordion-trigger" aria-expanded="false" aria-controls="panel-workflow">
-            <span class="trigger-text">End-to-end workflow</span>
-            <span class="trigger-icon" aria-hidden="true">▲</span>
-          </button>
-          <div class="accordion-panel" id="panel-workflow" hidden>
-            <div class="panel-card">
-              <h3 class="panel-title">End-to-end workflow</h3>
-              <ul class="panel-list">
-                <li>Study design & alignment</li>
-                <li>Recruitment & feasibility</li>
-                <li>Fieldwork (IDI / FGD / online)</li>
-                <li>Translation / interpretation (if needed)</li>
-                <li>Analysis & reporting</li>
-              </ul>
+        <!-- 左カラム：3行メニュー（閉状態は細線のみ） -->
+        <div class="how-work-menu">
+          
+          <!-- Item 1: End-to-end workflow -->
+          <div class="accordion-item" data-accordion="workflow">
+            <button class="accordion-trigger" aria-expanded="false" aria-controls="panel-workflow">
+              <span class="trigger-text">End-to-end workflow</span>
+              <svg class="trigger-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M7 2L7 12M7 2L3 6M7 2L11 6" stroke="#f9e5c1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="accordion-panel" id="panel-workflow" hidden>
+              <div class="panel-card">
+                <h3 class="panel-title">End-to-end workflow</h3>
+                <ul class="panel-list">
+                  <li>Study design & alignment</li>
+                  <li>Recruitment & feasibility</li>
+                  <li>Fieldwork (IDI / FGD / online)</li>
+                  <li>Translation / interpretation (if needed)</li>
+                  <li>Analysis & reporting</li>
+                </ul>
+              </div>
             </div>
           </div>
-        </div>
-        
-        <!-- Item 2: Typical timeline -->
-        <div class="accordion-item" data-accordion="timeline">
-          <button class="accordion-trigger" aria-expanded="false" aria-controls="panel-timeline">
-            <span class="trigger-text">Typical timeline</span>
-            <span class="trigger-icon" aria-hidden="true">▲</span>
-          </button>
+          
+          <!-- Item 2: Typical timeline -->
+          <div class="accordion-item" data-accordion="timeline">
+            <button class="accordion-trigger" aria-expanded="false" aria-controls="panel-timeline">
+              <span class="trigger-text">Typical timeline</span>
+              <svg class="trigger-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M7 2L7 12M7 2L3 6M7 2L11 6" stroke="#f9e5c1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
           <div class="accordion-panel" id="panel-timeline" hidden>
             <div class="panel-card">
               <h3 class="panel-title">Typical timeline</h3>
@@ -173,7 +171,9 @@
         <div class="accordion-item" data-accordion="transparency">
           <button class="accordion-trigger" aria-expanded="false" aria-controls="panel-transparency">
             <span class="trigger-text">Transparency in scope changes</span>
-            <span class="trigger-icon" aria-hidden="true">▲</span>
+            <svg class="trigger-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M7 2L7 12M7 2L3 6M7 2L11 6" stroke="#f9e5c1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </button>
           <div class="accordion-panel" id="panel-transparency" hidden>
             <div class="panel-card">
@@ -184,8 +184,20 @@
           </div>
         </div>
         
+      </div><!-- /how-work-menu -->
+      
+      <!-- 右カラム：タイトル＋サブコピー（PPT：右寄り） -->
+      <div class="how-work-header">
+        <h1 class="how-work-title">
+          <span class="italic">How</span> We Work
+        </h1>
+        <p class="how-work-subtitle">A practical, step-by-step operating model</p>
+        <p class="how-work-subtitle">— so global teams can plan with confidence.</p>
       </div>
-    </div>
+      
+    </div><!-- /how-work-grid -->
+      
+    </div><!-- /container -->
   </section>
 
   <!-- タイムライン拡大モーダル -->

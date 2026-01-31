@@ -1,5 +1,5 @@
 /* ===================================
-   How We Work Page - PPT準拠
+   How We Work Page - PPT準拠（2カラム構図）
    =================================== */
 
 /* HOW WE WORK SECTION */
@@ -8,11 +8,27 @@
   padding: calc(var(--spacing-xl) + 70px) 0 var(--spacing-xl) 0;
 }
 
-/* ヘッダー：タイトル＋サブコピー */
+/* ===================================
+   2カラムグリッド（PPT構図）
+   =================================== */
+
+.how-work-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 左：メニュー / 右：タイトル */
+  gap: 60px;
+  align-items: start;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* 左カラム：3行メニュー */
+.how-work-menu {
+  /* メニューコンテナ */
+}
+
+/* 右カラム：タイトル＋サブコピー（PPT：右寄り） */
 .how-work-header {
-  max-width: 900px;
-  margin: 0 auto 80px auto;
-  text-align: center;
+  text-align: right; /* PPT：右寄り */
 }
 
 .how-work-title {
@@ -42,16 +58,8 @@
 }
 
 /* ===================================
-   3行アコーディオン（PPT準拠）
-   =================================== */
-
-.how-work-accordion {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-/* ===================================
    アコーディオン（PPT準拠：行メニュー形式）
+   巨大クリームバー禁止
    =================================== */
 
 .accordion-item {
@@ -107,19 +115,26 @@
   transition: font-weight 180ms ease-out;
 }
 
-/* トリガーアイコン（PPT：小さな矢印、初期は上向き▲） */
+/* トリガーアイコン（PPT：細いchevron SVG） */
 .trigger-icon {
-  font-size: 0.9rem; /* 小さな矢印（PPT準拠） */
-  color: #f9e5c1;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
   opacity: 0.8;
   transition: transform 200ms ease-out, opacity 180ms ease-out;
+}
+
+.trigger-icon path {
+  stroke: #f9e5c1;
+  stroke-width: 2;
+  fill: none;
 }
 
 .accordion-trigger:hover .trigger-icon {
   opacity: 1;
 }
 
-/* PPT準拠：初期は上向き▲、開いたら下向き▼に変化 */
+/* PPT準拠：初期は上向き、開いたら180度回転（下向き） */
 .accordion-item.active .trigger-icon {
   transform: rotate(180deg);
 }
@@ -372,9 +387,29 @@
    レスポンシブ対応
    =================================== */
 
+/* タブレット：1カラム化の準備 */
+@media (max-width: 1024px) {
+  .how-work-grid {
+    gap: 40px;
+  }
+}
+
+/* モバイル：1カラム（縦積み） */
 @media (max-width: 768px) {
+  .how-work-grid {
+    grid-template-columns: 1fr; /* 1カラム */
+    gap: 48px;
+  }
+  
+  /* モバイル：右カラムを上に */
   .how-work-header {
-    margin-bottom: 60px;
+    order: -1; /* 最初に表示 */
+    text-align: center; /* モバイルは中央寄せ */
+    margin-bottom: 40px;
+  }
+  
+  .how-work-title {
+    font-size: 2.5rem;
   }
 
   /* モバイル：行メニューの余白調整 */
