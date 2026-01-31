@@ -23,6 +23,11 @@
   backdrop-filter: blur(10px);
 }
 
+/* scrolled時はロゴのshadowを軽減（白背景なので） */
+.site-header.scrolled .site-logo img {
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.15));
+}
+
 .site-header.scrolled .main-nav a {
   color: var(--primary-text);
   text-shadow: none;
@@ -40,16 +45,32 @@
 
 .header-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end; /* PPT通り：右寄せ */
   align-items: center;
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 var(--spacing-md);
+  gap: var(--spacing-md); /* ナビとロゴの間隔 */
+}
+
+/* PPT通りの並び順：ナビ → ロゴ（HTMLは触らずorderで制御） */
+.site-logo {
+  order: 2; /* ロゴを右端に */
+}
+
+.main-nav {
+  order: 1; /* ナビをロゴの左に */
+}
+
+.menu-toggle {
+  order: 3; /* モバイルハンバーガーは最後 */
 }
 
 .site-logo img {
   height: 50px;
   width: auto;
+  /* Hero背景での視認性確保（控えめなdrop-shadow） */
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.2));
 }
 
 .main-nav ul {
@@ -398,11 +419,22 @@
    =================================== */
 
 @media (max-width: 768px) {
+  /* モバイル：ハンバーガーとロゴの配置を維持 */
+  .header-container {
+    justify-content: space-between; /* モバイルでは両端配置 */
+  }
+  
+  .site-logo {
+    order: 1; /* モバイル：ロゴを左 */
+  }
+  
   .menu-toggle {
+    order: 2; /* モバイル：ハンバーガーを右 */
     display: block;
   }
   
   .main-nav {
+    order: 3; /* モバイル：ナビは展開メニュー */
     position: fixed;
     top: 70px;
     left: 0;
