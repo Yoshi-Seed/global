@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Request Research Report - Seed Planning">
+  <title>Request Report | Seed Planning</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/request-report.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="../../medical/assets/sp_logo_top_shape_only.png">
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-container">
+      <div class="site-logo">
+        <a href="index.html">
+          <img src="../../medical/assets/seed_planning_logo.png" alt="Seed Planning Logo">
+        </a>
+      </div>
+      
+      <nav class="main-nav">
+        <ul>
+          <li><a href="how-we-work.html">How We Work</a></li>
+          <li><a href="#rare-disease">Rare Disease</a></li>
+          <li><a href="insights.html">Japan Fact Sheets</a></li>
+          <li><a href="about-us.html">About Team</a></li>
+          <li><a href="#contact-us" class="active">Contact Us</a></li>
+        </ul>
+      </nav>
+      
+      <button class="menu-toggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="request-hero-section">
+    <div class="container">
+      <h1>Request Research Report</h1>
+      <p class="subtitle">
+        Access our comprehensive research insights and analysis
+      </p>
+    </div>
+  </section>
+
+  <!-- REQUEST FORM SECTION -->
+  <section class="request-form-section bg-light-beige" id="contact-us">
+    <div class="container">
+      <div class="form-layout">
+        <!-- Left Side: Contact Information -->
+        <div class="contact-info">
+          <h2>Get in Touch</h2>
+          <p class="info-intro">
+            Fill out the form and our team will respond within 24 hours. You can also reach us directly using the information below.
+          </p>
+          
+          <div class="contact-methods">
+            <div class="contact-method">
+              <div class="method-icon">📧</div>
+              <div class="method-details">
+                <h4>Email</h4>
+                <a href="mailto:info@seedplanning.co.jp">info@seedplanning.co.jp</a>
+              </div>
+            </div>
+            
+            <div class="contact-method">
+              <div class="method-icon">📞</div>
+              <div class="method-details">
+                <h4>Phone</h4>
+                <a href="tel:+81-3-XXXX-XXXX">+81-3-XXXX-XXXX</a>
+                <p class="method-note">Mon-Fri, 9:00-18:00 (JST)</p>
+              </div>
+            </div>
+            
+            <div class="contact-method">
+              <div class="method-icon">📍</div>
+              <div class="method-details">
+                <h4>Address</h4>
+                <p>Tokyo, Japan</p>
+              </div>
+            </div>
+            
+            <div class="contact-method">
+              <div class="method-icon">💼</div>
+              <div class="method-details">
+                <h4>LinkedIn</h4>
+                <a href="https://www.linkedin.com/company/seedplanning" target="_blank" rel="noopener noreferrer">Follow us on LinkedIn</a>
+              </div>
+            </div>
+          </div>
+          
+          <div class="certifications-display">
+            <h4>Our Certifications</h4>
+            <div class="cert-logos">
+              <img src="../../medical/assets/ISO27001.png" alt="ISO 27001">
+              <img src="../../medical/assets/privacy_mark.png" alt="Privacy Mark">
+              <img src="../../medical/assets/jmra_member.png" alt="JMRA">
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side: Request Form -->
+        <div class="request-form-container">
+          <form class="request-form" id="request-form" data-ajax>
+            <h3 class="form-title">Report Request Form</h3>
+            
+            <div class="form-group">
+              <label for="company-name">Company Name *</label>
+              <input 
+                type="text" 
+                id="company-name" 
+                name="company-name" 
+                required
+                aria-required="true">
+            </div>
+            
+            <div class="form-group">
+              <label for="full-name">Full Name *</label>
+              <input 
+                type="text" 
+                id="full-name" 
+                name="full-name" 
+                required
+                aria-required="true">
+            </div>
+            
+            <div class="form-group">
+              <label for="email-address">Email Address *</label>
+              <input 
+                type="email" 
+                id="email-address" 
+                name="email-address" 
+                required
+                aria-required="true">
+            </div>
+            
+            <div class="form-group">
+              <label for="phone-number">Phone Number</label>
+              <input 
+                type="tel" 
+                id="phone-number" 
+                name="phone-number">
+            </div>
+            
+            <div class="form-group">
+              <label for="help-category">What can we help you with? *</label>
+              <select 
+                id="help-category" 
+                name="help-category" 
+                required
+                aria-required="true">
+                <option value="">Select a category...</option>
+                <option value="patient-recruitment">Patient Recruitment</option>
+                <option value="feasibility-study">Feasibility Study</option>
+                <option value="advisory-board">Advisory Board</option>
+                <option value="qualitative-research">Qualitative Research (IDIs, Focus Groups)</option>
+                <option value="quantitative-research">Quantitative Research (Surveys)</option>
+                <option value="rare-disease">Rare Disease Research</option>
+                <option value="hcp-research">HCP Research</option>
+                <option value="market-access">Market Access Research</option>
+                <option value="compliance">Compliance Consultation</option>
+                <option value="report-request">Specific Report Request</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="specific-topic">Specific Topic or Report Name</label>
+              <input 
+                type="text" 
+                id="specific-topic" 
+                name="specific-topic"
+                placeholder="e.g., Patient Journey in Rare Diseases, HCP Insights Oncology APAC">
+            </div>
+            
+            <div class="form-group">
+              <label for="therapeutic-area">Therapeutic Area</label>
+              <input 
+                type="text" 
+                id="therapeutic-area" 
+                name="therapeutic-area"
+                placeholder="e.g., Oncology, Cardiology, Rare Diseases">
+            </div>
+            
+            <div class="form-group">
+              <label for="message">Message / Request Details *</label>
+              <textarea 
+                id="message" 
+                name="message" 
+                rows="6" 
+                required
+                aria-required="true"
+                placeholder="Please provide details about your research needs, objectives, timeline, and any specific requirements..."></textarea>
+            </div>
+            
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary btn-large" id="submit-btn">
+                Submit Request
+              </button>
+            </div>
+            
+            <p class="form-note">
+              * Required fields. We respect your privacy and will not share your information with third parties.
+            </p>
+          </form>
+          
+          <!-- Success Message (hidden by default) -->
+          <div class="success-message" id="success-message" style="display: none;">
+            <div class="success-icon">✓</div>
+            <h3>Thank You!</h3>
+            <p>Your request has been submitted successfully. Our team will review your request and contact you within 24 hours.</p>
+            <button class="btn btn-secondary" onclick="location.reload()">Submit Another Request</button>
+          </div>
+          
+          <!-- Error Message (hidden by default) -->
+          <div class="error-message" id="error-message" style="display: none;">
+            <div class="error-icon">⚠</div>
+            <p>Something went wrong. Please try again or contact us directly at <a href="mailto:info@seedplanning.co.jp">info@seedplanning.co.jp</a></p>
+            <button class="btn btn-secondary" onclick="document.getElementById('error-message').style.display='none'">Try Again</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-grid">
+        <div class="footer-section">
+          <h4>About Seed Planning</h4>
+          <p>
+            Global medical research organization connecting healthcare insights worldwide. Trusted by leading pharmaceutical companies and medical device manufacturers.
+          </p>
+        </div>
+        
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="how-we-work.html">How We Work</a></li>
+            <li><a href="insights.html">Insights</a></li>
+            <li><a href="about-us.html">About Us</a></li>
+            <li><a href="voices.html">Client Voices</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-section">
+          <h4>Services</h4>
+          <ul>
+            <li><a href="#">Patient Recruitment</a></li>
+            <li><a href="#">Feasibility Studies</a></li>
+            <li><a href="#">Advisory Boards</a></li>
+            <li><a href="#">Qualitative Research</a></li>
+            <li><a href="#">Quantitative Research</a></li>
+            <li><a href="#">Rare Disease Studies</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-section">
+          <h4>Contact</h4>
+          <p>
+            Email: <a href="mailto:info@seedplanning.co.jp">info@seedplanning.co.jp</a><br>
+            Phone: +81-3-XXXX-XXXX
+          </p>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <div class="footer-certifications">
+          <img src="../../medical/assets/ISO27001.png" alt="ISO 27001 Certified">
+          <img src="../../medical/assets/privacy_mark.png" alt="Privacy Mark">
+          <img src="../../medical/assets/jmra_member.png" alt="JMRA Member">
+          <img src="../../medical/assets/esomar.png" alt="ESOMAR">
+          <img src="../../medical/assets/ephmra.png" alt="EphMRA">
+        </div>
+        <p>&copy; 2026 Seed Planning Inc. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
+  <script src="js/request-form.js"></script>
+</body>
+</html>

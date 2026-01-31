@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Research Insights - Seed Planning Global Medical Research">
+  <title>Insights | Seed Planning</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/insights.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="../../medical/assets/sp_logo_top_shape_only.png">
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-container">
+      <div class="site-logo">
+        <a href="index.html">
+          <img src="../../medical/assets/seed_planning_logo.png" alt="Seed Planning Logo">
+        </a>
+      </div>
+      
+      <nav class="main-nav">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="how-we-work.html">How We Work</a></li>
+          <li><a href="insights.html" class="active">Insights</a></li>
+          <li><a href="about-us.html">About Us</a></li>
+          <li><a href="voices.html">Voices</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+      </nav>
+      
+      <button class="menu-toggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="insights-hero-section">
+    <div class="container">
+      <h1>Research <span class="italic">Insights</span></h1>
+      <p class="subtitle">
+        Discover our latest findings and thought leadership in medical research
+      </p>
+    </div>
+  </section>
+
+  <!-- FILTER PANEL -->
+  <section class="filter-section bg-ivory">
+    <div class="container">
+      <div class="filter-panel">
+        <div class="filter-header">
+          <h3 class="montserrat-bold">Find Insights</h3>
+          <button id="clear-filters" class="btn-link">Clear all filters</button>
+        </div>
+        
+        <div class="filter-controls">
+          <div class="search-group">
+            <label for="search-input">Search</label>
+            <input 
+              type="text" 
+              id="search-input" 
+              placeholder="Search insights by keyword..."
+              aria-label="Search insights">
+          </div>
+          
+          <div class="filter-group">
+            <label for="topic-area-filter">Topic Area</label>
+            <select id="topic-area-filter" multiple size="1">
+              <option value="">All Topics</option>
+              <option value="patient-research">Patient Research</option>
+              <option value="hcp-research">HCP Research</option>
+              <option value="healthcare-system">Healthcare System</option>
+              <option value="compliance">Compliance</option>
+              <option value="market-access">Market Access</option>
+            </select>
+          </div>
+          
+          <div class="tags-group">
+            <label>Popular Tags</label>
+            <div id="tags-container" class="tags-list">
+              <button class="filter-tag" data-tag="oncology">Oncology</button>
+              <button class="filter-tag" data-tag="rare-diseases">Rare Diseases</button>
+              <button class="filter-tag" data-tag="cardiology">Cardiology</button>
+              <button class="filter-tag" data-tag="japan">Japan</button>
+              <button class="filter-tag" data-tag="apac">APAC</button>
+              <button class="filter-tag" data-tag="patient-recruitment">Patient Recruitment</button>
+              <button class="filter-tag" data-tag="feasibility">Feasibility</button>
+              <button class="filter-tag" data-tag="advisory-boards">Advisory Boards</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="results-info">
+          <p id="results-count">Showing all insights</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED INSIGHTS CAROUSEL -->
+  <section class="featured-section bg-gray-green">
+    <div class="container">
+      <h2 class="text-light text-center">Featured Reports</h2>
+      
+      <div class="carousel" data-autoplay="true" data-interval="6000">
+        <div class="carousel-container">
+          <!-- Slide 1 -->
+          <div class="carousel-slide">
+            <div class="featured-card">
+              <div class="featured-content">
+                <span class="topic-badge">HCP Research</span>
+                <h3 class="montserrat-bold">Understanding Prescribing Behaviors in Oncology</h3>
+                <p class="featured-summary">
+                  A comprehensive study of oncology specialists across APAC markets, exploring treatment decision-making factors, information sources, and unmet needs in cancer care.
+                </p>
+                <div class="featured-tags">
+                  <span class="tag">Oncology</span>
+                  <span class="tag">APAC</span>
+                  <span class="tag">HCP Insights</span>
+                </div>
+                <div class="featured-actions">
+                  <a href="#" class="btn btn-secondary">Learn More</a>
+                  <a href="request-report.html" class="btn btn-tertiary">Request Full Report</a>
+                </div>
+              </div>
+              <div class="featured-image">
+                <img src="../../medical/assets/seed_discussion.png" alt="HCP Research">
+              </div>
+            </div>
+          </div>
+          
+          <!-- Slide 2 -->
+          <div class="carousel-slide">
+            <div class="featured-card">
+              <div class="featured-content">
+                <span class="topic-badge">Patient Research</span>
+                <h3 class="montserrat-bold">Patient Journey Mapping in Rare Diseases</h3>
+                <p class="featured-summary">
+                  In-depth qualitative research with rare disease patients revealing critical touchpoints, barriers to care, and opportunities for improved patient support programs.
+                </p>
+                <div class="featured-tags">
+                  <span class="tag">Rare Diseases</span>
+                  <span class="tag">Patient Journey</span>
+                  <span class="tag">Qualitative</span>
+                </div>
+                <div class="featured-actions">
+                  <a href="#" class="btn btn-secondary">Learn More</a>
+                  <a href="request-report.html" class="btn btn-tertiary">Request Full Report</a>
+                </div>
+              </div>
+              <div class="featured-image">
+                <img src="../../medical/assets/patient_care.png" alt="Patient Research">
+              </div>
+            </div>
+          </div>
+          
+          <!-- Slide 3 -->
+          <div class="carousel-slide">
+            <div class="featured-card">
+              <div class="featured-content">
+                <span class="topic-badge">Healthcare System</span>
+                <h3 class="montserrat-bold">Market Access Pathways in Japan</h3>
+                <p class="featured-summary">
+                  Strategic analysis of reimbursement processes, pricing dynamics, and stakeholder engagement strategies for successful product launch in the Japanese market.
+                </p>
+                <div class="featured-tags">
+                  <span class="tag">Japan</span>
+                  <span class="tag">Market Access</span>
+                  <span class="tag">Reimbursement</span>
+                </div>
+                <div class="featured-actions">
+                  <a href="#" class="btn btn-secondary">Learn More</a>
+                  <a href="request-report.html" class="btn btn-tertiary">Request Full Report</a>
+                </div>
+              </div>
+              <div class="featured-image">
+                <img src="../../medical/assets/seed_consultation.png" alt="Market Access">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSIGHTS GRID -->
+  <section class="insights-grid-section bg-ivory">
+    <div class="container">
+      <h2 class="text-center">All Insights</h2>
+      
+      <div class="insights-grid">
+        <!-- Insight Card 1 -->
+        <article class="insight-card" 
+                 data-title="Recruitment Strategies for Rare Disease Studies"
+                 data-topic="patient-research"
+                 data-tags="rare-diseases, patient-recruitment, global">
+          <span class="topic-badge-small">Patient Research</span>
+          <h3 class="montserrat">Recruitment Strategies for Rare Disease Studies</h3>
+          <p class="insight-excerpt">
+            Best practices for identifying and engaging rare disease patients across multiple markets. Includes case studies from successful recruitment campaigns.
+          </p>
+          <div class="insight-meta">
+            <span class="date">January 2026</span>
+            <span class="read-time">8 min read</span>
+          </div>
+          <div class="insight-tags">
+            <span class="tag-small">Rare Diseases</span>
+            <span class="tag-small">Patient Recruitment</span>
+            <span class="tag-small">Global</span>
+          </div>
+          <a href="#" class="btn-link">Read More →</a>
+        </article>
+
+        <!-- Insight Card 2 -->
+        <article class="insight-card" 
+                 data-title="Digital Health Adoption Among Japanese HCPs"
+                 data-topic="hcp-research"
+                 data-tags="japan, digital-health, hcp-insights">
+          <span class="topic-badge-small">HCP Research</span>
+          <h3 class="montserrat">Digital Health Adoption Among Japanese HCPs</h3>
+          <p class="insight-excerpt">
+            Survey findings on digital health tool usage, preferences, and barriers among healthcare professionals in Japan's evolving healthcare landscape.
+          </p>
+          <div class="insight-meta">
+            <span class="date">December 2025</span>
+            <span class="read-time">6 min read</span>
+          </div>
+          <div class="insight-tags">
+            <span class="tag-small">Japan</span>
+            <span class="tag-small">Digital Health</span>
+            <span class="tag-small">HCP Insights</span>
+          </div>
+          <a href="#" class="btn-link">Read More →</a>
+        </article>
+
+        <!-- Insight Card 3 -->
+        <article class="insight-card" 
+                 data-title="Feasibility Assessment Framework"
+                 data-topic="healthcare-system"
+                 data-tags="feasibility, methodology, apac">
+          <span class="topic-badge-small">Healthcare System</span>
+          <h3 class="montserrat">Feasibility Assessment Framework</h3>
+          <p class="insight-excerpt">
+            A comprehensive guide to conducting effective feasibility studies, with insights from over 100 assessments across APAC markets.
+          </p>
+          <div class="insight-meta">
+            <span class="date">November 2025</span>
+            <span class="read-time">10 min read</span>
+          </div>
+          <div class="insight-tags">
+            <span class="tag-small">Feasibility</span>
+            <span class="tag-small">Methodology</span>
+            <span class="tag-small">APAC</span>
+          </div>
+          <a href="#" class="btn-link">Read More →</a>
+        </article>
+
+        <!-- Insight Card 4 -->
+        <article class="insight-card" 
+                 data-title="Compliance Best Practices in Medical Research"
+                 data-topic="compliance"
+                 data-tags="compliance, ich-gcp, regulatory">
+          <span class="topic-badge-small">Compliance</span>
+          <h3 class="montserrat">Compliance Best Practices in Medical Research</h3>
+          <p class="insight-excerpt">
+            Essential compliance considerations for medical research, covering ICH-GCP guidelines, data protection regulations, and ethical standards.
+          </p>
+          <div class="insight-meta">
+            <span class="date">October 2025</span>
+            <span class="read-time">12 min read</span>
+          </div>
+          <div class="insight-tags">
+            <span class="tag-small">Compliance</span>
+            <span class="tag-small">ICH-GCP</span>
+            <span class="tag-small">Regulatory</span>
+          </div>
+          <a href="#" class="btn-link">Read More →</a>
+        </article>
+
+        <!-- Insight Card 5 -->
+        <article class="insight-card" 
+                 data-title="Patient-Centric Trial Design in Oncology"
+                 data-topic="patient-research"
+                 data-tags="oncology, patient-recruitment, trial-design">
+          <span class="topic-badge-small">Patient Research</span>
+          <h3 class="montserrat">Patient-Centric Trial Design in Oncology</h3>
+          <p class="insight-excerpt">
+            How patient insights are shaping clinical trial design in oncology, improving recruitment, retention, and patient experience.
+          </p>
+          <div class="insight-meta">
+            <span class="date">September 2025</span>
+            <span class="read-time">9 min read</span>
+          </div>
+          <div class="insight-tags">
+            <span class="tag-small">Oncology</span>
+            <span class="tag-small">Patient Recruitment</span>
+            <span class="tag-small">Trial Design</span>
+          </div>
+          <a href="#" class="btn-link">Read More →</a>
+        </article>
+
+        <!-- Insight Card 6 -->
+        <article class="insight-card" 
+                 data-title="Advisory Board Best Practices"
+                 data-topic="hcp-research"
+                 data-tags="advisory-boards, kol-engagement, strategy">
+          <span class="topic-badge-small">HCP Research</span>
+          <h3 class="montserrat">Advisory Board Best Practices</h3>
+          <p class="insight-excerpt">
+            Strategic guidance on planning, executing, and maximizing value from medical advisory boards with KOLs and experts.
+          </p>
+          <div class="insight-meta">
+            <span class="date">August 2025</span>
+            <span class="read-time">7 min read</span>
+          </div>
+          <div class="insight-tags">
+            <span class="tag-small">Advisory Boards</span>
+            <span class="tag-small">KOL Engagement</span>
+            <span class="tag-small">Strategy</span>
+          </div>
+          <a href="#" class="btn-link">Read More →</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA SECTION -->
+  <section class="cta-insights-section bg-light-beige">
+    <div class="container text-center">
+      <h2>Can't Find What You're Looking For?</h2>
+      <p class="subtitle">Request a specific topic or custom research report</p>
+      <a href="request-report.html" class="btn btn-primary btn-large">Request Specific Topic</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-grid">
+        <div class="footer-section">
+          <h4>About Seed Planning</h4>
+          <p>
+            Global medical research organization connecting healthcare insights worldwide. Trusted by leading pharmaceutical companies and medical device manufacturers.
+          </p>
+        </div>
+        
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="how-we-work.html">How We Work</a></li>
+            <li><a href="insights.html">Insights</a></li>
+            <li><a href="about-us.html">About Us</a></li>
+            <li><a href="voices.html">Client Voices</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-section">
+          <h4>Services</h4>
+          <ul>
+            <li><a href="#">Patient Recruitment</a></li>
+            <li><a href="#">Feasibility Studies</a></li>
+            <li><a href="#">Advisory Boards</a></li>
+            <li><a href="#">Qualitative Research</a></li>
+            <li><a href="#">Quantitative Research</a></li>
+            <li><a href="#">Rare Disease Studies</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-section">
+          <h4>Contact</h4>
+          <p>
+            Email: <a href="mailto:info@seedplanning.co.jp">info@seedplanning.co.jp</a><br>
+            Phone: +81-3-XXXX-XXXX
+          </p>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <div class="footer-certifications">
+          <img src="../../medical/assets/ISO27001.png" alt="ISO 27001 Certified">
+          <img src="../../medical/assets/privacy_mark.png" alt="Privacy Mark">
+          <img src="../../medical/assets/jmra_member.png" alt="JMRA Member">
+          <img src="../../medical/assets/esomar.png" alt="ESOMAR">
+          <img src="../../medical/assets/ephmra.png" alt="EphMRA">
+        </div>
+        <p>&copy; 2026 Seed Planning Inc. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
+  <script src="js/carousel.js"></script>
+  <script src="js/filter.js"></script>
+</body>
+</html>
