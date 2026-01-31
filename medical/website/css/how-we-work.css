@@ -50,68 +50,82 @@
   margin: 0 auto;
 }
 
+/* ===================================
+   アコーディオン（PPT準拠：行メニュー形式）
+   =================================== */
+
 .accordion-item {
-  border-bottom: 1px solid rgba(249, 229, 193, 0.3);
+  /* 細い区切り線（PPT準拠） */
+  border-bottom: 1px solid rgba(249, 229, 193, 0.55);
 }
 
 .accordion-item:first-child {
-  border-top: 1px solid rgba(249, 229, 193, 0.3);
+  border-top: 1px solid rgba(249, 229, 193, 0.55);
 }
 
-/* トリガーボタン */
+/* トリガーボタン（PPT：行メニュー、巨大バー禁止） */
 .accordion-trigger {
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 28px 32px;
-  background: none;
+  padding: 20px 0; /* 左右余白なし（行として見せる） */
+  background: none; /* 背景色なし（PPT準拠） */
   border: none;
   cursor: pointer;
-  transition: background-color 200ms ease-out;
+  transition: all 180ms ease-out;
   text-align: left;
 }
 
 .accordion-trigger:hover {
-  background-color: rgba(249, 229, 193, 0.08);
+  /* 控えめなhover（背景色を少しだけ） */
+  background-color: rgba(249, 229, 193, 0.05);
+  padding-left: 8px; /* 微かに右にシフト */
 }
 
 .accordion-trigger:focus-visible {
   outline: 2px solid #f9e5c1;
-  outline-offset: -2px;
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
-/* Active状態 */
+/* Active状態（開いている時） */
 .accordion-item.active .accordion-trigger {
-  background-color: rgba(249, 229, 193, 0.12);
+  background-color: transparent; /* 開いても背景色なし */
 }
 
 .accordion-item.active .trigger-text {
-  font-weight: 600;
+  font-weight: 600; /* 開いている時は太字 */
 }
 
-/* トリガーテキスト */
+/* トリガーテキスト（PPT：Montserrat） */
 .trigger-text {
-  font-family: 'Helvetica', Arial, sans-serif;
-  font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+  font-family: 'Montserrat', sans-serif; /* PPT準拠 */
+  font-size: clamp(1.1rem, 2vw, 1.35rem); /* 控えめサイズ */
   font-weight: 400;
   color: #f9e5c1;
-  transition: font-weight 200ms ease-out;
+  transition: font-weight 180ms ease-out;
 }
 
-/* トリガーアイコン */
+/* トリガーアイコン（PPT：小さな矢印、初期は上向き▲） */
 .trigger-icon {
-  font-size: 1.2rem;
+  font-size: 0.9rem; /* 小さな矢印（PPT準拠） */
   color: #f9e5c1;
-  transition: transform 200ms ease-out;
+  opacity: 0.8;
+  transition: transform 200ms ease-out, opacity 180ms ease-out;
 }
 
+.accordion-trigger:hover .trigger-icon {
+  opacity: 1;
+}
+
+/* PPT準拠：初期は上向き▲、開いたら下向き▼に変化 */
 .accordion-item.active .trigger-icon {
   transform: rotate(180deg);
 }
 
 /* ===================================
-   展開パネル
+   展開パネル（PPT準拠：クリーム色カード）
    =================================== */
 
 .accordion-panel {
@@ -128,12 +142,13 @@
   max-height: 2000px;
 }
 
-/* パネルカード */
+/* パネルカード（PPT：ここで初めて箱が出る） */
 .panel-card {
-  background-color: #fff6ea;
-  border-radius: 8px;
-  padding: 40px;
-  margin: 0 32px 32px 32px;
+  background-color: #fff6ea; /* クリーム色 */
+  border-radius: 20px; /* 大きめの角丸（PPT品質） */
+  padding: 40px; /* しっかりした余白 */
+  margin: 16px 0 28px 0; /* 行の直下に展開 */
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08); /* 控えめな影 */
 }
 
 .panel-title {
@@ -362,13 +377,20 @@
     margin-bottom: 60px;
   }
 
+  /* モバイル：行メニューの余白調整 */
   .accordion-trigger {
-    padding: 24px 20px;
+    padding: 18px 0; /* 左右余白なし（PPT準拠） */
+  }
+  
+  .accordion-trigger:hover {
+    padding-left: 6px; /* hover時の微シフト */
   }
 
+  /* モバイル：カードの余白調整 */
   .panel-card {
     padding: 28px 24px;
-    margin: 0 20px 24px 20px;
+    margin: 12px 0 24px 0; /* 左右余白なし */
+    border-radius: 16px; /* 少し小さめの角丸 */
   }
 
   .panel-title {
