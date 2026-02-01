@@ -125,43 +125,62 @@
    =================================== */
 
 .site-footer {
-  background-color: var(--bg-ivory);
+  background-color: #f5f0e8;
   color: var(--primary-text);
-  padding: 40px 0;
+  padding: 60px 32px 40px;
   border-top: 1px solid rgba(91, 26, 6, 0.1);
+  text-align: center;
 }
 
-.footer-content {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 var(--spacing-md);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 40px;
-}
-
-.footer-left {
+.footer-top {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 12px;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
 }
 
-.footer-logo {
-  height: 50px;
+.footer-main-logo {
+  height: 80px;
   width: auto;
 }
 
-.footer-copyright {
-  font-size: 0.9rem;
-  color: var(--primary-text);
+.footer-company-name {
+  font-family: var(--font-accent);
+  font-size: 3rem;
+  font-weight: 700;
+  color: #5b1a06;
+  letter-spacing: 2px;
+  margin: 0;
+  line-height: 1;
 }
 
-.footer-center {
-  flex: 1;
+.footer-tagline {
+  font-family: var(--font-accent);
+  font-size: 1.2rem;
+  color: #734228;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.footer-middle {
+  margin-bottom: 32px;
+}
+
+.footer-copyright {
+  font-size: 0.95rem;
+  color: var(--primary-text);
+  margin: 0;
+}
+
+.footer-bottom {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+  gap: 40px;
+  flex-wrap: wrap;
 }
 
 .footer-nav {
@@ -172,7 +191,7 @@
 }
 
 .footer-nav a {
-  color: var(--primary-text);
+  color: #734228;
   text-decoration: none;
   font-size: 0.95rem;
   transition: var(--transition-fast);
@@ -183,16 +202,12 @@
   color: var(--accent-brown);
 }
 
-.footer-right {
-  display: flex;
-  align-items: center;
-}
-
 .footer-certifications {
   display: flex;
   align-items: center;
   gap: 16px;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .footer-certifications .cert-logo {
@@ -208,34 +223,58 @@
 
 /* Responsive */
 @media (max-width: 1024px) {
-  .footer-content {
+  .footer-bottom {
     flex-direction: column;
     align-items: center;
-    text-align: center;
-    gap: 32px;
+    gap: 24px;
   }
   
-  .footer-left {
-    align-items: center;
+  .footer-nav {
+    flex-direction: row;
+    gap: 16px;
+  }
+  
+  .footer-main-logo {
+    height: 60px;
+  }
+  
+  .footer-company-name {
+    font-size: 2.5rem;
+  }
+  
+  .footer-tagline {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .site-footer {
+    padding: 40px 24px 32px;
+  }
+  
+  .footer-main-logo {
+    height: 50px;
+  }
+  
+  .footer-company-name {
+    font-size: 2rem;
+  }
+  
+  .footer-tagline {
+    font-size: 1rem;
   }
   
   .footer-nav {
     flex-direction: column;
     gap: 12px;
   }
-}
-
-@media (max-width: 768px) {
+  
   .footer-certifications {
     gap: 12px;
   }
   
   .footer-certifications .cert-logo {
     height: 28px;
-  }
-  
-  .footer-logo {
-    height: 40px;
   }
 }
 
