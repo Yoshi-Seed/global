@@ -24,6 +24,8 @@
 /* 左カラム：3行メニュー */
 .how-work-menu {
   /* メニューコンテナ */
+  background: none !important;
+  background-color: transparent !important;
 }
 
 /* 右カラム：タイトル＋サブコピー（PPT：右寄り） */
@@ -65,6 +67,8 @@
 .accordion-item {
   /* 細い区切り線（PPT準拠） */
   border-bottom: 1px solid rgba(249, 229, 193, 0.55);
+  background: none !important;
+  background-color: transparent !important;
 }
 
 .accordion-item:first-child {
@@ -148,6 +152,8 @@
   overflow: hidden;
   max-height: 0;
   transition: max-height 250ms ease-out;
+  background: none !important;
+  background-color: transparent !important;
 }
 
 .accordion-panel[hidden] {
