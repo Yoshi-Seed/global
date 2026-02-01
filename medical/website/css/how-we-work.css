@@ -465,3 +465,157 @@
     padding: 10px;
   }
 }
+
+/* ===================================
+   VOICES FROM OUR PARTNERS SECTION
+   =================================== */
+
+.voices-section {
+  background-color: #b8b870;
+  padding: 80px 0;
+}
+
+.voices-section .section-title {
+  font-family: 'Times New Roman', Times, serif;
+  font-style: italic;
+  font-size: 2.5rem;
+  color: #5b1a06;
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.testimonial-card {
+  background-color: #e8e4c8;
+  border: 2px solid #7d6f4e;
+  border-radius: 12px;
+  padding: 32px;
+  position: relative;
+}
+
+.quote-mark {
+  font-family: Georgia, serif;
+  font-size: 4rem;
+  color: #5b1a06;
+  line-height: 1;
+  margin-bottom: 16px;
+}
+
+.testimonial-text {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 1.1rem;
+  color: #5b1a06;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.testimonial-author {
+  font-family: 'Times New Roman', Times, serif;
+  font-style: italic;
+  font-size: 1rem;
+  color: #5b1a06;
+  text-align: right;
+}
+
+@media (max-width: 1024px) {
+  .testimonial-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .testimonial-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  .voices-section .section-title {
+    font-size: 2rem;
+  }
+  
+  .testimonial-card {
+    padding: 24px;
+  }
+  
+  .quote-mark {
+    font-size: 3rem;
+  }
+  
+  .testimonial-text {
+    font-size: 1rem;
+  }
+}
+
+/* ===================================
+   THE PEOPLE BEHIND THE TRANSLATION SECTION
+   =================================== */
+
+.translation-section {
+  background-color: #fff6ea;
+  padding: 80px 0;
+  text-align: center;
+}
+
+.section-title-translation {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 2.5rem;
+  color: #5b1a06;
+  margin-bottom: 32px;
+}
+
+.section-title-translation em {
+  font-style: italic;
+}
+
+.section-description {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 1.2rem;
+  color: #5b1a06;
+  line-height: 1.8;
+  max-width: 900px;
+  margin: 0 auto 40px;
+}
+
+.btn-contact {
+  display: inline-block;
+  background-color: #5b1a06;
+  color: #fff6ea;
+  padding: 16px 48px;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 1.1rem;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-contact:hover {
+  background-color: #734228;
+}
+
+@media (max-width: 768px) {
+  .translation-section {
+    padding: 60px 0;
+  }
+  
+  .section-title-translation {
+    font-size: 2rem;
+  }
+  
+  .section-description {
+    font-size: 1.1rem;
+    padding: 0 20px;
+  }
+  
+  .btn-contact {
+    padding: 14px 36px;
+    font-size: 1rem;
+  }
+}
