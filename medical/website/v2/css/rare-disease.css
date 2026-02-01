@@ -1,0 +1,121 @@
+/* ===================================
+   Rare Disease page (PPT-inspired)
+   =================================== */
+
+.rare-hero {
+  background-color: var(--bg-ivory);
+  padding: calc(var(--spacing-xl) + 60px) 0 var(--spacing-lg);
+  text-align: center;
+}
+
+.rare-title {
+  font-family: 'Times New Roman', Times, serif;
+  font-weight: 400;
+  font-size: clamp(2.8rem, 5vw, 4.1rem);
+  margin: 0 0 18px 0;
+  color: #4e613f;
+}
+
+.rare-title em {
+  font-style: italic;
+}
+
+.rare-subtitle {
+  font-family: var(--font-body);
+  font-size: 1.15rem;
+  line-height: 1.75;
+  color: var(--primary-text);
+  max-width: 88ch;
+  margin: 0 auto;
+}
+
+/* Blocks */
+.rare-block {
+  padding: 70px 0;
+  background-color: var(--bg-ivory);
+}
+
+.rare-block--alt {
+  background-color: var(--bg-light-beige);
+}
+
+.rare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 44px;
+  align-items: center;
+}
+
+.rare-image img {
+  width: 100%;
+  height: 360px;
+  object-fit: cover;
+  border-radius: 18px;
+  filter: grayscale(100%);
+  opacity: 0.92;
+  border: 1px solid rgba(91, 26, 6, 0.12);
+}
+
+.rare-heading {
+  font-family: 'Times New Roman', Times, serif;
+  font-weight: 400;
+  font-size: 2.4rem;
+  margin: 0 0 14px 0;
+  color: var(--primary-text);
+}
+
+.rare-copy p {
+  font-family: var(--font-body);
+  line-height: 1.75;
+  color: var(--primary-text);
+  margin: 0 0 14px 0;
+}
+
+.rare-bullets {
+  margin: 0 0 22px 0;
+  padding-left: 20px;
+  font-family: var(--font-body);
+  color: var(--primary-text);
+  line-height: 1.8;
+}
+
+.rare-bullets li + li {
+  margin-top: 10px;
+}
+
+.rare-btn {
+  margin-top: 8px;
+}
+
+/* CTA */
+.rare-cta {
+  background-color: #b5bf84;
+  padding: 80px 0;
+  text-align: center;
+}
+
+.rare-cta .cta-title {
+  font-family: 'Times New Roman', Times, serif;
+  font-weight: 400;
+  font-size: 2.8rem;
+  margin: 0 0 14px 0;
+  color: var(--primary-text);
+}
+
+.rare-cta .cta-text {
+  font-family: var(--font-body);
+  margin: 0 auto 26px;
+  max-width: 75ch;
+  line-height: 1.75;
+  color: var(--primary-text);
+}
+
+@media (max-width: 1024px) {
+  .rare-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .rare-image img {
+    height: 300px;
+  }
+}

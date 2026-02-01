@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Japan fact sheet detail page. Download PDFs and explore related topics.">
+  <title>Fact Sheet | Seed Planning</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/fact-sheet.css">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/sp_logo_top_shape_only.png">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-container">
+      <nav class="main-nav" aria-label="Primary navigation">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="how-we-work.html">How we work</a></li>
+          <li><a href="rare-disease.html">Rare disease</a></li>
+          <li><a href="insights.html" class="active">Japan fact sheets</a></li>
+          <li><a href="about-us.html">About team</a></li>
+          <li><a href="request-report.html">Contact us</a></li>
+        </ul>
+      </nav>
+
+      <button class="menu-toggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- HERO -->
+    <section class="factsheet-hero">
+      <div class="factsheet-hero-text">
+        <div class="factsheet-hero-inner">
+          <p id="fsTopic" class="hero-topic">Topic area</p>
+          <h1 id="fsTitle" class="hero-title">Loading…</h1>
+          <p id="fsSubtitle" class="hero-subtitle"></p>
+
+          <div id="fsTags" class="hero-tags" aria-label="Tags"></div>
+
+          <a id="fsDownloadTop" class="btn-download" href="#" target="_blank" rel="noopener noreferrer">Download now</a>
+        </div>
+      </div>
+
+      <div class="factsheet-hero-image">
+        <img id="fsHeroImage" src="assets/seed_discussion.png" alt="">
+      </div>
+    </section>
+
+    <!-- CONTENT -->
+    <section class="factsheet-content">
+      <div class="container factsheet-columns">
+        <div class="factsheet-col">
+          <h2 class="content-heading">Key points</h2>
+          <ul id="fsKeyPoints" class="bullet-list"></ul>
+        </div>
+
+        <div class="factsheet-col">
+          <h2 class="content-heading">Suggested questions</h2>
+          <ul id="fsQuestions" class="bullet-list"></ul>
+
+          <div class="download-box">
+            <a id="fsDownloadBottom" class="btn-download btn-download--solid" href="#" target="_blank" rel="noopener noreferrer">
+              Download now
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RELATED -->
+    <section class="related-section">
+      <div class="container">
+        <h2 class="related-title">You may also like…</h2>
+        <div id="relatedGrid" class="related-grid"></div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="factsheet-cta">
+      <div class="container cta-inner">
+        <h2 class="cta-title">Navigating Japan’s market?</h2>
+        <p class="cta-text">Tell us your therapy area, audience, and timeline — we’ll suggest the right research approach.</p>
+        <a href="request-report.html" class="btn btn-primary">Request a specific topic</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-top">
+      <img src="assets/seed_planning_logo.png" alt="Seed Planning Co., Ltd." class="footer-main-logo">
+      <h2 class="footer-company-name">SEED PLANNING</h2>
+      <p class="footer-tagline">Market Research &amp; Consulting</p>
+    </div>
+
+    <div class="footer-middle">
+      <p class="footer-copyright">&copy; 2026 Seed Planning Co., Ltd.</p>
+    </div>
+
+    <div class="footer-bottom">
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <a href="how-we-work.html">How we work</a>
+        <a href="rare-disease.html">Rare disease</a>
+        <a href="insights.html">Japan fact sheets</a>
+        <a href="about-us.html">About team</a>
+        <a href="request-report.html">Contact us</a>
+      </nav>
+
+      <div class="footer-certifications" aria-label="Certifications and memberships">
+        <img src="assets/esomar.png" alt="ESOMAR" class="cert-logo">
+        <img src="assets/ephmra.png" alt="EphMRA" class="cert-logo">
+        <img src="assets/ISO27001.png" alt="ISO 27001" class="cert-logo">
+        <img src="assets/privacy_mark.png" alt="Privacy Mark" class="cert-logo">
+        <img src="assets/jmra_member.png" alt="JMRA" class="cert-logo">
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
+  <script src="js/fact-sheets-data.js"></script>
+  <script src="js/fact-sheet-page.js"></script>
+</body>
+</html>

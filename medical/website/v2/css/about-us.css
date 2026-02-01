@@ -1,0 +1,239 @@
+/* ===================================
+   About Team Page (PPT-inspired, implementation-friendly)
+   =================================== */
+
+.about-hero {
+  background-color: var(--bg-ivory);
+  padding: calc(var(--spacing-xl) + 60px) 0 var(--spacing-lg);
+  text-align: center;
+}
+
+.about-title {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: clamp(2.8rem, 5vw, 4.2rem);
+  font-weight: 400;
+  color: var(--primary-text);
+  margin: 0 0 16px 0;
+  letter-spacing: -0.01em;
+}
+
+.about-subtitle {
+  font-family: var(--font-body);
+  font-size: 1.15rem;
+  color: var(--primary-text);
+  margin: 0 auto 28px;
+  max-width: 70ch;
+  line-height: 1.7;
+}
+
+.about-actions {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.about-actions .btn {
+  padding: 14px 20px;
+}
+
+/* Team carousel */
+.team-section {
+  background-color: var(--bg-ivory);
+  padding: var(--spacing-lg) 0 var(--spacing-xl);
+}
+
+.team-carousel .carousel-slide {
+  padding: 0;
+}
+
+.team-card {
+  max-width: 980px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 32px;
+  align-items: center;
+  padding: 26px 10px;
+}
+
+.team-meta {
+  text-align: left;
+}
+
+.team-name {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 2.1rem;
+  font-weight: 400;
+  color: var(--primary-text);
+  margin: 0 0 10px 0;
+}
+
+.team-role {
+  font-family: var(--font-body);
+  font-size: 1.15rem;
+  color: var(--primary-text);
+  margin: 0;
+}
+
+.team-photo img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 18px;
+  filter: grayscale(100%);
+  opacity: 0.92;
+  border: 1px solid rgba(91, 26, 6, 0.12);
+}
+
+/* Moderators */
+.moderators-section {
+  background-color: var(--bg-ivory);
+  padding-bottom: var(--spacing-xl);
+}
+
+.moderators-hero {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  min-height: 360px;
+  display: flex;
+  align-items: stretch;
+}
+
+.moderators-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 246, 234, 0.58);
+}
+
+.moderators-hero-inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.moderators-text {
+  max-width: 760px;
+  padding: 40px 0;
+}
+
+.moderators-title {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: clamp(2.4rem, 4.2vw, 3.6rem);
+  font-weight: 400;
+  color: #4e613f;
+  margin: 0 0 16px 0;
+}
+
+.moderators-title em {
+  font-style: italic;
+}
+
+.moderators-subtitle {
+  font-family: var(--font-body);
+  font-size: 1.15rem;
+  color: #4e613f;
+  margin: 0;
+  line-height: 1.7;
+}
+
+.moderators-trigger {
+  position: absolute;
+  left: 50%;
+  bottom: -22px;
+  transform: translateX(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  border: 2px solid rgba(78, 97, 63, 0.35);
+  background: var(--bg-ivory);
+  color: #4e613f;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 180ms ease-out, box-shadow 180ms ease-out;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.moderators-trigger:hover {
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.12);
+  transform: translateX(-50%) translateY(-1px);
+}
+
+.moderators-trigger-icon {
+  font-size: 1.35rem;
+  line-height: 1;
+  transform: rotate(0deg);
+  transition: transform 180ms ease-out;
+}
+
+.moderators-trigger[aria-expanded="true"] .moderators-trigger-icon {
+  transform: rotate(180deg);
+}
+
+.moderators-content {
+  padding-top: 44px;
+  background-color: var(--bg-light-beige);
+}
+
+.moderators-table-wrap {
+  overflow-x: auto;
+  background: var(--bg-ivory);
+  border-radius: 18px;
+  border: 1px solid rgba(78, 97, 63, 0.18);
+}
+
+.moderators-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 760px;
+}
+
+.moderators-table th,
+.moderators-table td {
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(91, 26, 6, 0.10);
+  text-align: left;
+  vertical-align: top;
+}
+
+.moderators-table th {
+  font-family: var(--font-body);
+  font-weight: 700;
+  color: #4e613f;
+  background: rgba(181, 191, 132, 0.22);
+}
+
+.moderators-table td {
+  font-family: var(--font-body);
+  color: var(--primary-text);
+  line-height: 1.6;
+}
+
+.moderators-note {
+  font-family: var(--font-body);
+  color: var(--primary-text);
+  margin: 18px 0 0;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .team-card {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .team-meta {
+    text-align: center;
+  }
+
+  .team-photo img {
+    height: 260px;
+  }
+}
