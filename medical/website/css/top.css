@@ -28,33 +28,25 @@
   object-fit: cover;
   object-position: 65% 55%;
   transform: scale(1.05);
+  filter: none;
+  opacity: 1;
 }
 
 .hero-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 0.15) 0%,
-    rgba(0, 0, 0, 0.08) 50%,
-    rgba(0, 0, 0, 0) 100%
-  );
-  z-index: 2;
+  display: none;
 }
 
 .hero-logo {
   position: absolute;
   top: 24px;
   right: 32px;
-  z-index: 4;
+  z-index: 10;
   transition: opacity 0.3s ease;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
 }
 
 .hero-logo img {
-  height: 48px;
+  height: 90px;
   width: auto;
   display: block;
 }
@@ -86,6 +78,7 @@
   max-width: 12ch; /* 2行で気持ちよく折れる */
   margin-bottom: var(--spacing-md);
   color: #f9e5c1; /* PPT準拠：クリーム色（白はNG） */
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
 .hero-title .italic {
@@ -98,6 +91,7 @@
   line-height: 1.6; /* 余白優先 */
   margin-bottom: var(--spacing-md);
   color: #f9e5c1; /* PPT準拠：クリーム色 */
+  text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.7), 0 0 15px rgba(0, 0, 0, 0.5);
 }
 
 .hero-question {
@@ -107,6 +101,7 @@
   margin-top: var(--spacing-sm); /* 詰めない */
   margin-bottom: var(--spacing-lg);
   color: #f9e5c1; /* PPT準拠：クリーム色 */
+  text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.7), 0 0 15px rgba(0, 0, 0, 0.5);
 }
 
 .hero-question em {
@@ -754,7 +749,7 @@
   }
   
   .hero-logo img {
-    height: 40px;
+    height: 75px;
   }
 }
 
@@ -767,7 +762,7 @@
   }
   
   .hero-logo img {
-    height: 32px;
+    height: 60px;
   }
   
   .content-header h2 {
