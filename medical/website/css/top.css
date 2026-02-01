@@ -26,7 +26,8 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  object-position: 65% 55%;
+  transform: scale(1.05);
 }
 
 .hero-overlay {
@@ -37,11 +38,29 @@
   height: 100%;
   background: linear-gradient(
     to right,
-    rgba(0, 0, 0, 0.6) 0%,
-    rgba(0, 0, 0, 0.3) 50%,
+    rgba(0, 0, 0, 0.15) 0%,
+    rgba(0, 0, 0, 0.08) 50%,
     rgba(0, 0, 0, 0) 100%
   );
   z-index: 2;
+}
+
+.hero-logo {
+  position: absolute;
+  top: 24px;
+  right: 32px;
+  z-index: 4;
+  transition: opacity 0.3s ease;
+}
+
+.hero-logo img {
+  height: 48px;
+  width: auto;
+  display: block;
+}
+
+.hero-logo:hover {
+  opacity: 0.9;
 }
 
 .hero-content {
@@ -728,10 +747,28 @@
     text-align: center;
     max-width: 100%;
   }
+  
+  .hero-logo {
+    top: 16px;
+    right: 16px;
+  }
+  
+  .hero-logo img {
+    height: 40px;
+  }
 }
 
 @media (max-width: 768px) {
   /* hero-titleはclampで自動調整されるため、固定値は不要 */
+  
+  .hero-logo {
+    top: 12px;
+    right: 12px;
+  }
+  
+  .hero-logo img {
+    height: 32px;
+  }
   
   .content-header h2 {
     font-size: 2rem;
