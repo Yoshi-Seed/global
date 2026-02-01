@@ -28,6 +28,8 @@
   object-fit: cover;
   object-position: 65% 55%;
   transform: scale(1.05);
+  filter: none;
+  opacity: 1;
 }
 
 .hero-overlay {
