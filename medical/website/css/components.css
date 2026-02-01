@@ -23,11 +23,6 @@
   backdrop-filter: blur(10px);
 }
 
-/* scrolled時はロゴのshadowを軽減（白背景なので） */
-.site-header.scrolled .site-logo img {
-  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.15));
-}
-
 .site-header.scrolled .main-nav a {
   color: var(--primary-text);
   text-shadow: none;
@@ -498,11 +493,7 @@
 @media (max-width: 768px) {
   /* モバイル：ハンバーガーとロゴの配置を維持 */
   .header-container {
-    justify-content: space-between; /* モバイルでは両端配置 */
-  }
-  
-  .site-logo {
-    order: 1; /* モバイル：ロゴを左 */
+    justify-content: center; /* Center navigation in mobile */
   }
   
   .menu-toggle {
