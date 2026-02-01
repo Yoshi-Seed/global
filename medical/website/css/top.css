@@ -46,7 +46,7 @@
 }
 
 .hero-logo img {
-  height: 60px;
+  height: 90px;
   width: auto;
   display: block;
 }
@@ -749,7 +749,7 @@
   }
   
   .hero-logo img {
-    height: 50px;
+    height: 75px;
   }
 }
 
@@ -762,7 +762,7 @@
   }
   
   .hero-logo img {
-    height: 40px;
+    height: 60px;
   }
   
   .content-header h2 {
