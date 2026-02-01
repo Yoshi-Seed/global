@@ -322,54 +322,53 @@
   cursor: pointer;
 }
 
+/* モーダルコンテンツ：画面の80%サイズ */
 .modal-content {
   position: relative;
   z-index: 10000;
-  max-width: 95vw;
-  max-height: 95vh;
-  padding: 20px;
+  width: 80vw;           /* 画面幅の80%（固定） */
+  max-width: 1400px;     /* 最大幅 */
+  max-height: 85vh;      /* 画面高さの85% */
+  padding: 40px;         /* たっぷりパディング */
   background-color: #fff6ea;
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  overflow: auto; /* モバイルで横スクロール可能 */
+  overflow: hidden;      /* 内部でスクロール */
 }
 
 /* モーダル内のSVGコンテナ */
 .modal-svg-container {
   width: 100%;
-  overflow-x: auto; /* 横スクロール可能 */
+  max-height: calc(85vh - 80px); /* パディング40px×2を引く */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;        /* 横スクロール可能 */
 }
 
-/* モーダル内のSVGサイズ調整 */
+/* モーダル内のSVG：大きく表示 */
 .modal-svg-container svg {
-  /* デフォルト: 元のサイズを維持（拡大表示） */
-  width: auto;
+  width: 100%;           /* コンテナいっぱいに拡大 */
   height: auto;
-  max-width: 100%;
-  /* SVGの実際のサイズに基づく表示 */
+  min-width: 1000px;     /* 最小幅を確保（元のSVGサイズ） */
 }
 
 /* モバイル: SVGの最小幅を確保してスクロールさせる */
 @media (max-width: 768px) {
-  .modal-svg-container svg {
-    min-width: 800px; /* スマホでもこの幅を確保＝文字が読める */
-    height: auto;
-  }
-}
-
-/* デスクトップ大画面: より大きく表示 */
-@media (min-width: 1200px) {
   .modal-content {
-    max-width: 90vw;
+    width: 95vw;         /* モバイルは95% */
     max-height: 90vh;
+    padding: 20px;
+  }
+  
+  .modal-svg-container {
+    max-height: calc(90vh - 40px); /* モバイルパディング20px×2 */
   }
   
   .modal-svg-container svg {
-    /* 大画面では元のサイズまたはそれ以上に拡大 */
-    width: auto;
+    min-width: 800px;    /* スマホでもこの幅を確保＝文字が読める */
+    width: 100%;
     height: auto;
-    max-width: none; /* 制限なし */
-    max-height: 80vh; /* 画面の80%まで */
   }
 }
 
