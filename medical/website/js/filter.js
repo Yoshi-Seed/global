@@ -118,7 +118,7 @@ class InsightsFilter {
   updateResultsCount(count) {
     const resultsCounter = document.querySelector('#results-count');
     if (resultsCounter) {
-      resultsCounter.textContent = `Showing ${count} of ${this.insightCards.length} insights`;
+      resultsCounter.textContent = `Showing ${count} of ${this.insightCards.length} fact sheets`;
     }
   }
   
@@ -156,15 +156,14 @@ function initSearchSuggestions() {
   
   const suggestions = [
     'Patient recruitment',
-    'HCP research',
-    'Rare diseases',
+    'HCP interviews',
+    'Pricing & reimbursement',
+    'Market access',
+    'Annual health check-up',
+    'Japan vs US',
     'Oncology',
-    'Cardiology',
-    'Feasibility',
-    'Advisory boards',
-    'Qualitative research',
-    'Japan market',
-    'APAC region'
+    'Privacy / APPI',
+    'Fieldwork timeline'
   ];
   
   const suggestionsList = document.createElement('div');

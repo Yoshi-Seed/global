@@ -86,7 +86,7 @@
 }
 
 .hero-subtitle {
-  font-family: 'Helvetica', Arial, sans-serif; /* PPT準拠 */
+  font-family: var(--font-body); /* PPT準拠 */
   font-size: clamp(1rem, 1.8vw, 1.375rem); /* 16px〜22px */
   line-height: 1.6; /* 余白優先 */
   margin-bottom: var(--spacing-md);
@@ -95,7 +95,7 @@
 }
 
 .hero-question {
-  font-family: 'Helvetica', Arial, sans-serif; /* PPT準拠 */
+  font-family: var(--font-body); /* PPT準拠 */
   font-size: clamp(0.9rem, 1.5vw, 1.1rem); /* 控えめサイズ */
   line-height: 1.6;
   margin-top: var(--spacing-sm); /* 詰めない */
@@ -113,12 +113,12 @@
   padding: 1rem 2.5rem;
   background-color: #444f0c; /* PPT準拠：深い緑 */
   color: #f9e5c1; /* PPT準拠：クリーム色 */
-  font-family: 'Helvetica', Arial, sans-serif;
+  font-family: var(--font-body);
   font-size: 1rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border-radius: 10px; /* 控えめな角丸 */
+  border-radius: 9999px; /* 控えめな角丸 */
   transition: all 0.18s ease-out; /* 150-200ms */
   border: none;
   cursor: pointer;
@@ -493,7 +493,7 @@
 
 /* サブコピー：Helvetica + #5b1a06 */
 .gbu-subtitle {
-  font-family: 'Helvetica', Arial, sans-serif;
+  font-family: var(--font-body);
   font-size: clamp(1rem, 2vw, 1.15rem);
   font-weight: 400;
   color: #5b1a06;
@@ -714,6 +714,26 @@
 .contact-image img {
   width: 100%;
   border-radius: 8px;
+}
+
+.contact-details {
+  margin-top: 1.25rem;
+  padding: 1rem;
+  background: rgba(255, 246, 234, 0.85);
+  border: 1px solid rgba(91, 26, 6, 0.15);
+  border-radius: 8px;
+}
+
+.contact-details p {
+  margin: 0 0 0.9rem;
+}
+
+.contact-details p:last-child {
+  margin-bottom: 0;
+}
+
+.contact-details a {
+  text-decoration: underline;
 }
 
 .contact-form {

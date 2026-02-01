@@ -3,21 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Research Insights - Seed Planning Global Medical Research">
-  <title>Insights | Seed Planning</title>
-  
+  <meta name="description" content="Japan research fact sheets for global medical teams. Practical guidance on healthcare market research in Japan — recruitment, market access, HCP and patient research.">
+  <title>Japan Research Fact Sheets | Seed Planning</title>
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+
   <!-- Styles -->
   <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/insights.css">
   
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="../assets/sp_logo_top_shape_only.png">
+  <link rel="icon" type="image/png" href="assets/sp_logo_top_shape_only.png">
 </head>
 <body>
   <!-- HEADER -->
@@ -45,9 +44,9 @@
   <!-- HERO SECTION -->
   <section class="insights-hero-section">
     <div class="container">
-      <h1>Research <span class="italic">Insights</span></h1>
+      <h1>Japan Research <span class="italic">Fact Sheets</span></h1>
       <p class="subtitle">
-        Discover our latest findings and thought leadership in medical research
+        Practical guidance you can reuse — built for global teams planning healthcare research in Japan.
       </p>
     </div>
   </section>
@@ -57,7 +56,7 @@
     <div class="container">
       <div class="filter-panel">
         <div class="filter-header">
-          <h3 class="montserrat-bold">Find Insights</h3>
+          <h3 class="montserrat-bold">Find Fact Sheets</h3>
           <button id="clear-filters" class="btn-link">Clear all filters</button>
         </div>
         
@@ -67,39 +66,39 @@
             <input 
               type="text" 
               id="search-input" 
-              placeholder="Search insights by keyword..."
-              aria-label="Search insights">
+              placeholder="Search fact sheets by keyword..."
+              aria-label="Search fact sheets">
           </div>
           
           <div class="filter-group">
             <label for="topic-area-filter">Topic Area</label>
             <select id="topic-area-filter" multiple size="1">
               <option value="">All Topics</option>
-              <option value="patient-research">Patient Research</option>
+              <option value="methodology">Methodology &amp; Operations</option>
               <option value="hcp-research">HCP Research</option>
+              <option value="patient-research">Patient Research</option>
               <option value="healthcare-system">Healthcare System</option>
-              <option value="compliance">Compliance</option>
-              <option value="market-access">Market Access</option>
+              <option value="market-access">Market Access &amp; Pricing</option>
             </select>
           </div>
           
           <div class="tags-group">
             <label>Popular Tags</label>
             <div id="tags-container" class="tags-list">
-              <button class="filter-tag" data-tag="oncology">Oncology</button>
-              <button class="filter-tag" data-tag="rare-diseases">Rare Diseases</button>
-              <button class="filter-tag" data-tag="cardiology">Cardiology</button>
               <button class="filter-tag" data-tag="japan">Japan</button>
-              <button class="filter-tag" data-tag="apac">APAC</button>
-              <button class="filter-tag" data-tag="patient-recruitment">Patient Recruitment</button>
-              <button class="filter-tag" data-tag="feasibility">Feasibility</button>
-              <button class="filter-tag" data-tag="advisory-boards">Advisory Boards</button>
+              <button class="filter-tag" data-tag="recruitment">Recruitment</button>
+              <button class="filter-tag" data-tag="market-access">Market access</button>
+              <button class="filter-tag" data-tag="pricing">Pricing</button>
+              <button class="filter-tag" data-tag="hcp">HCP</button>
+              <button class="filter-tag" data-tag="patients">Patients</button>
+              <button class="filter-tag" data-tag="oncology">Oncology</button>
+              <button class="filter-tag" data-tag="compliance">Compliance</button>
             </div>
           </div>
         </div>
         
         <div class="results-info">
-          <p id="results-count">Showing all insights</p>
+          <p id="results-count">Showing all fact sheets</p>
         </div>
       </div>
     </div>
@@ -108,7 +107,7 @@
   <!-- FEATURED INSIGHTS CAROUSEL -->
   <section class="featured-section bg-gray-green">
     <div class="container">
-      <h2 class="text-light text-center">Featured Reports</h2>
+      <h2 class="text-light text-center">English Report Summaries</h2>
       
       <div class="carousel" data-autoplay="true" data-interval="6000">
         <div class="carousel-container">
@@ -117,22 +116,22 @@
             <div class="featured-card">
               <div class="featured-content">
                 <span class="topic-badge">HCP Research</span>
-                <h3 class="montserrat-bold">Understanding Prescribing Behaviors in Oncology</h3>
+                <h3 class="montserrat-bold">Japanese Physicians’ Prescribing Behaviors &amp; Psychology</h3>
                 <p class="featured-summary">
-                  A comprehensive study of oncology specialists across APAC markets, exploring treatment decision-making factors, information sources, and unmet needs in cancer care.
+                  A practical primer on what drives prescribing decisions in Japan — information sources, clinical constraints, and how context shapes “real-world” choices.
                 </p>
                 <div class="featured-tags">
-                  <span class="tag">Oncology</span>
-                  <span class="tag">APAC</span>
-                  <span class="tag">HCP Insights</span>
+                  <span class="tag">Japan</span>
+                  <span class="tag">HCP</span>
+                  <span class="tag">Prescribing</span>
                 </div>
                 <div class="featured-actions">
-                  <a href="#" class="btn btn-secondary">Learn More</a>
-                  <a href="request-report.html" class="btn btn-tertiary">Request Full Report</a>
+                  <a href="pdf/Japanese_Physicians_Prescribing_Behaviors_&_Psychology.pdf" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">Download PDF</a>
+                  <a href="request-report.html" class="btn btn-tertiary">Contact us</a>
                 </div>
               </div>
               <div class="featured-image">
-                <img src="../assets/seed_discussion.png" alt="HCP Research">
+                <img src="assets/seed_discussion.png" alt="HCP Research">
               </div>
             </div>
           </div>
@@ -142,22 +141,22 @@
             <div class="featured-card">
               <div class="featured-content">
                 <span class="topic-badge">Patient Research</span>
-                <h3 class="montserrat-bold">Patient Journey Mapping in Rare Diseases</h3>
+                <h3 class="montserrat-bold">Optimizing Patient Recruitment Strategies in the Japanese Market</h3>
                 <p class="featured-summary">
-                  In-depth qualitative research with rare disease patients revealing critical touchpoints, barriers to care, and opportunities for improved patient support programs.
+                  What tends to work (and what often doesn’t) when recruiting patients in Japan — channels, partner models, timelines, and practical ethics considerations.
                 </p>
                 <div class="featured-tags">
-                  <span class="tag">Rare Diseases</span>
-                  <span class="tag">Patient Journey</span>
-                  <span class="tag">Qualitative</span>
+                  <span class="tag">Recruitment</span>
+                  <span class="tag">Patients</span>
+                  <span class="tag">Japan</span>
                 </div>
                 <div class="featured-actions">
-                  <a href="#" class="btn btn-secondary">Learn More</a>
-                  <a href="request-report.html" class="btn btn-tertiary">Request Full Report</a>
+                  <a href="pdf/Optimizing_Patient_Recruitment_Strategies_in_the_Japanese_Market.pdf" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">Download PDF</a>
+                  <a href="request-report.html" class="btn btn-tertiary">Contact us</a>
                 </div>
               </div>
               <div class="featured-image">
-                <img src="../assets/patient_care.png" alt="Patient Research">
+                <img src="assets/patient_care.png" alt="Patient Research">
               </div>
             </div>
           </div>
@@ -166,23 +165,23 @@
           <div class="carousel-slide">
             <div class="featured-card">
               <div class="featured-content">
-                <span class="topic-badge">Healthcare System</span>
-                <h3 class="montserrat-bold">Market Access Pathways in Japan</h3>
+                <span class="topic-badge">Market Access</span>
+                <h3 class="montserrat-bold">Japan’s Drug Reimbursement and Pricing Process</h3>
                 <p class="featured-summary">
-                  Strategic analysis of reimbursement processes, pricing dynamics, and stakeholder engagement strategies for successful product launch in the Japanese market.
+                  A plain-English overview of the reimbursement and pricing flow in Japan — useful for global teams planning launch strategy and stakeholder engagement.
                 </p>
                 <div class="featured-tags">
-                  <span class="tag">Japan</span>
-                  <span class="tag">Market Access</span>
+                  <span class="tag">Pricing</span>
                   <span class="tag">Reimbursement</span>
+                  <span class="tag">Japan</span>
                 </div>
                 <div class="featured-actions">
-                  <a href="#" class="btn btn-secondary">Learn More</a>
-                  <a href="request-report.html" class="btn btn-tertiary">Request Full Report</a>
+                  <a href="pdf/Japans_Drug_Reimbursement_and_Pricing_Process.pdf" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">Download PDF</a>
+                  <a href="request-report.html" class="btn btn-tertiary">Contact us</a>
                 </div>
               </div>
               <div class="featured-image">
-                <img src="../assets/seed_consultation.png" alt="Market Access">
+                <img src="assets/seed_consultation.png" alt="Market Access">
               </div>
             </div>
           </div>
@@ -194,139 +193,216 @@
   <!-- INSIGHTS GRID -->
   <section class="insights-grid-section bg-ivory">
     <div class="container">
-      <h2 class="text-center">All Insights</h2>
+      <h2 class="text-center">All Fact Sheets</h2>
       
       <div class="insights-grid">
-        <!-- Insight Card 1 -->
         <article class="insight-card" 
-                 data-title="Recruitment Strategies for Rare Disease Studies"
-                 data-topic="patient-research"
-                 data-tags="rare-diseases, patient-recruitment, global">
-          <span class="topic-badge-small">Patient Research</span>
-          <h3 class="montserrat">Recruitment Strategies for Rare Disease Studies</h3>
+                 data-title="Conducting Physician Market Research in Japan"
+                 data-topic="methodology"
+                 data-tags="japan,hcp,compliance">
+          <span class="topic-badge-small">Methodology</span>
+          <h3 class="montserrat">Conducting Physician Market Research in Japan</h3>
           <p class="insight-excerpt">
-            Best practices for identifying and engaging rare disease patients across multiple markets. Includes case studies from successful recruitment campaigns.
+            A practical guide for international teams: how to design, recruit, moderate, and report physician research in Japan — with common pitfalls and how to avoid them.
           </p>
           <div class="insight-meta">
-            <span class="date">January 2026</span>
-            <span class="read-time">8 min read</span>
-          </div>
-          <div class="insight-tags">
-            <span class="tag-small">Rare Diseases</span>
-            <span class="tag-small">Patient Recruitment</span>
-            <span class="tag-small">Global</span>
-          </div>
-          <a href="#" class="btn-link">Read More →</a>
-        </article>
-
-        <!-- Insight Card 2 -->
-        <article class="insight-card" 
-                 data-title="Digital Health Adoption Among Japanese HCPs"
-                 data-topic="hcp-research"
-                 data-tags="japan, digital-health, hcp-insights">
-          <span class="topic-badge-small">HCP Research</span>
-          <h3 class="montserrat">Digital Health Adoption Among Japanese HCPs</h3>
-          <p class="insight-excerpt">
-            Survey findings on digital health tool usage, preferences, and barriers among healthcare professionals in Japan's evolving healthcare landscape.
-          </p>
-          <div class="insight-meta">
-            <span class="date">December 2025</span>
-            <span class="read-time">6 min read</span>
+            <span class="date">PDF fact sheet</span>
+            <span class="read-time">English</span>
           </div>
           <div class="insight-tags">
             <span class="tag-small">Japan</span>
-            <span class="tag-small">Digital Health</span>
-            <span class="tag-small">HCP Insights</span>
-          </div>
-          <a href="#" class="btn-link">Read More →</a>
-        </article>
-
-        <!-- Insight Card 3 -->
-        <article class="insight-card" 
-                 data-title="Feasibility Assessment Framework"
-                 data-topic="healthcare-system"
-                 data-tags="feasibility, methodology, apac">
-          <span class="topic-badge-small">Healthcare System</span>
-          <h3 class="montserrat">Feasibility Assessment Framework</h3>
-          <p class="insight-excerpt">
-            A comprehensive guide to conducting effective feasibility studies, with insights from over 100 assessments across APAC markets.
-          </p>
-          <div class="insight-meta">
-            <span class="date">November 2025</span>
-            <span class="read-time">10 min read</span>
-          </div>
-          <div class="insight-tags">
-            <span class="tag-small">Feasibility</span>
-            <span class="tag-small">Methodology</span>
-            <span class="tag-small">APAC</span>
-          </div>
-          <a href="#" class="btn-link">Read More →</a>
-        </article>
-
-        <!-- Insight Card 4 -->
-        <article class="insight-card" 
-                 data-title="Compliance Best Practices in Medical Research"
-                 data-topic="compliance"
-                 data-tags="compliance, ich-gcp, regulatory">
-          <span class="topic-badge-small">Compliance</span>
-          <h3 class="montserrat">Compliance Best Practices in Medical Research</h3>
-          <p class="insight-excerpt">
-            Essential compliance considerations for medical research, covering ICH-GCP guidelines, data protection regulations, and ethical standards.
-          </p>
-          <div class="insight-meta">
-            <span class="date">October 2025</span>
-            <span class="read-time">12 min read</span>
-          </div>
-          <div class="insight-tags">
+            <span class="tag-small">HCP</span>
             <span class="tag-small">Compliance</span>
-            <span class="tag-small">ICH-GCP</span>
-            <span class="tag-small">Regulatory</span>
           </div>
-          <a href="#" class="btn-link">Read More →</a>
+          <a href="pdf/Conducting_Physician_Market_Research_in_Japan-A_Comprehensive_Guide_for_International_Teams.pdf" class="btn-link" target="_blank" rel="noopener noreferrer">Download PDF →</a>
         </article>
 
-        <!-- Insight Card 5 -->
         <article class="insight-card" 
-                 data-title="Patient-Centric Trial Design in Oncology"
-                 data-topic="patient-research"
-                 data-tags="oncology, patient-recruitment, trial-design">
-          <span class="topic-badge-small">Patient Research</span>
-          <h3 class="montserrat">Patient-Centric Trial Design in Oncology</h3>
+                 data-title="Tips for Healthcare Market Research in Japan"
+                 data-topic="methodology"
+                 data-tags="japan,compliance,hcp">
+          <span class="topic-badge-small">Methodology</span>
+          <h3 class="montserrat">Tips for Healthcare MR in Japan</h3>
           <p class="insight-excerpt">
-            How patient insights are shaping clinical trial design in oncology, improving recruitment, retention, and patient experience.
+            A quick, reusable checklist for planning and executing Japan healthcare research — from screening nuance to incentive norms and reporting expectations.
           </p>
           <div class="insight-meta">
-            <span class="date">September 2025</span>
-            <span class="read-time">9 min read</span>
+            <span class="date">PDF fact sheet</span>
+            <span class="read-time">English</span>
           </div>
           <div class="insight-tags">
-            <span class="tag-small">Oncology</span>
-            <span class="tag-small">Patient Recruitment</span>
-            <span class="tag-small">Trial Design</span>
+            <span class="tag-small">Japan</span>
+            <span class="tag-small">Compliance</span>
+            <span class="tag-small">HCP</span>
           </div>
-          <a href="#" class="btn-link">Read More →</a>
+          <a href="pdf/Tips_for_Healthcare_MR_in_Japan.pdf" class="btn-link" target="_blank" rel="noopener noreferrer">Download PDF →</a>
         </article>
 
-        <!-- Insight Card 6 -->
         <article class="insight-card" 
-                 data-title="Advisory Board Best Practices"
+                 data-title="Japan Market Brief: Navigating structural, cultural, and operational complexities"
+                 data-topic="healthcare-system"
+                 data-tags="japan,compliance,market-access">
+          <span class="topic-badge-small">Healthcare System</span>
+          <h3 class="montserrat">Japan Market Brief: Structural, Cultural &amp; Operational Complexities</h3>
+          <p class="insight-excerpt">
+            An orientation-style brief for global teams — what tends to surprise first-time researchers, and how to plan timelines and stakeholder alignment realistically.
+          </p>
+          <div class="insight-meta">
+            <span class="date">PDF fact sheet</span>
+            <span class="read-time">English</span>
+          </div>
+          <div class="insight-tags">
+            <span class="tag-small">Japan</span>
+            <span class="tag-small">Compliance</span>
+            <span class="tag-small">Market access</span>
+          </div>
+          <a href="pdf/Japan_Market_Brief_Navigating_Structural_Cultural_and_Operational_Complexities_in_Pharmaceutical_Market_Research.pdf" class="btn-link" target="_blank" rel="noopener noreferrer">Download PDF →</a>
+        </article>
+
+        <article class="insight-card" 
+                 data-title="Japan's Annual Health Check-up System"
+                 data-topic="healthcare-system"
+                 data-tags="japan,patients,hcp">
+          <span class="topic-badge-small">Healthcare System</span>
+          <h3 class="montserrat">Japan’s Annual Health Check-up System</h3>
+          <p class="insight-excerpt">
+            How the annual check-up system works, why it matters for patient behavior and care pathways, and what it can mean for research design and interpretation.
+          </p>
+          <div class="insight-meta">
+            <span class="date">PDF fact sheet</span>
+            <span class="read-time">English</span>
+          </div>
+          <div class="insight-tags">
+            <span class="tag-small">Japan</span>
+            <span class="tag-small">Patients</span>
+            <span class="tag-small">HCP</span>
+          </div>
+          <a href="pdf/Japans_Annual_Health_Check-up_System_Overview_and_Insights_for_Pharma_Market.pdf" class="btn-link" target="_blank" rel="noopener noreferrer">Download PDF →</a>
+        </article>
+
+        <article class="insight-card" 
+                 data-title="Japan vs US Pharmaceutical Environment"
+                 data-topic="market-access"
+                 data-tags="japan,market-access,pricing">
+          <span class="topic-badge-small">Market Access</span>
+          <h3 class="montserrat">Japan vs US: Key Differences in Prescribing &amp; Market Access</h3>
+          <p class="insight-excerpt">
+            A comparison designed for alignment: key differences in prescribing dynamics, payer reality, and access pathways that can affect messaging and research interpretation.
+          </p>
+          <div class="insight-meta">
+            <span class="date">PDF fact sheet</span>
+            <span class="read-time">English</span>
+          </div>
+          <div class="insight-tags">
+            <span class="tag-small">Japan</span>
+            <span class="tag-small">Market access</span>
+            <span class="tag-small">Pricing</span>
+          </div>
+          <a href="pdf/Japan_vs_US_Pharmaceutical_Environment_Key_Differences_in_Prescribing_&_Market_Access.pdf" class="btn-link" target="_blank" rel="noopener noreferrer">Download PDF →</a>
+        </article>
+
+        <article class="insight-card" 
+                 data-title="Japan's Drug Reimbursement and Pricing Process"
+                 data-topic="market-access"
+                 data-tags="japan,pricing,market-access">
+          <span class="topic-badge-small">Market Access</span>
+          <h3 class="montserrat">Japan’s Drug Reimbursement and Pricing Process</h3>
+          <p class="insight-excerpt">
+            A clear overview of the reimbursement and pricing flow in Japan — useful for early planning, internal education, and launch cross-functional alignment.
+          </p>
+          <div class="insight-meta">
+            <span class="date">PDF fact sheet</span>
+            <span class="read-time">English</span>
+          </div>
+          <div class="insight-tags">
+            <span class="tag-small">Japan</span>
+            <span class="tag-small">Pricing</span>
+            <span class="tag-small">Market access</span>
+          </div>
+          <a href="pdf/Japans_Drug_Reimbursement_and_Pricing_Process.pdf" class="btn-link" target="_blank" rel="noopener noreferrer">Download PDF →</a>
+        </article>
+
+        <article class="insight-card" 
+                 data-title="Japanese Physicians’ Prescribing Behaviors & Psychology"
                  data-topic="hcp-research"
-                 data-tags="advisory-boards, kol-engagement, strategy">
+                 data-tags="japan,hcp">
           <span class="topic-badge-small">HCP Research</span>
-          <h3 class="montserrat">Advisory Board Best Practices</h3>
+          <h3 class="montserrat">Japanese Physicians’ Prescribing Behaviors &amp; Psychology</h3>
           <p class="insight-excerpt">
-            Strategic guidance on planning, executing, and maximizing value from medical advisory boards with KOLs and experts.
+            What drives prescribing decisions in Japan, and how to interpret stated vs. revealed preferences in interviews and surveys.
           </p>
           <div class="insight-meta">
-            <span class="date">August 2025</span>
-            <span class="read-time">7 min read</span>
+            <span class="date">PDF fact sheet</span>
+            <span class="read-time">English</span>
           </div>
           <div class="insight-tags">
-            <span class="tag-small">Advisory Boards</span>
-            <span class="tag-small">KOL Engagement</span>
-            <span class="tag-small">Strategy</span>
+            <span class="tag-small">Japan</span>
+            <span class="tag-small">HCP</span>
           </div>
-          <a href="#" class="btn-link">Read More →</a>
+          <a href="pdf/Japanese_Physicians_Prescribing_Behaviors_&_Psychology.pdf" class="btn-link" target="_blank" rel="noopener noreferrer">Download PDF →</a>
+        </article>
+
+        <article class="insight-card" 
+                 data-title="Patient-Centered Market Research in Japan"
+                 data-topic="patient-research"
+                 data-tags="japan,patients,compliance">
+          <span class="topic-badge-small">Patient Research</span>
+          <h3 class="montserrat">Patient-Centered Market Research in Japan</h3>
+          <p class="insight-excerpt">
+            Designing research that respects participant burden and yields clearer insight — consent, sensitivity, caregiver dynamics, and practical do’s/don’ts.
+          </p>
+          <div class="insight-meta">
+            <span class="date">PDF fact sheet</span>
+            <span class="read-time">English</span>
+          </div>
+          <div class="insight-tags">
+            <span class="tag-small">Japan</span>
+            <span class="tag-small">Patients</span>
+            <span class="tag-small">Compliance</span>
+          </div>
+          <a href="pdf/Patient-Centered_Market_Research_in_Japan.pdf" class="btn-link" target="_blank" rel="noopener noreferrer">Download PDF →</a>
+        </article>
+
+        <article class="insight-card" 
+                 data-title="Optimizing Patient Recruitment Strategies in the Japanese Market"
+                 data-topic="patient-research"
+                 data-tags="japan,recruitment,patients">
+          <span class="topic-badge-small">Patient Research</span>
+          <h3 class="montserrat">Optimizing Patient Recruitment Strategies in Japan</h3>
+          <p class="insight-excerpt">
+            What tends to work (and what often doesn’t) when recruiting patients in Japan — channels, partner models, timelines, and ethics considerations.
+          </p>
+          <div class="insight-meta">
+            <span class="date">PDF fact sheet</span>
+            <span class="read-time">English</span>
+          </div>
+          <div class="insight-tags">
+            <span class="tag-small">Japan</span>
+            <span class="tag-small">Recruitment</span>
+            <span class="tag-small">Patients</span>
+          </div>
+          <a href="pdf/Optimizing_Patient_Recruitment_Strategies_in_the_Japanese_Market.pdf" class="btn-link" target="_blank" rel="noopener noreferrer">Download PDF →</a>
+        </article>
+
+        <article class="insight-card" 
+                 data-title="Understanding Oncology Dynamics in Japan"
+                 data-topic="hcp-research"
+                 data-tags="japan,oncology,hcp">
+          <span class="topic-badge-small">HCP Research</span>
+          <h3 class="montserrat">Understanding Oncology Dynamics in Japan</h3>
+          <p class="insight-excerpt">
+            A market orientation brief: key stakeholders, care settings, and research considerations that often influence interpretation in oncology studies.
+          </p>
+          <div class="insight-meta">
+            <span class="date">PDF fact sheet</span>
+            <span class="read-time">English</span>
+          </div>
+          <div class="insight-tags">
+            <span class="tag-small">Japan</span>
+            <span class="tag-small">Oncology</span>
+            <span class="tag-small">HCP</span>
+          </div>
+          <a href="pdf/Understanding_Oncology_Dynamics_in_Japan.pdf" class="btn-link" target="_blank" rel="noopener noreferrer">Download PDF →</a>
         </article>
       </div>
     </div>
@@ -344,7 +420,7 @@
   <!-- FOOTER -->
   <footer class="site-footer">
     <div class="footer-top">
-      <img src="../assets/seed_planning_logo.png" alt="Seed Planning Co., Ltd." class="footer-main-logo">
+      <img src="assets/seed_planning_logo.png" alt="Seed Planning Co., Ltd." class="footer-main-logo">
       <h2 class="footer-company-name">SEED PLANNING</h2>
       <p class="footer-tagline">Market Research & Consulting</p>
     </div>
@@ -363,11 +439,11 @@
       </nav>
       
       <div class="footer-certifications">
-        <img src="../assets/esomar.png" alt="ESOMAR" class="cert-logo">
-        <img src="../assets/ephmra.png" alt="EphMRA" class="cert-logo">
-        <img src="../assets/ISO27001.png" alt="ISO 27001" class="cert-logo">
-        <img src="../assets/privacy_mark.png" alt="Privacy Mark" class="cert-logo">
-        <img src="../assets/jmra_member.png" alt="JMRA" class="cert-logo">
+        <img src="assets/esomar.png" alt="ESOMAR" class="cert-logo">
+        <img src="assets/ephmra.png" alt="EphMRA" class="cert-logo">
+        <img src="assets/ISO27001.png" alt="ISO 27001" class="cert-logo">
+        <img src="assets/privacy_mark.png" alt="Privacy Mark" class="cert-logo">
+        <img src="assets/jmra_member.png" alt="JMRA" class="cert-logo">
       </div>
     </div>
   </footer>

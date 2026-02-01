@@ -6,6 +6,7 @@
 :root {
   /* Colors */
   --primary-text: #5b1a06;
+  --accent-brown: #734228;
   --light-text: #f9e5c1;
   --white-text: #fff6ea;
   
@@ -19,9 +20,9 @@
   --bg-dark-green: #4e613f;
   
   /* Fonts */
-  --font-heading: 'Times New Roman', serif;
-  --font-body: 'Helvetica', Arial, sans-serif;
-  --font-accent: 'Montserrat', sans-serif;
+  --font-heading: 'DM Serif Display', serif;
+  --font-body: 'DM Sans', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  --font-accent: 'DM Sans', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
   
   /* Spacing */
   --spacing-xs: 0.5rem;
@@ -99,7 +100,7 @@ a {
 }
 
 a:hover {
-  transform: translateX(2px);
+  opacity: 0.9;
 }
 
 a:active {
@@ -157,9 +158,13 @@ section {
   text-align: center;
   cursor: pointer;
   border: none;
-  border-radius: 0;
+  border-radius: 9999px;
   transition: all 0.15s ease-out;
   text-decoration: none;
+}
+
+.btn-block {
+  width: 100%;
 }
 
 .btn:hover {
@@ -239,6 +244,13 @@ label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
+}
+
+.form-note {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  color: rgba(91, 26, 6, 0.85);
+  line-height: 1.5;
 }
 
 /* Grid System */
@@ -457,3 +469,7 @@ img {
     font-size: 0.9rem;
   }
 }
+
+
+/* Utility: square-corner button (if needed for specific components) */
+.btn-square { border-radius: 0; }

@@ -123,22 +123,95 @@ function initForms() {
 function handleFormSubmit(form) {
   const formData = new FormData(form);
   const submitBtn = form.querySelector('button[type="submit"]');
-  
+
+  // Preserve original label so each form can have its own wording
+  const originalBtnLabel = submitBtn ? submitBtn.textContent.trim() : '';
+
   if (submitBtn) {
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Sending...';
+    submitBtn.textContent = 'Opening...';
   }
-  
-  // Simulate form submission (replace with actual endpoint)
-  setTimeout(() => {
-    showNotification('Thank you! Your message has been sent.', 'success');
-    form.reset();
-    
-    if (submitBtn) {
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Submit';
-    }
-  }, 1500);
+
+  const mailtoLink = buildMailtoFromForm(form, formData);
+
+  // Reset early (the user is about to jump into their email app)
+  form.reset();
+
+  if (submitBtn) {
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalBtnLabel || 'Submit';
+  }
+
+  if (mailtoLink) {
+    showNotification('Opening your email draft…', 'success');
+    window.location.href = mailtoLink;
+  } else {
+    showNotification('Please email us at medb3@seedplanning.co.jp', 'info');
+  }
+}
+
+// ===================================
+// MAILTO HELPERS (static-site friendly)
+// ===================================
+
+const DEFAULT_CONTACT_EMAIL = 'medb3@seedplanning.co.jp';
+
+function buildMailtoFromForm(form, formData) {
+  try {
+    const to = form.dataset.mailtoTo || DEFAULT_CONTACT_EMAIL;
+    const subject = form.dataset.mailtoSubject || buildDefaultSubject(formData);
+    const body = buildEmailBodyFromForm(form, formData);
+    return buildMailtoLink(to, subject, body);
+  } catch (err) {
+    console.error('Failed to build mailto link:', err);
+    return '';
+  }
+}
+
+function buildDefaultSubject(formData) {
+  const company = (formData.get('company') || formData.get('company-name') || '').toString().trim();
+  const name = (formData.get('name') || formData.get('full-name') || '').toString().trim();
+  const parts = ['Website inquiry — Global Medical'];
+  const who = [company, name].filter(Boolean).join(' / ');
+  if (who) parts.push(`(${who})`);
+  return parts.join(' ');
+}
+
+function buildEmailBodyFromForm(form, formData) {
+  const lines = [];
+  const fields = form.querySelectorAll('input, select, textarea');
+
+  fields.forEach((field) => {
+    if (!field.name) return;
+    const rawValue = formData.get(field.name);
+    const value = (rawValue ?? '').toString().trim();
+    if (!value) return;
+
+    const labelText = getLabelTextForField(form, field);
+    lines.push(`${labelText}: ${value}`);
+  });
+
+  lines.push('');
+  lines.push(`Page: ${window.location.href}`);
+
+  return lines.join('\n');
+}
+
+function getLabelTextForField(form, field) {
+  const fallback = field.name.replace(/[-_]/g, ' ').trim();
+  if (!field.id) return fallback;
+  const label = form.querySelector(`label[for="${field.id}"]`);
+  if (!label) return fallback;
+  return label.textContent.replace('*', '').trim() || fallback;
+}
+
+function buildMailtoLink(to, subject, body) {
+  const encTo = encodeURIComponent(to).replace(/%40/g, '@'); // keep email readable
+  const params = new URLSearchParams({
+    subject: subject || '',
+    body: body || ''
+  });
+  return `mailto:${encTo}?${params.toString()}`;
 }
 
 // ===================================
@@ -206,5 +279,7 @@ function throttle(func, limit) {
 window.MedicalSite = {
   showNotification,
   debounce,
-  throttle
+  throttle,
+  buildMailtoFromForm,
+  DEFAULT_CONTACT_EMAIL
 };

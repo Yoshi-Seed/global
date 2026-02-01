@@ -22,22 +22,20 @@ document.addEventListener('DOMContentLoaded', function() {
     // Disable submit button and show loading
     submitBtn.disabled = true;
     submitBtn.classList.add('loading');
-    submitBtn.textContent = 'Submitting...';
+    submitBtn.textContent = 'Opening...';
     
-    // Collect form data
+    // Collect form data & open email draft (static-site friendly)
     const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
-    
-    // Simulate form submission (replace with actual API call)
-    setTimeout(() => {
-      // Success scenario
+    const mailtoLink = window.MedicalSite?.buildMailtoFromForm
+      ? window.MedicalSite.buildMailtoFromForm(form, formData)
+      : '';
+
+    if (mailtoLink) {
+      window.location.href = mailtoLink;
       handleSuccess();
-      
-      // For actual implementation, use:
-      // submitFormData(data)
-      //   .then(handleSuccess)
-      //   .catch(handleError);
-    }, 1500);
+    } else {
+      handleError(new Error('Failed to build email draft'));
+    }
   });
   
   // Real-time validation
@@ -139,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Re-enable submit button
     submitBtn.disabled = false;
     submitBtn.classList.remove('loading');
-    submitBtn.textContent = 'Submit Request';
+    submitBtn.textContent = 'Open email draft';
     
     // Send confirmation email notification (pseudo-code)
     console.log('Form submitted successfully');
@@ -149,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Re-enable submit button
     submitBtn.disabled = false;
     submitBtn.classList.remove('loading');
-    submitBtn.textContent = 'Submit Request';
+    submitBtn.textContent = 'Open email draft';
     
     // Show error message
     errorMessage.style.display = 'block';
@@ -160,39 +158,4 @@ document.addEventListener('DOMContentLoaded', function() {
     console.error('Form submission error:', error);
   }
   
-  // Actual API submission function (to be implemented)
-  async function submitFormData(data) {
-    // Example implementation:
-    // const response = await fetch('/api/contact', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(data),
-    // });
-    // 
-    // if (!response.ok) {
-    //   throw new Error('Submission failed');
-    // }
-    // 
-    // return response.json();
-    
-    return new Promise((resolve) => {
-      setTimeout(resolve, 1500);
-    });
-  }
-});
-
-// ===================================
-// Prevent double submission
-// ===================================
-
-window.addEventListener('beforeunload', function(e) {
-  const form = document.getElementById('request-form');
-  const submitBtn = document.getElementById('submit-btn');
-  
-  if (form && submitBtn && submitBtn.disabled) {
-    e.preventDefault();
-    e.returnValue = 'Your form is being submitted. Are you sure you want to leave?';
-  }
 });
