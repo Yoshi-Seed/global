@@ -1,0 +1,20 @@
+# robots.txt for Seed Planning Global Medical Website
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://yoshi-seed.github.io/global/medical/website/v2/sitemap.xml
+
+# Crawl-delay for all bots
+Crawl-delay: 1
+
+# Disallow admin or private areas (if any in future)
+# Disallow: /admin/
+# Disallow: /private/
+
+# Allow all CSS, JS, and image files
+Allow: /css/
+Allow: /js/
+Allow: /assets/
+Allow: /pdf/
