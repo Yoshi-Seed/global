@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Links</title>
+  <style>
+    :root{
+      --bg-fallback: #f4f1ea; /* pale canvas */
+      --card: rgba(255,255,255,.78);
+      --card-border: rgba(0,0,0,.08);
+      --text: rgba(0,0,0,.86);
+      --muted: rgba(0,0,0,.62);
+      --btn: rgba(0,0,0,.82);
+      --btn-text: #fff;
+      --btn-pressed: rgba(0,0,0,.92);
+      --shadow: 0 10px 30px rgba(0,0,0,.12);
+      --radius: 18px;
+    }
+
+    *{ box-sizing: border-box; }
+    html, body { height: 100%; }
+    body{
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color: var(--text);
+      background: var(--bg-fallback);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Background video */
+    .bg{
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      overflow: hidden;
+      background: var(--bg-fallback);
+    }
+    .bg video{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    /* Soft overlay for readability */
+    .overlay{
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: rgba(244, 241, 234, 0.55);
+      backdrop-filter: blur(2px);
+    }
+
+    main{
+      min-height: 100%;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+    }
+
+    .wrap{
+      width: 100%;
+      max-width: 680px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .card{
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .title{
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.25;
+      margin: 0;
+    }
+
+    .link{
+      font-size: 14px;
+      line-height: 1.35;
+      word-break: break-all;
+      color: rgba(0,0,0,.72);
+      text-decoration: none;
+    }
+    .link:active{ opacity: .75; }
+
+    .row{
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    button{
+      appearance: none;
+      border: 0;
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-weight: 700;
+      font-size: 14px;
+      background: var(--btn);
+      color: var(--btn-text);
+      cursor: pointer;
+      min-width: 104px;
+      touch-action: manipulation;
+    }
+    button:active{ background: var(--btn-pressed); transform: translateY(1px); }
+
+    .status{
+      font-size: 12px;
+      color: var(--muted);
+      min-height: 16px;
+    }
+
+    /* iPhone-friendly spacing */
+    @media (max-width: 420px){
+      .card{ padding: 14px; }
+      button{ min-width: 96px; padding: 10px 10px; }
+      .title{ font-size: 15px; }
+    }
+
+    /* If user prefers reduced motion, don’t autoplay video visually */
+    @media (prefers-reduced-motion: reduce){
+      .bg video{ display: none; }
+      .overlay{ background: rgba(244, 241, 234, 1); backdrop-filter: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg" aria-hidden="true">
+    <video autoplay muted loop playsinline preload="metadata" poster="">
+      <source src="assets/hero-bg-15s-muted.mp4" type="video/mp4" />
+    </video>
+  </div>
+  <div class="overlay" aria-hidden="true"></div>
+
+  <main>
+    <div class="wrap" role="list">
+
+      <!-- NEW: Team Profile -->
+      <section class="card" role="listitem" data-url="https://yoshi-seed.github.io/global/medical/website/v2/pdf/Core_Values_and_Team_Seed_Planning_20251225.pdf">
+        <p class="title">Team Profile</p>
+        <div class="row">
+          <a class="link" href="https://yoshi-seed.github.io/global/medical/website/v2/pdf/Core_Values_and_Team_Seed_Planning_20251225.pdf" target="_blank" rel="noopener noreferrer">
+            https://yoshi-seed.github.io/global/medical/website/v2/pdf/Core_Values_and_Team_Seed_Planning_20251225.pdf
+          </a>
+          <button type="button" class="copy-btn">URL Copy</button>
+        </div>
+        <div class="status" aria-live="polite"></div>
+      </section>
+
+      <section class="card" role="listitem" data-url="https://yoshi-seed.github.io/global/faq-standalone.html">
+        <p class="title">Japan medical market research FAQ</p>
+        <div class="row">
+          <a class="link" href="https://yoshi-seed.github.io/global/faq-standalone.html" target="_blank" rel="noopener noreferrer">
+            https://yoshi-seed.github.io/global/faq-standalone.html
+          </a>
+          <button type="button" class="copy-btn">URL Copy</button>
+        </div>
+        <div class="status" aria-live="polite"></div>
+      </section>
+
+      <section class="card" role="listitem" data-url="https://yoshi-seed.github.io/global/medical/website/v2/insights.html">
+        <p class="title">Japan medical market research Fact sheets</p>
+        <div class="row">
+          <a class="link" href="https://yoshi-seed.github.io/global/medical/website/v2/insights.html" target="_blank" rel="noopener noreferrer">
+            https://yoshi-seed.github.io/global/medical/website/v2/insights.html
+          </a>
+          <button type="button" class="copy-btn">URL Copy</button>
+        </div>
+        <div class="status" aria-live="polite"></div>
+      </section>
+
+      <section class="card" role="listitem" data-url="https://www.seedplanning.co.jp/global/pmrc/">
+        <p class="title">PMRC Landing page</p>
+        <div class="row">
+          <a class="link" href="https://www.seedplanning.co.jp/global/pmrc/" target="_blank" rel="noopener noreferrer">
+            https://www.seedplanning.co.jp/global/pmrc/
+          </a>
+          <button type="button" class="copy-btn">URL Copy</button>
+        </div>
+        <div class="status" aria-live="polite"></div>
+      </section>
+
+    </div>
+  </main>
+
+  <script>
+    async function copyToClipboard(text) {
+      // Modern clipboard API (requires https or localhost)
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return;
+      }
+      // Fallback
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.left = "-9999px";
+      ta.style.top = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+    }
+
+    document.querySelectorAll(".card").forEach((card) => {
+      const url = card.getAttribute("data-url");
+      const btn = card.querySelector(".copy-btn");
+      const status = card.querySelector(".status");
+
+      btn.addEventListener("click", async () => {
+        try{
+          await copyToClipboard(url);
+          status.textContent = "Copied.";
+          btn.textContent = "Copied";
+          setTimeout(() => {
+            status.textContent = "";
+            btn.textContent = "URL Copy";
+          }, 1200);
+        }catch(e){
+          status.textContent = "Copy failed. Tap and hold the URL to copy.";
+          setTimeout(() => status.textContent = "", 2200);
+        }
+      });
+    });
+
+    // If the video fails to load, fallback bg color is already in place.
+    // Optional: hide video element on error to avoid broken UI.
+    const vid = document.querySelector(".bg video");
+    if (vid) {
+      vid.addEventListener("error", () => {
+        vid.style.display = "none";
+        document.querySelector(".overlay").style.background = "rgba(244, 241, 234, 1)";
+        document.querySelector(".overlay").style.backdropFilter = "none";
+      });
+    }
+  </script>
+</body>
+</html>
