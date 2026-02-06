@@ -592,14 +592,39 @@
 
 /* RARE DISEASE INITIATIVE SECTION */
 .rare-disease-section {
+  position: relative;
   padding: var(--spacing-xl) 0;
   background-color: #b5bf84;
-  text-align: center;
+  overflow: hidden;
+}
+
+/* Background "Featured" text */
+.rare-disease-section::before {
+  content: 'Featured';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: clamp(8rem, 20vw, 16rem);
+  font-weight: 700;
+  color: rgba(68, 79, 12, 0.11);
+  white-space: nowrap;
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.rare-disease-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .rare-disease-header {
-  max-width: 800px;
-  margin: 0 auto;
+  max-width: 600px;
+  text-align: right;
 }
 
 .rare-disease-header h2 {
@@ -643,6 +668,21 @@
 .btn-visit-microsite:focus-visible {
   outline: 3px solid #5b1a06;
   outline-offset: 3px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .rare-disease-section::before {
+    font-size: clamp(4rem, 15vw, 8rem);
+  }
+  
+  .rare-disease-content {
+    justify-content: center;
+  }
+  
+  .rare-disease-header {
+    text-align: center;
+  }
 }
 
 /* OUR INDUSTRY COVERAGE SECTION */
