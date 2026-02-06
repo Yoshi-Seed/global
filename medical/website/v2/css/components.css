@@ -25,40 +25,50 @@
 }
 
 .site-header.scrolled .main-nav a {
-  color: #fff6ea;
-  text-shadow: none;
+  color: #5b1a06;
 }
 
 .site-header.scrolled .main-nav a:hover {
-  color: #f9e5c1;
-  background-color: rgba(255, 246, 234, 0.18);
+  color: #735240;
+  background-color: rgba(91, 26, 6, 0.08);
   border-radius: 9999px;
   transform: translateY(-1px);
 }
 
 .site-header.scrolled .main-nav a.active {
-  color: #f9e5c1;
-  background-color: rgba(255, 246, 234, 0.24);
+  color: #5b1a06;
+  background-color: rgba(91, 26, 6, 0.12);
   border-radius: 9999px;
   font-weight: 600;
 }
 
 .header-container {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 var(--spacing-md);
 }
 
-.main-nav {
+.header-logo {
   order: 1;
 }
 
-.menu-toggle {
+.header-logo img {
+  height: 45px;
+  width: auto;
+  display: block;
+}
+
+.main-nav {
   order: 2;
   margin-left: auto;
+}
+
+.menu-toggle {
+  order: 3;
+  margin-left: var(--spacing-sm);
 }
 
 .main-nav ul {
@@ -69,18 +79,17 @@
 }
 
 .main-nav a {
-  font-family: var(--font-accent);
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 1rem;
-  color: #fff6ea;
+  color: #5b1a06;
   padding: 0.5rem 1rem;
   transition: all 0.15s ease-out;
   position: relative;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .main-nav a:hover {
-  color: #f9e5c1;
-  background-color: rgba(255, 246, 234, 0.18);
+  color: #735240;
+  background-color: rgba(91, 26, 6, 0.08);
   border-radius: 9999px;
   transform: translateY(-1px);
 }
@@ -96,8 +105,8 @@
 }
 
 .main-nav a.active {
-  color: #f9e5c1;
-  background-color: rgba(255, 246, 234, 0.24);
+  color: #5b1a06;
+  background-color: rgba(91, 26, 6, 0.12);
   border-radius: 9999px;
   font-weight: 600;
 }
@@ -472,16 +481,21 @@
 @media (max-width: 768px) {
   /* モバイル：ハンバーガーとロゴの配置を維持 */
   .header-container {
-    justify-content: center; /* Center navigation in mobile */
+    justify-content: space-between;
+  }
+  
+  .header-logo {
+    order: 1;
   }
   
   .menu-toggle {
-    order: 2; /* モバイル：ハンバーガーを右 */
+    order: 3; /* モバイル：ハンバーガーを右 */
     display: block;
+    margin-left: auto;
   }
   
   .main-nav {
-    order: 3; /* モバイル：ナビは展開メニュー */
+    order: 2; /* モバイル：ナビは展開メニュー */
     position: fixed;
     top: 70px;
     left: 0;

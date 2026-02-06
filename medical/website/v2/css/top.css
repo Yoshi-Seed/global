@@ -71,9 +71,9 @@
 
 .hero-title {
   font-family: 'Times New Roman', Times, serif; /* PPT準拠：クラシック */
-  font-size: clamp(2.75rem, 6vw, 5.5rem); /* 44px〜88px */
+  font-size: clamp(3.5rem, 7vw, 6.5rem); /* サイズ拡大: 56px〜104px */
   font-weight: 400; /* 太らせない */
-  line-height: 1.05; /* タイト */
+  line-height: 0.95; /* 行間を詰める */
   letter-spacing: -0.02em; /* わずかに詰める */
   max-width: 12ch; /* 2行で気持ちよく折れる */
   margin-bottom: var(--spacing-md);
@@ -99,7 +99,7 @@
   font-size: clamp(0.9rem, 1.5vw, 1.1rem); /* 控えめサイズ */
   line-height: 1.6;
   margin-top: var(--spacing-sm); /* 詰めない */
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-sm); /* ボタンとの間隔を詰める */
   color: #f9e5c1; /* PPT準拠：クリーム色 */
   text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.7), 0 0 15px rgba(0, 0, 0, 0.5);
 }
