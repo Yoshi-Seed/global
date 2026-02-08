@@ -69,9 +69,9 @@
 
 .contact-details li {
   display: grid;
-  grid-template-columns: 28px 1fr;
-  gap: 12px;
-  align-items: center;
+  grid-template-columns: 40px 1fr;
+  gap: 16px;
+  align-items: flex-start;
   font-family: var(--font-body);
   color: var(--primary-text);
 }
@@ -85,6 +85,13 @@
 
 .contact-details a:hover {
   border-bottom-color: rgba(91, 26, 6, 0.35);
+}
+
+.contact-icon-img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  display: block;
 }
 
 .contact-icon {
