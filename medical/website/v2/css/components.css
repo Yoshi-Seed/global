@@ -45,7 +45,7 @@
 
 .header-container {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   max-width: 1400px;
   margin: 0 auto;
@@ -57,6 +57,8 @@
   order: 1;
   flex-shrink: 0;
   margin-left: 0;
+  position: absolute;
+  left: var(--spacing-md);
 }
 
 .header-logo img {
@@ -67,9 +69,9 @@
 
 .main-nav {
   order: 2;
-  margin-left: auto;
   flex-shrink: 0;
-  margin-right: -0.75rem;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .menu-toggle {
@@ -88,11 +90,15 @@
 
 .main-nav a {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size: 1rem;
+  font-size: 1.15rem;
+  font-style: italic !important;
   color: #5b1a06;
   padding: 0.5rem 1rem;
   transition: all 0.15s ease-out;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .main-nav a:hover {
