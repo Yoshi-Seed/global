@@ -1,0 +1,14 @@
+{
+  "header": [
+    { "label": "Home", "href": "index.html", "activeOn": ["index"] },
+    { "label": "How we work", "href": "how-we-work.html", "activeOn": ["how-we-work"] },
+    { "label": "Rare disease", "href": "rare-disease.html", "activeOn": ["rare-disease"] },
+    { "label": "Japan fact sheets", "href": "insights.html", "activeOn": ["insights", "fact-sheet"] },
+    { "label": "About team", "href": "about-us.html", "activeOn": ["about-us"] },
+    { "label": "Contact us", "href": "request-report.html", "activeOn": ["request-report"] }
+  ],
+  "footerColumns": [
+    ["how-we-work.html", "insights.html", "about-us.html"],
+    ["rare-disease.html", "request-report.html"]
+  ]
+}

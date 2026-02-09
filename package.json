@@ -5,9 +5,16 @@
   "main": "index.html",
   "scripts": {
     "start": "vercel dev",
-    "deploy": "vercel --prod"
+    "deploy": "vercel --prod",
+    "build:medical-v2": "node medical/website/v2/build/build-pages.js"
   },
-  "keywords": ["ai", "chat", "medical", "research", "feasibility"],
+  "keywords": [
+    "ai",
+    "chat",
+    "medical",
+    "research",
+    "feasibility"
+  ],
   "author": "Yoshi",
   "license": "MIT"
 }
