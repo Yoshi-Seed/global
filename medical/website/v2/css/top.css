@@ -783,7 +783,7 @@
 .contact-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  min-height: 560px;
+  min-height: 680px;
 }
 
 .contact-left {
@@ -817,9 +817,11 @@
 
 .contact-left-content h2 {
   font-family: 'Times New Roman', Times, serif;
-  font-size: clamp(2.6rem, 4vw, 3.4rem);
-  margin-bottom: 8px;
+  font-size: clamp(3.5rem, 6vw, 5rem);
+  margin-bottom: 0;
+  margin-top: 12px;
   color: var(--primary-text);
+  letter-spacing: -0.02em;
 }
 
 .contact-intro {
@@ -828,6 +830,7 @@
   line-height: 1.7;
   color: var(--primary-text);
   max-width: 40ch;
+  margin-top: -72px;
 }
 
 .contact-details {
@@ -835,16 +838,17 @@
   padding: 0;
   margin: 0;
   display: grid;
-  gap: 14px;
+  gap: 0;
 }
 
 .contact-details li {
   display: grid;
-  grid-template-columns: 40px 1fr;
+  grid-template-columns: 48px 1fr;
   gap: 16px;
-  align-items: flex-start;
+  align-items: center;
   font-family: var(--font-body);
   color: var(--primary-text);
+  margin-bottom: -12px;
 }
 
 .contact-details a {
@@ -859,8 +863,8 @@
 }
 
 .contact-icon-img {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   object-fit: contain;
   display: block;
 }
@@ -899,7 +903,7 @@
 
 .contact-form .form-group label {
   font-family: var(--font-body);
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .contact-form input,
