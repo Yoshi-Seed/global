@@ -1,0 +1,118 @@
+[
+  {
+    "id": "index",
+    "output": "index.html",
+    "title": "Global Medical Research | Seed Planning",
+    "description": "Global Medical Research - Seed Planning",
+    "styles": [
+      "css/global.css",
+      "css/components.css",
+      "css/top.css"
+    ],
+    "scripts": [
+      "js/main.js",
+      "js/accordion.js",
+      "js/carousel.js",
+      "js/top-page.js"
+    ],
+    "content": "templates/content/index.html"
+  },
+  {
+    "id": "how-we-work",
+    "output": "how-we-work.html",
+    "title": "How We Work | Seed Planning",
+    "description": "How We Work - Seed Planning Global Medical Research Process",
+    "styles": [
+      "css/global.css",
+      "css/components.css",
+      "css/how-we-work.css"
+    ],
+    "scripts": [
+      "js/main.js",
+      "js/how-we-work.js"
+    ],
+    "content": "templates/content/how-we-work.html"
+  },
+  {
+    "id": "rare-disease",
+    "output": "rare-disease.html",
+    "title": "Rare Disease Initiative | Seed Planning",
+    "description": "Rare disease patient interview research in Japan \u2014 ethical recruitment, sensitive moderation, and clear English reporting for global teams.",
+    "styles": [
+      "css/global.css",
+      "css/components.css",
+      "css/rare-disease.css"
+    ],
+    "scripts": [
+      "js/main.js"
+    ],
+    "content": "templates/content/rare-disease.html"
+  },
+  {
+    "id": "insights",
+    "output": "insights.html",
+    "title": "Japan Fact Sheets | Seed Planning",
+    "description": "Japan Research Fact Sheets: practical briefs for global medical teams navigating Japan healthcare research, recruitment, and market access.",
+    "styles": [
+      "css/global.css",
+      "css/components.css",
+      "css/insights.css"
+    ],
+    "scripts": [
+      "js/main.js",
+      "js/fact-sheets-data.js",
+      "js/insights-page.js",
+      "js/carousel.js"
+    ],
+    "content": "templates/content/insights.html"
+  },
+  {
+    "id": "fact-sheet",
+    "output": "fact-sheet.html",
+    "title": "Fact Sheet | Seed Planning",
+    "description": "Japan fact sheet detail page. Download PDFs and explore related topics.",
+    "styles": [
+      "css/global.css",
+      "css/components.css",
+      "css/fact-sheet.css"
+    ],
+    "scripts": [
+      "js/main.js",
+      "js/fact-sheets-data.js",
+      "js/fact-sheet-page.js"
+    ],
+    "content": "templates/content/fact-sheet.html"
+  },
+  {
+    "id": "about-us",
+    "output": "about-us.html",
+    "title": "About Team | Seed Planning",
+    "description": "Meet our Japan-based researchers, project managers, and moderators supporting global medical research.",
+    "styles": [
+      "css/global.css",
+      "css/components.css",
+      "css/about-us.css"
+    ],
+    "scripts": [
+      "js/main.js",
+      "js/carousel.js",
+      "js/about-us.js"
+    ],
+    "content": "templates/content/about-us.html"
+  },
+  {
+    "id": "request-report",
+    "output": "request-report.html",
+    "title": "Contact Us | Seed Planning",
+    "description": "Contact Seed Planning's Global Medical team for Japan market research, feasibility, recruitment, interviews, and report requests.",
+    "styles": [
+      "css/global.css",
+      "css/components.css",
+      "css/request-report.css"
+    ],
+    "scripts": [
+      "js/main.js"
+    ],
+    "content": "templates/content/request-report.html"
+  }
+]
