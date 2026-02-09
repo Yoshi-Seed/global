@@ -35,7 +35,7 @@
 
 .how-work-title {
   font-family: 'Times New Roman', Times, serif;
-  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-size: clamp(3rem, 6vw, 5rem);
   font-weight: 400;
   color: #f9e5c1;
   line-height: 1.2;
