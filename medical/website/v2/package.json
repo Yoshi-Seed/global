@@ -1,0 +1,22 @@
+{
+  "name": "medical-website-v2-quality-checks",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Quality checks for medical website v2",
+  "scripts": {
+    "lint": "npm run lint:html && npm run lint:css && npm run lint:js",
+    "lint:html": "htmlhint \"**/*.html\"",
+    "lint:css": "stylelint \"css/**/*.css\"",
+    "lint:js": "eslint \"js/**/*.js\"",
+    "format:check": "prettier --check \"package.json\" \"eslint.config.js\" \".htmlhintrc\" \".stylelintrc.json\" \"scripts/**/*.mjs\"",
+    "validate:content": "node scripts/validate-content.mjs"
+  },
+  "devDependencies": {
+    "eslint": "^9.20.1",
+    "globals": "^15.15.0",
+    "htmlhint": "^1.1.4",
+    "prettier": "^3.5.0",
+    "stylelint": "^16.14.1"
+  },
+  "type": "module"
+}
