@@ -149,6 +149,16 @@
   background-color: #fff6ea;
 }
 
+/* Header Section (右上に配置) */
+.why-seed-header {
+  text-align: right;
+  margin-bottom: 48px;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 var(--spacing-md);
+}
+
 .why-seed-layout {
   display: grid;
   grid-template-columns: 0.8fr auto 1.7fr;
@@ -201,18 +211,9 @@
   color: #735240;
 }
 
-/* Active Tab Indicator - Yellow Circle (PPT style) */
+/* Active Tab Indicator - 非表示 */
 .tab-indicator {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: transparent;
-  transition: background-color 200ms ease-out;
-  flex-shrink: 0;
-}
-
-.tab-item.active .tab-indicator {
-  background-color: #f4c430;
+  display: none;
 }
 
 .tab-item.active .tab-label {
@@ -248,18 +249,14 @@
   margin-left: auto;
 }
 
-/* Panel Header */
-.panel-header {
-  margin-bottom: 32px;
-  text-align: right;
-}
+/* Panel Header - 削除（ヘッダーセクションに移動したため不要） */
 
 .panel-title {
   font-family: 'Times New Roman', serif;
-  font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+  font-size: clamp(3rem, 5.5vw, 4.2rem);
   font-weight: 400;
   color: #5b1a06;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   line-height: 1.2;
 }
 
@@ -269,9 +266,10 @@
 
 .panel-subtitle {
   font-family: 'Helvetica', sans-serif;
-  font-size: 1.05rem;
+  font-size: 1.35rem;
   color: #5b1a06;
-  line-height: 1.7;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
   max-width: 700px;
   margin-left: auto;
 }
