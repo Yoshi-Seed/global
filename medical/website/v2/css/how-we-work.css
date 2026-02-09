@@ -5,7 +5,7 @@
 /* HOW WE WORK SECTION */
 .how-work-section {
   background-color: #735240;
-  padding: calc(var(--spacing-xl) + 70px) 0 calc(var(--spacing-xl) + 160px) 0;
+  padding: calc(var(--spacing-xl) + 70px) 0 calc(var(--spacing-xl) + 40px) 0;
 }
 
 /* ===================================
@@ -485,10 +485,11 @@
 .voices-section .section-title {
   font-family: 'Times New Roman', Times, serif;
   font-style: normal;
-  font-size: 3.5rem;
+  font-size: 4.5rem;
   color: #5b1a06;
-  text-align: center;
+  text-align: left;
   margin-bottom: 60px;
+  letter-spacing: -0.02em;
 }
 
 .voices-section .section-title em {
@@ -504,35 +505,43 @@
 }
 
 .testimonial-card {
-  background-color: #fff6ea;
-  border: 2px solid rgba(91, 26, 6, 0.25);
+  background-color: transparent;
+  border: 2px solid rgba(91, 26, 6, 0.4);
   border-radius: 14px;
   padding: 32px;
   position: relative;
+  min-height: 340px;
+  display: flex;
+  flex-direction: column;
 }
 
 .quote-mark {
-  font-family: Georgia, serif;
-  font-size: 4rem;
-  color: #5b1a06;
   line-height: 1;
   margin-bottom: 16px;
+}
+
+.quote-mark img {
+  width: 60px;
+  height: auto;
+  display: block;
 }
 
 .testimonial-text {
   font-family: Helvetica, Arial, sans-serif;
   font-size: 1.1rem;
   color: #5b1a06;
-  line-height: 1.6;
+  line-height: 1.4;
   margin-bottom: 20px;
 }
 
 .testimonial-author {
-  font-family: 'Times New Roman', Times, serif;
+  font-family: 'Montserrat', sans-serif;
   font-style: italic;
   font-size: 1rem;
   color: #5b1a06;
   text-align: right;
+  margin-top: auto;
+  padding-top: 24px;
 }
 
 @media (max-width: 1024px) {
@@ -556,8 +565,8 @@
     padding: 24px;
   }
 
-  .quote-mark {
-    font-size: 3rem;
+  .quote-mark img {
+    width: 45px;
   }
 
   .testimonial-text {
