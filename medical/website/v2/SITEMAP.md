@@ -53,7 +53,7 @@
 **Update Frequency**: Weekly
 
 **Content**:
-- 12 downloadable fact sheets
+- 10 downloadable fact sheets
 - Filterable by topic area and tags
 - Links to individual fact sheet pages
 
@@ -145,8 +145,8 @@
 
 ---
 
-### 8. [Patient-Centered Market Research in Japan](https://yoshi-seed.github.io/global/medical/website/v2/fact-sheet.html?id=patient-centered-research)
-**ID**: `patient-centered-research`  
+### 8. [Patient-Centered Market Research in Japan](https://yoshi-seed.github.io/global/medical/website/v2/fact-sheet.html?id=patient-centered)
+**ID**: `patient-centered`  
 **Topic**: Patient insights  
 **Tags**: Qualitative, Patient journey, Ethics  
 **PDF**: `Patient-Centered_Market_Research_in_Japan.pdf`
@@ -169,22 +169,6 @@
 
 ---
 
-### 11. [Core Values and Team](https://yoshi-seed.github.io/global/medical/website/v2/fact-sheet.html?id=core-values-team)
-**ID**: `core-values-team`  
-**Topic**: About Seed Planning  
-**Tags**: Company, Values, Team  
-**PDF**: `Core_Values_and_Team_Seed_Planning_20251225.pdf`
-
----
-
-### 12. [Seed Planning Company Profile](https://yoshi-seed.github.io/global/medical/website/v2/fact-sheet.html?id=company-profile)
-**ID**: `company-profile`  
-**Topic**: About Seed Planning  
-**Tags**: Company, Profile, Capabilities  
-**PDF**: `Seed_Planning_Company_Profile_en.pdf`
-
----
-
 ## 📦 Resources
 
 ### PDF Downloads
@@ -192,7 +176,6 @@
 
 All fact sheet PDFs are available for download:
 - Conducting_Physician_Market_Research_in_Japan-A_Comprehensive_Guide_for_International_Teams.pdf
-- Core_Values_and_Team_Seed_Planning_20251225.pdf
 - Japan_Market_Brief_Navigating_Structural_Cultural_and_Operational_Complexities_in_Pharmaceutical_Market_Research.pdf
 - Japan_vs_US_Pharmaceutical_Environment_Key_Differences_in_Prescribing_and_Market_Access.pdf
 - Japanese_Physicians_Prescribing_Behaviors_and_Psychology.pdf
@@ -200,9 +183,25 @@ All fact sheet PDFs are available for download:
 - Japans_Drug_Reimbursement_and_Pricing_Process.pdf
 - Optimizing_Patient_Recruitment_Strategies_in_the_Japanese_Market.pdf
 - Patient-Centered_Market_Research_in_Japan.pdf
-- Seed_Planning_Company_Profile_en.pdf
 - Tips_for_Healthcare_MR_in_Japan.pdf
 - Understanding_Oncology_Dynamics_in_Japan.pdf
+
+---
+
+## ✅ Fact Sheet ID Validation Rule
+
+To keep the sitemap accurate, only IDs defined in `js/fact-sheets-data.js` should appear as `fact-sheet.html?id=...` URLs in `sitemap.xml`.
+
+Run this check before publishing:
+
+```bash
+node medical/website/v2/scripts/check-fact-sheet-sitemap-ids.mjs
+```
+
+What it validates:
+- Every `FACT_SHEETS[].id` exists in `sitemap.xml`
+- `sitemap.xml` has no extra Fact Sheet IDs that are not in `FACT_SHEETS`
+- Every `FACT_SHEETS[].related` ID points to an existing `FACT_SHEETS[].id`
 
 ---
 
@@ -240,7 +239,7 @@ All fact sheet PDFs are available for download:
 ├── Rare Disease (rare-disease.html)
 │
 ├── Japan Fact Sheets (insights.html)
-│   └── 12 Individual Fact Sheets → fact-sheet.html?id=...
+│   └── 10 Individual Fact Sheets → fact-sheet.html?id=...
 │
 ├── About Team (about-us.html)
 │
@@ -261,7 +260,7 @@ All fact sheet PDFs are available for download:
 | About | about-us.html | 223 | 0.7 | Monthly |
 | Fact Sheet (template) | fact-sheet.html | 142 | 0.7 | Monthly |
 
-**Total**: 7 HTML pages + 12 fact sheet variations = 19 unique URLs
+**Total**: 7 HTML pages + 10 fact sheet variations = 17 unique URLs
 
 ---
 
