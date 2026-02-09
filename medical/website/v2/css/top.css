@@ -623,7 +623,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size: clamp(8rem, 20vw, 16rem);
+  font-size: clamp(13rem, 28vw, 26rem);
   font-weight: 700;
   color: rgba(68, 79, 12, 0.11);
   white-space: nowrap;
@@ -648,7 +648,7 @@
   font-family: var(--font-heading);
   font-size: clamp(2.5rem, 5vw, 3.5rem);
   color: #5b1a06;
-  margin-bottom: var(--spacing-md);
+  margin-bottom: 12px;
 }
 
 .rare-disease-header h2 .italic {
@@ -690,7 +690,7 @@
 /* Responsive */
 @media (max-width: 768px) {
   .rare-disease-section::before {
-    font-size: clamp(4rem, 15vw, 8rem);
+    font-size: clamp(9rem, 26vw, 17rem);
   }
   
   .rare-disease-content {
