@@ -109,6 +109,8 @@ function initSmoothScroll() {
 // FORM HANDLING
 // ===================================
 
+// Official form submission logic for v2 lives here.
+// Any form with [data-ajax] uses this unified handler.
 function initForms() {
   const forms = document.querySelectorAll('form[data-ajax]');
   
@@ -121,7 +123,6 @@ function initForms() {
 }
 
 function handleFormSubmit(form) {
-  const formData = new FormData(form);
   const submitBtn = form.querySelector('button[type="submit"]');
   
   if (submitBtn) {
