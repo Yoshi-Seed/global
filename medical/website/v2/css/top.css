@@ -830,7 +830,7 @@
   line-height: 1.7;
   color: var(--primary-text);
   max-width: 40ch;
-  margin-top: -72px;
+  margin-top: -24px;
 }
 
 .contact-details {
@@ -906,12 +906,21 @@
   font-weight: 400;
 }
 
+.contact-form .form-group {
+  margin-bottom: 28px;
+}
+
 .contact-form input,
 .contact-form select,
 .contact-form textarea {
-  background-color: rgba(255, 246, 234, 0.55);
-  border: 1px solid rgba(91, 26, 6, 0.25);
+  background-color: transparent;
+  border: 1px solid rgba(91, 26, 6, 0.4);
   border-radius: 10px;
+}
+
+.contact-form select {
+  width: 100%;
+  max-width: 100%;
 }
 
 .contact-form textarea {
@@ -921,6 +930,7 @@
 .contact-form .btn-block {
   width: 100%;
   border-radius: 9999px;
+  margin-top: 24px;
 }
 
 /* RESPONSIVE DESIGN */
