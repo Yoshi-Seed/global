@@ -100,7 +100,7 @@
   </url>
   
   <url>
-    <loc>https://yoshi-seed.github.io/global/medical/website/v2/fact-sheet.html?id=patient-centered-research</loc>
+    <loc>https://yoshi-seed.github.io/global/medical/website/v2/fact-sheet.html?id=patient-centered</loc>
     <lastmod>2026-02-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -119,19 +119,4 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
-  
-  <url>
-    <loc>https://yoshi-seed.github.io/global/medical/website/v2/fact-sheet.html?id=core-values-team</loc>
-    <lastmod>2026-02-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <url>
-    <loc>https://yoshi-seed.github.io/global/medical/website/v2/fact-sheet.html?id=company-profile</loc>
-    <lastmod>2026-02-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
 </urlset>
