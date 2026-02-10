@@ -18,6 +18,7 @@
   position: relative;
   background-size: cover;
   background-position: center;
+  min-height: 800px;
 }
 
 .contact-left-overlay {
@@ -38,14 +39,14 @@
   padding: clamp(32px, 4vw, 56px) clamp(32px, 4vw, 56px) 0 clamp(32px, 4vw, 56px);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 24px;
+  justify-content: flex-start;
+  gap: 350px;
   max-width: 660px;
 }
 
 .contact-page-title {
   font-family: 'Times New Roman', Times, serif;
-  font-size: clamp(2.8rem, 4.4vw, 3.8rem);
+  font-size: clamp(3.5rem, 5.5vw, 5rem);
   font-weight: 400;
   margin: 0 0 14px 0;
   color: var(--primary-text);
@@ -54,9 +55,9 @@
 .contact-intro {
   font-family: var(--font-body);
   font-size: 1.08rem;
-  line-height: 1.75;
+  line-height: 1.4;
   color: var(--primary-text);
-  max-width: 48ch;
+  max-width: 70ch;
 }
 
 .contact-details {
@@ -64,14 +65,14 @@
   padding: 0;
   margin: 0;
   display: grid;
-  gap: 14px;
+  gap: 0px;
 }
 
 .contact-details li {
   display: grid;
   grid-template-columns: 40px 1fr;
   gap: 16px;
-  align-items: flex-start;
+  align-items: center;
   font-family: var(--font-body);
   color: var(--primary-text);
 }
