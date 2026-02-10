@@ -783,7 +783,6 @@
 .contact-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  min-height: 680px;
 }
 
 .contact-left {
@@ -892,13 +891,15 @@
   background-color: var(--bg-light-beige);
   padding: clamp(32px, 4vw, 56px);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  min-height: 100%;
 }
 
 .contact-form {
   width: 100%;
   max-width: 520px;
+  padding-bottom: 80px;
 }
 
 .contact-form .form-group label {
@@ -913,7 +914,7 @@
 .contact-form input,
 .contact-form select,
 .contact-form textarea {
-  background-color: transparent;
+  background-color: transparent !important;
   border: 1px solid rgba(91, 26, 6, 0.4);
   border-radius: 10px;
 }
