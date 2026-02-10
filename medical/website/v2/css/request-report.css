@@ -4,6 +4,7 @@
 
 .contact-page {
   padding-top: 70px; /* header offset */
+  padding-bottom: 0;
   background-color: var(--bg-light-beige);
 }
 
@@ -34,7 +35,7 @@
   position: relative;
   z-index: 1;
   height: 100%;
-  padding: clamp(32px, 4vw, 56px);
+  padding: clamp(32px, 4vw, 56px) clamp(32px, 4vw, 56px) 0 clamp(32px, 4vw, 56px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -114,7 +115,7 @@
 
 .contact-right {
   background-color: var(--bg-light-beige);
-  padding: clamp(32px, 4vw, 56px);
+  padding: clamp(32px, 4vw, 56px) clamp(32px, 4vw, 56px) 0 clamp(32px, 4vw, 56px);
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -124,7 +125,6 @@
 .contact-form {
   width: 100%;
   max-width: 560px;
-  padding-bottom: 80px;
 }
 
 .contact-form .form-group label {
