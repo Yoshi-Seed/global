@@ -585,12 +585,12 @@
 .btn-contact {
   display: inline-block;
   background-color: var(--primary-text);
-  color: var(--bg-ivory);
+  color: #f9e5c1;
   padding: 14px 42px;
   font-family: var(--font-body);
   font-size: 1.05rem;
   text-decoration: none;
-  border-radius: 9999px;
+  border-radius: 0;
   transition: transform 180ms ease-out, background-color 180ms ease-out;
 }
 
@@ -615,7 +615,7 @@
 
 .translation-section--dark .btn-contact {
   background-color: var(--bg-brown);
-  color: var(--bg-ivory);
+  color: #f9e5c1;
 }
 
 .translation-section--dark .btn-contact:hover {
