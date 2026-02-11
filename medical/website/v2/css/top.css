@@ -826,10 +826,10 @@
 .contact-intro {
   font-family: var(--font-body);
   font-size: 1.05rem;
-  line-height: 1.7;
+  line-height: 1.4;
   color: var(--primary-text);
   max-width: 40ch;
-  margin-top: -12px;
+  margin-top: -390px;
 }
 
 .contact-details {
