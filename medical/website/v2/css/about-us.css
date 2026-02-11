@@ -5,12 +5,12 @@
 .about-hero {
   background-color: var(--bg-ivory);
   padding: calc(var(--spacing-xl) + 60px) 0 var(--spacing-lg);
-  text-align: center;
+  text-align: right;
 }
 
 .about-title {
   font-family: 'Times New Roman', Times, serif;
-  font-size: clamp(2.8rem, 5vw, 4.2rem);
+  font-size: clamp(3.5rem, 6vw, 5.5rem);
   font-weight: 400;
   color: var(--primary-text);
   margin: 0 0 16px 0;
@@ -25,9 +25,22 @@
   font-family: var(--font-body);
   font-size: 1.15rem;
   color: var(--primary-text);
-  margin: 0 auto;
+  margin: 0 0 32px auto;
   max-width: 70ch;
   line-height: 1.7;
+}
+
+.about-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  margin-left: auto;
+  max-width: 60ch;
+}
+
+.about-actions .btn {
+  border-radius: 0;
 }
 
 /* Who we are section */
