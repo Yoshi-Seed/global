@@ -5,7 +5,12 @@
 .about-hero {
   background-color: var(--bg-ivory);
   padding: calc(var(--spacing-xl) + 60px) 0 var(--spacing-lg);
-  text-align: right;
+}
+
+.about-hero .container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .about-title {
@@ -15,6 +20,8 @@
   color: var(--primary-text);
   margin: 0 0 16px 0;
   letter-spacing: -0.01em;
+  max-width: 60ch;
+  text-align: right;
 }
 
 .about-title em {
@@ -25,17 +32,17 @@
   font-family: var(--font-body);
   font-size: 1.15rem;
   color: var(--primary-text);
-  margin: 0 0 32px auto;
-  max-width: 70ch;
+  margin: 0 0 32px 0;
+  max-width: 60ch;
   line-height: 1.7;
+  text-align: right;
 }
 
 .about-actions {
   display: flex;
   gap: 16px;
-  justify-content: flex-end;
+  justify-content: flex-start;
   flex-wrap: wrap;
-  margin-left: auto;
   max-width: 60ch;
 }
 
