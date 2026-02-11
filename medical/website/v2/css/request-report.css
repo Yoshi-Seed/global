@@ -50,6 +50,7 @@
   font-weight: 400;
   margin: 0 0 14px 0;
   color: var(--primary-text);
+  letter-spacing: -0.02em;
 }
 
 .contact-intro {
@@ -130,7 +131,11 @@
 
 .contact-form .form-group label {
   font-family: var(--font-body);
-  font-weight: 600;
+  font-weight: 400;
+}
+
+.contact-form .form-group {
+  margin-bottom: 24px;
 }
 
 .contact-form input,
