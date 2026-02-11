@@ -40,7 +40,7 @@
 }
 
 .about-actions .btn {
-  border-radius: 0;
+  border-radius: 0 !important;
 }
 
 /* Who we are section */
