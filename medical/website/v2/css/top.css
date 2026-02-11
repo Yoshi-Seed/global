@@ -406,7 +406,7 @@
 /* Hero全体：フルスクリーン背景 */
 .gbu-hero {
   position: relative;
-  min-height: 90vh;
+  min-height: 95vh;
   display: flex;
   align-items: center;
   justify-content: center;
