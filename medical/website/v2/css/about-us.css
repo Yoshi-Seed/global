@@ -32,7 +32,7 @@
   font-family: var(--font-body);
   font-size: 1.15rem;
   color: var(--primary-text);
-  margin: 0 0 32px 0;
+  margin: 0 0 20px 0;
   max-width: 60ch;
   line-height: 1.7;
   text-align: right;
@@ -48,6 +48,7 @@
 
 .about-actions .btn {
   border-radius: 0 !important;
+  color: #f9e5c1 !important;
 }
 
 /* Who we are section */
@@ -128,22 +129,45 @@
   padding: var(--spacing-lg) 0 var(--spacing-xl);
 }
 
+.team-section .container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.team-carousel {
+  width: 100%;
+}
+
 .team-carousel .carousel-slide {
   padding: 0;
+}
+
+.team-carousel .carousel-controls {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+  width: fit-content;
+}
+
+.team-carousel .carousel-btn {
+  display: none;
 }
 
 .team-card {
   max-width: 980px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
+  display: flex;
+  justify-content: flex-end;
   gap: 32px;
   align-items: center;
   padding: 26px 10px;
 }
 
 .team-meta {
-  text-align: left;
+  text-align: right;
+  max-width: 60ch;
 }
 
 .team-name {
@@ -159,6 +183,10 @@
   font-size: 1.15rem;
   color: var(--primary-text);
   margin: 0;
+}
+
+.team-photo {
+  display: none;
 }
 
 .team-photo img {
