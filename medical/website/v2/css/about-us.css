@@ -273,26 +273,26 @@
   width: 44px;
   height: 44px;
   border-radius: 9999px;
-  border: 2px solid rgba(78, 97, 63, 0.35);
+  border: none;
   background: var(--bg-ivory);
   color: #4e613f;
   cursor: pointer;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 180ms ease-out, box-shadow 180ms ease-out;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  transition: transform 180ms ease-out;
+  box-shadow: none;
 }
 
 .moderators-trigger:hover {
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.12);
   transform: translateX(-50%) translateY(-1px);
 }
 
 .moderators-trigger-icon {
-  font-size: 1.35rem;
+  font-size: 1.8rem;
   line-height: 1;
-  transform: rotate(0deg);
+  color: #8c785b;
+  display: block;
   transition: transform 180ms ease-out;
 }
 
