@@ -5,7 +5,7 @@
 .rare-hero {
   background-color: var(--bg-ivory);
   padding: calc(var(--spacing-xl) + 60px) 0 var(--spacing-lg);
-  text-align: center;
+  text-align: left;
 }
 
 .rare-title {
@@ -14,6 +14,7 @@
   font-size: clamp(2.8rem, 5vw, 4.1rem);
   margin: 0 0 18px 0;
   color: #4e613f;
+  letter-spacing: -0.02em;
 }
 
 .rare-title em {
@@ -23,10 +24,10 @@
 .rare-subtitle {
   font-family: var(--font-body);
   font-size: 1.15rem;
-  line-height: 1.75;
+  line-height: 1.5;
   color: var(--primary-text);
   max-width: 88ch;
-  margin: 0 auto;
+  margin: 0;
 }
 
 /* Blocks */
@@ -91,7 +92,7 @@
 .rare-cta {
   background-color: #b5bf84;
   padding: 80px 0;
-  text-align: center;
+  text-align: left;
 }
 
 .rare-cta .cta-title {
@@ -104,10 +105,14 @@
 
 .rare-cta .cta-text {
   font-family: var(--font-body);
-  margin: 0 auto 26px;
+  margin: 0 0 26px 0;
   max-width: 75ch;
-  line-height: 1.75;
+  line-height: 1.4;
   color: var(--primary-text);
+}
+
+.rare-cta .btn {
+  border-radius: 0 !important;
 }
 
 @media (max-width: 1024px) {
