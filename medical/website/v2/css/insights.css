@@ -351,6 +351,14 @@
   padding: 60px 0 80px;
 }
 
+.report-carousel-section .carousel-dots {
+  display: none;
+}
+
+.report-carousel-section .carousel-controls {
+  display: none;
+}
+
 .report-card {
   background: var(--bg-ivory);
   border-radius: 18px;

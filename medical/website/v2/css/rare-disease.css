@@ -63,6 +63,7 @@
   font-size: 2.4rem;
   margin: 0 0 14px 0;
   color: var(--primary-text);
+  text-align: right;
 }
 
 .rare-copy p {
