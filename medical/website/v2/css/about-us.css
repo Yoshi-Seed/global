@@ -290,9 +290,11 @@
 
 .moderators-trigger-icon {
   font-size: 1.8rem;
-  line-height: 1;
+  line-height: 0;
   color: #8c785b;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: transform 180ms ease-out;
 }
 
