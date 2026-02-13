@@ -148,6 +148,7 @@
 .related-section {
   background-color: #708c63;
   padding: 70px 0;
+  text-align: left;
 }
 
 .related-title {
@@ -163,6 +164,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 32px;
+  text-align: left;
 }
 
 .related-card {
