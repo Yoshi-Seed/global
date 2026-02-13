@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.title = `${current.title} | Japan Fact Sheet | Seed Planning`;
 
   topicEl.textContent = current.topicArea || 'Topic area';
-  titleEl.textContent = current.title || '';
+  titleEl.innerHTML = current.title || '';
   subtitleEl.textContent = current.subtitle || '';
 
   // Tags
