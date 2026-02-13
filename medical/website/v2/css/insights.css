@@ -414,6 +414,11 @@
   text-align: left;
 }
 
+.cta-inner {
+  margin-left: 0;
+  margin-right: auto;
+}
+
 .cta-title {
   font-family: 'Times New Roman', Times, serif;
   font-size: 4.0rem;
