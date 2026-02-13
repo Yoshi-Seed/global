@@ -411,7 +411,7 @@
 .insights-cta {
   background-color: var(--bg-light-beige);
   padding: 80px 0;
-  text-align: center;
+  text-align: left;
 }
 
 .cta-title {
@@ -424,10 +424,14 @@
 
 .cta-text {
   font-family: var(--font-body);
-  margin: 0 auto 26px;
+  margin: 0 0 26px 0;
   max-width: 70ch;
-  line-height: 1.75;
+  line-height: 1.4;
   color: var(--primary-text);
+}
+
+.insights-cta .btn {
+  border-radius: 0 !important;
 }
 
 /* Responsive */
