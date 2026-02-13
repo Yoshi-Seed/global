@@ -420,6 +420,7 @@
   font-weight: 400;
   margin: 0 0 14px 0;
   color: var(--primary-text);
+  text-align: left;
 }
 
 .cta-text {
@@ -428,6 +429,7 @@
   max-width: 70ch;
   line-height: 1.4;
   color: var(--primary-text);
+  text-align: left;
 }
 
 .insights-cta .btn {
