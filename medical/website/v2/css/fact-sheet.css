@@ -2,16 +2,22 @@
    Fact Sheet detail page (PPT-inspired)
    =================================== */
 
+/* Remove gap between header and hero */
+#main {
+  margin-top: 0;
+  padding-top: 0;
+}
+
 .factsheet-hero {
   display: grid;
   grid-template-columns: 1fr 1fr;
   min-height: 520px;
-  margin-top: 70px; /* header offset */
+  margin-top: 0;
 }
 
 .factsheet-hero-text {
-  background-color: #6e86a1;
-  color: var(--bg-ivory);
+  background-color: rgba(110, 134, 161, 0.5);
+  color: #5b1a06;
   display: flex;
   align-items: center;
 }
@@ -22,27 +28,27 @@
 }
 
 .hero-topic {
-  font-family: var(--font-accent);
+  font-family: 'Montserrat', Arial, sans-serif;
   font-weight: 700;
   letter-spacing: 0.02em;
   margin: 0 0 12px 0;
-  color: rgba(255, 246, 234, 0.92);
+  color: #fff6ea;
 }
 
 .hero-title {
-  font-family: 'Times New Roman', Times, serif;
+  font-family: 'Montserrat', Arial, sans-serif;
   font-weight: 400;
   font-size: clamp(2.2rem, 3.8vw, 3.2rem);
-  line-height: 1.15;
+  line-height: 1.1;
   margin: 0 0 18px 0;
 }
 
 .hero-subtitle {
-  font-family: var(--font-body);
+  font-family: 'Montserrat', Arial, sans-serif;
   font-size: 1.15rem;
   line-height: 1.75;
   margin: 0 0 18px 0;
-  color: rgba(255, 246, 234, 0.95);
+  color: #5b1a06;
   max-width: 70ch;
 }
 
@@ -56,7 +62,7 @@
 .hero-tag {
   background: rgba(255, 246, 234, 0.14);
   border: 1px solid rgba(255, 246, 234, 0.25);
-  color: rgba(255, 246, 234, 0.95);
+  color: #fff6ea;
   font-family: var(--font-body);
   font-size: 0.9rem;
   padding: 6px 12px;
@@ -66,29 +72,29 @@
 .btn-download {
   display: inline-block;
   padding: 14px 34px;
-  border-radius: 9999px;
+  border-radius: 0;
   border: 1px solid rgba(255, 246, 234, 0.55);
-  color: var(--bg-ivory);
+  color: #fff6ea;
   text-decoration: none;
   font-family: var(--font-body);
   font-weight: 700;
-  background: rgba(255, 246, 234, 0.12);
+  background: #6e86a1;
   transition: transform 180ms ease-out, background-color 180ms ease-out;
 }
 
 .btn-download:hover {
   transform: translateY(-1px);
-  background: rgba(255, 246, 234, 0.18);
+  background: rgba(110, 134, 161, 0.85);
 }
 
 .btn-download--solid {
-  background: #4e613f;
-  border-color: rgba(78, 97, 63, 0.5);
-  color: var(--bg-ivory);
+  background: #6e86a1;
+  border-color: rgba(110, 134, 161, 0.5);
+  color: #fff6ea;
 }
 
 .btn-download--solid:hover {
-  background: rgba(78, 97, 63, 0.92);
+  background: rgba(110, 134, 161, 0.85);
 }
 
 .factsheet-hero-image img {
@@ -102,7 +108,7 @@
 /* Content */
 .factsheet-content {
   background-color: var(--bg-ivory);
-  padding: 70px 0;
+  padding: 40px 0 100px 0;
 }
 
 .factsheet-columns {
@@ -112,11 +118,11 @@
 }
 
 .content-heading {
-  font-family: 'Times New Roman', Times, serif;
+  font-family: 'Montserrat', Arial, sans-serif;
   font-weight: 400;
   font-size: 2.1rem;
   color: var(--primary-text);
-  margin: 0 0 18px 0;
+  margin: 0 0 28px 0;
 }
 
 .bullet-list {
@@ -133,6 +139,8 @@
 
 .download-box {
   margin-top: 26px;
+  text-align: right;
+  display: none;
 }
 
 /* Related */
