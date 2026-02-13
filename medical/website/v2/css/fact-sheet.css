@@ -156,6 +156,7 @@
   font-size: 4.0rem;
   color: var(--bg-ivory);
   margin: 0 0 28px 0;
+  text-align: left;
 }
 
 .related-grid {
@@ -191,6 +192,7 @@
   padding: 16px 16px 18px;
   display: grid;
   gap: 10px;
+  text-align: left;
 }
 
 .related-topic {
