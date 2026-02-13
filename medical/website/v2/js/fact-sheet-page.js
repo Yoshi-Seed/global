@@ -46,8 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.title = `${current.title} | Japan Fact Sheet | Seed Planning`;
 
   topicEl.textContent = current.topicArea || 'Topic area';
-  console.log('Setting title:', current.title);
-  console.log('Using innerHTML');
   titleEl.innerHTML = current.title || '';
   subtitleEl.textContent = current.subtitle || '';
 

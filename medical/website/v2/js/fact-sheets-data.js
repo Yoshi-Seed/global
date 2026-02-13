@@ -66,7 +66,7 @@ window.FACT_SHEETS = [
   },
   {
     id: "prescribing-behaviors",
-    title: "Japanese Physicians Prescribing<br>Behaviors & Psychology",
+    title: "Japanese Physicians Prescribing Behaviors & Psychology",
     subtitle: "How decisions are made — and how adoption happens",
     topicArea: "HCP insights",
     tags: ["Behavior", "Messaging", "Segmentation"],
