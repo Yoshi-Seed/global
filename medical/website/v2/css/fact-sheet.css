@@ -38,10 +38,10 @@
 .hero-title {
   font-family: 'Montserrat', Arial, sans-serif;
   font-weight: 400;
-  font-size: clamp(2.2rem, 3.8vw, 3.2rem);
+  font-size: clamp(2.0rem, 3.5vw, 2.9rem);
   line-height: 1.1;
   margin: 0 0 18px 0;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.06em;
 }
 
 .hero-subtitle {
