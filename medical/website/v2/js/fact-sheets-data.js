@@ -8,7 +8,7 @@ window.FACT_SHEETS = [
     subtitle: "A comprehensive guide for international teams",
     topicArea: "HCP research",
     tags: ["Japan", "Methodology", "Fieldwork"],
-    thumbnail: "assets/seed_discussion.png",
+    thumbnail: "assets/fact-sheet-hero-meeting.jpg",
     pdf: "pdf/Conducting_Physician_Market_Research_in_Japan-A_Comprehensive_Guide_for_International_Teams.pdf",
     keyPoints: [
       "What makes physician recruitment and scheduling different in Japan (and how to plan around it).",
@@ -29,7 +29,7 @@ window.FACT_SHEETS = [
     subtitle: "Navigating structural, cultural, and operational complexity",
     topicArea: "Research operations",
     tags: ["Pharma", "Japan ops", "Culture"],
-    thumbnail: "assets/seed_office.png",
+    thumbnail: "assets/fact-sheet-hero-doctor-writing.jpg",
     pdf: "pdf/Japan_Market_Brief_Navigating_Structural_Cultural_and_Operational_Complexities_in_Pharmaceutical_Market_Research.pdf",
     keyPoints: [
       "How Japan’s healthcare structure influences access, referral, and decision-making.",
@@ -66,11 +66,11 @@ window.FACT_SHEETS = [
   },
   {
     id: "prescribing-behaviors",
-    title: "Japanese Physicians Prescribing Behaviors & Psychology",
+    title: "Japanese Physicians<br>Prescribing Behaviors<br>& Psychology",
     subtitle: "How decisions are made — and how adoption happens",
     topicArea: "HCP insights",
     tags: ["Behavior", "Messaging", "Segmentation"],
-    thumbnail: "assets/notetaking.png",
+    thumbnail: "assets/fact-sheet-hero-doctor-writing-clipboard.jpg",
     pdf: "pdf/Japanese_Physicians_Prescribing_Behaviors_and_Psychology.pdf",
     keyPoints: [
       "How physicians weigh evidence, guidelines, and real-world constraints in Japan.",
@@ -90,7 +90,7 @@ window.FACT_SHEETS = [
     subtitle: "Overview and implications for diagnosis journey",
     topicArea: "Healthcare system",
     tags: ["Screening", "Prevention", "Patient flow"],
-    thumbnail: "assets/patient_care.png",
+    thumbnail: "assets/fact-sheet-hero-checklist.jpg",
     pdf: "pdf/Japans_Annual_Health_Check-up_System_Overview_and_Insights_for_Pharma_Market.pdf",
     keyPoints: [
       "How annual check-ups work in Japan and how patients move from screening to care.",
@@ -110,7 +110,7 @@ window.FACT_SHEETS = [
     subtitle: "A practical walkthrough for global teams",
     topicArea: "Market access",
     tags: ["Pricing", "Reimbursement", "Policy"],
-    thumbnail: "assets/seed_office.png",
+    thumbnail: "assets/fact-sheet-hero-business-handshake.jpg",
     pdf: "pdf/Japans_Drug_Reimbursement_and_Pricing_Process.pdf",
     keyPoints: [
       "Key steps from regulatory approval to reimbursement listing in Japan.",
@@ -170,7 +170,7 @@ window.FACT_SHEETS = [
     subtitle: "Fieldwork, translation, and quality — practical notes",
     topicArea: "Research operations",
     tags: ["Tips", "Fieldwork", "Quality"],
-    thumbnail: "assets/notetaking.png",
+    thumbnail: "assets/fact-sheet-hero-health-insurance-tiles.jpg",
     pdf: "pdf/Tips_for_Healthcare_MR_in_Japan.pdf",
     keyPoints: [
       "Best practices for scheduling, incentives, and local etiquette in Japan.",
@@ -190,7 +190,7 @@ window.FACT_SHEETS = [
     subtitle: "Institutions, decision-making, and patient pathways",
     topicArea: "Therapy area",
     tags: ["Oncology", "Patient flow", "Institutions"],
-    thumbnail: "assets/seed_consultation.png",
+    thumbnail: "assets/fact-sheet-hero-doctors-meeting.jpg",
     pdf: "pdf/Understanding_Oncology_Dynamics_in_Japan.pdf",
     keyPoints: [
       "How institutions (university vs community) shape decision-making in oncology.",
