@@ -92,7 +92,8 @@
   margin-bottom: var(--spacing-lg); /* 間隔を広げる */
   color: #f9e5c1; /* PPT準拠：クリーム色 */
   text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.7), 0 0 15px rgba(0, 0, 0, 0.5);
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .hero-question {
@@ -562,7 +563,8 @@
   margin-bottom: 0;
   transition: color 180ms ease-out;
   letter-spacing: -0.02em;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
   text-align: center;
 }
 
@@ -581,6 +583,13 @@
   align-self: center;
   text-align: center;
 }
+
+
+@media (min-width: 1024px) {
+  .link-title {
+    white-space: nowrap;
+    overflow-wrap: normal;
+  }
 }
 
 /* ===================================

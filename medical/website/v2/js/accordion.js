@@ -15,8 +15,6 @@ class Accordion {
     this.items.forEach((item, index) => {
       const header = item.querySelector('.accordion-header');
       const content = item.querySelector('.accordion-content');
-      const icon = item.querySelector('.accordion-icon');
-      
       if (!header || !content) return;
       
       // Set unique IDs for accessibility
@@ -48,9 +46,7 @@ class Accordion {
   }
   
   toggle(item) {
-    const header = item.querySelector('.accordion-header');
     const content = item.querySelector('.accordion-content');
-    const icon = item.querySelector('.accordion-icon');
     const isActive = content.classList.contains('active');
     
     // Close all items if multiple not allowed
