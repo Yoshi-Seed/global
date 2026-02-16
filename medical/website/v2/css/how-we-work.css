@@ -75,7 +75,7 @@
 /* 左カラム（メニュー）内の段落のスタイル調整 */
 .how-work-menu .how-work-description {
   margin-top: 0;
-  margin-bottom: 32px;
+  margin-bottom: 48px;
   max-width: 100%;
   font-size: clamp(0.85rem, 1.4vw, 0.95rem);
   line-height: 1.5;
