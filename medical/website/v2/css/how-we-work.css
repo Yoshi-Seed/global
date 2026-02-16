@@ -204,6 +204,15 @@
   margin-bottom: 24px;
 }
 
+.panel-intro {
+  font-family: 'Montserrat', Arial, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: #5b1a06;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
 .panel-list {
   list-style: none;
   padding: 0;
@@ -228,6 +237,16 @@
   color: #735240;
   font-size: 1.5rem;
   line-height: 1.8;
+}
+
+.panel-footer {
+  font-family: 'Montserrat', Arial, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: #5b1a06;
+  line-height: 1.6;
+  margin-top: 16px;
+  margin-bottom: 0;
 }
 
 .panel-text {
