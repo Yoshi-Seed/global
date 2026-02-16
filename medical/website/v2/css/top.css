@@ -79,6 +79,8 @@
   margin-bottom: var(--spacing-sm); /* サブタイトルとの間隔を詰める */
   color: #f9e5c1; /* PPT準拠：クリーム色（白はNG） */
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  animation: riseUp 1s ease-out 0.2s forwards;
 }
 
 .hero-title .italic {
@@ -94,6 +96,68 @@
   text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.7), 0 0 15px rgba(0, 0, 0, 0.5);
   white-space: normal;
   overflow-wrap: anywhere;
+  letter-spacing: -0.02em;
+  opacity: 0;
+  animation: riseUp 1s ease-out 0.4s forwards;
+}
+
+.hero-description {
+  font-family: var(--font-body);
+  font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+  line-height: 1.7;
+  margin-top: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  color: #f9e5c1;
+  text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.7), 0 0 15px rgba(0, 0, 0, 0.5);
+  max-width: 700px;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.hero-description .slide-left {
+  display: block;
+  opacity: 0;
+  animation: slideInFromLeft 1.2s ease-out 0.5s forwards;
+  margin-bottom: 0.5em;
+}
+
+.hero-description .slide-right {
+  display: block;
+  opacity: 0;
+  animation: slideInFromRight 1.2s ease-out 1.3s forwards;
+}
+
+@keyframes slideInFromLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-80px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  0% {
+    opacity: 0;
+    transform: translateX(80px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes riseUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .hero-question {
@@ -104,6 +168,8 @@
   margin-bottom: var(--spacing-sm); /* ボタンとの間隔を詰める */
   color: #f9e5c1; /* PPT準拠：クリーム色 */
   text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.7), 0 0 15px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  animation: riseUp 1s ease-out 1.3s forwards;
 }
 
 .hero-question em {
@@ -124,6 +190,8 @@
   transition: all 0.18s ease-out; /* 150-200ms */
   border: none;
   cursor: pointer;
+  opacity: 0;
+  animation: riseUp 1s ease-out 1.3s forwards;
 }
 
 .btn-start-here:hover {
