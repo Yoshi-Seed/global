@@ -349,6 +349,12 @@
 
 .report-intro .btn {
   border-radius: 8px;
+  background-color: #f9e5c1;
+  color: #5b1a06;
+}
+
+.report-intro .btn:hover {
+  background-color: #f5ddb0;
 }
 
 /* Report carousel */
