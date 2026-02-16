@@ -6,7 +6,7 @@
   position: relative;
   background-size: cover;
   background-position: center;
-  padding: 140px 0 50px;
+  padding: 140px 0 30px;
 }
 
 .insights-hero-overlay {
@@ -43,7 +43,7 @@
 /* Layout */
 .factsheets-section {
   background-color: var(--bg-ivory);
-  padding: 40px 0;
+  padding: 20px 0 40px;
 }
 
 .factsheets-layout {
