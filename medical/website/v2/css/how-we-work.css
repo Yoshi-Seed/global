@@ -625,20 +625,30 @@
 
 .testimonial-text span {
   display: block;
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.testimonial-card:not(:hover) .testimonial-text span {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.testimonial-card:hover .testimonial-text .text-slide-left {
+  animation: slideInFromLeft 0.8s ease-out 0.2s forwards;
+}
+
+.testimonial-card:hover .testimonial-text .text-slide-right {
+  animation: slideInFromRight 0.8s ease-out 0.6s forwards;
+}
+
+.testimonial-card .testimonial-text span {
+  opacity: 1;
+}
+
+.testimonial-card:hover .testimonial-text span {
   opacity: 0;
-  animation-duration: 0.8s;
-  animation-fill-mode: forwards;
-  animation-timing-function: ease-out;
-}
-
-.testimonial-text .text-slide-left {
-  animation-name: slideInFromLeft;
-  animation-delay: 0.2s;
-}
-
-.testimonial-text .text-slide-right {
-  animation-name: slideInFromRight;
-  animation-delay: 0.6s;
 }
 
 @keyframes slideInFromLeft {
