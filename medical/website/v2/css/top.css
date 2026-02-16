@@ -13,6 +13,12 @@
   margin-top: 70px;
 }
 
+/* Homeページのみ: 背景画像を最上部まで引き伸ばす */
+.page-home .hero-section {
+  min-height: 100vh;
+  margin-top: 0;
+}
+
 .hero-background {
   position: absolute;
   top: 0;
