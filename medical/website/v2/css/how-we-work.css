@@ -81,6 +81,56 @@
   line-height: 1.5;
 }
 
+/* アニメーション用のspan要素 */
+.how-work-menu .how-work-description span {
+  display: block;
+  opacity: 0;
+}
+
+.how-work-menu .how-work-description .slide-left {
+  animation: slideInFromLeft 1s ease-out forwards;
+}
+
+.how-work-menu .how-work-description .slide-right {
+  animation: slideInFromRight 1s ease-out forwards;
+}
+
+/* 各行の遅延時間 */
+.how-work-menu .how-work-description .slide-left:nth-of-type(1) {
+  animation-delay: 0.3s;
+}
+
+.how-work-menu .how-work-description .slide-right:nth-of-type(2) {
+  animation-delay: 0.8s;
+}
+
+.how-work-menu .how-work-description .slide-left:nth-of-type(3) {
+  animation-delay: 1.3s;
+}
+
+/* アニメーション定義 */
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 /* ===================================
    アコーディオン（PPT準拠：行メニュー形式）
    巨大クリームバー禁止
