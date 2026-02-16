@@ -48,8 +48,8 @@ class Carousel {
   }
   
   createControls() {
-    const controls = document.createElement('div');
-    controls.className = 'carousel-controls';
+    const wrapper = document.createElement('div');
+    wrapper.className = 'carousel-wrapper';
     
     const prevBtn = document.createElement('button');
     prevBtn.className = 'carousel-btn carousel-prev';
@@ -63,9 +63,10 @@ class Carousel {
     nextBtn.setAttribute('aria-label', 'Next slide');
     nextBtn.addEventListener('click', () => this.next());
     
-    controls.appendChild(prevBtn);
-    controls.appendChild(nextBtn);
-    this.carousel.appendChild(controls);
+    wrapper.appendChild(prevBtn);
+    this.controlsWrapper = wrapper;
+    this.nextBtn = nextBtn;
+    this.carousel.appendChild(wrapper);
   }
   
   createDots() {
@@ -75,6 +76,7 @@ class Carousel {
     this.slides.forEach((_, index) => {
       const dot = document.createElement('button');
       dot.className = 'carousel-dot';
+      dot.textContent = index + 1;
       dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
       
       if (index === 0) {
@@ -85,7 +87,8 @@ class Carousel {
       dotsContainer.appendChild(dot);
     });
     
-    this.carousel.appendChild(dotsContainer);
+    this.controlsWrapper.appendChild(dotsContainer);
+    this.controlsWrapper.appendChild(this.nextBtn);
     this.dots = dotsContainer.querySelectorAll('.carousel-dot');
   }
   

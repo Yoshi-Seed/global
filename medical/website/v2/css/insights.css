@@ -363,12 +363,64 @@
   padding: 60px 0 80px;
 }
 
-.report-carousel-section .carousel-dots {
-  display: none;
+.report-carousel-section .carousel-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 40px;
 }
 
 .report-carousel-section .carousel-controls {
-  display: none;
+  display: flex;
+  order: 1;
+}
+
+.report-carousel-section .carousel-dots {
+  display: flex;
+  order: 2;
+  margin-top: 0;
+}
+
+.report-carousel-section .carousel-controls {
+  order: 3;
+}
+
+.report-carousel-section .carousel-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: rgba(249, 229, 193, 0.2);
+  border: 2px solid rgba(249, 229, 193, 0.4);
+  color: #f9e5c1;
+}
+
+.report-carousel-section .carousel-btn:hover {
+  background-color: rgba(249, 229, 193, 0.3);
+  border-color: rgba(249, 229, 193, 0.6);
+}
+
+.report-carousel-section .carousel-dot {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: rgba(249, 229, 193, 0.2);
+  border: 2px solid rgba(249, 229, 193, 0.4);
+  color: #f9e5c1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.report-carousel-section .carousel-dot.active {
+  background-color: #f9e5c1;
+  border-color: #f9e5c1;
+  color: #5b1a06;
+  width: 56px;
+  border-radius: 50%;
 }
 
 .report-card {
