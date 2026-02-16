@@ -284,9 +284,8 @@
   content: '•';
   position: absolute;
   left: 0;
-  top: 0;
   color: #735240;
-  font-size: 1.5rem;
+  font-size: 1.05rem;
   line-height: 1.5;
 }
 
