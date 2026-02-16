@@ -61,6 +61,26 @@
   margin-top: 8px;
 }
 
+.how-work-description {
+  font-family: 'Montserrat', Arial, sans-serif;
+  font-size: clamp(0.95rem, 1.6vw, 1.05rem);
+  font-weight: 400;
+  color: #f9e5c1;
+  line-height: 1.6;
+  margin-top: 24px;
+  margin-bottom: 0;
+  max-width: 700px;
+}
+
+/* 左カラム（メニュー）内の段落のスタイル調整 */
+.how-work-menu .how-work-description {
+  margin-top: 0;
+  margin-bottom: 32px;
+  max-width: 100%;
+  font-size: clamp(0.85rem, 1.4vw, 0.95rem);
+  line-height: 1.5;
+}
+
 /* ===================================
    アコーディオン（PPT準拠：行メニュー形式）
    巨大クリームバー禁止
