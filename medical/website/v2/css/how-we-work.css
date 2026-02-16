@@ -222,12 +222,12 @@
 .panel-list li {
   font-family: 'Montserrat', Arial, sans-serif;
   font-size: 1.05rem;
-  font-weight: 400;
+  font-weight: 600;
   color: #5b1a06;
-  line-height: 1.8;
+  line-height: 1.5;
   padding-left: 24px;
   position: relative;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .panel-list li::before {
