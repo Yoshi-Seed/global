@@ -234,6 +234,7 @@
   content: '•';
   position: absolute;
   left: 0;
+  top: 0;
   color: #735240;
   font-size: 1.5rem;
   line-height: 1.5;
