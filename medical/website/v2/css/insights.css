@@ -547,6 +547,15 @@
   border-radius: 8px !important;
 }
 
+/* Remove hover effects from buttons on insights page */
+button.btn:hover,
+button.btn-secondary:hover,
+button#clearFilters:hover,
+.btn:hover {
+  box-shadow: none !important;
+  transform: translateY(0) !important;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
   .factsheets-layout {
