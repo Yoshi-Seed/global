@@ -313,7 +313,7 @@
 .report-intro {
   position: relative;
   background-size: cover;
-  background-position: center top;
+  background-position: center;
   padding: 70px 0;
 }
 
@@ -335,7 +335,7 @@
 
 .report-intro-title {
   font-family: 'Times New Roman', Times, serif;
-  font-size: 3.4rem;
+  font-size: 3.8rem;
   font-weight: 400;
   margin: 0 0 4px 0;
 }
@@ -445,6 +445,11 @@
   display: flex;
   flex-direction: column;
   position: relative;
+}
+
+.report-card:hover {
+  box-shadow: none;
+  transform: none;
 }
 
 .report-meta {
