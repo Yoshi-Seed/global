@@ -95,7 +95,7 @@
 
 .rare-btn {
   margin-top: 8px;
-  border-radius: 0 !important;
+  border-radius: 8px !important;
 }
 
 /* CTA */
@@ -122,7 +122,7 @@
 }
 
 .rare-cta .btn {
-  border-radius: 0 !important;
+  border-radius: 8px !important;
 }
 
 @media (max-width: 1024px) {

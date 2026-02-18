@@ -1061,6 +1061,11 @@
   margin-top: 24px;
 }
 
+.contact-form .btn-block:hover {
+  box-shadow: none !important;
+  transform: translateY(0) !important;
+}
+
 /* RESPONSIVE DESIGN */
 
 @media (max-width: 1024px) {

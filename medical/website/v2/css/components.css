@@ -590,7 +590,7 @@
   font-family: var(--font-body);
   font-size: 1.05rem;
   text-decoration: none;
-  border-radius: 0;
+  border-radius: 8px;
   transition: transform 180ms ease-out, background-color 180ms ease-out;
 }
 
