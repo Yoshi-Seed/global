@@ -218,7 +218,7 @@
 .moderators-hero {
   position: relative;
   background-size: cover;
-  background-position: center;
+  background-position: center 40%;
   min-height: 280px;
   display: flex;
   align-items: stretch;
@@ -227,7 +227,7 @@
 .moderators-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(255, 246, 234, 0.58);
+  background: none;
 }
 
 .moderators-hero-inner {
