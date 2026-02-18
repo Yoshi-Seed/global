@@ -387,6 +387,7 @@
 
 .report-carousel-section .carousel-btn.carousel-prev {
   order: 1;
+  display: none;
 }
 
 .report-carousel-section .carousel-dots {
@@ -398,6 +399,7 @@
 
 .report-carousel-section .carousel-btn.carousel-next {
   order: 3;
+  display: none;
 }
 
 .report-carousel-section .carousel-btn {
