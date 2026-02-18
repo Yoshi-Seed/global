@@ -76,7 +76,6 @@ class Carousel {
     this.slides.forEach((_, index) => {
       const dot = document.createElement('button');
       dot.className = 'carousel-dot';
-      dot.textContent = index + 1;
       dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
       
       if (index === 0) {

@@ -369,9 +369,12 @@
 }
 
 .report-carousel-section .carousel-slide {
-  min-width: 50%;
+  min-width: 100%;
   padding: 0 10px;
   box-sizing: border-box;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
 }
 
 .report-carousel-section .carousel-wrapper {
@@ -390,7 +393,7 @@
   display: flex;
   order: 2;
   margin-top: 0;
-  gap: 20px;
+  gap: 12px;
 }
 
 .report-carousel-section .carousel-btn.carousel-next {
@@ -413,25 +416,18 @@
 }
 
 .report-carousel-section .carousel-dot {
-  width: 40px;
-  height: 40px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  background-color: rgba(249, 229, 193, 0.2);
-  border: 2px solid rgba(249, 229, 193, 0.4);
-  color: #f9e5c1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  font-weight: 600;
+  background-color: rgba(249, 229, 193, 0.3);
+  border: none;
+  padding: 0;
+  transition: all 0.3s ease;
 }
 
 .report-carousel-section .carousel-dot.active {
   background-color: #f9e5c1;
-  border-color: #f9e5c1;
-  color: #5b1a06;
-  width: 40px;
+  width: 12px;
   border-radius: 50%;
 }
 
@@ -441,7 +437,8 @@
   border: none;
   padding: 26px;
   max-width: 100%;
-  margin: 0 auto;
+  flex: 1;
+  margin: 0;
   display: flex;
   flex-direction: column;
   position: relative;

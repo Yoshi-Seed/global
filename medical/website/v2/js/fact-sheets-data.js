@@ -227,5 +227,54 @@ window.REPORT_SUMMARIES = [
     title: "Patient recruitment realities in Japan",
     summary: "Recruitment channels, constraints, and a fieldwork checklist to reduce drop-outs — especially when the topic is sensitive.",
     tags: ["Recruitment", "Quality"]
+  },
+  {
+    number: "004",
+    date: "2026-02",
+    title: "Conducting physician market research in Japan",
+    summary: "Key considerations for engaging Japanese physicians in market research — from recruitment protocols to interview methodology.",
+    tags: ["HCP insights", "Methodology"]
+  },
+  {
+    number: "005",
+    date: "2026-02",
+    title: "Understanding Japan's healthcare infrastructure",
+    summary: "An overview of Japan's unique healthcare system structure and how it impacts clinical research and patient access.",
+    tags: ["Market access", "Policy"]
+  },
+  {
+    number: "006",
+    date: "2026-02",
+    title: "Patient engagement strategies in Japan",
+    summary: "Best practices for building trust and engagement with Japanese patients in clinical and market research settings.",
+    tags: ["Recruitment", "Quality"]
+  },
+  {
+    number: "007",
+    date: "2026-03",
+    title: "Regulatory considerations for Japan research",
+    summary: "Essential regulatory frameworks and ethical guidelines that shape healthcare research design and execution in Japan.",
+    tags: ["Policy", "Quality"]
+  },
+  {
+    number: "008",
+    date: "2026-03",
+    title: "Digital health adoption in Japan",
+    summary: "Current trends and barriers in digital health technology adoption among Japanese healthcare professionals and patients.",
+    tags: ["HCP insights", "Market access"]
+  },
+  {
+    number: "009",
+    date: "2026-03",
+    title: "Rare disease research in Japan",
+    summary: "Unique challenges and opportunities for conducting rare disease research in Japan's healthcare ecosystem.",
+    tags: ["Recruitment", "Policy"]
+  },
+  {
+    number: "010",
+    date: "2026-03",
+    title: "Qualitative research best practices for Japan",
+    summary: "Methodological insights and cultural considerations for conducting high-quality qualitative research in Japan.",
+    tags: ["Methodology", "Quality"]
   }
 ];

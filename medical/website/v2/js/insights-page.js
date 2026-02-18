@@ -316,25 +316,52 @@ document.addEventListener('DOMContentLoaded', () => {
   // ---------- Report carousel ----------
   const reportContainer = document.getElementById('reportCarouselContainer');
   if (reportContainer) {
-    reportContainer.innerHTML = reportSummaries
-      .map((r) => {
-        const tags = (r.tags || []).map((t) => `<span class="tag-pill">${escapeHtml(t)}</span>`).join('');
-        return `
-          <div class="carousel-slide">
-            <article class="report-card">
-              <div class="report-meta">
-                <span class="report-number">#${escapeHtml(r.number)}</span>
-                <span class="report-date">${escapeHtml(r.date)}</span>
-              </div>
-              <h3 class="report-title">${escapeHtml(r.title)}</h3>
-              <p class="report-summary">${escapeHtml(r.summary)}</p>
-              <div class="report-tags">${tags}</div>
-              <a href="#" class="btn-learn-more">Download</a>
-            </article>
+    // Group reports into pairs (2 cards per slide)
+    const slides = [];
+    for (let i = 0; i < reportSummaries.length; i += 2) {
+      const card1 = reportSummaries[i];
+      const card2 = reportSummaries[i + 1];
+      
+      const tags1 = (card1.tags || []).map((t) => `<span class="tag-pill">${escapeHtml(t)}</span>`).join('');
+      const card1Html = `
+        <article class="report-card">
+          <div class="report-meta">
+            <span class="report-number">#${escapeHtml(card1.number)}</span>
+            <span class="report-date">${escapeHtml(card1.date)}</span>
           </div>
+          <h3 class="report-title">${escapeHtml(card1.title)}</h3>
+          <p class="report-summary">${escapeHtml(card1.summary)}</p>
+          <div class="report-tags">${tags1}</div>
+          <a href="#" class="btn-learn-more">Download</a>
+        </article>
+      `;
+      
+      let card2Html = '';
+      if (card2) {
+        const tags2 = (card2.tags || []).map((t) => `<span class="tag-pill">${escapeHtml(t)}</span>`).join('');
+        card2Html = `
+          <article class="report-card">
+            <div class="report-meta">
+              <span class="report-number">#${escapeHtml(card2.number)}</span>
+              <span class="report-date">${escapeHtml(card2.date)}</span>
+            </div>
+            <h3 class="report-title">${escapeHtml(card2.title)}</h3>
+            <p class="report-summary">${escapeHtml(card2.summary)}</p>
+            <div class="report-tags">${tags2}</div>
+            <a href="#" class="btn-learn-more">Download</a>
+          </article>
         `;
-      })
-      .join('');
+      }
+      
+      slides.push(`
+        <div class="carousel-slide">
+          ${card1Html}
+          ${card2Html}
+        </div>
+      `);
+    }
+    
+    reportContainer.innerHTML = slides.join('');
   }
 
   // First render
