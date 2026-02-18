@@ -313,7 +313,7 @@
 .report-intro {
   position: relative;
   background-size: cover;
-  background-position: center;
+  background-position: center top;
   padding: 70px 0;
 }
 
@@ -442,6 +442,9 @@
   padding: 26px;
   max-width: 100%;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 
 .report-meta {
@@ -481,6 +484,28 @@
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.btn-learn-more {
+  display: inline-block;
+  align-self: flex-end;
+  margin-top: auto;
+  padding: 8px 20px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #5b1a06;
+  background-color: transparent;
+  border: 1px solid #5b1a06;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-learn-more:hover {
+  background-color: #5b1a06;
+  color: #f9e5c1;
 }
 
 /* CTA */
@@ -514,7 +539,7 @@
 }
 
 .insights-cta .btn {
-  border-radius: 0 !important;
+  border-radius: 8px !important;
 }
 
 /* Responsive */

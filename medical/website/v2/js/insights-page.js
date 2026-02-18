@@ -329,6 +329,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <h3 class="report-title">${escapeHtml(r.title)}</h3>
               <p class="report-summary">${escapeHtml(r.summary)}</p>
               <div class="report-tags">${tags}</div>
+              <a href="#" class="btn-learn-more">Download</a>
             </article>
           </div>
         `;
