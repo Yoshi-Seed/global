@@ -289,17 +289,19 @@
 }
 
 .moderators-trigger-icon {
-  font-size: 1.8rem;
-  line-height: 0;
+  font-size: 1.5rem;
+  line-height: 1;
   color: #8c785b;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  top: -6px;
   transition: transform 180ms ease-out;
 }
 
 .moderators-trigger[aria-expanded="true"] .moderators-trigger-icon {
-  transform: rotate(180deg);
+  transform: rotate(180deg) translateY(-12px);
 }
 
 .moderators-content {
