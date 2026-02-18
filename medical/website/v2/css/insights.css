@@ -363,6 +363,17 @@
   padding: 60px 0 80px;
 }
 
+.report-carousel-section .carousel-container {
+  display: flex;
+  transition: transform 0.5s ease;
+}
+
+.report-carousel-section .carousel-slide {
+  min-width: 50%;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
 .report-carousel-section .carousel-wrapper {
   display: flex;
   align-items: center;
@@ -371,8 +382,7 @@
   margin-top: 40px;
 }
 
-.report-carousel-section .carousel-controls {
-  display: flex;
+.report-carousel-section .carousel-btn.carousel-prev {
   order: 1;
 }
 
@@ -380,19 +390,21 @@
   display: flex;
   order: 2;
   margin-top: 0;
+  gap: 20px;
 }
 
-.report-carousel-section .carousel-controls {
+.report-carousel-section .carousel-btn.carousel-next {
   order: 3;
 }
 
 .report-carousel-section .carousel-btn {
-  width: 56px;
-  height: 56px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background-color: rgba(249, 229, 193, 0.2);
   border: 2px solid rgba(249, 229, 193, 0.4);
   color: #f9e5c1;
+  font-size: 0.9rem;
 }
 
 .report-carousel-section .carousel-btn:hover {
@@ -401,8 +413,8 @@
 }
 
 .report-carousel-section .carousel-dot {
-  width: 56px;
-  height: 56px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background-color: rgba(249, 229, 193, 0.2);
   border: 2px solid rgba(249, 229, 193, 0.4);
@@ -411,7 +423,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--font-body);
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   font-weight: 600;
 }
 
@@ -419,16 +431,16 @@
   background-color: #f9e5c1;
   border-color: #f9e5c1;
   color: #5b1a06;
-  width: 56px;
+  width: 40px;
   border-radius: 50%;
 }
 
 .report-card {
   background: var(--bg-ivory);
   border-radius: 18px;
-  border: 1px solid rgba(91, 26, 6, 0.18);
+  border: none;
   padding: 26px;
-  max-width: 860px;
+  max-width: 100%;
   margin: 0 auto;
 }
 
