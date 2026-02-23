@@ -152,13 +152,14 @@
 /* Team grid */
 .team-section {
   background-color: var(--bg-ivory);
-  padding: var(--spacing-xl) 0 var(--spacing-lg);
+  padding: var(--spacing-xl) 0 120px;
 }
 
 .team-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  column-gap: 24px;
+  row-gap: 40px;
   max-width: 1200px;
   margin: 0 auto;
 }
