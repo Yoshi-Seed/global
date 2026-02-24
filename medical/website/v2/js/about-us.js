@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
         content.hidden = true;
       } else {
         content.hidden = false;
-        // Optional: bring content into view smoothly
-        content.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Optional: bring content into view smoothly (with minimal scroll)
+        content.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
     });
   }
