@@ -437,7 +437,7 @@
 
 /* Lead quote in panel-01 */
 .panel-lead-quote {
-  font-family: var(--font-heading);
+  font-family: 'Times New Roman', Times, serif;
   font-style: italic;
   font-size: 1.25rem;
   line-height: 1.55;
@@ -479,7 +479,7 @@
 }
 
 .stat-number {
-  font-family: var(--font-heading);
+  font-family: 'Montserrat', sans-serif;
   font-size: 2.4rem;
   color: var(--primary-text);
   line-height: 1;
