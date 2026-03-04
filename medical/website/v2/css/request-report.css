@@ -3,7 +3,7 @@
    =================================== */
 
 .contact-page {
-  padding-top: 70px; /* header offset */
+  padding-top: 110px; /* header offset */
   padding-bottom: 0;
   background-color: var(--bg-light-beige);
 }
