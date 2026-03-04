@@ -4,7 +4,8 @@
 
 .about-hero {
   background-color: var(--bg-ivory);
-  padding: 0;
+  padding-top: 110px; /* Adjusted for fixed header offset */
+  padding-bottom: 0;
   overflow: hidden;
 }
 
