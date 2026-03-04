@@ -29,7 +29,7 @@ window.FACT_SHEETS = [
     subtitle: "Navigating structural, cultural, and operational complexity",
     topicArea: "Research operations",
     tags: ["Pharma", "Japan ops", "Culture"],
-    thumbnail: "assets/fact-sheet-hero-doctor-writing.jpg",
+    thumbnail: "assets/japan-market-brief-hero.jpg",
     pdf: "pdf/Japan_Market_Brief_Navigating_Structural_Cultural_and_Operational_Complexities_in_Pharmaceutical_Market_Research.pdf",
     keyPoints: [
       "How Japan’s healthcare structure influences access, referral, and decision-making.",
