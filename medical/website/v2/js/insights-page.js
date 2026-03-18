@@ -1,5 +1,19 @@
 // Japan Fact Sheets page: render + filter + paginate
 document.addEventListener('DOMContentLoaded', () => {
+  // Hero video autoplay initialization
+  const heroVideo = document.querySelector('.insights-hero-video');
+  if (heroVideo) {
+    // Force play on load
+    heroVideo.play().catch(err => {
+      console.log('Video autoplay prevented:', err);
+      // Retry on user interaction
+      document.addEventListener('click', function playOnClick() {
+        heroVideo.play();
+        document.removeEventListener('click', playOnClick);
+      }, { once: true });
+    });
+  }
+
   const data = window.FACT_SHEETS || [];
   const reportSummaries = window.REPORT_SUMMARIES || [];
 
