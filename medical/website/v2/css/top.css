@@ -820,7 +820,7 @@
 }
 
 .rare-disease-header {
-  max-width: 600px;
+  max-width: 800px;
   text-align: right;
 }
 
@@ -841,6 +841,7 @@
   color: #5b1a06;
   margin-bottom: var(--spacing-lg);
   line-height: 1.6;
+  letter-spacing: 0.06em;
 }
 
 .btn-visit-microsite {
