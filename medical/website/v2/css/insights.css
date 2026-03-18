@@ -187,12 +187,13 @@
   border: 1px solid rgba(91, 26, 6, 0.18);
   border-radius: 18px;
   overflow: hidden;
-  transition: transform 180ms ease-out, box-shadow 180ms ease-out;
+  transition: transform 180ms ease-out, box-shadow 180ms ease-out, background-color 0.2s ease;
 }
 
 .factsheet-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 18px 30px rgba(0, 0, 0, 0.10);
+  background-color: #f4e4cf;
 }
 
 .factsheet-link {
