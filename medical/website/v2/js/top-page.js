@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initVideoControl();
   initVideoCrossfade();
   initSmoothScroll(); // START HEREボタン用スムーススクロール
+  initGbuSubtitleAnimation(); // GBUサブタイトルのスクロールアニメーション
 });
 
 // WHY SEED SECTION - Tab-based interface (PPT準拠)
@@ -216,6 +217,31 @@ function initSmoothScroll() {
       });
     }
   });
+}
+
+// GBU SUBTITLE ANIMATION - Scroll-triggered animation
+function initGbuSubtitleAnimation() {
+  const gbuSubtitle = document.querySelector('.gbu-subtitle');
+  
+  if (!gbuSubtitle) return;
+  
+  const observerOptions = {
+    threshold: 0.3, // セクションが30%表示されたらトリガー
+    rootMargin: '0px'
+  };
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // セクションが表示されたらアニメーション開始
+        entry.target.classList.add('animated');
+        // 一度アニメーションしたら監視を停止
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+  
+  observer.observe(gbuSubtitle);
 }
 
 // FORM HANDLING - Simple form submission (if contact form exists on page)
