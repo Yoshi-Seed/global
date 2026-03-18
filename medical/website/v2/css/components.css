@@ -631,12 +631,12 @@
 }
 
 .translation-section--dark .btn-contact {
-  background-color: var(--bg-brown);
-  color: #f9e5c1;
+  background-color: #f9e5c1;
+  color: #4e613f;
 }
 
 .translation-section--dark .btn-contact:hover {
-  background-color: rgba(115, 82, 64, 0.85);
+  background-color: #fef5e7;
 }
 
 @media (max-width: 768px) {
