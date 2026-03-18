@@ -549,7 +549,7 @@
 .cta-text {
   font-family: var(--font-body);
   margin: 0 0 26px 0;
-  max-width: 70ch;
+  max-width: 100ch;
   line-height: 1.4;
   color: var(--primary-text);
   text-align: left;
