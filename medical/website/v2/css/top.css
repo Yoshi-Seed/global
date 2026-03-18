@@ -885,9 +885,9 @@
   font-family: var(--font-body);
   font-size: 1.05rem;
   color: #5b1a06;
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: 20px;
   line-height: 1.6;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.01em;
 }
 
 .btn-visit-microsite {
