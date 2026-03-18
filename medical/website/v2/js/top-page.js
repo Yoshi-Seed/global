@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initVideoCrossfade();
   initSmoothScroll(); // START HEREボタン用スムーススクロール
   initGbuSubtitleAnimation(); // GBUサブタイトルのスクロールアニメーション
+  initStatsCounter(); // 統計数字のルーレットアニメーション
 });
 
 // WHY SEED SECTION - Tab-based interface (PPT準拠)
@@ -242,6 +243,64 @@ function initGbuSubtitleAnimation() {
   }, observerOptions);
   
   observer.observe(gbuSubtitle);
+}
+
+// STATS COUNTER - Roulette animation for statistics numbers
+function initStatsCounter() {
+  const statNumbers = document.querySelectorAll('.stat-number');
+  
+  if (!statNumbers.length) return;
+  
+  const observerOptions = {
+    threshold: 0.5, // 50%表示されたらトリガー
+    rootMargin: '0px'
+  };
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const target = entry.target;
+        const finalValue = parseInt(target.textContent);
+        
+        // アニメーション開始
+        animateCounter(target, finalValue);
+        
+        // 一度アニメーションしたら監視を停止
+        observer.unobserve(target);
+      }
+    });
+  }, observerOptions);
+  
+  // 各数字要素を監視
+  statNumbers.forEach(element => {
+    observer.observe(element);
+  });
+}
+
+function animateCounter(element, finalValue) {
+  const duration = 2000; // 2秒間
+  const startTime = performance.now();
+  const startValue = 0;
+  
+  function updateCounter(currentTime) {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    
+    // イージング関数（徐々に減速）
+    const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+    
+    const currentValue = Math.floor(startValue + (finalValue - startValue) * easeOutQuart);
+    element.textContent = currentValue;
+    
+    if (progress < 1) {
+      requestAnimationFrame(updateCounter);
+    } else {
+      // 最終値を確実に設定
+      element.textContent = finalValue;
+    }
+  }
+  
+  requestAnimationFrame(updateCounter);
 }
 
 // FORM HANDLING - Simple form submission (if contact form exists on page)
