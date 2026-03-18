@@ -4,20 +4,32 @@
 
 .insights-hero {
   position: relative;
-  background-size: cover;
-  background-position: center;
+  background-color: #4e613f;
   padding: 180px 0 30px;
+  overflow: hidden;
+}
+
+.insights-hero-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(100%);
+  z-index: 0;
 }
 
 .insights-hero-overlay {
   position: absolute;
   inset: 0;
   background: rgba(78, 97, 63, 0.55);
+  z-index: 1;
 }
 
 .insights-hero-inner {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   text-align: center;
   color: var(--bg-ivory);
 }
