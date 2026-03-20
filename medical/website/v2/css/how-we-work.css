@@ -621,6 +621,8 @@
   color: #5b1a06;
   line-height: 1.4;
   margin-bottom: 20px;
+  text-align: justify;
+  text-justify: inter-word;
 }
 
 .testimonial-text span {
