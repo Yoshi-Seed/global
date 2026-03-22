@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="EPHMRA 2025 Code of Conduct based ethics challenge for healthcare market research teams.">
+  <title>EPHMRA Code Challenge</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <div class="bg-orb orb-a"></div>
+  <div class="bg-orb orb-b"></div>
+  <div class="grid-glow"></div>
+
+  <main class="app-shell">
+    <header class="topbar">
+      <div class="brand-wrap">
+        <div class="brand-mark" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <div>
+          <p class="eyebrow">EPHMRA 2025 Code Challenge</p>
+          <h1>Healthcare Market Research Ethics Quiz</h1>
+        </div>
+      </div>
+      <div class="top-pills">
+        <span class="pill">8問ランダム出題</span>
+        <span class="pill">1問でも不正解で終了</span>
+        <span class="pill">Perfect clearでCertificate</span>
+      </div>
+    </header>
+
+    <section id="screen-home" class="screen active" aria-labelledby="home-title">
+      <div class="hero-layout">
+        <div class="hero-copy panel">
+          <p class="section-kicker">Training mode</p>
+          <h2 id="home-title">規範理解を、ただ読むだけで終わらせない。</h2>
+          <p class="lead">中級と上級からレベルを選び、毎回ランダムに選ばれる8問に挑戦するノーミス型チャレンジです。正解した問題にはすぐ解説が入り、不正解が出た時点で終了。全問正解すると証明書画面が表示されます。</p>
+
+          <div class="feature-grid">
+            <div class="feature-card">
+              <strong>出題方式</strong>
+              <span>4択 / 2択を混在</span>
+            </div>
+            <div class="feature-card">
+              <strong>学習効果</strong>
+              <span>正解時にショート解説</span>
+            </div>
+            <div class="feature-card">
+              <strong>再挑戦性</strong>
+              <span>銀行型ランダム出題</span>
+            </div>
+            <div class="feature-card">
+              <strong>設計思想</strong>
+              <span>例外・場面判断を重視</span>
+            </div>
+          </div>
+
+          <div class="disclaimer-box">
+            <strong>Source note</strong>
+            <p>EPHMRA 2025 Code of Conduct（日本語訳）をもとに作成したトレーニング用クイズです。国別要件や法的判断が必要な場面では、必ず現地ルール・法務判断も確認してください。</p>
+          </div>
+        </div>
+
+        <aside class="control-panel panel">
+          <label class="field-label" for="learnerName">Certificate name <span>optional</span></label>
+          <input id="learnerName" class="text-input" type="text" maxlength="40" placeholder="例：Yoshi / Team member name">
+
+          <div class="stats-header">
+            <h3>Your local stats</h3>
+            <button class="text-button" type="button" data-action="clear-stats">Reset</button>
+          </div>
+          <div id="statsSummary" class="stats-summary"></div>
+
+          <div class="control-note">
+            <strong>How it works</strong>
+            <ul>
+              <li>1レベルにつき8問。</li>
+              <li>毎回ランダムに構成が変わります。</li>
+              <li>正解なら解説へ、不正解ならその場で終了。</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+
+      <div id="levelGrid" class="level-grid"></div>
+
+      <footer class="home-footer">
+        <span>Static HTML / CSS / JS only - GitHub Pages ready</span>
+        <span>Designed for professional internal training use</span>
+      </footer>
+    </section>
+
+    <section id="screen-quiz" class="screen" aria-labelledby="questionText">
+      <div class="panel quiz-panel">
+        <div class="quiz-topline">
+          <button class="ghost-button" type="button" data-action="home">Home</button>
+          <div class="progress-cluster">
+            <div class="progress-bar" aria-hidden="true">
+              <span id="progressFill"></span>
+            </div>
+            <div class="progress-meta">
+              <span id="questionCounter">Q1 / 8</span>
+              <span id="streakCounter">Perfect streak: 0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="chip-row">
+          <span id="levelChip" class="chip strong"></span>
+          <span id="topicChip" class="chip"></span>
+          <span id="choiceChip" class="chip"></span>
+        </div>
+
+        <div id="scenarioBox" class="scenario-box hidden">
+          <p class="scenario-tag">Scenario</p>
+          <p id="scenarioText"></p>
+        </div>
+
+        <h2 id="questionText" class="question-text"></h2>
+        <div id="optionsContainer" class="options-grid"></div>
+      </div>
+    </section>
+
+    <section id="screen-feedback" class="screen" aria-labelledby="feedbackTitle">
+      <div class="panel result-panel success-tone">
+        <div class="result-badge success">Correct</div>
+        <h2 id="feedbackTitle">Nice call.</h2>
+        <p id="feedbackQuestion" class="result-question"></p>
+
+        <div class="answer-box correct-box">
+          <span class="answer-label">Correct answer</span>
+          <p id="feedbackCorrect"></p>
+        </div>
+
+        <div class="explanation-box">
+          <span class="answer-label">Why</span>
+          <p id="feedbackExplanation"></p>
+          <p id="feedbackReference" class="reference-line"></p>
+        </div>
+
+        <div class="action-row">
+          <button class="primary-button" type="button" data-action="next-question">Next question</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-fail" class="screen" aria-labelledby="failTitle">
+      <div class="panel result-panel fail-tone">
+        <div class="result-badge fail">Run ended</div>
+        <h2 id="failTitle">ここで終了です。</h2>
+        <p class="fail-copy">不正解が出た時点でこのラウンドは終了します。正解と考え方を確認して、次のランダムセットで再挑戦してください。</p>
+
+        <div class="answer-box wrong-box">
+          <span class="answer-label">Your answer</span>
+          <p id="failSelected"></p>
+        </div>
+
+        <div class="answer-box correct-box">
+          <span class="answer-label">Correct answer</span>
+          <p id="failCorrect"></p>
+        </div>
+
+        <div class="explanation-box">
+          <span class="answer-label">Why</span>
+          <p id="failExplanation"></p>
+          <p id="failReference" class="reference-line"></p>
+        </div>
+
+        <div class="fail-stats">
+          <div>
+            <strong id="failLevelLabel"></strong>
+            <span id="failScoreLabel"></span>
+          </div>
+          <div>
+            <strong id="failBestRunLabel"></strong>
+            <span>best local run</span>
+          </div>
+        </div>
+
+        <div class="action-row two-up">
+          <button class="primary-button" type="button" data-action="retry-same">Retry same level</button>
+          <button class="ghost-button" type="button" data-action="home">Back home</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-success" class="screen" aria-labelledby="successTitle">
+      <div id="confettiField" class="confetti-field" aria-hidden="true"></div>
+      <div class="panel success-panel">
+        <div class="result-badge success">Perfect clear</div>
+        <h2 id="successTitle">You have answered all questions correctly!!</h2>
+        <p class="success-copy">全8問ノーミス達成です。ランダム出題なので、次回はまた別のセットで復習できます。</p>
+
+        <article class="certificate-card" id="certificateCard">
+          <div class="certificate-inner">
+            <p class="certificate-kicker">Certificate of Completion</p>
+            <h3 id="certificateName">Learner</h3>
+            <p class="certificate-message">has completed the EPHMRA Code Challenge with a perfect score.</p>
+            <div class="certificate-meta">
+              <div>
+                <span>Level</span>
+                <strong id="certificateLevel">Intermediate</strong>
+              </div>
+              <div>
+                <span>Date</span>
+                <strong id="certificateDate"></strong>
+              </div>
+              <div>
+                <span>Certificate ID</span>
+                <strong id="certificateId"></strong>
+              </div>
+            </div>
+            <div class="certificate-seal" aria-hidden="true">PERFECT<br>8 / 8</div>
+          </div>
+        </article>
+
+        <div class="success-stats" id="successStats"></div>
+
+        <div class="action-row wrap">
+          <button class="primary-button" type="button" data-action="download-certificate">Download certificate PNG</button>
+          <button class="secondary-button" type="button" data-action="retry-same">Retry same level</button>
+          <button class="ghost-button" type="button" data-action="home">Back home</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="assets/js/questions.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
