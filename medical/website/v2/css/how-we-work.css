@@ -619,14 +619,13 @@
   font-family: Montserrat, Arial, sans-serif;
   font-size: 1.1rem;
   color: #5b1a06;
-  line-height: 1.4;
+  line-height: 1.6;
   margin-bottom: 20px;
-  text-align: justify;
-  text-justify: inter-word;
+  text-align: left;
 }
 
 .testimonial-text span {
-  display: block;
+  display: inline;
   opacity: 1;
   transform: translateX(0);
   transition: opacity 0.8s ease-out, transform 0.8s ease-out;
