@@ -6,6 +6,41 @@
   <title>案件検索 - プロジェクト履歴管理システム</title>
   <link rel="icon" type="image/png" href="SP_logo_shape_only.png">
   <script src="https://cdn.tailwindcss.com"></script>
+
+<script>
+  (function () {
+    const PASSWORD = "seed2026";
+    const SESSION_KEY = "project_tracker_projects_auth";
+
+    // このタブですでに認証済みなら通す
+    if (sessionStorage.getItem(SESSION_KEY) === "ok") return;
+
+    const input = window.prompt("このページは保護されています。パスワードを入力してください。");
+
+    if (input !== PASSWORD) {
+      document.documentElement.innerHTML = `
+        <head>
+          <meta charset="UTF-8">
+          <title>Access denied</title>
+        </head>
+        <body style="margin:0;display:flex;align-items:center;justify-content:center;height:100vh;font-family:Arial,sans-serif;background:#f8fafc;">
+          <div style="background:#fff;padding:32px;border:1px solid #ddd;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,0.08);text-align:center;">
+            <h2 style="margin-top:0;">アクセスできません</h2>
+            <p>パスワードが正しくありません。</p>
+            <button onclick="location.reload()" style="padding:10px 16px;border:none;border-radius:8px;background:#111827;color:white;cursor:pointer;">
+              もう一度試す
+            </button>
+          </div>
+        </body>
+      `;
+      throw new Error("Unauthorized");
+    }
+
+    sessionStorage.setItem(SESSION_KEY, "ok");
+  })();
+</script>
+  
+  
   <!-- Project Tracker スタイルシート -->
   <link rel="stylesheet" href="css/style-2026.css">
   <link rel="stylesheet" href="css/components.css">
