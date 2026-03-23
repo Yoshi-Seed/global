@@ -733,17 +733,18 @@
 
 .japan-tips-title {
   font-family: 'Times New Roman', Times, serif;
-  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-size: 4.5rem;
   font-weight: 400;
   color: var(--primary-text);
   text-align: right;
   margin: 0 0 60px 0;
   width: 100%;
+  letter-spacing: -0.02em;
 }
 
 .japan-tips-title em {
   font-style: italic;
-  color: var(--accent-brown);
+  color: #c65e3e;
 }
 
 .tips-carousel {
@@ -762,31 +763,52 @@
 
 .tip-card {
   flex: 0 0 calc(50% - 20px);
-  background: var(--bg-ivory);
-  border: 1px solid rgba(91, 26, 6, 0.25);
-  border-radius: 12px;
+  background: rgba(115, 82, 64, 0.16);
+  border: none;
+  border-radius: 16px;
   padding: 40px 36px;
   box-sizing: border-box;
   min-height: 280px;
+  position: relative;
+  overflow: hidden;
+}
+
+.tip-number {
+  position: absolute;
+  right: 20px;
+  bottom: 10px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12rem;
+  font-weight: 700;
+  color: rgba(115, 82, 64, 0.08);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
 }
 
 .tip-heading {
   font-family: 'Times New Roman', Times, serif;
-  font-size: 1.8rem;
+  font-style: italic;
+  font-size: 1.4rem;
   font-weight: 400;
   color: var(--primary-text);
   margin: 0 0 20px 0;
-  line-height: 1.3;
+  line-height: 1.4;
+  border-left: 3px solid #735240;
+  padding-left: 1rem;
+  position: relative;
+  z-index: 1;
 }
 
 .tip-text {
-  font-family: var(--font-body);
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.05rem;
   line-height: 1.7;
   color: var(--primary-text);
   margin: 0;
-  text-align: justify;
-  text-justify: inter-word;
+  padding-left: calc(1rem + 3px);
+  position: relative;
+  z-index: 1;
 }
 
 .carousel-dots {
@@ -824,6 +846,10 @@
   
   .japan-tips-background {
     width: 150px;
+  }
+  
+  .japan-tips-title {
+    font-size: 3.5rem;
   }
   
   .tip-card {
