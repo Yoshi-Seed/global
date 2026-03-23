@@ -135,3 +135,107 @@
     height: 300px;
   }
 }
+
+/* Microsites Section */
+.microsites-section {
+  background-color: rgba(110, 134, 161, 0.32);
+  padding: 0;
+  text-align: center;
+}
+
+.microsites-trigger {
+  background-color: #fff6ea;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin: 0 auto;
+  transform: translateY(-30px);
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.microsites-trigger:hover {
+  background-color: #f5ecd7;
+}
+
+.microsites-trigger[aria-expanded="true"] {
+  transform: translateY(-30px) rotate(180deg);
+}
+
+.microsites-trigger-icon {
+  font-size: 1.8rem;
+  color: #5b1a06;
+  line-height: 0;
+}
+
+.microsites-content {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.5s ease, padding 0.5s ease;
+  padding: 0 20px;
+}
+
+.microsites-content:not([hidden]) {
+  max-height: 500px;
+  padding: 20px 20px 80px;
+}
+
+.microsites-title {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 2.5rem;
+  font-weight: 400;
+  color: #5b1a06;
+  margin: 0 0 40px 0;
+}
+
+.microsites-subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  display: block;
+  margin-top: 4px;
+  font-weight: 400;
+}
+
+.microsites-buttons {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.microsite-btn {
+  display: inline-block;
+  padding: 14px 36px;
+  background-color: transparent;
+  color: #5b1a06;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  text-decoration: none;
+  border: 1px solid #5b1a06;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  min-width: 240px;
+}
+
+.microsite-btn:hover {
+  background-color: #5b1a06;
+  color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .microsites-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .microsite-btn {
+    width: 100%;
+    max-width: 400px;
+  }
+}
