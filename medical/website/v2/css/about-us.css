@@ -159,56 +159,42 @@
 .team-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  column-gap: 24px;
-  row-gap: 40px;
+  column-gap: 60px;
+  row-gap: 50px;
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0 20px;
 }
 
-.team-box {
-  background-color: var(--bg-ivory);
-  border: 1px solid var(--primary-text);
-  padding: 40px 30px;
-  min-height: 250px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.team-box:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(91, 26, 6, 0.1);
-  border-color: var(--bg-brown);
-}
-
-.team-meta {
+.team-member {
   text-align: left;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
+  padding-bottom: 50px;
+  border-bottom: 1px solid rgba(91, 26, 6, 0.2);
+}
+
+.team-member:nth-child(4),
+.team-member:nth-child(5),
+.team-member:nth-child(6) {
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 .team-name {
   font-family: 'Montserrat', Arial, sans-serif;
   font-size: 1.4rem;
-  font-weight: 400;
+  font-weight: 700;
   color: var(--primary-text);
-  margin: 0;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
 }
 
 .team-role {
   font-family: 'Montserrat', var(--font-body);
   font-size: 1.1rem;
-  font-weight: 700;
+  font-weight: 400;
   color: var(--primary-text);
   margin: 0;
   line-height: 1.5;
-  margin-top: auto;
 }
 
 /* Moderators */
