@@ -775,15 +775,13 @@
   font-size: clamp(2.5rem, 4.5vw, 3.6rem);
   font-weight: 400;
   color: #f9e5c1;
-  line-height: 1.2;
-  margin-bottom: 0;
+  line-height: 1;
+  margin: 0;
+  padding: 0;
   transition: color 180ms ease-out;
   letter-spacing: -0.02em;
-  white-space: normal;
-  overflow-wrap: anywhere;
   text-align: left;
-  display: inline-block;
-  max-width: 100%;
+  display: block;
 }
 
 .link-title .italic {
@@ -791,10 +789,12 @@
 }
 
 .link-arrow {
+  display: block;
   font-size: 2rem;
   color: #f9e5c1;
   text-align: left;
-  margin: 0 0 12px 0;
+  margin: 0;
+  padding: 0;
   line-height: 1;
 }
 
@@ -805,7 +805,8 @@
   font-weight: 400;
   color: #f9e5c1;
   line-height: 1.6;
-  margin: 0;
+  margin: 12px 0 0 0;
+  padding: 0;
   align-self: flex-start;
   text-align: left;
 }
