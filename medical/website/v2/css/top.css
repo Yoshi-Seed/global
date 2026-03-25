@@ -82,9 +82,8 @@
   line-height: 0.85; /* 行間をさらに詰める */
   letter-spacing: -0.02em; /* わずかに詰める */
   max-width: 14ch; /* 2行で自然に折れるように調整 */
-  margin-bottom: var(--spacing-sm); /* サブタイトルとの間隔を詰める */
+  margin-bottom: var(--spacing-md); /* サブタイトルとの間隔を広げる */
   color: #f9e5c1; /* PPT準拠：クリーム色（白はNG） */
-  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 0, 0, 0.5);
   opacity: 0;
   animation: riseUp 1s ease-out 0.2s forwards;
 }
@@ -110,7 +109,7 @@
 .hero-description {
   font-family: var(--font-body);
   font-size: clamp(0.95rem, 1.6vw, 1.1rem);
-  line-height: 1.3;
+  line-height: 1.7;
   margin-top: var(--spacing-md);
   margin-bottom: var(--spacing-lg);
   color: #f9e5c1;
@@ -192,7 +191,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border-radius: 9999px; /* 控えめな角丸 */
+  border-radius: 6px; /* 少し角を落とした程度の角丸 */
   transition: all 0.18s ease-out; /* 150-200ms */
   border: none;
   cursor: pointer;
