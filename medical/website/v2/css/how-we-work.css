@@ -77,7 +77,7 @@
 /* 左カラム（メニュー）内の段落のスタイル調整 */
 .how-work-menu .how-work-description {
   margin-top: 40px;
-  margin-bottom: 48px;
+  margin-bottom: 80px;
   max-width: 100%;
   font-size: clamp(0.85rem, 1.4vw, 0.95rem);
   line-height: 1.5;
@@ -581,7 +581,8 @@
   color: #5b1a06;
   line-height: 1.6;
   margin-bottom: 20px;
-  text-align: left;
+  text-align: justify;
+  text-justify: inter-word;
 }
 
 .testimonial-text span {
@@ -608,7 +609,8 @@
   color: #5b1a06;
   line-height: 1.7;
   margin: 0 0 20px 0;
-  text-align: left;
+  text-align: justify;
+  text-justify: inter-word;
 }
 
 .testimonial-text span {
@@ -623,7 +625,8 @@
   text-align: right;
   margin-top: auto;
   padding-top: 24px;
-  white-space: normal;
+  white-space: nowrap;
+  letter-spacing: -0.03em;
 }
 
 @media (max-width: 1024px) {
