@@ -266,8 +266,8 @@
   cursor: pointer;
   text-align: left;
   font-family: 'Montserrat', sans-serif;
-  font-size: 1.45rem; /* サイズアップ */
-  font-weight: 400;
+  font-size: 1.65rem; /* さらにサイズアップ */
+  font-weight: 500;
   color: #5b1a06;
   transition: transform 150ms ease-out;
   width: 100%; /* 幅を統一 */
@@ -292,7 +292,7 @@
 }
 
 .tab-item.active .tab-label {
-  font-weight: 600;
+  font-weight: 700;
   color: #5b1a06;
 }
 
@@ -354,10 +354,11 @@
   position: relative;
   display: none;
   background-color: rgba(115, 82, 64, 0.16);
-  border-radius: 28px;
+  border-radius: 12px;
   padding: 48px 40px;
   min-height: 400px;
   overflow: hidden;
+  box-shadow: 0 2px 8px rgba(91, 26, 6, 0.06);
 }
 
 .panel-content.active {
