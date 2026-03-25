@@ -2,6 +2,52 @@
    Insights / Japan Fact Sheets (PPT-inspired)
    =================================== */
 
+/* Breadcrumb */
+.breadcrumb {
+  margin-bottom: 8px;
+  text-align: left;
+  grid-column: 1;
+}
+
+.breadcrumb ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--primary-text);
+}
+
+.breadcrumb li {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb li:not(:last-child)::after {
+  content: '>';
+  margin-left: 8px;
+  color: rgba(91, 26, 6, 0.5);
+}
+
+.breadcrumb a {
+  color: var(--primary-text);
+  text-decoration: none;
+  transition: color 180ms ease-out;
+}
+
+.breadcrumb a:hover {
+  color: var(--primary-text);
+  text-decoration: underline;
+}
+
+.breadcrumb li[aria-current="page"] {
+  color: var(--primary-text);
+  font-weight: 600;
+}
+
 .insights-hero {
   position: relative;
   background-color: #4e613f;
@@ -63,6 +109,7 @@
   grid-template-columns: 320px 1fr;
   gap: 38px;
   align-items: start;
+  grid-auto-flow: dense;
 }
 
 .filters {
@@ -72,7 +119,7 @@
   padding: 22px;
   position: sticky;
   top: 200px;
-  margin-top: 30px;
+  grid-column: 1;
 }
 
 .filter-block + .filter-block {
@@ -177,6 +224,11 @@
 }
 
 /* Results */
+.factsheets-results {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+}
+
 .results-meta {
   margin-top: -70px;
   margin-bottom: 18px;
