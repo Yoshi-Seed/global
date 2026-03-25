@@ -2,11 +2,16 @@
    Insights / Japan Fact Sheets (PPT-inspired)
    =================================== */
 
+/* Sidebar Container */
+.sidebar-container {
+  position: sticky;
+  top: 200px;
+}
+
 /* Breadcrumb */
 .breadcrumb {
-  margin-bottom: 8px;
+  margin-bottom: 4px;
   text-align: left;
-  grid-column: 1;
 }
 
 .breadcrumb ol {
@@ -117,9 +122,6 @@
   border: none;
   border-radius: 18px;
   padding: 22px;
-  position: sticky;
-  top: 200px;
-  grid-column: 1;
 }
 
 .filter-block + .filter-block {
@@ -226,7 +228,6 @@
 /* Results */
 .factsheets-results {
   grid-column: 2;
-  grid-row: 1 / span 2;
 }
 
 .results-meta {
