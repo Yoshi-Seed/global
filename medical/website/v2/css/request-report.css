@@ -70,15 +70,15 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  display: grid;
-  gap: 0px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .contact-details li {
-  display: grid;
-  grid-template-columns: 40px 1fr;
-  gap: 16px;
+  display: flex;
   align-items: center;
+  gap: 12px;
   font-family: var(--font-body);
   color: var(--primary-text);
 }
@@ -95,10 +95,11 @@
 }
 
 .contact-icon-img {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   object-fit: contain;
   display: block;
+  flex-shrink: 0;
 }
 
 .contact-icon {
