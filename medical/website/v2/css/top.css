@@ -781,11 +781,18 @@
   letter-spacing: -0.02em;
   white-space: normal;
   overflow-wrap: anywhere;
-  text-align: center;
+  text-align: left;
 }
 
 .link-title .italic {
   font-style: italic;
+}
+
+.link-arrow {
+  font-size: 2rem;
+  color: #f9e5c1;
+  text-align: left;
+  margin: 4px 0 12px 0;
 }
 
 /* 小見出し：Montserrat + #f9e5c1（必須） */
@@ -796,8 +803,8 @@
   color: #f9e5c1;
   line-height: 1.6;
   margin: 0;
-  align-self: center;
-  text-align: center;
+  align-self: flex-start;
+  text-align: left;
 }
 
 
