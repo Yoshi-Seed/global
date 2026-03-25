@@ -6,12 +6,14 @@
 .sidebar-container {
   position: sticky;
   top: 200px;
+  align-self: start;
 }
 
 /* Breadcrumb */
 .breadcrumb {
-  margin-bottom: 4px;
-  text-align: left;
+  background-color: var(--bg-ivory);
+  padding: 16px 0;
+  margin-bottom: 40px;
 }
 
 .breadcrumb ol {
