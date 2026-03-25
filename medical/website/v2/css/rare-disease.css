@@ -11,10 +11,11 @@
 .rare-title {
   font-family: 'Times New Roman', Times, serif;
   font-weight: 400;
-  font-size: clamp(3.2rem, 5vw, 4.6rem);
+  font-size: clamp(4rem, 8vw, 6.5rem);
   margin: 0 0 18px 0;
   color: #4e613f;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.08em;
+  line-height: 0.85;
 }
 
 .rare-title em {
@@ -22,9 +23,10 @@
 }
 
 .rare-subtitle {
-  font-family: var(--font-body);
-  font-size: 1.15rem;
-  line-height: 1.5;
+  font-family: 'Montserrat', Arial, sans-serif;
+  font-size: clamp(0.95rem, 1.8vw, 1.1rem);
+  line-height: 1.7;
+  letter-spacing: -0.04em;
   color: var(--primary-text);
   max-width: 88ch;
   margin: 0;
