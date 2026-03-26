@@ -43,11 +43,11 @@ function initTipsCarousel() {
     dots[index].classList.add('active');
   }
   
-  // Auto-advance every 5 seconds
-  setInterval(() => {
-    currentIndex = (currentIndex + 1) % totalSlides;
-    goToSlide(currentIndex);
-  }, 5000);
+  // Auto-advance disabled
+  // setInterval(() => {
+  //   currentIndex = (currentIndex + 1) % totalSlides;
+  //   goToSlide(currentIndex);
+  // }, 5000);
   
   // Recalculate on resize
   window.addEventListener('resize', () => {
