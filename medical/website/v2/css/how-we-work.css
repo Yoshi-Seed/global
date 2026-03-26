@@ -746,9 +746,9 @@
   background: rgba(115, 82, 64, 0.16);
   border: none;
   border-radius: 16px;
-  padding: 40px 36px 60px 36px;
+  padding: 28px 24px 44px 24px;
   box-sizing: border-box;
-  min-height: 320px;
+  min-height: 260px;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -795,7 +795,7 @@
 
 .tip-text {
   font-family: 'Montserrat', sans-serif;
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   line-height: 1.7;
   color: var(--primary-text);
   margin: 0;
@@ -806,9 +806,12 @@
 
 .carousel-dots {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   gap: 12px;
   margin-top: 40px;
+  width: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 
 .carousel-dot {
