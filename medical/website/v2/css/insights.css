@@ -7,6 +7,10 @@
   position: sticky;
   top: 200px;
   align-self: start;
+  flex-shrink: 0;
+  width: 320px;
+  margin-top: 0;
+  padding-top: 0;
 }
 
 /* Breadcrumb */
@@ -112,11 +116,9 @@
 }
 
 .factsheets-layout {
-  display: grid;
-  grid-template-columns: 320px 1fr;
+  display: flex;
   gap: 38px;
-  align-items: start;
-  grid-auto-flow: dense;
+  align-items: flex-start;
 }
 
 .filters {
@@ -124,6 +126,7 @@
   border: none;
   border-radius: 18px;
   padding: 22px;
+  margin-top: 0;
 }
 
 .filter-block + .filter-block {
@@ -229,12 +232,15 @@
 
 /* Results */
 .factsheets-results {
-  grid-column: 2;
+  flex: 1;
+  margin-top: 0;
+  padding-top: 0;
 }
 
 .results-meta {
-  margin-top: -70px;
+  margin-top: 0;
   margin-bottom: 18px;
+  padding-top: 0;
 }
 
 .results-count {
