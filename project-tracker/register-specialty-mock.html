@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>医師登録 専門領域UIモック - プロジェクト履歴管理システム</title>
+  <link rel="icon" type="image/png" href="SP_logo_shape_only.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/style-2026.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="js/data/specialties-master.js"></script>
+  <style>
+    .mock-card {
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    }
+
+    .category-btn,
+    .specialty-btn {
+      transition: all 0.2s ease;
+      cursor: pointer;
+      user-select: none;
+      background: rgba(31, 122, 133, 0.15);
+      color: #1F7A85;
+      border: 1px solid #1F7A85;
+    }
+
+    .category-btn:hover,
+    .specialty-btn:hover {
+      background: rgba(31, 122, 133, 0.25);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(31, 122, 133, 0.2);
+    }
+
+    .category-btn.active,
+    .specialty-btn.selected {
+      background: white !important;
+      color: #1F7A85 !important;
+      border: 2px solid #1F7A85 !important;
+      box-shadow: 0 4px 12px rgba(31, 122, 133, 0.3) !important;
+      transform: scale(1.03);
+      font-weight: 700;
+    }
+
+    .subspecialty-group {
+      animation: groupFadeIn 0.25s ease-out;
+    }
+
+    @keyframes groupFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .summary-item {
+      border-left: 4px solid #1F7A85;
+      background: rgba(232, 240, 241, 0.65);
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <nav class="bg-white shadow-md sticky top-0 z-40">
+    <div class="container mx-auto px-2 sm:px-4 py-2 sm:py-3">
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <div class="flex items-center space-x-2 sm:space-x-4">
+          <img src="Seed_Planning_Logo_Original.jpg" alt="SEED PLANNING" class="h-8 sm:h-10">
+          <h1 class="hidden md:block text-lg font-bold text-gray-800">医師登録モック（診療科選択）</h1>
+        </div>
+        <div>
+          <a href="register.html" class="px-3 py-2 text-xs sm:text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition inline-flex items-center gap-2">
+            <i class="fas fa-arrow-left"></i>
+            既存登録画面へ
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mx-auto px-4 py-8">
+    <div class="max-w-5xl mx-auto space-y-6">
+      <div class="rounded-lg shadow-md p-6" style="background: linear-gradient(135deg, #E8F0F1 0%, #d5e5e7 100%);">
+        <h2 class="text-2xl font-bold text-gray-800 flex items-center">
+          <i class="fas fa-stethoscope mr-3" style="color: #1F7A85;"></i>
+          医師登録：専門領域選択UIモック
+        </h2>
+        <p class="text-gray-700 mt-2 text-sm">
+          既存の医師登録フォームにおける「主要診療科・関連領域・専門分野」の階層的入力UIのモックです。
+          バックエンド連携は行わず、UI/UX議論用にフロントのみで動作します。
+        </p>
+      </div>
+
+      <section class="mock-card p-6 space-y-6">
+        <div>
+          <h3 class="text-base font-bold text-gray-800 mb-2">1. 主要診療科（必須・1つ選択）</h3>
+          <select id="primarySpecialty" class="w-full md:w-2/3 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+            <option value="">選択してください</option>
+          </select>
+          <p class="text-xs text-gray-500 mt-2">主たる専門を1つ選択します。</p>
+        </div>
+
+        <div>
+          <h3 class="text-base font-bold text-gray-800 mb-2">2. 関連する診療領域（複数選択可）</h3>
+          <div id="categoryButtons" class="flex flex-wrap gap-2"></div>
+          <p class="text-xs text-gray-500 mt-2">複数カテゴリを同時に選択できます。カテゴリ解除時は配下選択も自動解除されます。</p>
+        </div>
+
+        <div>
+          <h3 class="text-base font-bold text-gray-800 mb-2">3. 専門分野（複数選択可）</h3>
+          <div id="subspecialtyContainer" class="space-y-4"></div>
+          <p id="subspecialtyPlaceholder" class="text-sm text-gray-500 bg-gray-50 rounded-lg p-4 border border-dashed border-gray-300">
+            上の「関連する診療領域」を1つ以上選択すると、専門分野ボタンが表示されます。
+          </p>
+        </div>
+
+        <div>
+          <h3 class="text-base font-bold text-gray-800 mb-2">4. 選択サマリー</h3>
+          <div class="space-y-3">
+            <div class="summary-item rounded-lg px-4 py-3 text-sm text-gray-700">
+              <span class="font-semibold">主要診療科：</span>
+              <span id="summaryPrimary">未選択</span>
+            </div>
+            <div class="summary-item rounded-lg px-4 py-3 text-sm text-gray-700">
+              <span class="font-semibold">関連する診療領域：</span>
+              <span id="summaryCategories">未選択</span>
+            </div>
+            <div class="summary-item rounded-lg px-4 py-3 text-sm text-gray-700">
+              <span class="font-semibold">専門分野：</span>
+              <span id="summarySubspecialties">未選択</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3 pt-2">
+          <button id="resetBtn" type="button" class="px-4 py-2 rounded-lg text-sm font-semibold bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200 transition">
+            <i class="fas fa-rotate-left mr-1"></i> 選択をリセット
+          </button>
+          <span class="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-3 py-1">
+            UI検討用モック（保存機能なし）
+          </span>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const CATEGORY_ORDER = [
+      '内科系',
+      '外科系',
+      '消化器系',
+      '血液・内分泌・代謝',
+      '神経・精神',
+      '感覚器',
+      '小児・産婦人科',
+      '腎・泌尿器',
+      'その他・横断'
+    ];
+
+    const mockCategorySeeds = {
+      '内科系': ['一般内科', '循環器内科', '呼吸器内科', '腎臓内科', '糖尿病内科', '内分泌内科', '感染症内科', '老年内科'],
+      '外科系': ['一般外科', '消化器外科', '心臓血管外科', '呼吸器外科', '乳腺外科', '脳神経外科', '形成外科'],
+      '消化器系': ['消化器内科', '消化器科', '消化器外科'],
+      '血液・内分泌・代謝': ['血液内科', '内分泌内科', '糖尿病内科'],
+      '神経・精神': ['神経内科', '脳神経外科', '精神科', '心療内科'],
+      '感覚器': ['眼科', '耳鼻咽喉科', '皮膚科'],
+      '小児・産婦人科': ['小児科', '小児外科', '産婦人科', '産科', '婦人科'],
+      '腎・泌尿器': ['腎臓内科', '泌尿器科'],
+      'その他・横断': ['救急科', '総合診療科', '麻酔科', '放射線科', 'リハビリテーション科']
+    };
+
+    const selectedCategories = new Set();
+    const selectedSubspecialtiesByCategory = {};
+
+    const categoryButtonsEl = document.getElementById('categoryButtons');
+    const primaryEl = document.getElementById('primarySpecialty');
+    const subspecialtyContainerEl = document.getElementById('subspecialtyContainer');
+    const subspecialtyPlaceholderEl = document.getElementById('subspecialtyPlaceholder');
+
+    function normalizeWithMaster(name) {
+      if (window.SpecialtyMaster && typeof window.SpecialtyMaster.findSpecialtyByName === 'function') {
+        const found = window.SpecialtyMaster.findSpecialtyByName(name);
+        return found ? found.ja : name;
+      }
+      return name;
+    }
+
+    function unique(items) {
+      return [...new Set(items)];
+    }
+
+    const categoryData = CATEGORY_ORDER.reduce((acc, category) => {
+      const normalized = unique((mockCategorySeeds[category] || []).map(normalizeWithMaster));
+      acc[category] = normalized;
+      selectedSubspecialtiesByCategory[category] = new Set();
+      return acc;
+    }, {});
+
+    const primaryOptions = unique(Object.values(categoryData).flat()).sort((a, b) => a.localeCompare(b, 'ja'));
+
+    function initPrimaryOptions() {
+      primaryOptions.forEach(spec => {
+        const option = document.createElement('option');
+        option.value = spec;
+        option.textContent = spec;
+        primaryEl.appendChild(option);
+      });
+    }
+
+    function renderCategoryButtons() {
+      categoryButtonsEl.innerHTML = '';
+
+      CATEGORY_ORDER.forEach(category => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'category-btn px-4 py-2 rounded-lg font-semibold text-sm';
+        btn.dataset.category = category;
+
+        const selectedCount = selectedSubspecialtiesByCategory[category].size;
+        btn.innerHTML = `${category} <span class="ml-1 text-xs font-bold">(${selectedCount})</span>`;
+
+        if (selectedCategories.has(category)) {
+          btn.classList.add('active');
+        }
+
+        btn.addEventListener('click', () => {
+          if (selectedCategories.has(category)) {
+            selectedCategories.delete(category);
+            selectedSubspecialtiesByCategory[category].clear();
+          } else {
+            selectedCategories.add(category);
+          }
+          renderCategoryButtons();
+          renderSubspecialtyGroups();
+          updateSummary();
+        });
+
+        categoryButtonsEl.appendChild(btn);
+      });
+    }
+
+    function renderSubspecialtyGroups() {
+      subspecialtyContainerEl.innerHTML = '';
+      const selectedList = CATEGORY_ORDER.filter(c => selectedCategories.has(c));
+
+      subspecialtyPlaceholderEl.classList.toggle('hidden', selectedList.length > 0);
+
+      selectedList.forEach(category => {
+        const group = document.createElement('div');
+        group.className = 'subspecialty-group bg-white/70 rounded-lg border border-gray-200 p-4';
+
+        const header = document.createElement('div');
+        header.className = 'flex items-center justify-between mb-3';
+        header.innerHTML = `
+          <h4 class="font-semibold text-gray-800">${category}</h4>
+          <span class="text-xs text-gray-500">選択中: ${selectedSubspecialtiesByCategory[category].size}</span>
+        `;
+
+        const btnWrap = document.createElement('div');
+        btnWrap.className = 'flex flex-wrap gap-2';
+
+        categoryData[category].forEach(spec => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'specialty-btn px-3 py-2 rounded-lg font-semibold text-sm';
+          btn.textContent = spec;
+
+          if (selectedSubspecialtiesByCategory[category].has(spec)) {
+            btn.classList.add('selected');
+          }
+
+          btn.addEventListener('click', () => {
+            const picked = selectedSubspecialtiesByCategory[category];
+            if (picked.has(spec)) {
+              picked.delete(spec);
+            } else {
+              picked.add(spec);
+            }
+            renderCategoryButtons();
+            renderSubspecialtyGroups();
+            updateSummary();
+          });
+
+          btnWrap.appendChild(btn);
+        });
+
+        group.appendChild(header);
+        group.appendChild(btnWrap);
+        subspecialtyContainerEl.appendChild(group);
+      });
+    }
+
+    function updateSummary() {
+      const primary = primaryEl.value || '未選択';
+      const categories = CATEGORY_ORDER.filter(c => selectedCategories.has(c));
+      const allSubspecialties = categories.flatMap(c => [...selectedSubspecialtiesByCategory[c]]);
+
+      document.getElementById('summaryPrimary').textContent = primary;
+      document.getElementById('summaryCategories').textContent = categories.length ? categories.join('、') : '未選択';
+      document.getElementById('summarySubspecialties').textContent = allSubspecialties.length
+        ? unique(allSubspecialties).join('、')
+        : '未選択';
+    }
+
+    function resetAll() {
+      primaryEl.value = '';
+      selectedCategories.clear();
+      CATEGORY_ORDER.forEach(category => selectedSubspecialtiesByCategory[category].clear());
+      renderCategoryButtons();
+      renderSubspecialtyGroups();
+      updateSummary();
+    }
+
+    primaryEl.addEventListener('change', updateSummary);
+    document.getElementById('resetBtn').addEventListener('click', resetAll);
+
+    initPrimaryOptions();
+    renderCategoryButtons();
+    renderSubspecialtyGroups();
+    updateSummary();
+  </script>
+</body>
+</html>
