@@ -3,1071 +3,330 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>【モック】診療科選択UI — 医師登録フロー</title>
+  <title>医師登録 専門領域UIモック - プロジェクト履歴管理システム</title>
   <link rel="icon" type="image/png" href="SP_logo_shape_only.png">
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/style-2026.css">
+  <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+  <script src="js/data/specialties-master.js"></script>
   <style>
-    /* ========================================================
-       Seed Planning デザイントークン（style-2026.css より引用）
-    ======================================================== */
-    :root {
-      --sp-primary:       #1F7A85;
-      --sp-primary-dark:  #1a6770;
-      --sp-primary-light: #2a8a95;
-      --sp-primary-a10:   rgba(31, 122, 133, 0.10);
-      --sp-primary-a20:   rgba(31, 122, 133, 0.20);
-      --sp-primary-a30:   rgba(31, 122, 133, 0.30);
-      --sp-secondary:     #E8F0F1;
-      --sp-secondary-dk:  #d5e5e7;
-      --text-main:        #1e293b;
-      --text-muted:       #64748b;
-      --text-light:       #94a3b8;
-      --bg-base:          #f8fafc;
-      --radius-lg:        16px;
-      --radius-md:        12px;
-      --radius-sm:        8px;
-      --shadow-sm:        0 4px 6px -1px rgba(0,0,0,.05), 0 2px 4px -1px rgba(0,0,0,.03);
-      --transition:       all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    .mock-card {
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
     }
 
-    /* ========================================================
-       ベース
-    ======================================================== */
-    body {
-      background-color: var(--bg-base);
-      background-image:
-        radial-gradient(at 0% 0%,   rgba(31,122,133,.08) 0px, transparent 55%),
-        radial-gradient(at 100% 0%,  rgba(31,122,133,.05) 0px, transparent 55%),
-        radial-gradient(at 100% 100%, rgba(45,150,163,.04) 0px, transparent 50%);
-      background-attachment: fixed;
-      color: var(--text-main);
-      font-family: 'Inter', 'Hiragino Sans', 'Yu Gothic UI', system-ui, sans-serif;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* ========================================================
-       モックバナー（最上部）
-    ======================================================== */
-    .mock-banner {
-      background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);
-      color: #78350f;
-      text-align: center;
-      font-size: .8rem;
-      font-weight: 700;
-      letter-spacing: .04em;
-      padding: .45rem 1rem;
-      border-bottom: 2px solid #f59e0b;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    /* ========================================================
-       ナビゲーション
-    ======================================================== */
-    nav.site-nav {
-      background: rgba(255,255,255,.92);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255,255,255,.5);
-      box-shadow: var(--shadow-sm);
-      position: sticky;
-      top: 2.1rem;
-      z-index: 50;
-    }
-
-    /* ========================================================
-       フォームカード
-    ======================================================== */
-    .form-card {
-      background: rgba(255,255,255,.88);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(255,255,255,.55);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-sm);
-    }
-
-    /* セクションヘッダー */
-    .section-header {
-      display: flex;
-      align-items: center;
-      gap: .6rem;
-      padding: 1rem 1.25rem;
-      background: linear-gradient(135deg, var(--sp-secondary) 0%, var(--sp-secondary-dk) 100%);
-      border-radius: var(--radius-md) var(--radius-md) 0 0;
-      border-bottom: 1px solid rgba(31,122,133,.15);
-    }
-
-    .section-number {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 1.6rem;
-      height: 1.6rem;
-      background-color: var(--sp-primary);
-      color: white;
-      font-size: .75rem;
-      font-weight: 800;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-
-    .section-title {
-      font-size: .9375rem;
-      font-weight: 700;
-      color: var(--text-main);
-      line-height: 1.3;
-    }
-
-    .section-subtitle {
-      font-size: .75rem;
-      color: var(--text-muted);
-      font-weight: 400;
-    }
-
-    .required-badge {
-      display: inline-block;
-      font-size: .65rem;
-      font-weight: 700;
-      color: white;
-      background: #ef4444;
-      border-radius: 4px;
-      padding: .1rem .4rem;
-      vertical-align: middle;
-      margin-left: .35rem;
-    }
-
-    .optional-badge {
-      display: inline-block;
-      font-size: .65rem;
-      font-weight: 700;
-      color: var(--sp-primary);
-      background: var(--sp-primary-a10);
-      border: 1px solid rgba(31,122,133,.3);
-      border-radius: 4px;
-      padding: .1rem .4rem;
-      vertical-align: middle;
-      margin-left: .35rem;
-    }
-
-    /* ========================================================
-       カテゴリーボタン（projects.html と同一スタイル）
-    ======================================================== */
-    .category-btn {
-      transition: var(--transition);
-      cursor: pointer;
-      user-select: none;
-      background: var(--sp-primary-a10);
-      color: var(--sp-primary);
-      border: 1px solid rgba(31,122,133,.5);
-      border-radius: var(--radius-sm);
-      padding: .45rem 1rem;
-      font-size: .8125rem;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: .35rem;
-      position: relative;
-      white-space: nowrap;
-    }
-
-    .category-btn:hover {
-      background: var(--sp-primary-a20);
-      transform: translateY(-1px);
-      box-shadow: 0 2px 8px var(--sp-primary-a20);
-    }
-
-    .category-btn.active {
-      background: white !important;
-      color: var(--sp-primary) !important;
-      border: 2px solid var(--sp-primary) !important;
-      box-shadow: 0 4px 12px var(--sp-primary-a30) !important;
-      transform: scale(1.04) !important;
-    }
-
-    /* カテゴリーアクティブ時の選択済みカウントバッジ */
-    .category-btn .sel-count {
-      display: none;
-      background: var(--sp-primary);
-      color: white;
-      border-radius: 999px;
-      padding: .05rem .45rem;
-      font-size: .68rem;
-      font-weight: 800;
-      line-height: 1.4;
-    }
-
-    .category-btn.has-selection .sel-count {
-      display: inline-block;
-    }
-
-    /* ========================================================
-       専門科ボタン（projects.html と同一スタイル）
-    ======================================================== */
+    .category-btn,
     .specialty-btn {
-      transition: var(--transition);
+      transition: all 0.2s ease;
       cursor: pointer;
       user-select: none;
-      background: var(--sp-primary-a10);
-      color: var(--sp-primary);
-      border: 1px solid rgba(31,122,133,.45);
-      border-radius: var(--radius-sm);
-      padding: .38rem .875rem;
-      font-size: .8125rem;
-      font-weight: 600;
-      white-space: nowrap;
+      background: rgba(31, 122, 133, 0.15);
+      color: #1F7A85;
+      border: 1px solid #1F7A85;
     }
 
+    .category-btn:hover,
     .specialty-btn:hover {
-      background: var(--sp-primary-a20);
+      background: rgba(31, 122, 133, 0.25);
       transform: translateY(-1px);
-      box-shadow: 0 2px 8px var(--sp-primary-a20);
+      box-shadow: 0 2px 8px rgba(31, 122, 133, 0.2);
     }
 
+    .category-btn.active,
     .specialty-btn.selected {
       background: white !important;
-      color: var(--sp-primary) !important;
-      border: 2px solid var(--sp-primary) !important;
-      box-shadow: 0 4px 12px var(--sp-primary-a30) !important;
-      transform: scale(1.04) !important;
+      color: #1F7A85 !important;
+      border: 2px solid #1F7A85 !important;
+      box-shadow: 0 4px 12px rgba(31, 122, 133, 0.3) !important;
+      transform: scale(1.03);
+      font-weight: 700;
     }
 
-    /* ========================================================
-       プライマリ専門科セレクト（section 1）
-    ======================================================== */
-    .primary-select-wrapper {
-      position: relative;
-    }
-
-    .primary-select-wrapper select {
-      width: 100%;
-      padding: .6rem 2.5rem .6rem 1rem;
-      border: 1px solid rgba(31,122,133,.4);
-      border-radius: var(--radius-sm);
-      font-size: .875rem;
-      background-color: rgba(255,255,255,.85);
-      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%231F7A85' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-      background-position: right .6rem center;
-      background-repeat: no-repeat;
-      background-size: 1.4em 1.4em;
-      -webkit-appearance: none;
-      appearance: none;
-      cursor: pointer;
-      transition: var(--transition);
-      color: var(--text-main);
-    }
-
-    .primary-select-wrapper select:focus {
-      outline: none;
-      border-color: var(--sp-primary);
-      box-shadow: 0 0 0 3px var(--sp-primary-a10);
-      background-color: white;
-    }
-
-    .primary-select-wrapper .select-icon {
-      position: absolute;
-      left: .85rem;
-      top: 50%;
-      transform: translateY(-50%);
-      pointer-events: none;
-      color: var(--sp-primary);
-      font-size: .9rem;
-    }
-
-    .primary-select-wrapper select {
-      padding-left: 2.4rem;
-    }
-
-    /* ========================================================
-       サブスペシャリティグループ（アニメーション付き）
-    ======================================================== */
     .subspecialty-group {
-      overflow: hidden;
-      max-height: 0;
-      opacity: 0;
-      transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-                  opacity 0.25s ease,
-                  margin-top 0.3s ease;
-      margin-top: 0;
+      animation: groupFadeIn 0.25s ease-out;
     }
 
-    .subspecialty-group.open {
-      max-height: 600px;
-      opacity: 1;
-      margin-top: .75rem;
+    @keyframes groupFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    .subspecialty-group-inner {
-      border: 1px solid rgba(31,122,133,.2);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      background: rgba(255,255,255,.7);
-    }
-
-    .subspecialty-group-header {
-      display: flex;
-      align-items: center;
-      gap: .5rem;
-      padding: .6rem 1rem;
-      background: linear-gradient(90deg, var(--sp-primary-a10) 0%, transparent 100%);
-      border-bottom: 1px solid rgba(31,122,133,.12);
-    }
-
-    .subspecialty-group-title {
-      font-size: .8125rem;
-      font-weight: 700;
-      color: var(--sp-primary);
-    }
-
-    .subspecialty-group-body {
-      padding: .75rem 1rem;
-      display: flex;
-      flex-wrap: wrap;
-      gap: .5rem;
-    }
-
-    /* ========================================================
-       サマリーエリア
-    ======================================================== */
-    .summary-card {
-      background: linear-gradient(135deg, #f0fafb 0%, #e8f4f5 100%);
-      border: 1.5px solid rgba(31,122,133,.25);
-      border-radius: var(--radius-md);
-      padding: 1.1rem 1.25rem;
-    }
-
-    .summary-row {
-      display: flex;
-      align-items: flex-start;
-      gap: .6rem;
-      font-size: .8125rem;
-      line-height: 1.55;
-      padding: .35rem 0;
-      border-bottom: 1px solid rgba(31,122,133,.08);
-    }
-
-    .summary-row:last-child {
-      border-bottom: none;
-    }
-
-    .summary-label {
-      flex-shrink: 0;
-      width: 10rem;
-      font-weight: 700;
-      color: var(--sp-primary-dark);
-    }
-
-    .summary-value {
-      color: var(--text-main);
-      flex: 1;
-    }
-
-    .summary-value.empty {
-      color: var(--text-light);
-      font-style: italic;
-    }
-
-    .summary-chip {
-      display: inline-block;
-      background: white;
-      color: var(--sp-primary);
-      border: 1px solid rgba(31,122,133,.4);
-      border-radius: 999px;
-      padding: .1rem .65rem;
-      font-size: .75rem;
-      font-weight: 600;
-      margin: .1rem .15rem;
-    }
-
-    /* ========================================================
-       リセットボタン
-    ======================================================== */
-    .btn-reset {
-      display: inline-flex;
-      align-items: center;
-      gap: .4rem;
-      padding: .45rem 1.1rem;
-      font-size: .8125rem;
-      font-weight: 600;
-      color: #6b7280;
-      background: white;
-      border: 1px solid #d1d5db;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .btn-reset:hover {
-      background: #f9fafb;
-      border-color: #9ca3af;
-      color: var(--text-main);
-    }
-
-    /* ========================================================
-       実装メモ
-    ======================================================== */
-    .impl-note {
-      background: #fffbeb;
-      border: 1px solid #fde68a;
-      border-radius: var(--radius-md);
-      padding: 1rem 1.25rem;
-      font-size: .8125rem;
-      color: #78350f;
-    }
-
-    .impl-note h4 {
-      font-weight: 700;
-      margin-bottom: .4rem;
-      display: flex;
-      align-items: center;
-      gap: .4rem;
-    }
-
-    .impl-note ul {
-      padding-left: 1.2rem;
-      margin-top: .3rem;
-      list-style: disc;
-    }
-
-    .impl-note li {
-      margin-bottom: .25rem;
-      line-height: 1.55;
-    }
-
-    /* ========================================================
-       ユーティリティ
-    ======================================================== */
-    .divider {
-      border: none;
-      border-top: 1px solid rgba(31,122,133,.1);
-      margin: 1.5rem 0;
-    }
-
-    /* カテゴリーボタン群ラッパー */
-    .category-btn-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: .5rem;
-    }
-
-    /* 空状態 */
-    .empty-hint {
-      display: flex;
-      align-items: center;
-      gap: .5rem;
-      color: var(--text-light);
-      font-size: .8125rem;
-      padding: .75rem 0 .25rem;
+    .summary-item {
+      border-left: 4px solid #1F7A85;
+      background: rgba(232, 240, 241, 0.65);
     }
   </style>
 </head>
-
-<body>
-
-  <!-- ① モックバナー -->
-  <div class="mock-banner">
-    <i class="fas fa-flask mr-1"></i>
-    これは UI モック（検討用サンプル）です。バックエンドには接続されていません。本番実装前の確認・議論用ページです。
-  </div>
-
-  <!-- ② ナビゲーション（既存ページと共通） -->
-  <nav class="site-nav">
-    <div class="container mx-auto px-3 sm:px-6 py-2.5">
+<body class="bg-gray-50">
+  <nav class="bg-white shadow-md sticky top-0 z-40">
+    <div class="container mx-auto px-2 sm:px-4 py-2 sm:py-3">
       <div class="flex items-center justify-between flex-wrap gap-2">
-        <div class="flex items-center gap-3">
+        <div class="flex items-center space-x-2 sm:space-x-4">
           <img src="Seed_Planning_Logo_Original.jpg" alt="SEED PLANNING" class="h-8 sm:h-10">
-          <span class="hidden md:block text-base font-bold text-gray-800">プロジェクト履歴管理システム</span>
+          <h1 class="hidden md:block text-lg font-bold text-gray-800">医師登録モック（診療科選択）</h1>
         </div>
-        <div class="flex flex-wrap gap-1.5">
-          <a href="index.html"    class="px-3 py-1.5 text-xs bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center gap-1">
-            <i class="fas fa-home"></i><span class="hidden sm:inline">ホーム</span>
-          </a>
-          <a href="register.html" class="px-3 py-1.5 text-xs text-white rounded-lg transition flex items-center gap-1" style="background-color:#1F7A85;">
-            <i class="fas fa-plus"></i><span class="hidden sm:inline">新規登録</span>
-          </a>
-          <a href="projects.html" class="px-3 py-1.5 text-xs bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center gap-1">
-            <i class="fas fa-search"></i><span class="hidden sm:inline">案件検索</span>
-          </a>
-          <a href="links.html"    class="px-3 py-1.5 text-xs bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center gap-1">
-            <i class="fas fa-link"></i><span class="hidden sm:inline">リンク集</span>
+        <div>
+          <a href="register.html" class="px-3 py-2 text-xs sm:text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition inline-flex items-center gap-2">
+            <i class="fas fa-arrow-left"></i>
+            既存登録画面へ
           </a>
         </div>
       </div>
     </div>
   </nav>
 
-  <!-- ③ メインコンテンツ -->
-  <div class="container mx-auto px-4 py-8 max-w-3xl">
-
-    <!-- ページヘッダー -->
-    <div class="rounded-xl shadow-sm p-6 mb-6" style="background: linear-gradient(135deg, #E8F0F1 0%, #d5e5e7 100%);">
-      <div class="flex items-start gap-3">
-        <div class="mt-0.5">
-          <i class="fas fa-user-md text-2xl" style="color: #1F7A85;"></i>
-        </div>
-        <div>
-          <h2 class="text-xl font-bold text-gray-800">医師登録 — 診療科選択</h2>
-          <p class="text-sm text-gray-600 mt-1">
-            担当医師の主要診療科・関連診療領域・専門分野を選択してください。
-          </p>
-          <p class="text-xs text-gray-500 mt-2">
-            <span class="required-badge">必須</span> の項目は登録完了に必要です。
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- メインフォームカード -->
-    <div class="form-card p-6 space-y-7">
-
-      <!-- ══════════════════════════════════════
-           SECTION 1: 主要診療科（単一選択・必須）
-      ══════════════════════════════════════ -->
-      <section id="section-primary">
-        <div class="mb-4">
-          <h3 class="text-sm font-bold text-gray-700 flex items-center gap-2">
-            <span class="section-number">1</span>
-            主要診療科（必須・1つ選択）<span class="required-badge">必須</span>
-          </h3>
-          <p class="text-xs text-gray-500 mt-1.5 ml-7">
-            医師の主たる専門領域を1つ選んでください。この情報は案件マッチングに使用されます。
-          </p>
-        </div>
-
-        <div class="primary-select-wrapper ml-7">
-          <span class="select-icon"><i class="fas fa-stethoscope"></i></span>
-          <select id="primarySpecialty" onchange="onPrimaryChange()">
-            <option value="">— 主要診療科を選択してください —</option>
-            <!-- JavaScriptで動的生成 -->
-          </select>
-        </div>
-        <p id="primaryError" class="ml-7 mt-1.5 text-xs text-red-500 hidden">
-          <i class="fas fa-exclamation-circle mr-1"></i>主要診療科は必須です。
+  <div class="container mx-auto px-4 py-8">
+    <div class="max-w-5xl mx-auto space-y-6">
+      <div class="rounded-lg shadow-md p-6" style="background: linear-gradient(135deg, #E8F0F1 0%, #d5e5e7 100%);">
+        <h2 class="text-2xl font-bold text-gray-800 flex items-center">
+          <i class="fas fa-stethoscope mr-3" style="color: #1F7A85;"></i>
+          医師登録：専門領域選択UIモック
+        </h2>
+        <p class="text-gray-700 mt-2 text-sm">
+          既存の医師登録フォームにおける「主要診療科・関連領域・専門分野」の階層的入力UIのモックです。
+          バックエンド連携は行わず、UI/UX議論用にフロントのみで動作します。
         </p>
-      </section>
+      </div>
 
-      <hr class="divider">
+      <section class="mock-card p-6 space-y-6">
+        <div>
+          <h3 class="text-base font-bold text-gray-800 mb-2">1. 主要診療科（必須・1つ選択）</h3>
+          <select id="primarySpecialty" class="w-full md:w-2/3 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+            <option value="">選択してください</option>
+          </select>
+          <p class="text-xs text-gray-500 mt-2">主たる専門を1つ選択します。</p>
+        </div>
 
-      <!-- ══════════════════════════════════════
-           SECTION 2: 関連する診療領域（カテゴリー複数選択）
-      ══════════════════════════════════════ -->
-      <section id="section-categories">
-        <div class="mb-4">
-          <h3 class="text-sm font-bold text-gray-700 flex items-center gap-2">
-            <span class="section-number">2</span>
-            関連する診療領域（複数選択可）<span class="optional-badge">任意</span>
-          </h3>
-          <p class="text-xs text-gray-500 mt-1.5 ml-7">
-            主要診療科に加え、関連・隣接する診療カテゴリーをすべて選択してください。選択後に専門分野が展開されます。
+        <div>
+          <h3 class="text-base font-bold text-gray-800 mb-2">2. 関連する診療領域（複数選択可）</h3>
+          <div id="categoryButtons" class="flex flex-wrap gap-2"></div>
+          <p class="text-xs text-gray-500 mt-2">複数カテゴリを同時に選択できます。カテゴリ解除時は配下選択も自動解除されます。</p>
+        </div>
+
+        <div>
+          <h3 class="text-base font-bold text-gray-800 mb-2">3. 専門分野（複数選択可）</h3>
+          <div id="subspecialtyContainer" class="space-y-4"></div>
+          <p id="subspecialtyPlaceholder" class="text-sm text-gray-500 bg-gray-50 rounded-lg p-4 border border-dashed border-gray-300">
+            上の「関連する診療領域」を1つ以上選択すると、専門分野ボタンが表示されます。
           </p>
         </div>
 
-        <div id="categoryBtnGroup" class="category-btn-group ml-7">
-          <!-- JavaScriptで動的生成 -->
-        </div>
-      </section>
-
-      <hr class="divider">
-
-      <!-- ══════════════════════════════════════
-           SECTION 3: 専門分野（サブスペシャリティ複数選択）
-      ══════════════════════════════════════ -->
-      <section id="section-subspecialties">
-        <div class="mb-3">
-          <h3 class="text-sm font-bold text-gray-700 flex items-center gap-2">
-            <span class="section-number">3</span>
-            専門分野（複数選択可）<span class="optional-badge">任意</span>
-          </h3>
-          <p class="text-xs text-gray-500 mt-1.5 ml-7">
-            上のカテゴリーを選択すると、対応する専門分野が表示されます。該当するものをすべて選んでください。
-          </p>
-        </div>
-
-        <!-- カテゴリー未選択時のヒント -->
-        <div id="subspecialtyHint" class="empty-hint ml-7">
-          <i class="fas fa-arrow-up text-gray-300"></i>
-          <span>「関連する診療領域」を選択すると専門分野が表示されます</span>
-        </div>
-
-        <!-- 動的に生成される各カテゴリーのサブスペシャリティグループ -->
-        <div id="subspecialtyContainer" class="ml-7 space-y-0">
-          <!-- JavaScriptで動的生成 -->
-        </div>
-      </section>
-
-      <hr class="divider">
-
-      <!-- ══════════════════════════════════════
-           SECTION 4: 選択内容サマリー
-      ══════════════════════════════════════ -->
-      <section id="section-summary">
-        <div class="mb-3">
-          <h3 class="text-sm font-bold text-gray-700 flex items-center gap-2">
-            <span class="section-number">4</span>
-            選択内容の確認
-          </h3>
-        </div>
-
-        <div class="summary-card ml-7">
-          <!-- 主要診療科 -->
-          <div class="summary-row">
-            <span class="summary-label">
-              <i class="fas fa-circle text-xs mr-1.5" style="color:#1F7A85;"></i>主要診療科
-            </span>
-            <span id="summaryPrimary" class="summary-value empty">未選択</span>
-          </div>
-          <!-- 関連する診療領域 -->
-          <div class="summary-row">
-            <span class="summary-label">
-              <i class="fas fa-circle text-xs mr-1.5" style="color:#1F7A85;"></i>関連する診療領域
-            </span>
-            <span id="summaryCategories" class="summary-value empty">未選択</span>
-          </div>
-          <!-- 専門分野 -->
-          <div class="summary-row">
-            <span class="summary-label">
-              <i class="fas fa-circle text-xs mr-1.5" style="color:#1F7A85;"></i>専門分野
-            </span>
-            <span id="summarySubspecialties" class="summary-value empty">未選択</span>
+        <div>
+          <h3 class="text-base font-bold text-gray-800 mb-2">4. 選択サマリー</h3>
+          <div class="space-y-3">
+            <div class="summary-item rounded-lg px-4 py-3 text-sm text-gray-700">
+              <span class="font-semibold">主要診療科：</span>
+              <span id="summaryPrimary">未選択</span>
+            </div>
+            <div class="summary-item rounded-lg px-4 py-3 text-sm text-gray-700">
+              <span class="font-semibold">関連する診療領域：</span>
+              <span id="summaryCategories">未選択</span>
+            </div>
+            <div class="summary-item rounded-lg px-4 py-3 text-sm text-gray-700">
+              <span class="font-semibold">専門分野：</span>
+              <span id="summarySubspecialties">未選択</span>
+            </div>
           </div>
         </div>
 
-        <!-- リセットボタン -->
-        <div class="ml-7 mt-3 flex items-center gap-3">
-          <button class="btn-reset" onclick="resetAll()">
-            <i class="fas fa-undo"></i> すべてリセット
+        <div class="flex flex-wrap items-center gap-3 pt-2">
+          <button id="resetBtn" type="button" class="px-4 py-2 rounded-lg text-sm font-semibold bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200 transition">
+            <i class="fas fa-rotate-left mr-1"></i> 選択をリセット
           </button>
-          <span id="totalCountBadge" class="text-xs text-gray-400 hidden">
-            合計 <strong id="totalCount">0</strong> 項目選択中
+          <span class="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-3 py-1">
+            UI検討用モック（保存機能なし・画面構成レビュー専用）
           </span>
+          <p class="text-xs text-gray-500">
+            ※本モックはKUSSHUおよび社内ステークホルダー向けのUI確認用です。バリデーション・保存・GAS連携は未実装です。
+          </p>
         </div>
       </section>
-
-    </div><!-- /form-card -->
-
-
-    <!-- ══════════════════════════════════════
-         実装メモ（モック内注記）
-    ══════════════════════════════════════ -->
-    <div class="impl-note mt-8">
-      <h4>
-        <i class="fas fa-info-circle" style="color:#d97706;"></i>
-        実装メモ — この画面について
-      </h4>
-      <ul>
-        <li>このページは <code>register-specialty-mock.html</code> です。<strong>本番の <code>register.html</code> は変更されていません。</strong></li>
-        <li>専門科データは <code>js/data/specialties-master.js</code> の <code>SPECIALTIES_MASTER</code> オブジェクトを直接参照しています。</li>
-        <li>カテゴリー「血液・内分泌・代謝」「腎・泌尿器」は、マスターデータの実際のカテゴリー区分（内科系 / 泌尿器系）に合わせてマッピングしています。</li>
-        <li>本番実装では、選択値を <code>hidden input</code> 経由で GAS に送信するか、既存の <code>specialty</code> フィールドとの整合性を取る必要があります。</li>
-        <li>UI スタイルは <code>projects.html</code> の <code>.category-btn</code> / <code>.specialty-btn</code> を参考に再現しています。</li>
-        <li>「主要診療科」の選択肢は、カテゴリー選択と連動させる（例：選択中カテゴリーの候補のみ表示する）よう変更することも検討できます。</li>
-      </ul>
     </div>
+  </div>
 
-  </div><!-- /container -->
-
-
-  <!-- ══════════════════════════════════════
-       専門科マスターデータ（インライン）
-       ※ specialties-master.js を読み込まない
-          スタンドアロン動作のため、必要最小限
-          のデータをここに定義する。
-          実際には js/data/specialties-master.js
-          を <script src="..."> で参照すること。
-  ══════════════════════════════════════ -->
-  <script src="js/data/specialties-master.js"></script>
-
-  <!-- ══════════════════════════════════════
-       モックロジック
-  ══════════════════════════════════════ -->
   <script>
-    /* ====================================================
-       データ定義
-       カテゴリーとサブスペシャリティのマッピング。
-       モックのUIカテゴリー名はタスク仕様書に準拠し、
-       専門科名は specialties-master.js の .ja プロパティ
-       から取得している（可能な限り）。
-    ==================================================== */
-
-    /** UIに表示するカテゴリー定義（順序付き） */
-    const UI_CATEGORIES = [
-      { key: '内科系',          icon: 'fa-stethoscope',    color: '#3B82F6' },
-      { key: '外科系',          icon: 'fa-user-md',        color: '#EF4444' },
-      { key: '消化器系',        icon: 'fa-heartbeat',      color: '#10B981' },
-      { key: '血液・内分泌・代謝', icon: 'fa-tint',         color: '#F59E0B' },
-      { key: '神経・精神',      icon: 'fa-brain',          color: '#8B5CF6' },
-      { key: '感覚器',          icon: 'fa-eye',            color: '#06B6D4' },
-      { key: '小児・産婦人科',  icon: 'fa-baby',           color: '#EC4899' },
-      { key: '腎・泌尿器',      icon: 'fa-flask',          color: '#14B8A6' },
-      { key: 'その他・横断',    icon: 'fa-hospital',       color: '#6B7280' },
+    const CATEGORY_ORDER = [
+      '内科系',
+      '外科系',
+      '消化器系',
+      '血液・内分泌・代謝',
+      '神経・精神',
+      '感覚器',
+      '小児・産婦人科',
+      '腎・泌尿器',
+      'その他・横断'
     ];
 
-    /**
-     * カテゴリーキーごとの専門科リスト。
-     * specialties-master.js のデータを基に、UIカテゴリー向けに
-     * マッピングして定義する。
-     */
-    const SUBSPECIALTIES_BY_CATEGORY = {
-      '内科系': [
-        '内科', '循環器内科', '呼吸器内科', '腎臓内科',
-        '内分泌内科', '糖尿病内科', '腫瘍内科', 'リウマチ科', '老年内科'
-      ],
-      '外科系': [
-        '外科', '消化器外科', '心臓血管外科', '呼吸器外科',
-        '乳腺外科', '脳神経外科', '整形外科', '形成外科'
-      ],
-      '消化器系': [
-        '消化器内科', '消化器外科', '肝臓専門医'
-      ],
-      '血液・内分泌・代謝': [
-        '血液内科', '内分泌内科', '糖尿病内科', '肥満症専門医', '内科'
-      ],
-      '神経・精神': [
-        '脳神経内科', '脳神経外科', '精神科', '心療内科', 'リウマチ科'
-      ],
-      '感覚器': [
-        '眼科', '耳鼻咽喉科', '皮膚科'
-      ],
-      '小児・産婦人科': [
-        '小児科', '小児外科', '産婦人科', '産科', '婦人科'
-      ],
-      '腎・泌尿器': [
-        '腎臓内科', '泌尿器科'
-      ],
-      'その他・横断': [
-        '救急科', '総合診療科', '麻酔科', '放射線科', 'リハビリテーション科', '病理診断科'
-      ]
+    const mockCategorySeeds = {
+      '内科系': ['一般内科', '循環器内科', '呼吸器内科', '腎臓内科', '糖尿病内科', '内分泌内科', '感染症内科', '老年内科'],
+      '外科系': ['一般外科', '消化器外科', '心臓血管外科', '呼吸器外科', '乳腺外科', '脳神経外科', '形成外科'],
+      '消化器系': ['消化器内科', '消化器科', '消化器外科'],
+      '血液・内分泌・代謝': ['血液内科', '内分泌内科', '糖尿病内科'],
+      '神経・精神': ['神経内科', '脳神経外科', '精神科', '心療内科'],
+      '感覚器': ['眼科', '耳鼻咽喉科', '皮膚科'],
+      '小児・産婦人科': ['小児科', '小児外科', '産婦人科', '産科', '婦人科'],
+      '腎・泌尿器': ['腎臓内科', '泌尿器科'],
+      'その他・横断': ['救急科', '総合診療科', '麻酔科', '放射線科', 'リハビリテーション科']
     };
 
-    /* ====================================================
-       状態管理
-    ==================================================== */
-    const state = {
-      primary:        '',        // 主要診療科
-      categories:     new Set(), // 選択中カテゴリー
-      subspecialties: new Set(), // 選択中専門分野
-    };
+    const selectedCategories = new Set();
+    const selectedSubspecialtiesByCategory = {};
 
-    /* ====================================================
-       初期化
-    ==================================================== */
-    document.addEventListener('DOMContentLoaded', () => {
-      buildPrimarySelect();
-      buildCategoryButtons();
-      updateSummary();
-    });
+    const categoryButtonsEl = document.getElementById('categoryButtons');
+    const primaryEl = document.getElementById('primarySpecialty');
+    const subspecialtyContainerEl = document.getElementById('subspecialtyContainer');
+    const subspecialtyPlaceholderEl = document.getElementById('subspecialtyPlaceholder');
 
-    /* ────────────────────────────────────────────────
-       主要診療科セレクト生成
-    ──────────────────────────────────────────────── */
-    function buildPrimarySelect() {
-      const sel = document.getElementById('primarySpecialty');
-
-      // specialties-master.js からフラットに取得（優先度順）
-      let items = [];
-      try {
-        items = SpecialtyMaster.getSpecialtiesSorted();
-      } catch(e) {
-        // フォールバック：インライン定義から全値を収集
-        items = Object.values(SUBSPECIALTIES_BY_CATEGORY)
-          .flat()
-          .filter((v, i, a) => a.indexOf(v) === i)
-          .map(ja => ({ ja, category: '' }));
+    function normalizeWithMaster(name) {
+      if (window.SpecialtyMaster && typeof window.SpecialtyMaster.findSpecialtyByName === 'function') {
+        const found = window.SpecialtyMaster.findSpecialtyByName(name);
+        return found ? found.ja : name;
       }
+      return name;
+    }
 
-      // カテゴリーごとにオプショングループ化
-      const grouped = {};
-      items.forEach(s => {
-        const cat = s.category || 'その他';
-        if (!grouped[cat]) grouped[cat] = [];
-        grouped[cat].push(s.ja);
-      });
+    function unique(items) {
+      return [...new Set(items)];
+    }
 
-      Object.entries(grouped).forEach(([catName, specs]) => {
-        const og = document.createElement('optgroup');
-        og.label = catName;
-        specs.forEach(name => {
-          const opt = document.createElement('option');
-          opt.value = name;
-          opt.textContent = name;
-          og.appendChild(opt);
-        });
-        sel.appendChild(og);
+    const categoryData = CATEGORY_ORDER.reduce((acc, category) => {
+      const normalized = unique((mockCategorySeeds[category] || []).map(normalizeWithMaster));
+      acc[category] = normalized;
+      selectedSubspecialtiesByCategory[category] = new Set();
+      return acc;
+    }, {});
+
+    const primaryOptions = unique(Object.values(categoryData).flat()).sort((a, b) => a.localeCompare(b, 'ja'));
+
+    function initPrimaryOptions() {
+      primaryOptions.forEach(spec => {
+        const option = document.createElement('option');
+        option.value = spec;
+        option.textContent = spec;
+        primaryEl.appendChild(option);
       });
     }
 
-    /* ────────────────────────────────────────────────
-       カテゴリーボタン群生成
-    ──────────────────────────────────────────────── */
-    function buildCategoryButtons() {
-      const container = document.getElementById('categoryBtnGroup');
-      container.innerHTML = '';
+    function renderCategoryButtons() {
+      categoryButtonsEl.innerHTML = '';
 
-      UI_CATEGORIES.forEach(cat => {
+      CATEGORY_ORDER.forEach(category => {
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.className = 'category-btn';
-        btn.dataset.key = cat.key;
-        btn.innerHTML = `
-          <i class="fas ${cat.icon}" style="font-size:11px; color:${cat.color};"></i>
-          ${cat.key}
-          <span class="sel-count"></span>
-        `;
-        btn.addEventListener('click', () => toggleCategory(cat.key));
-        container.appendChild(btn);
-      });
+        btn.className = 'category-btn px-4 py-2 rounded-lg font-semibold text-sm';
+        btn.dataset.category = category;
 
-      // サブスペシャリティグループのDOMも事前構築
-      buildSubspecialtyGroups();
-    }
+        const selectedCount = selectedSubspecialtiesByCategory[category].size;
+        btn.innerHTML = `${category} <span class="ml-1 text-xs font-bold">(${selectedCount})</span>`;
 
-    /* ────────────────────────────────────────────────
-       サブスペシャリティグループのDOM構築（非表示で事前作成）
-    ──────────────────────────────────────────────── */
-    function buildSubspecialtyGroups() {
-      const container = document.getElementById('subspecialtyContainer');
-      container.innerHTML = '';
+        if (selectedCategories.has(category)) {
+          btn.classList.add('active');
+        }
 
-      UI_CATEGORIES.forEach(cat => {
-        const specs = SUBSPECIALTIES_BY_CATEGORY[cat.key] || [];
-        if (!specs.length) return;
-
-        // グループラッパー（アコーディオン）
-        const group = document.createElement('div');
-        group.className = 'subspecialty-group';
-        group.id = `subgroup-${sanitizeKey(cat.key)}`;
-
-        // inner
-        const inner = document.createElement('div');
-        inner.className = 'subspecialty-group-inner';
-
-        // ヘッダー
-        const header = document.createElement('div');
-        header.className = 'subspecialty-group-header';
-        header.innerHTML = `
-          <i class="fas ${cat.icon}" style="font-size:11px; color:${cat.color};"></i>
-          <span class="subspecialty-group-title">${cat.key}</span>
-          <span class="ml-auto text-xs text-gray-400" id="subcount-${sanitizeKey(cat.key)}"></span>
-        `;
-
-        // ボタン群
-        const body = document.createElement('div');
-        body.className = 'subspecialty-group-body';
-
-        specs.forEach(specName => {
-          const btn = document.createElement('button');
-          btn.type = 'button';
-          btn.className = 'specialty-btn';
-          btn.dataset.spec = specName;
-          btn.dataset.catKey = cat.key;
-          btn.textContent = specName;
-          btn.addEventListener('click', () => toggleSubspecialty(cat.key, specName, btn));
-          body.appendChild(btn);
+        btn.addEventListener('click', () => {
+          if (selectedCategories.has(category)) {
+            selectedCategories.delete(category);
+            selectedSubspecialtiesByCategory[category].clear();
+          } else {
+            selectedCategories.add(category);
+          }
+          renderCategoryButtons();
+          renderSubspecialtyGroups();
+          updateSummary();
         });
 
-        inner.appendChild(header);
-        inner.appendChild(body);
-        group.appendChild(inner);
-        container.appendChild(group);
+        categoryButtonsEl.appendChild(btn);
       });
     }
 
-    /* ====================================================
-       インタラクション
-    ==================================================== */
+    function renderSubspecialtyGroups() {
+      subspecialtyContainerEl.innerHTML = '';
+      const selectedList = CATEGORY_ORDER.filter(c => selectedCategories.has(c));
 
-    /** 主要診療科変更 */
-    function onPrimaryChange() {
-      const val = document.getElementById('primarySpecialty').value;
-      state.primary = val;
-      document.getElementById('primaryError').classList.toggle('hidden', !!val);
-      updateSummary();
-    }
+      subspecialtyPlaceholderEl.classList.toggle('hidden', selectedList.length > 0);
 
-    /** カテゴリーボタン toggle（複数選択） */
-    function toggleCategory(key) {
-      if (state.categories.has(key)) {
-        // 解除 → 配下の専門分野も解除
-        state.categories.delete(key);
-        clearSubspecialtiesForCategory(key);
-      } else {
-        state.categories.add(key);
-      }
+      selectedList.forEach(category => {
+        const group = document.createElement('div');
+        group.className = 'subspecialty-group bg-white/70 rounded-lg border border-gray-200 p-4';
 
-      // ボタン状態更新
-      refreshCategoryButton(key);
-      // サブスペシャリティパネル開閉
-      refreshSubspecialtyGroup(key);
-      // ヒント表示制御
-      refreshSubspecialtyHint();
-      // サマリー更新
-      updateSummary();
-    }
+        const header = document.createElement('div');
+        header.className = 'flex items-center justify-between mb-3';
+        header.innerHTML = `
+          <h4 class="font-semibold text-gray-800">${category}</h4>
+          <span class="text-xs text-gray-500">選択中: ${selectedSubspecialtiesByCategory[category].size}</span>
+        `;
 
-    /** 専門分野ボタン toggle（複数選択） */
-    function toggleSubspecialty(catKey, specName, btn) {
-      if (state.subspecialties.has(specName)) {
-        state.subspecialties.delete(specName);
-        btn.classList.remove('selected');
-      } else {
-        state.subspecialties.add(specName);
-        btn.classList.add('selected');
-      }
-      refreshCategorySelectionCount(catKey);
-      updateSummary();
-    }
+        const btnWrap = document.createElement('div');
+        btnWrap.className = 'flex flex-wrap gap-2';
 
-    /** カテゴリーを解除した際、配下の専門分野をすべてクリア */
-    function clearSubspecialtiesForCategory(key) {
-      const specs = SUBSPECIALTIES_BY_CATEGORY[key] || [];
-      specs.forEach(s => {
-        state.subspecialties.delete(s);
-        // ボタンの選択状態も解除
-        const btn = document.querySelector(
-          `#subgroup-${sanitizeKey(key)} .specialty-btn[data-spec="${CSS.escape(s)}"]`
-        );
-        if (btn) btn.classList.remove('selected');
+        categoryData[category].forEach(spec => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'specialty-btn px-3 py-2 rounded-lg font-semibold text-sm';
+          btn.textContent = spec;
+
+          if (selectedSubspecialtiesByCategory[category].has(spec)) {
+            btn.classList.add('selected');
+          }
+
+          btn.addEventListener('click', () => {
+            const picked = selectedSubspecialtiesByCategory[category];
+            if (picked.has(spec)) {
+              picked.delete(spec);
+            } else {
+              picked.add(spec);
+            }
+            renderCategoryButtons();
+            renderSubspecialtyGroups();
+            updateSummary();
+          });
+
+          btnWrap.appendChild(btn);
+        });
+
+        group.appendChild(header);
+        group.appendChild(btnWrap);
+        subspecialtyContainerEl.appendChild(group);
       });
     }
 
-    /* ====================================================
-       DOM 同期
-    ==================================================== */
-
-    /** カテゴリーボタンの active / sel-count を更新 */
-    function refreshCategoryButton(key) {
-      const btn = document.querySelector(`.category-btn[data-key="${key}"]`);
-      if (!btn) return;
-      const isActive = state.categories.has(key);
-      btn.classList.toggle('active', isActive);
-      refreshCategorySelectionCount(key);
-    }
-
-    /** カテゴリーボタン内の選択数バッジを更新 */
-    function refreshCategorySelectionCount(key) {
-      const btn = document.querySelector(`.category-btn[data-key="${key}"]`);
-      if (!btn) return;
-      const specs = SUBSPECIALTIES_BY_CATEGORY[key] || [];
-      const count = specs.filter(s => state.subspecialties.has(s)).length;
-      const badge = btn.querySelector('.sel-count');
-      if (badge) badge.textContent = count > 0 ? count : '';
-      btn.classList.toggle('has-selection', count > 0);
-
-      // グループヘッダーのカウントも更新
-      const headerCount = document.getElementById(`subcount-${sanitizeKey(key)}`);
-      if (headerCount) {
-        headerCount.textContent = count > 0 ? `${count} 件選択中` : '';
-      }
-    }
-
-    /** サブスペシャリティグループパネルの開閉 */
-    function refreshSubspecialtyGroup(key) {
-      const group = document.getElementById(`subgroup-${sanitizeKey(key)}`);
-      if (!group) return;
-      const shouldOpen = state.categories.has(key);
-      group.classList.toggle('open', shouldOpen);
-    }
-
-    /** サブスペシャリティのヒントテキスト表示制御 */
-    function refreshSubspecialtyHint() {
-      const hint = document.getElementById('subspecialtyHint');
-      hint.classList.toggle('hidden', state.categories.size > 0);
-    }
-
-    /* ====================================================
-       サマリー更新
-    ==================================================== */
     function updateSummary() {
-      // 主要診療科
-      const primEl = document.getElementById('summaryPrimary');
-      if (state.primary) {
-        primEl.textContent = state.primary;
-        primEl.classList.remove('empty');
-      } else {
-        primEl.textContent = '未選択';
-        primEl.classList.add('empty');
-      }
+      const primary = primaryEl.value || '未選択';
+      const categories = CATEGORY_ORDER.filter(c => selectedCategories.has(c));
+      const allSubspecialties = categories.flatMap(c => [...selectedSubspecialtiesByCategory[c]]);
 
-      // 関連診療領域
-      const catEl = document.getElementById('summaryCategories');
-      if (state.categories.size > 0) {
-        catEl.innerHTML = [...state.categories]
-          .map(c => `<span class="summary-chip">${c}</span>`)
-          .join('');
-        catEl.classList.remove('empty');
-      } else {
-        catEl.textContent = '未選択';
-        catEl.classList.add('empty');
-      }
-
-      // 専門分野
-      const specEl = document.getElementById('summarySubspecialties');
-      if (state.subspecialties.size > 0) {
-        specEl.innerHTML = [...state.subspecialties]
-          .map(s => `<span class="summary-chip">${s}</span>`)
-          .join('');
-        specEl.classList.remove('empty');
-      } else {
-        specEl.textContent = '未選択';
-        specEl.classList.add('empty');
-      }
-
-      // 合計カウント
-      const total = (state.primary ? 1 : 0)
-                  + state.categories.size
-                  + state.subspecialties.size;
-      const badge = document.getElementById('totalCountBadge');
-      const countEl = document.getElementById('totalCount');
-      if (total > 0) {
-        badge.classList.remove('hidden');
-        countEl.textContent = total;
-      } else {
-        badge.classList.add('hidden');
-      }
+      document.getElementById('summaryPrimary').textContent = primary;
+      document.getElementById('summaryCategories').textContent = categories.length ? categories.join('、') : '未選択';
+      document.getElementById('summarySubspecialties').textContent = allSubspecialties.length
+        ? unique(allSubspecialties).join('、')
+        : '未選択';
     }
 
-    /* ====================================================
-       リセット
-    ==================================================== */
     function resetAll() {
-      // state クリア
-      state.primary = '';
-      state.categories.clear();
-      state.subspecialties.clear();
-
-      // セレクトリセット
-      document.getElementById('primarySpecialty').value = '';
-      document.getElementById('primaryError').classList.add('hidden');
-
-      // カテゴリーボタンリセット
-      document.querySelectorAll('.category-btn').forEach(btn => {
-        btn.classList.remove('active', 'has-selection');
-        const badge = btn.querySelector('.sel-count');
-        if (badge) badge.textContent = '';
-      });
-
-      // サブスペシャリティグループ・ボタンリセット
-      document.querySelectorAll('.subspecialty-group').forEach(g => g.classList.remove('open'));
-      document.querySelectorAll('.specialty-btn').forEach(b => b.classList.remove('selected'));
-
-      // ヒント
-      document.getElementById('subspecialtyHint').classList.remove('hidden');
-
-      // サマリーリセット
+      primaryEl.value = '';
+      selectedCategories.clear();
+      CATEGORY_ORDER.forEach(category => selectedSubspecialtiesByCategory[category].clear());
+      renderCategoryButtons();
+      renderSubspecialtyGroups();
       updateSummary();
     }
 
-    /* ====================================================
-       ユーティリティ
-    ==================================================== */
-    /** CSS ID セレクターに使えない文字をエスケープ（簡易版） */
-    function sanitizeKey(key) {
-      return key.replace(/[・\s\/]/g, '-');
-    }
-  </script>
+    primaryEl.addEventListener('change', updateSummary);
+    document.getElementById('resetBtn').addEventListener('click', resetAll);
 
+    initPrimaryOptions();
+    renderCategoryButtons();
+    renderSubspecialtyGroups();
+    updateSummary();
+  </script>
 </body>
 </html>
