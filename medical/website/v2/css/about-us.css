@@ -174,9 +174,9 @@
   border-bottom: 1px solid rgba(91, 26, 6, 0.2);
 }
 
-.team-member:nth-child(4),
-.team-member:nth-child(5),
-.team-member:nth-child(6) {
+.team-member:nth-child(7),
+.team-member:nth-child(8),
+.team-member:nth-child(9) {
   border-bottom: none;
   padding-bottom: 0;
 }
