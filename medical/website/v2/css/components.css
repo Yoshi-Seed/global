@@ -520,16 +520,24 @@
   /* モバイル：ハンバーガーとロゴの配置を維持 */
   .header-container {
     justify-content: space-between;
+    padding: 0 12px 0 12px; /* モバイル：左右パディングを削減 */
   }
   
   .header-logo {
     order: 1;
+    margin-left: -8px; /* モバイル：ロゴをさらに左に */
+    margin-right: auto;
+  }
+  
+  .header-logo img {
+    height: 48px;
   }
   
   .menu-toggle {
     order: 3; /* モバイル：ハンバーガーを右 */
     display: block;
     margin-left: auto;
+    margin-right: -8px; /* モバイル：ハンバーガーをさらに右に */
   }
   
   .main-nav {

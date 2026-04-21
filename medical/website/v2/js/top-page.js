@@ -16,13 +16,50 @@ document.addEventListener('DOMContentLoaded', function() {
 function initWhySeedTabs() {
   const tabs = document.querySelectorAll('.tab-item');
   const panels = document.querySelectorAll('.panel-content');
+  const panelsContainer = document.querySelector('.why-seed-panels');
   
   if (!tabs.length || !panels.length) return;
+  
+  // モバイル版：スワイプ機能
+  let touchStartX = 0;
+  let touchEndX = 0;
+  let currentIndex = 0;
+  
+  if (panelsContainer && window.innerWidth <= 768) {
+    panelsContainer.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+    
+    panelsContainer.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, { passive: true });
+  }
+  
+  function handleSwipe() {
+    const swipeThreshold = 50;
+    const diff = touchStartX - touchEndX;
+    
+    if (Math.abs(diff) < swipeThreshold) return;
+    
+    if (diff > 0) {
+      // 左スワイプ：次のタブ
+      currentIndex = Math.min(currentIndex + 1, tabs.length - 1);
+    } else {
+      // 右スワイプ：前のタブ
+      currentIndex = Math.max(currentIndex - 1, 0);
+    }
+    
+    activateTab(currentIndex);
+    scrollTabIntoView(currentIndex);
+  }
   
   tabs.forEach((tab, index) => {
     // Click handler
     tab.addEventListener('click', function() {
+      currentIndex = index;
       activateTab(index);
+      scrollTabIntoView(index);
     });
     
     // Keyboard navigation
@@ -32,20 +69,25 @@ function initWhySeedTabs() {
       // Enter or Space - activate tab
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
+        currentIndex = index;
         activateTab(index);
       }
       // Arrow keys - navigate between tabs
       else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
         e.preventDefault();
         newIndex = (index + 1) % tabs.length;
+        currentIndex = newIndex;
         tabs[newIndex].focus();
         activateTab(newIndex);
+        scrollTabIntoView(newIndex);
       }
       else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
         e.preventDefault();
         newIndex = (index - 1 + tabs.length) % tabs.length;
+        currentIndex = newIndex;
         tabs[newIndex].focus();
         activateTab(newIndex);
+        scrollTabIntoView(newIndex);
       }
     });
   });
@@ -57,7 +99,7 @@ function initWhySeedTabs() {
       tab.setAttribute('aria-selected', 'false');
     });
     
-    // Hide all panels
+    // Hide all panels with fade out
     panels.forEach(panel => {
       panel.classList.remove('active');
     });
@@ -66,8 +108,29 @@ function initWhySeedTabs() {
     tabs[index].classList.add('active');
     tabs[index].setAttribute('aria-selected', 'true');
     
-    // Show corresponding panel
-    panels[index].classList.add('active');
+    // Show corresponding panel with fade in
+    setTimeout(() => {
+      panels[index].classList.add('active');
+    }, 10);
+  }
+  
+  function scrollTabIntoView(index) {
+    if (window.innerWidth <= 768) {
+      const tabsContainer = document.querySelector('.why-seed-tabs');
+      const activeTab = tabs[index];
+      
+      if (tabsContainer && activeTab) {
+        const containerWidth = tabsContainer.offsetWidth;
+        const tabLeft = activeTab.offsetLeft;
+        const tabWidth = activeTab.offsetWidth;
+        const scrollPosition = tabLeft - (containerWidth / 2) + (tabWidth / 2);
+        
+        tabsContainer.scrollTo({
+          left: scrollPosition,
+          behavior: 'smooth'
+        });
+      }
+    }
   }
 }
 

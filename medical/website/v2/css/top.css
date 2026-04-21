@@ -32,7 +32,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 65% 55%;
+  object-position: 75% 55%;
   transform: scale(1.05);
   filter: none;
   opacity: 1;
@@ -542,8 +542,17 @@
   }
   
   .panel-number {
-    font-size: clamp(80px, 20vw, 120px);
-    right: 24px;
+    font-size: clamp(120px, 25vw, 180px); /* モバイル：番号サイズ拡大 */
+    right: 20px;
+    bottom: 32px;
+  }
+  
+  /* モバイル：03番号の位置を調整 */
+  .panel-content[data-number="03"] .panel-number {
+    bottom: auto;
+    top: 55%;
+    transform: translateY(-50%);
+    right: 16px;
   }
 }
 
@@ -552,14 +561,100 @@
     padding: 60px 0;
   }
   
+  .panel-title {
+    font-size: clamp(4.2rem, 9.5vw, 6.0rem); /* モバイル：タイトルをさらに大きく 67.2px〜96px */
+    line-height: 1.0; /* モバイル：行間隔を狭く */
+    letter-spacing: -0.03em; /* モバイル：文字間隔を狭く */
+  }
+  
+  .panel-subtitle {
+    font-size: 1.05rem; /* モバイル：段落を小さく */
+  }
+  
+  /* モバイル：改行位置を変更 */
+  .panel-subtitle .subtitle-text::after {
+    content: "\A"; /* 改行を追加 */
+    white-space: pre;
+  }
+  
+  .panel-subtitle .subtitle-break-pc {
+    display: none; /* モバイル：PC版の改行を非表示 */
+  }
+  
+  /* モバイル：タブを横スクロール可能に */
+  .why-seed-layout {
+    display: block;
+  }
+  
+  .why-seed-tabs {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    gap: 0;
+    margin-bottom: 24px;
+    margin-left: -20px; /* モバイル：左右にはみ出させる */
+    margin-right: -20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-bottom: 1px solid rgba(91, 26, 6, 0.15); /* 下線を細く */
+  }
+  
+  .why-seed-tabs::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .why-seed-divider {
+    display: none; /* モバイル：縦線を非表示 */
+  }
+  
   .tab-item {
-    font-size: 1rem;
-    padding: 16px 20px;
+    flex: 0 0 auto;
+    font-size: 0.95rem;
+    padding: 12px 16px 14px 16px; /* パディングを調整 */
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent; /* アンダーラインを細く */
+    white-space: nowrap;
+    transition: all 0.2s ease;
+  }
+  
+  .tab-item:first-child {
+    padding-left: 0; /* 最初のタブは左余白なし */
+  }
+  
+  .tab-item.active {
+    border-bottom-color: #5b1a06; /* アンダーライン */
+  }
+  
+  .tab-indicator {
+    display: none; /* モバイル：左側のインジケーターを非表示 */
+  }
+  
+  .tab-label br {
+    display: none; /* モバイル：改行を無効化して1行表示 */
+  }
+  
+  .why-seed-panels {
+    position: relative;
+    overflow: hidden;
+    touch-action: pan-y;
   }
   
   .panel-content {
     padding: 36px 28px;
     min-height: 300px;
+    opacity: 0;
+    display: none;
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  .panel-content.active {
+    display: block;
+    opacity: 1;
   }
   
   .panel-list {
@@ -825,7 +920,23 @@
 
 @media (max-width: 768px) {
   .gbu-header {
-    margin-bottom: 80px;
+    margin-bottom: 60px; /* モバイル：ヘッダー下の余白を縮小 80px→60px */
+  }
+  
+  .gbu-title {
+    color: #f9e5c1; /* モバイル：クリーム色に変更 */
+    font-size: clamp(4.5rem, 10vw, 7.5rem); /* モバイル：文字サイズ拡大 72px〜120px */
+  }
+  
+  /* モバイル：背景にグラデーションオーバーレイを追加 */
+  .gbu-background::after {
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.35) 0%,     /* 左上：やや暗く（テキスト部分） */
+      rgba(0, 0, 0, 0.20) 30%,    /* 中央上：薄く */
+      rgba(0, 0, 0, 0.10) 60%,    /* 中央下：より薄く */
+      rgba(0, 0, 0, 0.15) 100%    /* 右下：少し暗く */
+    );
   }
 
   .gbu-links {
@@ -836,11 +947,16 @@
   .gbu-link {
     border-right: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-    padding: 40px 24px;
+    padding: 32px 24px; /* モバイル：パディングを縮小 40px→32px */
+    min-height: 200px; /* モバイル：最小高さを縮小 280px→200px */
   }
 
   .gbu-link:last-child {
     border-bottom: none;
+  }
+  
+  .link-desc {
+    margin-top: 8px; /* モバイル：タイトルと小見出しの間隔を縮小 12px→8px */
   }
 }
 
@@ -1238,6 +1354,32 @@
 @media (max-width: 768px) {
   /* hero-titleはclampで自動調整されるため、固定値は不要 */
   
+  .hero-background img {
+    object-position: 75% 55%; /* モバイル：芽を中央に配置 */
+  }
+  
+  .hero-content {
+    padding-top: 80px; /* モバイル：ヘッダーとの距離を広げる */
+  }
+  
+  .hero-title {
+    font-size: clamp(4.0rem, 10vw, 6.2rem); /* モバイル：文字サイズ拡大 64px〜99.2px */
+    line-height: 1.0; /* モバイル：行間隔を狭く */
+    max-width: 11ch; /* モバイル：2行表示（Japan insights/you can trust） */
+    text-align: left; /* モバイル：左揃え */
+    letter-spacing: -0.06em; /* モバイル：文字間隔を狭く */
+  }
+  
+  .btn-start-here {
+    background-color: #f9e5c1; /* モバイル：クリーム色の背景 */
+    color: #4e613f; /* モバイル：深緑の文字色 */
+  }
+  
+  .btn-start-here:hover {
+    background-color: #fef5dc; /* モバイルホバー：少し明るいクリーム色 */
+    box-shadow: 0 6px 12px rgba(78, 97, 63, 0.25); /* モバイルホバー：深緑のシャドウ */
+  }
+  
   .hero-logo {
     top: 12px;
     right: 12px;
@@ -1256,10 +1398,17 @@
   }
   
   .hero-overlay {
+    display: block; /* モバイル：オーバーレイを表示 */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
     background: linear-gradient(
       to bottom,
-      rgba(0, 0, 0, 0.5) 0%,
-      rgba(0, 0, 0, 0.4) 100%
+      rgba(0, 0, 0, 0.35) 0%,
+      rgba(0, 0, 0, 0.30) 100%
     );
   }
 }
