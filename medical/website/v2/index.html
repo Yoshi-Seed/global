@@ -376,16 +376,27 @@
 
   <footer class="site-footer">
     <div class="footer-container">
-      <!-- Row 1: Navigation Menu -->
+      <!-- Desktop: Left side (Logo + Copyright) -->
+      <div class="footer-left">
+        <img src="assets/seed_planning_logo.png" alt="Seed Planning Co., Ltd." class="footer-logo">
+        <p class="footer-copyright">&copy; Seed Planning Co., Ltd.</p>
+      </div>
+      
+      <!-- Desktop & Mobile: Navigation Menu -->
       <nav class="footer-nav">
-        <a href="how-we-work.html">How we work</a>
-        <a href="insights.html">Japan fact sheets</a>
-        <a href="about-us.html">About team</a>
-        <a href="rare-disease.html">Rare disease</a>
-        <a href="request-report.html">Contact us</a>
+        <div class="footer-nav-row">
+          <a href="index.html">Home</a>
+          <a href="how-we-work.html">How we work</a>
+          <a href="insights.html">Japan fact sheets</a>
+        </div>
+        <div class="footer-nav-row">
+          <a href="about-us.html">About team</a>
+          <a href="rare-disease.html">Rare disease</a>
+          <a href="request-report.html">Contact us</a>
+        </div>
       </nav>
       
-      <!-- Row 2: Certification Logos -->
+      <!-- Desktop & Mobile: Certification Logos -->
       <div class="footer-certifications">
         <img src="assets/esomar.png" alt="ESOMAR" class="cert-logo">
         <img src="assets/ephmra.png" alt="EphMRA" class="cert-logo">
@@ -393,9 +404,6 @@
         <img src="assets/privacy_mark.png" alt="Privacy Mark" class="cert-logo">
         <img src="assets/jmra_member.png" alt="JMRA" class="cert-logo">
       </div>
-      
-      <!-- Row 3: Copyright -->
-      <p class="footer-copyright">&copy; Seed Planning Co., Ltd.</p>
     </div>
   </footer>
 

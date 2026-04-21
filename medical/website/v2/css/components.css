@@ -145,32 +145,61 @@
 .site-footer {
   background-color: #f5f0e8;
   color: var(--primary-text);
-  padding: 60px 48px;
+  padding: 32px 48px;
   border-top: 1px solid rgba(91, 26, 6, 0.1);
 }
 
 .footer-container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 40px;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 48px;
 }
 
-/* Row 1: Navigation Menu */
+.footer-left {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.footer-logo {
+  height: 45px;
+  width: auto;
+}
+
+.footer-copyright {
+  font-size: 0.85rem;
+  color: var(--primary-text);
+  margin: 0;
+}
+
 .footer-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  align-items: center;
+}
+
+.footer-nav-row {
   display: flex;
   gap: 32px;
   justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
+}
+
+.footer-nav-column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .footer-nav a {
-  color: #4A2B1D;
+  color: var(--primary-text);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   transition: var(--transition-fast);
   white-space: nowrap;
 }
@@ -180,17 +209,15 @@
   color: #734228;
 }
 
-/* Row 2: Certification Logos */
 .footer-certifications {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 24px;
+  gap: 16px;
   flex-wrap: wrap;
 }
 
 .footer-certifications .cert-logo {
-  height: 45px;
+  height: 40px;
   width: auto;
   opacity: 0.85;
   transition: var(--transition-fast);
@@ -198,14 +225,6 @@
 
 .footer-certifications .cert-logo:hover {
   opacity: 1;
-}
-
-/* Row 3: Copyright */
-.footer-copyright {
-  font-size: 0.75rem;
-  color: rgba(74, 43, 29, 0.6);
-  margin: 0;
-  text-align: center;
 }
 
 .cert-label {
@@ -246,17 +265,32 @@
   }
   
   .footer-container {
+    flex-direction: column;
+    align-items: center;
     gap: 32px;
   }
   
+  /* Hide desktop nav columns */
+  .footer-nav-column {
+    display: none;
+  }
+  
+  /* Mobile: Row 1 - Navigation Menu with dividers */
   .footer-nav {
     display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     gap: 0;
     text-align: center;
     line-height: 1.8;
+    order: 1;
+  }
+  
+  /* Hide desktop nav rows on mobile */
+  .footer-nav-row {
+    display: contents;
   }
   
   .footer-nav a {
@@ -283,17 +317,35 @@
     pointer-events: none;
   }
   
+  /* Mobile: Row 2 - Certification Logos */
   .footer-certifications {
     gap: 16px;
+    justify-content: center;
+    order: 2;
   }
   
   .footer-certifications .cert-logo {
     height: 40px;
   }
   
-  .footer-copyright {
-    font-size: 0.7rem;
+  /* Mobile: Row 3 - Copyright (bottom) */
+  .footer-left {
+    display: flex;
+    order: 3;
+    width: 100%;
   }
+  
+  .footer-left .footer-logo {
+    display: none;
+  }
+  
+  .footer-left .footer-copyright {
+    font-size: 0.7rem;
+    color: rgba(74, 43, 29, 0.6);
+    text-align: center;
+    width: 100%;
+  }
+  
 }
 
 /* ===================================

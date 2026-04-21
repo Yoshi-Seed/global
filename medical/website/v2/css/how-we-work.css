@@ -484,7 +484,14 @@
   }
   
   .how-work-title {
-    font-size: 2.5rem;
+    font-size: clamp(4.5rem, 12vw, 6.5rem);
+    line-height: 0.9;
+    letter-spacing: -0.06em;
+    text-align: right;
+  }
+
+  .how-work-subtitle {
+    text-align: right;
   }
 
   /* モバイル：行メニューの余白調整 */
@@ -705,6 +712,10 @@
   letter-spacing: -0.02em;
 }
 
+.japan-tips-title br {
+  display: none;
+}
+
 .japan-tips-title em {
   font-style: italic;
   color: #c65e3e;
@@ -868,9 +879,23 @@
   }
   
   .japan-tips-title {
-    font-size: 2rem;
-    margin-bottom: 40px;
-    text-align: center;
+    font-size: clamp(4rem, 10vw, 5.5rem);
+    margin-bottom: 24px;
+    text-align: left;
+    line-height: 1.0;
+    letter-spacing: -0.08em;
+  }
+  
+  .japan-tips-title br {
+    display: block;
+  }
+  
+  .japan-tips-subtitle {
+    font-size: 0.85rem;
+    text-align: left;
+    line-height: 1.6;
+    margin: 0 0 40px 0;
+    max-width: 100%;
   }
   
   .tips-track {
@@ -965,6 +990,33 @@
 @media (max-width: 768px) {
   .core-values-section {
     padding: 60px 0;
+    overflow: hidden;
+  }
+  
+  .core-values-grid {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 16px;
+    padding: 0 5% 40px 5%;
+    margin: 0;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  
+  .core-values-grid::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .value-card {
+    flex: 0 0 85%;
+    min-width: 280px;
+    max-width: 350px;
+    scroll-snap-align: start;
+    height: auto;
+    min-height: 280px;
+    padding: 32px 24px;
   }
   
   .value-title {
