@@ -709,7 +709,7 @@
   text-align: right;
   margin: 0 0 60px 0;
   width: 100%;
-  letter-spacing: -0.02em;
+  letter-spacing: normal;
 }
 
 .japan-tips-title br {
