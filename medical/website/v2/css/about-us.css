@@ -506,6 +506,11 @@
     font-size: 0.95rem; /* 1.1rem → 0.95rem */
   }
 
+  /* Mobile: Moderators hero - ボタンが完全に表示されるよう余白追加 */
+  .moderators-hero {
+    padding-bottom: 30px; /* ボタンが完全に見えるよう下部に余白 */
+  }
+
   /* Mobile: Moderators table - カルーセル形式 */
   .moderators-table-wrap {
     overflow: hidden; /* カルーセル用にオーバーフローを隠す */
