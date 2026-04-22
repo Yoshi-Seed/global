@@ -54,6 +54,8 @@ body {
   background-color: var(--bg-ivory);
   line-height: 1.6;
   overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
 }
 
 /* Typography */
@@ -452,6 +454,22 @@ img {
     font-size: 14px;
   }
   
+  /* 横スクロール防止 */
+  html, body {
+    overflow-x: hidden !important;
+    max-width: 100vw;
+    width: 100%;
+  }
+  
+  main {
+    overflow-x: hidden !important;
+    max-width: 100%;
+    width: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* 見出しサイズの最適化（80%縮小） */
   h1 {
     font-size: 2.5rem;
   }
@@ -460,18 +478,45 @@ img {
     font-size: 2rem;
   }
   
+  h3 {
+    font-size: 1.76rem;
+  }
+  
+  h4 {
+    font-size: 1.44rem;
+  }
+  
+  /* グリッドレイアウトを1列に */
   .grid-2,
   .grid-3,
   .grid-4 {
     grid-template-columns: 1fr;
   }
   
+  /* セクション余白 */
   section {
     padding: var(--spacing-lg) 0;
+    max-width: 100%;
+    overflow-x: hidden;
   }
   
+  /* コンテナの最適化 */
   .container {
-    padding: 0 var(--spacing-sm);
+    padding: 0 20px;
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* 全ての要素にbox-sizing適用 */
+  * {
+    box-sizing: border-box;
+  }
+  
+  /* テキストの自然な改行 */
+  p, span, div {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 }
 
