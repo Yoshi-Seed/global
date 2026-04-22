@@ -373,6 +373,12 @@
 }
 
 @media (max-width: 768px) {
+  /* Mobile: main要素の余白を削除 */
+  #main {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
   /* Mobile: Hero section - image on top, full width */
   .about-hero {
     padding-top: 0 !important; /* パディングを削除 */
@@ -404,6 +410,8 @@
     object-fit: cover;
     object-position: center top !important; /* 画像の上部を表示 */
     margin-top: -70px !important; /* 画像自体を上に移動 */
+    display: block !important; /* 画像下の隙間を防止 */
+    vertical-align: top !important; /* 縦方向の隙間を防止 */
   }
 
   .about-hero-right {
