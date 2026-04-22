@@ -376,12 +376,12 @@
   /* Mobile: main要素の余白を削除 */
   #main {
     margin-top: 0 !important;
-    padding-top: 70px !important; /* ヘッダーの高さ分のパディングを確保 */
+    padding-top: 0 !important; /* パディングを完全削除 */
   }
 
   /* Mobile: Hero section - image on top, full width */
   .about-hero {
-    padding-top: 0 !important; /* パディングを削除 */
+    padding-top: 70px !important; /* ヘッダー分の余白を内部に確保 */
     padding-bottom: 0 !important;
     margin-top: 0 !important; /* margin-topを0に変更 */
     margin-bottom: 0 !important;
