@@ -1184,7 +1184,7 @@
 
 .feature-card {
   background-color: transparent;
-  padding: 40px 32px 60px 32px; /* 下部パディングを40px → 60pxに増加 */
+  padding: 40px 32px 200px 32px; /* 下部パディングを200pxに設定 */
   border: 1px solid #5b1a06;
   transition: transform 0.3s ease;
   min-height: 380px;
