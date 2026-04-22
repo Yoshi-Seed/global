@@ -514,9 +514,8 @@
   }
 
   .moderators-table {
-    min-width: 100%;
-    display: flex; /* カルーセル用にflex表示 */
-    transition: transform 0.3s ease;
+    width: 100%;
+    border-collapse: collapse;
   }
 
   .moderators-table thead {
@@ -526,15 +525,14 @@
   .moderators-table tbody {
     display: flex; /* カルーセル用にflex表示 */
     width: 100%;
-    overflow: hidden;
+    transition: transform 0.3s ease;
   }
 
   .moderators-table tr {
     display: block;
-    min-width: calc(100% - 40px); /* 左右余白を考慮 */
+    min-width: 100%; /* 画面幅いっぱい */
     flex-shrink: 0;
     padding: 24px;
-    margin: 0 20px; /* 左右に余白 */
     background: var(--bg-ivory);
     border: 1px solid rgba(91, 26, 6, 0.15);
     border-radius: 12px;
