@@ -634,16 +634,17 @@
     /* flex layoutから完全に切り離す */
     position: fixed !important;
     display: block !important;
-    top: 70px;
+    top: 0 !important; /* ヘッダーの上に重ねる */
     left: 0;
     right: 0;
     width: 100vw !important;
+    height: 100vh !important; /* 全画面表示 */
     background-color: #fff6ea;
     max-height: 0 !important;
     overflow: hidden !important;
     transition: max-height 0.3s ease-in-out !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    z-index: 1000;
+    z-index: 9999 !important; /* ヘッダーより上に */
     border-bottom: 1px solid rgba(91, 26, 6, 0.1);
     margin: 0 !important;
     padding: 0 !important;
@@ -663,7 +664,7 @@
   .main-nav ul {
     display: flex !important;
     flex-direction: column !important;
-    padding: 24px 20px !important;
+    padding: 90px 20px 24px 20px !important; /* 上部に余白追加（ヘッダー分） */
     margin: 0 !important;
     list-style: none !important;
     gap: 0 !important;
