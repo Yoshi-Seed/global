@@ -510,7 +510,6 @@
   .moderators-table-wrap {
     overflow: hidden; /* カルーセル用にオーバーフローを隠す */
     position: relative;
-    padding-bottom: 50px; /* ドットナビゲーション用のスペース */
   }
 
   .moderators-table {
@@ -565,11 +564,8 @@
     display: flex;
     justify-content: center;
     gap: 10px;
-    margin-top: 20px;
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
+    margin-top: 24px;
+    padding: 0;
   }
 
   .moderators-carousel-dots .dot {
