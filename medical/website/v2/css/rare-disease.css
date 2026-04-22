@@ -287,23 +287,24 @@
     display: none;
   }
 
-  /* Mobile: Microsites section - ボタンが完全に表示されるよう設定 */
+  /* Mobile: Microsites section - ボタンが境界線上に配置されるよう設定 */
   .microsites-section {
-    padding-top: 30px !important; /* ボタンの上半分が見えるよう余白 */
+    padding-top: 0 !important; /* paddingを削除してボタンが境界線上に */
     overflow: visible !important; /* ボタンがはみ出して表示されるように */
   }
 
-  /* Mobile: Microsites section内のcontainer - overflow解除 */
+  /* Mobile: Microsites section内のcontainer - overflow解除、ボタン位置調整 */
   .microsites-section .container {
     overflow: visible !important;
-    padding-top: 0 !important;
+    padding-top: 24px !important; /* ボタンの半分の高さ分の余白 */
   }
 
-  /* Mobile: Microsites trigger button - 確実に表示 */
+  /* Mobile: Microsites trigger button - 境界線上に配置 */
   .microsites-trigger {
     position: relative !important;
-    transform: translateY(-24px) !important;
+    transform: translateY(-24px) !important; /* ボタンの半分が上のセクションに */
     margin-top: 0 !important;
+    margin-bottom: 0 !important;
     display: block !important;
   }
 }
