@@ -72,6 +72,78 @@ document.addEventListener('DOMContentLoaded', () => {
   buildCheckboxList(topicAreaMenu, topicAreas, 'topicArea');
   buildCheckboxList(tagsMenu, allTags, 'tags');
 
+  // Mobile: Add click handlers for tag chips
+  const isMobile = () => window.innerWidth <= 768;
+  
+  const initTagChipInteractions = () => {
+    if (isMobile()) {
+      document.querySelectorAll('.checkbox-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+          // Prevent default checkbox behavior
+          if (e.target.tagName !== 'INPUT') {
+            e.preventDefault();
+          }
+          
+          const checkbox = this.querySelector('input[type="checkbox"]');
+          if (checkbox) {
+            checkbox.checked = !checkbox.checked;
+            
+            // Toggle active class for visual feedback
+            if (checkbox.checked) {
+              this.classList.add('active');
+            } else {
+              this.classList.remove('active');
+            }
+            
+            // Trigger filter update
+            applyFilters();
+          }
+        });
+      });
+    }
+  };
+  
+  // Mobile: Add "see more" button to Topic Area (2 rows = 4 items) and Tags (2 rows = 6 items)
+  const addSeeMoreButton = (menuId, visibleCount) => {
+    if (!isMobile()) return;
+    
+    const menu = document.getElementById(menuId);
+    if (!menu) return;
+    
+    const allItems = menu.querySelectorAll('.checkbox-item');
+    if (allItems.length <= visibleCount) return; // No need for "see more" if all items fit
+    
+    // Create "see more" button
+    const seeMoreBtn = document.createElement('button');
+    seeMoreBtn.className = 'see-more-btn';
+    seeMoreBtn.type = 'button';
+    seeMoreBtn.innerHTML = 'see more <span class="arrow">▼</span>';
+    
+    // Insert after the dropdown menu
+    menu.parentElement.insertBefore(seeMoreBtn, menu.nextSibling);
+    
+    // Toggle expansion on click
+    seeMoreBtn.addEventListener('click', () => {
+      const isExpanded = menu.classList.contains('expanded');
+      
+      if (isExpanded) {
+        menu.classList.remove('expanded');
+        seeMoreBtn.classList.remove('expanded');
+        seeMoreBtn.innerHTML = 'see more <span class="arrow">▼</span>';
+      } else {
+        menu.classList.add('expanded');
+        seeMoreBtn.classList.add('expanded');
+        seeMoreBtn.innerHTML = 'see less <span class="arrow">▼</span>';
+      }
+    });
+  };
+  
+  initTagChipInteractions();
+  
+  // Add "see more" buttons after checkbox lists are built
+  addSeeMoreButton('topicAreaMenu', 4);  // Topic Area: 2 rows × 2 items = 4
+  addSeeMoreButton('tagsMenu', 6);        // Tags: 2 rows × 3 items = 6
+
   const getSelected = (container) =>
     Array.from(container.querySelectorAll('input[type="checkbox"]:checked')).map((i) => i.value);
 
@@ -308,6 +380,17 @@ document.addEventListener('DOMContentLoaded', () => {
     searchInput.value = '';
     topicAreaMenu.querySelectorAll('input[type="checkbox"]').forEach((i) => (i.checked = false));
     tagsMenu.querySelectorAll('input[type="checkbox"]').forEach((i) => (i.checked = false));
+    // Mobile: Remove active class from tag chips
+    document.querySelectorAll('.checkbox-item').forEach(item => item.classList.remove('active'));
+    // Mobile: Collapse "see more" sections
+    if (isMobile()) {
+      document.querySelectorAll('.see-more-btn.expanded').forEach(btn => {
+        btn.classList.remove('expanded');
+        btn.innerHTML = 'see more <span class="arrow">▼</span>';
+      });
+      topicAreaMenu.classList.remove('expanded');
+      tagsMenu.classList.remove('expanded');
+    }
     suggestionList.hidden = true;
     currentPage = 1;
     update();
@@ -330,47 +413,32 @@ document.addEventListener('DOMContentLoaded', () => {
   // ---------- Report carousel ----------
   const reportContainer = document.getElementById('reportCarouselContainer');
   if (reportContainer) {
-    // Group reports into pairs (2 cards per slide)
+    // Mobile: 1 card per slide; Desktop: 2 cards per slide
+    const cardsPerSlide = isMobile() ? 1 : 2;
     const slides = [];
-    for (let i = 0; i < reportSummaries.length; i += 2) {
-      const card1 = reportSummaries[i];
-      const card2 = reportSummaries[i + 1];
+    
+    for (let i = 0; i < reportSummaries.length; i += cardsPerSlide) {
+      const cardsInSlide = reportSummaries.slice(i, i + cardsPerSlide);
       
-      const tags1 = (card1.tags || []).map((t) => `<span class="tag-pill">${escapeHtml(t)}</span>`).join('');
-      const card1Html = `
-        <article class="report-card">
-          <div class="report-meta">
-            <span class="report-number">#${escapeHtml(card1.number)}</span>
-            <span class="report-date">${escapeHtml(card1.date)}</span>
-          </div>
-          <h3 class="report-title">${escapeHtml(card1.title)}</h3>
-          <p class="report-summary">${escapeHtml(card1.summary)}</p>
-          <div class="report-tags">${tags1}</div>
-          <a href="#" class="btn-learn-more">Download</a>
-        </article>
-      `;
-      
-      let card2Html = '';
-      if (card2) {
-        const tags2 = (card2.tags || []).map((t) => `<span class="tag-pill">${escapeHtml(t)}</span>`).join('');
-        card2Html = `
+      const cardsHtml = cardsInSlide.map(card => {
+        const tags = (card.tags || []).map((t) => `<span class="tag-pill">${escapeHtml(t)}</span>`).join('');
+        return `
           <article class="report-card">
             <div class="report-meta">
-              <span class="report-number">#${escapeHtml(card2.number)}</span>
-              <span class="report-date">${escapeHtml(card2.date)}</span>
+              <span class="report-number">#${escapeHtml(card.number)}</span>
+              <span class="report-date">${escapeHtml(card.date)}</span>
             </div>
-            <h3 class="report-title">${escapeHtml(card2.title)}</h3>
-            <p class="report-summary">${escapeHtml(card2.summary)}</p>
-            <div class="report-tags">${tags2}</div>
+            <h3 class="report-title">${escapeHtml(card.title)}</h3>
+            <p class="report-summary">${escapeHtml(card.summary)}</p>
+            <div class="report-tags">${tags}</div>
             <a href="#" class="btn-learn-more">Download</a>
           </article>
         `;
-      }
+      }).join('');
       
       slides.push(`
         <div class="carousel-slide">
-          ${card1Html}
-          ${card2Html}
+          ${cardsHtml}
         </div>
       `);
     }
