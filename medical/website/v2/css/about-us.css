@@ -375,8 +375,9 @@
 @media (max-width: 768px) {
   /* Mobile: Hero section - image on top, full width */
   .about-hero {
-    padding-top: 70px; /* ヘッダー分の余白 */
+    padding-top: 0; /* パディングを削除 */
     padding-bottom: 0;
+    margin-top: 70px; /* ヘッダー分の余白をmarginで確保 */
   }
 
   .about-hero-wrapper {
@@ -389,6 +390,7 @@
     width: 100vw; /* 画面いっぱい */
     margin-left: calc(-50vw + 50%); /* 左右を画面端まで広げる */
     order: 1; /* 画像を上に */
+    margin-top: 0; /* 上部の余白をリセット */
   }
 
   .about-hero-left img {
