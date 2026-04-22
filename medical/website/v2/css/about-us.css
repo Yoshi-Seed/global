@@ -385,12 +385,13 @@
   .about-hero {
     padding-top: 0 !important; /* パディングを完全削除 */
     padding-bottom: 0 !important;
-    margin-top: 0 !important; /* margin-topを0に変更 */
+    margin-top: -70px !important; /* ヘッダーの高さ分ネガティブマージン */
     margin-bottom: 0 !important;
     position: relative !important;
     top: 0 !important; /* 位置をリセット */
     z-index: 1 !important; /* ヘッダーより下に配置 */
     background-color: transparent !important; /* 背景を透明に */
+    overflow: visible !important; /* オーバーフローを表示 */
   }
 
   .about-hero-wrapper {
@@ -398,15 +399,16 @@
     flex-direction: column; /* 縦並び */
     min-height: auto;
     margin-top: 0 !important;
-    padding-top: 0 !important;
+    padding-top: 70px !important; /* ヘッダー分のスペースを確保 */
+    background-color: var(--bg-ivory) !important; /* 背景色を維持 */
   }
 
   .about-hero-left {
     width: 100vw; /* 画面いっぱい */
     margin-left: calc(-50vw + 50%); /* 左右を画面端まで広げる */
     order: 1; /* 画像を上に */
-    margin-top: -70px !important; /* ヘッダーの高さ分ネガティブマージン */
-    padding-top: 70px !important; /* ヘッダー分のスペースを内部に確保 */
+    margin-top: -70px !important; /* ヘッダー分上に引き上げ */
+    padding-top: 0 !important; /* パディング削除 */
     margin-bottom: 0 !important;
     padding-bottom: 0 !important;
     position: relative !important;
