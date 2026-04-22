@@ -383,6 +383,8 @@
   #main {
     margin-top: 70px !important; /* ヘッダーの高さ分だけ下げる */
     padding-top: 0 !important;
+    min-height: 0 !important; /* システムの高さ確保を無効化 */
+    height: auto !important;
   }
 
   /* Mobile: Hero section - 完全にシンプルに */
@@ -392,24 +394,32 @@
     margin-top: 0 !important;
     margin-bottom: 0 !important;
     background-color: var(--bg-ivory) !important;
+    min-height: 0 !important; /* システムの高さ確保を無効化 */
+    height: auto !important;
+    position: relative !important;
+    z-index: 1 !important; /* ヘッダーの下に配置 */
   }
 
   .about-hero-wrapper {
     display: flex;
     flex-direction: column; /* 縦並び */
-    min-height: auto;
+    min-height: 0 !important; /* システムの高さ確保を無効化 */
+    height: auto !important;
     margin-top: 0 !important;
     padding-top: 0 !important;
+    justify-content: flex-start !important; /* 上詰め配置 */
   }
 
   .about-hero-left {
     width: 100vw; /* 画面いっぱい */
     margin-left: calc(-50vw + 50%); /* 左右を画面端まで広げる */
     order: 1; /* 画像を上に */
-    margin-top: 0 !important;
+    margin-top: -80px !important; /* 【最重要】画像を強制的に引き上げてベージュ領域に被せる */
     padding-top: 0 !important;
     margin-bottom: 0 !important;
     padding-bottom: 0 !important;
+    position: relative !important;
+    z-index: 1 !important; /* ヘッダーの下に配置 */
   }
 
   .about-hero-left img {
