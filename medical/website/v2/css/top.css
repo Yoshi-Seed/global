@@ -1133,7 +1133,7 @@
    SECTION A: HCP FEATURES (Desktop)
    ============================================ */
 .hcp-features-section {
-  padding: 80px 0;
+  padding: 80px 0 180px 0; /* 下側のパディングを80px → 180pxに増加 */
   margin-bottom: 0;
   background-color: #fff6ea;
 }
