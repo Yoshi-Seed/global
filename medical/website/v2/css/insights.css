@@ -99,6 +99,10 @@
   color: #f9e5c1;
 }
 
+.insights-title .mobile-br {
+  display: none; /* デスクトップでは改行を非表示 */
+}
+
 .insights-subtitle {
   font-family: var(--font-body);
   font-size: 1.15rem;
@@ -890,6 +894,22 @@ button#clearFilters:hover,
     border-radius: 12px;
   }
   
+  /* Mobile: Page title - 2 lines (Japan Research / Fact Sheets) */
+  .insights-title {
+    font-size: 2.5rem;
+    line-height: 1.1; /* 行間を縮める */
+  }
+
+  .insights-title .mobile-br {
+    display: inline; /* モバイルで改行を表示 */
+  }
+
+  /* Mobile: English Report Summaries - tighter line-height */
+  .report-intro-title {
+    font-size: 2.8rem;
+    line-height: 1.0; /* 行間を縮める */
+  }
+
   /* Mobile: Tighter line-height for CTA title */
   .cta-title {
     line-height: 0.95;
