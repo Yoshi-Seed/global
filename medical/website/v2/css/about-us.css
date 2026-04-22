@@ -506,14 +506,27 @@
     font-size: 0.95rem; /* 1.1rem → 0.95rem */
   }
 
-  /* Mobile: Moderators hero - 画像の高さを低く、ボタンを画像下部に配置 */
+  /* Mobile: Moderators hero - 画像の高さを低く、固定配置 */
   .moderators-hero {
     min-height: 200px; /* 280px → 200px に縮小 */
+    height: 200px; /* 高さを固定 */
     padding-bottom: 0; /* パディング削除 */
     position: relative;
+    overflow: hidden; /* はみ出しを隠す */
   }
 
-  /* Mobile: Moderators text - 画像上に固定配置 */
+  /* Mobile: Moderators hero inner - 固定配置の基準 */
+  .moderators-hero-inner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: block; /* flexを解除 */
+    height: 200px; /* 高さを固定 */
+  }
+
+  /* Mobile: Moderators text - 画像中央に固定配置 */
   .moderators-text {
     position: absolute;
     top: 50%;
@@ -538,6 +551,7 @@
   /* Mobile: Moderators trigger button - 画像下部に配置 */
   .moderators-trigger {
     bottom: -22px; /* 画像の下端から22px下に配置 */
+    position: absolute; /* 絶対配置を明示 */
   }
 
   /* Mobile: Moderators table - カルーセル形式 */
