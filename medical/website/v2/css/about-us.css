@@ -526,14 +526,15 @@
   .moderators-table tbody {
     display: flex; /* カルーセル用にflex表示 */
     width: 100%;
+    overflow: hidden;
   }
 
   .moderators-table tr {
     display: block;
-    min-width: 100%; /* 各カードを画面幅いっぱいに */
+    min-width: calc(100% - 40px); /* 左右余白を考慮 */
     flex-shrink: 0;
-    padding: 20px;
-    margin: 0 10px; /* 左右に余白 */
+    padding: 24px;
+    margin: 0 20px; /* 左右に余白 */
     background: var(--bg-ivory);
     border: 1px solid rgba(91, 26, 6, 0.15);
     border-radius: 12px;
@@ -542,8 +543,8 @@
 
   .moderators-table td {
     display: block;
-    border-bottom: none;
-    padding: 8px 0;
+    border-bottom: 1px solid rgba(91, 26, 6, 0.08); /* 薄い区切り線 */
+    padding: 14px 0;
     text-align: left;
   }
 
@@ -553,12 +554,12 @@
     font-weight: 700;
     color: #4e613f;
     display: block;
-    margin-bottom: 4px;
-    font-size: 0.9rem;
+    margin-bottom: 6px;
+    font-size: 0.85rem;
   }
 
   .moderators-table td:last-child {
-    border-bottom: none;
+    border-bottom: none; /* 最後のセルは区切り線なし */
   }
 
   /* Mobile: カルーセルドット */
