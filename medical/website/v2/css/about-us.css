@@ -506,9 +506,15 @@
     font-size: 0.95rem; /* 1.1rem → 0.95rem */
   }
 
-  /* Mobile: Moderators hero - ボタンが完全に表示されるよう余白追加 */
+  /* Mobile: Moderators hero - 画像の高さを低く、ボタンを画像下部に配置 */
   .moderators-hero {
-    padding-bottom: 30px; /* ボタンが完全に見えるよう下部に余白 */
+    min-height: 200px; /* 280px → 200px に縮小 */
+    padding-bottom: 0; /* パディング削除 */
+  }
+
+  /* Mobile: Moderators trigger button - 画像下部に配置 */
+  .moderators-trigger {
+    bottom: -22px; /* 画像の下端から22px下に配置 */
   }
 
   /* Mobile: Moderators table - カルーセル形式 */
