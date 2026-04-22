@@ -462,14 +462,6 @@
     font-size: 0.85rem; /* フォントサイズを少し小さく */
   }
 
-  /* Download team profileボタンのみ2行表示 */
-  .about-actions .btn-secondary {
-    white-space: normal !important; /* 改行を許可 */
-    max-width: 150px !important; /* 幅を制限して改行を促す */
-    line-height: 1.3 !important; /* 行間を調整 */
-    padding: 10px 12px !important; /* パディングを調整 */
-  }
-
   /* Mobile: 横幅制限とオーバーフロー防止 */
   .who-we-are-section,
   .team-section,
