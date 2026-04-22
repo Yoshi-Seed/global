@@ -271,14 +271,85 @@
 }
 
 @media (max-width: 768px) {
+  /* Mobile: 横幅制限とオーバーフロー防止 */
+  .factsheet-hero,
+  .factsheet-columns,
+  .related-grid,
+  .cta-section {
+    max-width: 100vw;
+    width: 100%;
+    overflow-x: hidden;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-sizing: border-box;
+  }
+  
+  /* Mobile: カードを縦並びに */
+  .related-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  /* Mobile: Hero section - image on top, blue-grey background full width */
+  .factsheet-hero {
+    display: flex;
+    flex-direction: column-reverse; /* 画像を上に */
+  }
+
+  .factsheet-hero-text {
+    background-color: rgba(110, 134, 161, 0.5);
+    width: 100vw; /* 画面いっぱいに */
+    margin-left: calc(-50vw + 50%); /* 左右を画面端まで広げる */
+    padding-left: 20px;
+    padding-right: 20px;
+    box-sizing: border-box;
+  }
+
+  .factsheet-hero-inner {
+    max-width: 100%;
+    padding: 34px 0; /* 左右のパディングを削除（親で設定済み） */
+  }
+
+  .factsheet-hero-image {
+    width: 100%;
+    margin-bottom: 0;
+  }
+
+  .factsheet-hero-image img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  /* Mobile: CTA section - left align */
+  .factsheet-cta {
+    text-align: left !important;
+  }
+
+  .factsheet-cta .cta-inner {
+    margin-left: 20px; /* 左側の余白を適度に */
+    margin-right: 20px; /* 右側にも余白を追加 */
+  }
+
   /* Mobile: Tighter line-height for CTA title */
   .cta-title {
     line-height: 0.95;
+    max-width: 100%;
+    word-wrap: break-word;
+    text-align: left !important; /* 左揃え */
   }
 
   /* Mobile: Smaller font size and more spacing above CTA text */
   .cta-text {
     font-size: 0.95rem;
     margin-top: 24px;
+    max-width: 100%;
+    word-wrap: break-word;
+    text-align: left !important; /* 左揃え */
+  }
+
+  .factsheet-cta .btn {
+    margin-left: 0; /* ボタンを左揃え */
   }
 }
