@@ -496,4 +496,61 @@
     border-bottom: none;
     padding-bottom: 0;
   }
+
+  /* Mobile: チームメンバーの名前と役職のテキストサイズを小さく */
+  .team-name {
+    font-size: 1.2rem; /* 1.4rem → 1.2rem */
+  }
+
+  .team-role {
+    font-size: 0.95rem; /* 1.1rem → 0.95rem */
+  }
+
+  /* Mobile: Moderators table - 縦表示（カード形式） */
+  .moderators-table-wrap {
+    overflow-x: visible; /* 横スクロールを無効化 */
+  }
+
+  .moderators-table {
+    min-width: 100%; /* 最小幅を削除 */
+    display: block; /* ブロック表示 */
+  }
+
+  .moderators-table thead {
+    display: none; /* ヘッダーを非表示 */
+  }
+
+  .moderators-table tbody {
+    display: block;
+  }
+
+  .moderators-table tr {
+    display: block;
+    margin-bottom: 20px;
+    padding: 16px;
+    background: var(--bg-ivory);
+    border: 1px solid rgba(91, 26, 6, 0.15);
+    border-radius: 12px;
+  }
+
+  .moderators-table td {
+    display: block;
+    border-bottom: none;
+    padding: 8px 0;
+    text-align: left;
+  }
+
+  /* Mobile: 各セルの前にラベルを追加 */
+  .moderators-table td:before {
+    content: attr(data-label);
+    font-weight: 700;
+    color: #4e613f;
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.9rem;
+  }
+
+  .moderators-table td:last-child {
+    border-bottom: none;
+  }
 }
