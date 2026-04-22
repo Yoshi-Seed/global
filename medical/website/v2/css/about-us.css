@@ -373,20 +373,25 @@
 }
 
 @media (max-width: 768px) {
-  /* Mobile: main要素の余白を削除 */
-  #main {
-    margin-top: 0 !important;
-    padding-top: 70px !important; /* ヘッダーの高さ分のパディングを確保 */
+  /* Mobile: body全体のgap削除 */
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
-  /* Mobile: Hero section - image on top, full width */
+  /* Mobile: main要素を完全にヘッダー直下に */
+  #main {
+    margin-top: 70px !important; /* ヘッダーの高さ分だけ下げる */
+    padding-top: 0 !important;
+  }
+
+  /* Mobile: Hero section - 完全にシンプルに */
   .about-hero {
-    padding-top: 0 !important; /* パディングを削除 */
+    padding-top: 0 !important;
     padding-bottom: 0 !important;
-    margin-top: 0 !important; /* margin-topを0に変更 */
+    margin-top: 0 !important;
     margin-bottom: 0 !important;
-    position: relative !important;
-    z-index: 1 !important; /* ヘッダーより下に配置 */
+    background-color: var(--bg-ivory) !important;
   }
 
   .about-hero-wrapper {
@@ -401,8 +406,8 @@
     width: 100vw; /* 画面いっぱい */
     margin-left: calc(-50vw + 50%); /* 左右を画面端まで広げる */
     order: 1; /* 画像を上に */
-    margin-top: 0 !important; /* 上部余白を完全削除 */
-    padding-top: 0 !important; /* 上部パディングを完全削除 */
+    margin-top: 0 !important;
+    padding-top: 0 !important;
     margin-bottom: 0 !important;
     padding-bottom: 0 !important;
   }

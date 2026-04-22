@@ -73,7 +73,10 @@ document.addEventListener('DOMContentLoaded', () => {
   buildCheckboxList(tagsMenu, allTags, 'tags');
 
   // Mobile: Add click handlers for tag chips
-  const isMobile = () => window.innerWidth <= 768;
+  const isMobile = () => {
+    // Check viewport width OR user agent for mobile devices
+    return window.innerWidth <= 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  };
   
   const initTagChipInteractions = () => {
     if (isMobile()) {
