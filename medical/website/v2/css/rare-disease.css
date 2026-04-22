@@ -296,13 +296,13 @@
   /* Mobile: Microsites section内のcontainer - overflow解除、ボタン位置調整 */
   .microsites-section .container {
     overflow: visible !important;
-    padding-top: 24px !important; /* ボタンの半分の高さ分の余白 */
+    padding-top: 0 !important; /* paddingを削除 */
   }
 
-  /* Mobile: Microsites trigger button - 境界線上に配置 */
+  /* Mobile: Microsites trigger button - さらに上に配置 */
   .microsites-trigger {
     position: relative !important;
-    transform: translateY(-24px) !important; /* ボタンの半分が上のセクションに */
+    transform: translateY(-36px) !important; /* 36px上に移動（ボタンの3/4が上のセクションに） */
     margin-top: 0 !important;
     margin-bottom: 0 !important;
     display: block !important;
