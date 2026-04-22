@@ -379,9 +379,9 @@
     padding: 0 !important;
   }
 
-  /* Mobile: main要素を完全にヘッダー直下に */
+  /* Mobile: main要素を完全にヘッダー直下に - 空白を削除 */
   #main {
-    margin-top: 70px !important; /* ヘッダーの高さ分だけ下げる */
+    margin-top: 0 !important; /* 空白セクションを削除 */
     padding-top: 0 !important;
     min-height: 0 !important; /* システムの高さ確保を無効化 */
     height: auto !important;
@@ -414,8 +414,8 @@
     width: 100vw; /* 画面いっぱい */
     margin-left: calc(-50vw + 50%); /* 左右を画面端まで広げる */
     order: 1; /* 画像を上に */
-    margin-top: -80px !important; /* 【最重要】画像を強制的に引き上げてベージュ領域に被せる */
-    padding-top: 0 !important;
+    margin-top: 0 !important; /* 空白削除により、margin-topをリセット */
+    padding-top: 70px !important; /* ヘッダー分のスペースを確保 */
     margin-bottom: 0 !important;
     padding-bottom: 0 !important;
     position: relative !important;
@@ -425,11 +425,11 @@
   .about-hero-left img {
     width: 100%;
     height: auto;
-    min-height: 300px; /* 最小高さを設定 */
-    max-height: 400px; /* 最大高さを制限 */
+    min-height: 370px; /* ヘッダー分を考慮して最小高さを調整 */
+    max-height: 470px; /* ヘッダー分を考慮して最大高さを調整 */
     object-fit: cover;
     object-position: center top !important; /* 画像の上部を表示 */
-    margin-top: 0 !important; /* margin-topを0に変更 */
+    margin-top: -70px !important; /* 画像をヘッダー分上にずらして、ヘッダー下から見えるように */
     margin-bottom: 0 !important;
     padding: 0 !important;
     display: block !important; /* 画像下の隙間を防止 */
