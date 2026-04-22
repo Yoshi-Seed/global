@@ -653,6 +653,19 @@ button#clearFilters:hover,
   }
 }
 
+@media (max-width: 768px) {
+  /* Mobile: Tighter line-height for CTA title */
+  .cta-title {
+    line-height: 0.95;
+  }
+
+  /* Mobile: Smaller font size and more spacing above CTA text */
+  .cta-text {
+    font-size: 0.95rem;
+    margin-top: 24px;
+  }
+}
+
 @media (max-width: 640px) {
   .factsheet-link {
     grid-template-columns: 1fr;

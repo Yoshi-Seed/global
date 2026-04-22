@@ -704,8 +704,15 @@
     padding: 60px 0;
   }
 
+  /* Tighter line-height for title */
+  .section-title-translation {
+    line-height: 0.95;
+  }
+
+  /* Smaller font size and more spacing above description */
   .section-description {
-    font-size: 1.08rem;
+    font-size: 0.95rem;
+    margin-top: 24px;
   }
 }
 

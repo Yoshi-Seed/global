@@ -270,4 +270,15 @@
     width: 100%;
     max-width: 400px;
   }
+
+  /* Mobile: Tighter line-height for CTA title */
+  .rare-cta .cta-title {
+    line-height: 0.95;
+  }
+
+  /* Mobile: Smaller font size and more spacing above CTA text */
+  .rare-cta .cta-text {
+    font-size: 0.95rem;
+    margin-top: 24px;
+  }
 }

@@ -60,12 +60,16 @@ function initTipsCarousel() {
 function initTestimonialCarousel() {
   const track = document.querySelector('.testimonial-track');
   const dotsContainer = document.querySelector('.testimonial-dots');
-  const cards = document.querySelectorAll('.testimonial-card');
   
-  if (!track || !dotsContainer || !cards.length) return;
+  if (!track || !dotsContainer) return;
   
   // Only initialize on mobile
   if (window.innerWidth > 768) return;
+  
+  // Get only cards within the carousel (mobile version)
+  const cards = track.querySelectorAll('.testimonial-card');
+  
+  if (!cards.length) return;
   
   let currentIndex = 0;
   const totalCards = cards.length;
