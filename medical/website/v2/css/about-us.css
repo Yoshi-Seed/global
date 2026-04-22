@@ -538,11 +538,10 @@
     flex-shrink: 0;
     margin: 0 20px; /* 左右余白 */
     padding: 30px; /* 内側余白をたっぷり */
-    background: #FFFFFF; /* 白いカード */
+    background: #fff6ea; /* 薄いベージュ */
     border: none; /* 枠線削除 */
     border-radius: 12px;
     box-sizing: border-box;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* カードが浮いて見える影 */
   }
 
   .moderators-table td {
