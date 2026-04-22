@@ -141,6 +141,11 @@
   margin-bottom: 10px;
 }
 
+/* PC: Hide mobile filter labels */
+.mobile-filter-label {
+  display: none;
+}
+
 .search-wrap {
   position: relative;
 }
@@ -632,7 +637,13 @@ button#clearFilters:hover,
 /* Responsive */
 @media (max-width: 1024px) {
   .factsheets-layout {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    gap: 24px;
+  }
+  
+  .sidebar-container {
+    width: 100%;
+    position: static;
   }
 
   .filters {
@@ -653,7 +664,232 @@ button#clearFilters:hover,
   }
 }
 
+/* Desktop: Hide "see more" button (only for mobile) */
+.see-more-btn {
+  display: none;
+}
+
 @media (max-width: 768px) {
+  /* Mobile: Hide breadcrumb navigation */
+  .breadcrumb {
+    display: none !important;
+  }
+  
+  /* Mobile: Responsive search box and filters */
+  .sidebar-container {
+    position: static;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+    max-width: calc(100% - 40px);
+  }
+  
+  /* Mobile: Remove background box from filters container */
+  .filters {
+    width: 100%;
+    padding: 0 !important; /* 背景ボックスを削除 */
+    margin: 0 0 32px 0;
+    box-sizing: border-box;
+    background: transparent !important; /* 背景を透明に */
+    border: none !important; /* 境界線を削除 */
+    border-radius: 0 !important;
+  }
+  
+  .filter-block {
+    width: 100%;
+    max-width: 100%; /* 幅の制限を解除 */
+    margin-bottom: 28px; /* セクション間の余白 */
+  }
+  
+  .filter-block:last-child {
+    margin-bottom: 0;
+  }
+  
+  /* Mobile: Style filter labels (Topic areas, Tags) */
+  .mobile-filter-label {
+    display: block !important;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 1.1rem; /* 少し大きく */
+    color: #4A2B1D; /* 濃い茶色 */
+    margin-bottom: 16px;
+    letter-spacing: 0.3px;
+    text-align: center; /* ラベルも中央揃え */
+  }
+  
+  .search-wrap {
+    width: 100%;
+    margin: 0 0 16px 0; /* 下に余白を追加 */
+  }
+  
+  #searchInput {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+    min-height: 48px; /* タップしやすいサイズ */
+    border-radius: 12px;
+    border: 1px solid rgba(91, 26, 6, 0.25);
+    background: rgba(255, 246, 234, 0.8);
+  }
+  
+  #searchInput::placeholder {
+    font-size: 0.9rem; /* プレースホルダーを少し小さく */
+  }
+  
+  /* Mobile: Search label styling */
+  .filter-block label[for="searchInput"] {
+    display: block !important;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #4A2B1D;
+    margin-bottom: 16px;
+    letter-spacing: 0.3px;
+  }
+  
+  /* Mobile: Hide dropdown toggle buttons */
+  .dropdown-toggle {
+    display: none !important;
+  }
+  
+  /* Mobile: Show dropdown menus as tag chips (background removed) */
+  .dropdown-menu {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 10px; /* タグ間の余白 */
+    justify-content: center; /* 中央揃え */
+    margin-top: 0;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important; /* 背景削除 */
+    width: 100%; /* 幅を広げる */
+    max-width: 100%; /* 最大幅制限を解除 */
+  }
+  
+  .dropdown-menu[hidden] {
+    display: flex !important;
+  }
+  
+  /* Mobile: Transform checkbox items into tag chips (redesigned) */
+  .checkbox-item {
+    display: inline-flex !important; /* inline-flexで横並び */
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto; /* 横に伸びず、縮まず、必要最小限の幅 */
+    padding: 8px 16px; /* 上下8px、左右16px */
+    border: 1px solid #4A2B1D; /* 濃い茶色の枠線 */
+    border-radius: 25px; /* 楕円形 */
+    background-color: transparent; /* 未選択時：透明 */
+    color: #4A2B1D; /* 未選択時：茶色文字 */
+    font-size: 0.85rem; /* さらに小さく（シュッとした印象） */
+    font-weight: 500;
+    text-align: center; /* 文字を中央配置 */
+    line-height: 1.3; /* 行間を適度に設定 */
+    cursor: pointer;
+    transition: all 0.25s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+    height: auto; /* 高さを自動調整 */
+    min-height: 34px; /* 最小高さのみ指定 */
+    width: auto; /* 文字の長さに応じた幅 */
+    white-space: nowrap; /* 改行しない（1行表示） */
+    box-sizing: border-box; /* パディングを含めたサイズ計算 */
+  }
+  
+  /* Mobile: Topic Area - 1行に2つ並べる */
+  #topicAreaMenu .checkbox-item {
+    flex: 0 0 calc(50% - 5px); /* 1行に2つ（gap 10pxを考慮） */
+    max-width: calc(50% - 5px);
+    font-size: 0.8rem; /* 文字サイズを縮小（0.85rem → 0.8rem） */
+    letter-spacing: -0.3px; /* 文字間隔を狭く */
+    padding: 8px 12px; /* 左右のパディングを少し縮小（16px → 12px） */
+  }
+  
+  /* Mobile: Tags - 1行に3つ並べる */
+  #tagsMenu .checkbox-item {
+    flex: 0 0 calc(33.333% - 7px); /* 1行に3つ（gap 10pxを考慮） */
+    max-width: calc(33.333% - 7px); /* 最大幅を設定 */
+    min-width: calc(33.333% - 7px); /* 最小幅も同じに設定 */
+    font-size: 0.68rem; /* 文字サイズをさらに縮小（0.72rem → 0.68rem、約10.9px） */
+    letter-spacing: -0.5px; /* 文字間隔をさらに狭く */
+    padding: 8px 6px; /* 左右のパディングをさらに縮小 */
+  }
+  
+  /* Hide checkbox inputs on mobile */
+  .checkbox-item input[type="checkbox"] {
+    display: none;
+  }
+  
+  /* Mobile: Hover effect for tag chips */
+  .checkbox-item:hover {
+    background-color: rgba(74, 43, 29, 0.08);
+    border-color: #3a2218;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(74, 43, 29, 0.15);
+  }
+  
+  /* Mobile: Active/selected state for tag chips */
+  .checkbox-item input[type="checkbox"]:checked + span,
+  .checkbox-item.active,
+  .checkbox-item:has(input[type="checkbox"]:checked) {
+    background-color: #4A2B1D !important; /* 選択時：茶色背景 */
+    color: #FFFFFF !important; /* 選択時：白文字 */
+    border-color: #4A2B1D !important;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(74, 43, 29, 0.25);
+  }
+  
+  /* Mobile: Hide tags beyond 2nd row initially */
+  #topicAreaMenu:not(.expanded) .checkbox-item:nth-child(n+5),
+  #tagsMenu:not(.expanded) .checkbox-item:nth-child(n+7) {
+    display: none !important;
+  }
+  
+  /* Mobile: See more button */
+  .see-more-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 10px 16px;
+    margin-top: 16px;
+    background: transparent;
+    border: 1px solid #4A2B1D;
+    border-radius: 25px;
+    color: #4A2B1D;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+  }
+  
+  .see-more-btn:hover {
+    background-color: rgba(74, 43, 29, 0.08);
+    border-color: #3a2218;
+  }
+  
+  .see-more-btn .arrow {
+    margin-left: 6px;
+    font-size: 0.9rem;
+    transition: transform 0.3s ease;
+  }
+  
+  .see-more-btn.expanded .arrow {
+    transform: rotate(180deg);
+  }
+  
+  /* Mobile: Clear filters button */
+  .btn-secondary {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 1rem;
+    min-height: 48px; /* タップしやすいサイズ */
+    margin-top: 32px; /* 上に余白を追加 */
+    border-radius: 12px;
+  }
+  
   /* Mobile: Tighter line-height for CTA title */
   .cta-title {
     line-height: 0.95;

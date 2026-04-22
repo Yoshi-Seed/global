@@ -72,6 +72,78 @@ document.addEventListener('DOMContentLoaded', () => {
   buildCheckboxList(topicAreaMenu, topicAreas, 'topicArea');
   buildCheckboxList(tagsMenu, allTags, 'tags');
 
+  // Mobile: Add click handlers for tag chips
+  const isMobile = () => window.innerWidth <= 768;
+  
+  const initTagChipInteractions = () => {
+    if (isMobile()) {
+      document.querySelectorAll('.checkbox-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+          // Prevent default checkbox behavior
+          if (e.target.tagName !== 'INPUT') {
+            e.preventDefault();
+          }
+          
+          const checkbox = this.querySelector('input[type="checkbox"]');
+          if (checkbox) {
+            checkbox.checked = !checkbox.checked;
+            
+            // Toggle active class for visual feedback
+            if (checkbox.checked) {
+              this.classList.add('active');
+            } else {
+              this.classList.remove('active');
+            }
+            
+            // Trigger filter update
+            applyFilters();
+          }
+        });
+      });
+    }
+  };
+  
+  // Mobile: Add "see more" button to Topic Area (2 rows = 4 items) and Tags (2 rows = 6 items)
+  const addSeeMoreButton = (menuId, visibleCount) => {
+    if (!isMobile()) return;
+    
+    const menu = document.getElementById(menuId);
+    if (!menu) return;
+    
+    const allItems = menu.querySelectorAll('.checkbox-item');
+    if (allItems.length <= visibleCount) return; // No need for "see more" if all items fit
+    
+    // Create "see more" button
+    const seeMoreBtn = document.createElement('button');
+    seeMoreBtn.className = 'see-more-btn';
+    seeMoreBtn.type = 'button';
+    seeMoreBtn.innerHTML = 'see more <span class="arrow">▼</span>';
+    
+    // Insert after the dropdown menu
+    menu.parentElement.insertBefore(seeMoreBtn, menu.nextSibling);
+    
+    // Toggle expansion on click
+    seeMoreBtn.addEventListener('click', () => {
+      const isExpanded = menu.classList.contains('expanded');
+      
+      if (isExpanded) {
+        menu.classList.remove('expanded');
+        seeMoreBtn.classList.remove('expanded');
+        seeMoreBtn.innerHTML = 'see more <span class="arrow">▼</span>';
+      } else {
+        menu.classList.add('expanded');
+        seeMoreBtn.classList.add('expanded');
+        seeMoreBtn.innerHTML = 'see less <span class="arrow">▼</span>';
+      }
+    });
+  };
+  
+  initTagChipInteractions();
+  
+  // Add "see more" buttons after checkbox lists are built
+  addSeeMoreButton('topicAreaMenu', 4);  // Topic Area: 2 rows × 2 items = 4
+  addSeeMoreButton('tagsMenu', 6);        // Tags: 2 rows × 3 items = 6
+
   const getSelected = (container) =>
     Array.from(container.querySelectorAll('input[type="checkbox"]:checked')).map((i) => i.value);
 
@@ -308,6 +380,17 @@ document.addEventListener('DOMContentLoaded', () => {
     searchInput.value = '';
     topicAreaMenu.querySelectorAll('input[type="checkbox"]').forEach((i) => (i.checked = false));
     tagsMenu.querySelectorAll('input[type="checkbox"]').forEach((i) => (i.checked = false));
+    // Mobile: Remove active class from tag chips
+    document.querySelectorAll('.checkbox-item').forEach(item => item.classList.remove('active'));
+    // Mobile: Collapse "see more" sections
+    if (isMobile()) {
+      document.querySelectorAll('.see-more-btn.expanded').forEach(btn => {
+        btn.classList.remove('expanded');
+        btn.innerHTML = 'see more <span class="arrow">▼</span>';
+      });
+      topicAreaMenu.classList.remove('expanded');
+      tagsMenu.classList.remove('expanded');
+    }
     suggestionList.hidden = true;
     currentPage = 1;
     update();
