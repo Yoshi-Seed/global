@@ -778,7 +778,7 @@ button#clearFilters:hover,
     justify-content: center;
     flex: 0 0 auto; /* 横に伸びず、縮まず、必要最小限の幅 */
     padding: 8px 16px; /* 上下8px、左右16px */
-    border: 1px solid #4A2B1D; /* 濃い茶色の枠線 */
+    border: 0.5px solid #5b1a06; /* 細い枠線、色を#5b1a06に変更 */
     border-radius: 25px; /* 楕円形 */
     background-color: transparent; /* 未選択時：透明 */
     color: #4A2B1D; /* 未選択時：茶色文字 */
@@ -823,21 +823,21 @@ button#clearFilters:hover,
   
   /* Mobile: Hover effect for tag chips */
   .checkbox-item:hover {
-    background-color: rgba(74, 43, 29, 0.08);
-    border-color: #3a2218;
+    background-color: rgba(91, 26, 6, 0.08); /* #5b1a06ベースの薄い背景 */
+    border-color: #5b1a06; /* ホバー時も#5b1a06 */
     transform: translateY(-1px);
-    box-shadow: 0 2px 6px rgba(74, 43, 29, 0.15);
+    box-shadow: 0 2px 6px rgba(91, 26, 6, 0.15); /* #5b1a06ベースの影 */
   }
   
   /* Mobile: Active/selected state for tag chips */
   .checkbox-item input[type="checkbox"]:checked + span,
   .checkbox-item.active,
   .checkbox-item:has(input[type="checkbox"]:checked) {
-    background-color: #4A2B1D !important; /* 選択時：茶色背景 */
+    background-color: #5b1a06 !important; /* 選択時：#5b1a06背景 */
     color: #FFFFFF !important; /* 選択時：白文字 */
-    border-color: #4A2B1D !important;
+    border-color: #5b1a06 !important; /* 選択時：#5b1a06枠線 */
     font-weight: 600;
-    box-shadow: 0 2px 8px rgba(74, 43, 29, 0.25);
+    box-shadow: 0 2px 8px rgba(91, 26, 6, 0.25); /* #5b1a06ベースの影 */
   }
   
   /* Mobile: Hide tags beyond 2nd row initially */
