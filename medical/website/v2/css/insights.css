@@ -898,10 +898,15 @@ button#clearFilters:hover,
   .insights-title {
     font-size: 3.2rem; /* 2.5rem → 3.2rem に拡大 */
     line-height: 1.1; /* 行間を縮める */
+    margin-bottom: 24px !important; /* タイトルと説明文の間のスペースを広げる */
   }
 
   .insights-title .mobile-br {
     display: inline; /* モバイルで改行を表示 */
+  }
+
+  .insights-subtitle {
+    margin-top: 24px !important; /* 説明文の上部余白を追加 */
   }
 
   /* Mobile: English Report Summaries - tighter line-height */
