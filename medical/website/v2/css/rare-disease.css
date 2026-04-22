@@ -281,4 +281,9 @@
     font-size: 0.95rem;
     margin-top: 24px;
   }
+
+  /* Mobile: Hide Participant-first approach section image */
+  .rare-block--alt .rare-image {
+    display: none;
+  }
 }
