@@ -377,16 +377,20 @@
   #main {
     margin-top: 0 !important;
     padding-top: 0 !important; /* パディングを完全削除 */
+    gap: 0 !important; /* gap設定をゼロに */
+    row-gap: 0 !important; /* row-gap設定をゼロに */
   }
 
   /* Mobile: Hero section - image on top, full width */
   .about-hero {
-    padding-top: 70px !important; /* ヘッダー分の余白を内部に確保 */
+    padding-top: 0 !important; /* パディングを完全削除 */
     padding-bottom: 0 !important;
     margin-top: 0 !important; /* margin-topを0に変更 */
     margin-bottom: 0 !important;
     position: relative !important;
+    top: 0 !important; /* 位置をリセット */
     z-index: 1 !important; /* ヘッダーより下に配置 */
+    background-color: transparent !important; /* 背景を透明に */
   }
 
   .about-hero-wrapper {
@@ -401,10 +405,12 @@
     width: 100vw; /* 画面いっぱい */
     margin-left: calc(-50vw + 50%); /* 左右を画面端まで広げる */
     order: 1; /* 画像を上に */
-    margin-top: 0 !important; /* 上部余白を完全削除 */
-    padding-top: 0 !important; /* 上部パディングを完全削除 */
+    margin-top: -70px !important; /* ヘッダーの高さ分ネガティブマージン */
+    padding-top: 70px !important; /* ヘッダー分のスペースを内部に確保 */
     margin-bottom: 0 !important;
     padding-bottom: 0 !important;
+    position: relative !important;
+    z-index: 1 !important;
   }
 
   .about-hero-left img {

@@ -467,6 +467,13 @@ img {
     width: 100%;
     margin: 0 !important;
     padding: 0 !important;
+    gap: 0 !important; /* gap設定をゼロに */
+    row-gap: 0 !important; /* row-gap設定をゼロに */
+  }
+  
+  body {
+    gap: 0 !important; /* gap設定をゼロに */
+    row-gap: 0 !important; /* row-gap設定をゼロに */
   }
   
   /* 見出しサイズの最適化（80%縮小） */
