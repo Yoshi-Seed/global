@@ -506,6 +506,66 @@
     font-size: 0.95rem; /* 1.1rem → 0.95rem */
   }
 
+  /* Mobile: Moderators section - ボタンスペース確保 */
+  .moderators-section {
+    padding: 0 0 40px; /* 下部にボタン用の余白 */
+  }
+
+  /* Mobile: Moderators hero - 画像の高さを低く、固定配置 */
+  .moderators-hero {
+    min-height: 200px !important; /* 280px → 200px に縮小 */
+    height: 200px !important; /* 高さを固定 */
+    padding: 0 !important; /* パディング完全削除 */
+    margin: 0 !important;
+    position: relative !important;
+    overflow: visible !important; /* ボタンが見えるように */
+    display: block !important; /* flexを解除 */
+  }
+
+  /* Mobile: Moderators hero inner - containerのpadding無効化 */
+  .moderators-hero-inner {
+    position: static !important; /* 通常フローに戻す */
+    padding: 0 !important;
+    margin: 0 !important;
+    display: block !important;
+    height: 200px !important; /* 高さを固定 */
+    max-width: 100% !important;
+  }
+
+  /* Mobile: Moderators text - 画像中央に絶対配置 */
+  .moderators-text {
+    position: absolute !important;
+    top: 50% !important;
+    left: 20px !important;
+    right: 20px !important;
+    transform: translateY(-50%) !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    z-index: 10 !important;
+    max-width: none !important;
+  }
+
+  /* Mobile: Moderators title - フォントサイズ調整 */
+  .moderators-title {
+    font-size: 2.5rem !important;
+    margin: 0 0 8px 0 !important;
+  }
+
+  /* Mobile: Moderators subtitle - フォントサイズ調整 */
+  .moderators-subtitle {
+    font-size: 1rem !important;
+    line-height: 1.4 !important;
+  }
+
+  /* Mobile: Moderators trigger button - 画像下部に絶対配置 */
+  .moderators-trigger {
+    position: absolute !important;
+    bottom: -22px !important; /* 画像の下端から22px下 */
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 10 !important;
+  }
+
   /* Mobile: Moderators table - カルーセル形式 */
   .moderators-table-wrap {
     overflow: hidden; /* カルーセル用にオーバーフローを隠す */
