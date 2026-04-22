@@ -945,10 +945,13 @@ button#clearFilters:hover,
   /* Mobile: Report card carousel - one card at a time, more square-like */
   .report-carousel-section .carousel-slide {
     padding: 0 20px; /* 左右に余白を追加 */
+    flex-direction: column; /* 縦並びに変更 */
+    gap: 0; /* gap削除 */
   }
 
   .report-card {
     max-width: 100%; /* 画面幅いっぱい */
+    width: 100% !important; /* 幅を100%に強制 */
     min-height: auto; /* 高さを自動調整 */
     aspect-ratio: auto; /* アスペクト比を自由に */
   }
