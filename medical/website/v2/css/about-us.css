@@ -390,7 +390,7 @@
     width: 100vw; /* 画面いっぱい */
     margin-left: calc(-50vw + 50%); /* 左右を画面端まで広げる */
     order: 1; /* 画像を上に */
-    margin-top: 0; /* 上部の余白をリセット */
+    margin-top: -70px !important; /* ヘッダーの高さ分上に移動 */
   }
 
   .about-hero-left img {
