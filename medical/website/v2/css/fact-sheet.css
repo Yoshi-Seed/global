@@ -312,7 +312,8 @@
   }
 
   .factsheet-hero-image {
-    width: 100%;
+    width: 100vw; /* 画面いっぱいに */
+    margin-left: calc(-50vw + 50%); /* 左右を画面端まで広げる */
     margin-bottom: 0;
   }
 
@@ -320,6 +321,7 @@
     width: 100%;
     height: auto;
     object-fit: cover;
+    display: block; /* 画像下の隙間を削除 */
   }
 
   /* Mobile: CTA section - left align */
