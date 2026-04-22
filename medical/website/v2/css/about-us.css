@@ -382,8 +382,9 @@
   /* Mobile: Hero section - image on top, full width */
   .about-hero {
     padding-top: 0 !important; /* パディングを削除 */
-    padding-bottom: 0;
-    margin-top: -70px !important; /* ヘッダーの高さ分上に移動 */
+    padding-bottom: 0 !important;
+    margin-top: 0 !important; /* margin-topを0に変更 */
+    margin-bottom: 0 !important;
     position: relative !important;
     z-index: 1 !important; /* ヘッダーより下に配置 */
   }
@@ -392,24 +393,30 @@
     display: flex;
     flex-direction: column; /* 縦並び */
     min-height: auto;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
   }
 
   .about-hero-left {
     width: 100vw; /* 画面いっぱい */
     margin-left: calc(-50vw + 50%); /* 左右を画面端まで広げる */
     order: 1; /* 画像を上に */
-    margin-top: 0 !important;
-    padding-top: 70px !important; /* ヘッダー分の余白を画像内部に確保 */
+    margin-top: 0 !important; /* 上部余白を完全削除 */
+    padding-top: 0 !important; /* 上部パディングを完全削除 */
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
   }
 
   .about-hero-left img {
     width: 100%;
     height: auto;
-    min-height: 370px; /* 最小高さを設定（70px増加） */
-    max-height: 470px; /* 最大高さを制限（70px増加） */
+    min-height: 300px; /* 最小高さを設定 */
+    max-height: 400px; /* 最大高さを制限 */
     object-fit: cover;
     object-position: center top !important; /* 画像の上部を表示 */
-    margin-top: -70px !important; /* 画像自体を上に移動 */
+    margin-top: 0 !important; /* margin-topを0に変更 */
+    margin-bottom: 0 !important;
+    padding: 0 !important;
     display: block !important; /* 画像下の隙間を防止 */
     vertical-align: top !important; /* 縦方向の隙間を防止 */
   }
@@ -420,11 +427,14 @@
     padding: 40px 20px; /* 左右に余白 */
     width: 100%;
     box-sizing: border-box;
+    margin-top: 0 !important; /* 上部余白を削除 */
+    padding-top: 40px !important;
   }
 
   .about-title {
     font-size: 4.2rem; /* タイトルをさらに大きく（3.5rem → 4.2rem） */
     text-align: left; /* 左揃え */
+    margin-top: 0 !important; /* 最初の要素の上部余白を削除 */
     margin-bottom: 20px;
     line-height: 1.1;
   }
