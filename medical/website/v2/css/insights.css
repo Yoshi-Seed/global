@@ -900,6 +900,41 @@ button#clearFilters:hover,
     font-size: 0.95rem;
     margin-top: 24px;
   }
+
+  /* Mobile: Report card carousel - one card at a time, more square-like */
+  .report-carousel-section .carousel-slide {
+    padding: 0 20px; /* 左右に余白を追加 */
+  }
+
+  .report-card {
+    max-width: 100%; /* 画面幅いっぱい */
+    min-height: auto; /* 高さを自動調整 */
+    aspect-ratio: auto; /* アスペクト比を自由に */
+  }
+
+  .report-title {
+    font-size: 1.3rem; /* タイトルを少し小さく */
+    margin-bottom: 10px;
+  }
+
+  .report-summary {
+    font-size: 0.9rem; /* 本文を少し小さく */
+    line-height: 1.6;
+    margin-bottom: 12px;
+    display: -webkit-box;
+    -webkit-line-clamp: 4; /* 4行まで表示 */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .report-tags {
+    margin-bottom: 12px;
+  }
+
+  .btn-learn-more {
+    padding: 8px 18px;
+    font-size: 0.85rem;
+  }
 }
 
 @media (max-width: 640px) {
