@@ -377,7 +377,9 @@
   .about-hero {
     padding-top: 0 !important; /* パディングを削除 */
     padding-bottom: 0;
-    margin-top: 0 !important; /* ヘッダーとの間のスペースを削除 */
+    margin-top: -70px !important; /* ヘッダーの高さ分上に移動 */
+    position: relative !important;
+    z-index: 1 !important; /* ヘッダーより下に配置 */
   }
 
   .about-hero-wrapper {
@@ -390,15 +392,18 @@
     width: 100vw; /* 画面いっぱい */
     margin-left: calc(-50vw + 50%); /* 左右を画面端まで広げる */
     order: 1; /* 画像を上に */
-    margin-top: -70px !important; /* ヘッダーの高さ分上に移動 */
+    margin-top: 0 !important;
+    padding-top: 70px !important; /* ヘッダー分の余白を画像内部に確保 */
   }
 
   .about-hero-left img {
     width: 100%;
     height: auto;
-    min-height: 300px; /* 最小高さを設定 */
-    max-height: 400px; /* 最大高さを制限 */
+    min-height: 370px; /* 最小高さを設定（70px増加） */
+    max-height: 470px; /* 最大高さを制限（70px増加） */
     object-fit: cover;
+    object-position: center top !important; /* 画像の上部を表示 */
+    margin-top: -70px !important; /* 画像自体を上に移動 */
   }
 
   .about-hero-right {
