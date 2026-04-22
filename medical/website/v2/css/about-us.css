@@ -379,9 +379,9 @@
     padding: 0 !important;
   }
 
-  /* Mobile: main要素をヘッダー直下に配置 */
+  /* Mobile: main要素を完全にヘッダー直下に - 空白を削除 */
   #main {
-    margin-top: 70px !important; /* ヘッダー分のスペースを確保（画像削除により必要） */
+    margin-top: 0 !important; /* 空白セクションを削除 */
     padding-top: 0 !important;
     min-height: 0 !important; /* システムの高さ確保を無効化 */
     height: auto !important;
@@ -411,16 +411,39 @@
   }
 
   .about-hero-left {
-    display: none !important; /* モバイル版では画像部分を完全に削除 */
+    width: 100vw; /* 画面いっぱい */
+    margin-left: calc(-50vw + 50%); /* 左右を画面端まで広げる */
+    order: 1; /* 画像を上に */
+    margin-top: 0 !important; /* 空白削除により、margin-topをリセット */
+    padding-top: 70px !important; /* ヘッダー分のスペースを確保 */
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+    position: relative !important;
+    z-index: 1 !important; /* ヘッダーの下に配置 */
+  }
+
+  .about-hero-left img {
+    width: 100%;
+    height: auto;
+    min-height: 370px; /* ヘッダー分を考慮して最小高さを調整 */
+    max-height: 470px; /* ヘッダー分を考慮して最大高さを調整 */
+    object-fit: cover;
+    object-position: center top !important; /* 画像の上部を表示 */
+    margin-top: -70px !important; /* 画像をヘッダー分上にずらして、ヘッダー下から見えるように */
+    margin-bottom: 0 !important;
+    padding: 0 !important;
+    display: block !important; /* 画像下の隙間を防止 */
+    vertical-align: top !important; /* 縦方向の隙間を防止 */
   }
 
   .about-hero-right {
-    order: 1; /* テキストを上に（画像が非表示のため） */
+    order: 2; /* テキストを下に */
     align-items: flex-start; /* 左揃え */
-    padding: 100px 20px 40px 20px !important; /* 上部にヘッダー分+余白を追加 */
+    padding: 40px 20px; /* 左右に余白 */
     width: 100%;
     box-sizing: border-box;
-    margin-top: 0 !important;
+    margin-top: 0 !important; /* 上部余白を削除 */
+    padding-top: 40px !important;
   }
 
   .about-title {
