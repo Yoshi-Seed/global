@@ -410,7 +410,7 @@
   }
 
   .about-title {
-    font-size: 3.5rem; /* タイトルを大きく（2.5rem → 3.5rem） */
+    font-size: 4.2rem; /* タイトルをさらに大きく（3.5rem → 4.2rem） */
     text-align: left; /* 左揃え */
     margin-bottom: 20px;
     line-height: 1.1;
@@ -466,6 +466,34 @@
   .team-grid {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 0; /* ギャップを削除（各メンバーで個別に設定） */
+  }
+
+  /* Mobile: すべてのチームメンバーに区切り線と間隔を設定 */
+  .team-member {
+    padding-bottom: 50px; /* 下部の余白 */
+    margin-bottom: 50px; /* メンバー間の間隔 */
+    border-bottom: 1px solid rgba(91, 26, 6, 0.2); /* 区切り線 */
+  }
+
+  /* Mobile: 最後のチームメンバーの下部スペースと区切り線を削除 */
+  .team-member:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  /* Mobile: 7-9番目のメンバーのスタイルをリセット（すべて均等に） */
+  .team-member:nth-child(7),
+  .team-member:nth-child(8),
+  .team-member:nth-child(9) {
+    border-bottom: 1px solid rgba(91, 26, 6, 0.2); /* 区切り線を追加 */
+    padding-bottom: 50px; /* 下部の余白を追加 */
+  }
+
+  /* Mobile: ただし9番目が最後の場合は区切り線を削除 */
+  .team-member:nth-child(9):last-child {
+    border-bottom: none;
+    padding-bottom: 0;
   }
 }
