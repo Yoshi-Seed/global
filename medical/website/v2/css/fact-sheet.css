@@ -354,4 +354,9 @@
   .factsheet-cta .btn {
     margin-left: 0; /* ボタンを左揃え */
   }
+
+  /* Mobile: "You may also like..." smaller font size */
+  .related-title {
+    font-size: 1.8rem; /* 2.8rem から 1.8rem に縮小 */
+  }
 }
