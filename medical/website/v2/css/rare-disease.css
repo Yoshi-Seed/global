@@ -286,4 +286,9 @@
   .rare-block--alt .rare-image {
     display: none;
   }
+
+  /* Mobile: Microsites section - ボタンが完全に表示されるよう上部余白追加 */
+  .microsites-section {
+    padding-top: 30px !important; /* ボタンの上半分が見えるよう余白 */
+  }
 }
