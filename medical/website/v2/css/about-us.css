@@ -376,7 +376,7 @@
   /* Mobile: main要素の余白を削除 */
   #main {
     margin-top: 0 !important;
-    padding-top: 0 !important;
+    padding-top: 70px !important; /* ヘッダーの高さ分のパディングを確保 */
   }
 
   /* Mobile: Hero section - image on top, full width */
