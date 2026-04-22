@@ -572,7 +572,12 @@
 
 @media (max-width: 768px) {
   /* モバイル：横幅制限とオーバーフロー防止 */
-  .site-header,
+  .site-header {
+    max-width: 100vw;
+    width: 100%;
+    overflow: visible !important; /* メニューが表示されるようにoverflowを解除 */
+  }
+
   .site-footer,
   section,
   .container {
@@ -587,6 +592,7 @@
     padding: 0 12px 0 12px; /* モバイル：左右パディングを削減 */
     max-width: 100%;
     width: 100%;
+    overflow: visible !important; /* メニューが表示されるようにoverflowを解除 */
   }
   
   .header-logo {
@@ -608,7 +614,7 @@
     margin-left: auto;
     margin-right: 8px; /* モバイル：右に配置 */
     position: relative;
-    z-index: 1001;
+    z-index: 10000 !important; /* メニューより上に */
     background: none;
     border: none;
     cursor: pointer;
