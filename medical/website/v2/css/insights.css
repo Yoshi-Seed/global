@@ -910,15 +910,31 @@ button#clearFilters:hover,
     line-height: 1.0; /* 行間を縮める */
   }
 
+  /* Mobile: CTA section - left align */
+  .insights-cta {
+    text-align: left !important; /* 左揃え */
+  }
+
+  .cta-inner {
+    margin-left: 20px; /* 左側の余白を適度に */
+    margin-right: 20px; /* 右側にも余白を追加 */
+  }
+
   /* Mobile: Tighter line-height for CTA title */
   .cta-title {
     line-height: 0.95;
+    text-align: left !important; /* 左揃え */
   }
 
   /* Mobile: Smaller font size and more spacing above CTA text */
   .cta-text {
     font-size: 0.95rem;
     margin-top: 24px;
+    text-align: left !important; /* 左揃え */
+  }
+
+  .insights-cta .btn {
+    margin-left: 0; /* ボタンを左揃え */
   }
 
   /* Mobile: Report card carousel - one card at a time, more square-like */
