@@ -410,7 +410,7 @@
   }
 
   .about-title {
-    font-size: 2.5rem; /* タイトルを小さく */
+    font-size: 3.5rem; /* タイトルを大きく（2.5rem → 3.5rem） */
     text-align: left; /* 左揃え */
     margin-bottom: 20px;
     line-height: 1.1;
@@ -425,14 +425,18 @@
   .about-actions {
     width: 100%;
     display: flex;
-    flex-direction: column;
+    flex-direction: row; /* 横並びに変更 */
     gap: 12px;
+    flex-wrap: wrap; /* 必要に応じて折り返し */
   }
 
   .about-actions .btn {
-    width: 100%; /* ボタンを幅いっぱいに */
+    flex: 1; /* 均等に幅を分配 */
+    min-width: 140px; /* 最小幅を設定 */
     text-align: center;
     justify-content: center;
+    padding: 12px 16px; /* パディングを調整 */
+    font-size: 0.85rem; /* フォントサイズを少し小さく */
   }
 
   /* Mobile: 横幅制限とオーバーフロー防止 */
