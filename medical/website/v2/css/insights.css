@@ -846,17 +846,17 @@ button#clearFilters:hover,
     display: none !important;
   }
   
-  /* Mobile: See more button */
+  /* Mobile: See more button - text only, no box */
   .see-more-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
-    padding: 10px 16px;
+    padding: 0; /* パディング削除 */
     margin-top: 16px;
     background: transparent;
-    border: 1px solid #4A2B1D;
-    border-radius: 25px;
+    border: none; /* 枠線削除 */
+    border-radius: 0; /* 角丸削除 */
     color: #4A2B1D;
     font-size: 0.85rem;
     font-weight: 500;
@@ -866,8 +866,8 @@ button#clearFilters:hover,
   }
   
   .see-more-btn:hover {
-    background-color: rgba(74, 43, 29, 0.08);
-    border-color: #3a2218;
+    color: #3a2218; /* ホバー時は色を濃く */
+    text-decoration: underline; /* 下線追加 */
   }
   
   .see-more-btn .arrow {
