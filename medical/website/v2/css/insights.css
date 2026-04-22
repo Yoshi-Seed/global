@@ -896,7 +896,7 @@ button#clearFilters:hover,
   
   /* Mobile: Page title - 2 lines (Japan Research / Fact Sheets) */
   .insights-title {
-    font-size: 2.5rem;
+    font-size: 3.2rem; /* 2.5rem → 3.2rem に拡大 */
     line-height: 1.1; /* 行間を縮める */
   }
 
