@@ -571,6 +571,11 @@
    =================================== */
 
 @media (max-width: 768px) {
+  /* モバイル：bodyの下部マージンを削除 */
+  body {
+    margin-bottom: 0 !important;
+  }
+
   /* モバイル：横幅制限とオーバーフロー防止 */
   .site-header {
     max-width: 100vw;
@@ -595,6 +600,7 @@
     max-width: 100%;
     width: 100%;
     overflow: visible !important; /* メニューが表示されるようにoverflowを解除 */
+    margin-bottom: 0 !important; /* ヘッダーコンテナの下部余白を削除 */
   }
   
   .header-logo {
