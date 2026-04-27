@@ -566,6 +566,12 @@
 }
 
 @media (max-width: 768px) {
+  /* ヘッダーとメインビジュアルを一体化 */
+  .hero-section {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
   .why-seed-section {
     padding: 60px 0;
   }

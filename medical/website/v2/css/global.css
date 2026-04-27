@@ -461,6 +461,16 @@ img {
     width: 100%;
   }
   
+  /* ヘッダーとメインコンテンツを一体化 */
+  body {
+    gap: 0 !important; /* gap設定をゼロに */
+    row-gap: 0 !important; /* row-gap設定をゼロに */
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+  }
+  
   main {
     overflow-x: hidden !important;
     max-width: 100%;
@@ -469,11 +479,8 @@ img {
     padding: 0 !important;
     gap: 0 !important; /* gap設定をゼロに */
     row-gap: 0 !important; /* row-gap設定をゼロに */
-  }
-  
-  body {
-    gap: 0 !important; /* gap設定をゼロに */
-    row-gap: 0 !important; /* row-gap設定をゼロに */
+    margin-top: -72px !important; /* ヘッダー高さ分を負のマージンで引き上げ */
+    padding-top: 72px !important; /* ヘッダー分のスペースを確保 */
   }
   
   /* 見出しサイズの最適化（80%縮小） */
