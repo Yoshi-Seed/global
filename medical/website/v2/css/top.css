@@ -1467,8 +1467,10 @@
      CONTACT SECTION (Mobile - Vertical)
      ============================================ */
   .contact-section {
-    margin-top: 0;
-    padding: 0;
+    margin-top: -10vh !important; /* 負のマージンでヘッダーの裏に引き上げ */
+    padding: 0 !important; /* パディングを完全削除 */
+    background-color: transparent !important; /* ベージュ背景を透明に */
+    min-height: auto !important; /* 最小高さを解除 */
   }
   
   .contact-grid {
@@ -1476,19 +1478,21 @@
     flex-direction: column;
     width: 100%;
     gap: 0;
+    margin-top: 0 !important; /* 上部マージンを完全削除 */
+    padding-top: 0 !important; /* 上部パディングを完全削除 */
   }
   
   .contact-left {
     position: relative;
     width: 100%;
-    margin: 0;
-    margin-top: -70px !important; /* ヘッダーの下に画像を引き上げて空間を埋める */
-    padding: 0;
-    padding-top: 70px !important; /* ヘッダー分のスペースを確保 */
+    margin: 0 !important; /* すべてのマージンを削除 */
+    padding: 0 !important; /* すべてのパディングを削除 */
+    padding-top: calc(70px + 10vh) !important; /* ヘッダー分 + 引き上げた分のスペースを確保 */
     display: block;
-    min-height: 500px;
+    min-height: auto !important; /* 最小高さを解除 */
     background-size: cover;
-    background-position: center;
+    background-position: center top; /* 画像を上部に配置 */
+    vertical-align: top !important; /* トップ配置 */
   }
   
   .contact-left-overlay {
@@ -1509,9 +1513,11 @@
   .contact-left-content {
     position: relative;
     z-index: 2;
-    padding: 48px 24px;
+    padding: 48px 24px !important;
     padding-top: 0 !important; /* ヘッダー分のスペースは.contact-leftで確保済み */
+    margin-top: 0 !important; /* 上部マージンを完全削除 */
     height: 100%;
+    min-height: auto !important; /* 最小高さを解除 */
     display: flex;
     flex-direction: column;
     justify-content: space-between;

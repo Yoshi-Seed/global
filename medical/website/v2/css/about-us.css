@@ -473,6 +473,9 @@
     justify-content: center;
     padding: 12px 16px; /* パディングを調整 */
     font-size: 0.85rem; /* フォントサイズを少し小さく */
+    display: flex !important; /* Flexboxで上下中央配置 */
+    align-items: center !important; /* テキストを上下中央に */
+    line-height: 1.2 !important; /* 行間を調整 */
   }
 
   /* Mobile: 横幅制限とオーバーフロー防止 */
