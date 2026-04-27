@@ -1467,7 +1467,8 @@
      CONTACT SECTION (Mobile - Vertical)
      ============================================ */
   .contact-section {
-    margin-top: -10vh !important; /* 負のマージンでヘッダーの裏に引き上げ */
+    margin-top: 0 !important; /* マージンを完全削除 */
+    margin-bottom: 0 !important;
     padding: 0 !important; /* パディングを完全削除 */
     background-color: transparent !important; /* ベージュ背景を透明に */
     min-height: auto !important; /* 最小高さを解除 */
@@ -1478,8 +1479,8 @@
     flex-direction: column;
     width: 100%;
     gap: 0;
-    margin-top: 0 !important; /* 上部マージンを完全削除 */
-    padding-top: 0 !important; /* 上部パディングを完全削除 */
+    margin: 0 !important; /* すべてのマージンを削除 */
+    padding: 0 !important; /* すべてのパディングを削除 */
   }
   
   .contact-left {
@@ -1487,7 +1488,7 @@
     width: 100%;
     margin: 0 !important; /* すべてのマージンを削除 */
     padding: 0 !important; /* すべてのパディングを削除 */
-    padding-top: calc(70px + 10vh) !important; /* ヘッダー分 + 引き上げた分のスペースを確保 */
+    padding-top: 72px !important; /* ヘッダー分のスペースを確保（ロゴ48px + パディング24px） */
     display: block;
     min-height: auto !important; /* 最小高さを解除 */
     background-size: cover;

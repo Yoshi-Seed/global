@@ -577,7 +577,7 @@
     width: 100%;
     overflow: visible !important; /* メニューが表示されるようにoverflowを解除 */
     margin-bottom: 0 !important; /* ヘッダー下部の余白を削除 */
-    padding-bottom: 0 !important; /* ヘッダー下部のパディングを削除 */
+    padding: 12px 0 !important; /* 上下のパディングを最小限に（18px → 12px） */
   }
 
   .site-footer,
