@@ -208,9 +208,11 @@
   }
 
   .contact-intro {
-    font-size: 1rem;
+    font-size: 0.95rem; /* フォントサイズを少し小さく */
     margin-bottom: 32px;
     max-width: 100%;
+    letter-spacing: -0.025em; /* 文字間隔を狭めて1行に収める */
+    line-height: 1.5;
   }
 
   /* モバイル版：デスクトップ用の改行を非表示、モバイル用の改行を表示 */
