@@ -66,6 +66,15 @@
   max-width: 70ch;
 }
 
+/* デスクトップ版：デスクトップ用の改行を表示、モバイル用の改行を非表示 */
+.contact-intro .desktop-br {
+  display: inline;
+}
+
+.contact-intro .mobile-br {
+  display: none;
+}
+
 .contact-details {
   list-style: none;
   padding: 0;
@@ -168,5 +177,57 @@
 
   .contact-right {
     padding-top: 24px;
+  }
+}
+
+/* モバイル版のみ（≤768px）：背景画像を削除 */
+@media (max-width: 768px) {
+  .contact-page {
+    padding-top: 70px; /* ヘッダー分のスペース */
+  }
+
+  .contact-left {
+    /* 背景画像を表示（デフォルトのスタイルを使用） */
+    min-height: 500px; /* モバイル用の高さ */
+    padding: 40px 20px;
+  }
+
+  .contact-left-overlay {
+    /* オーバーレイを表示（デフォルトのスタイルを使用） */
+  }
+
+  .contact-left-content {
+    padding: 0 !important;
+    max-width: 100%;
+  }
+
+  .contact-page-title {
+    font-size: clamp(2.5rem, 8vw, 3.5rem);
+    margin-bottom: 20px;
+  }
+
+  .contact-intro {
+    font-size: 0.95rem; /* フォントサイズを少し小さく */
+    margin-bottom: 32px;
+    max-width: 100%;
+    letter-spacing: -0.025em; /* 文字間隔を狭めて1行に収める */
+    line-height: 1.5;
+  }
+
+  /* モバイル版：デスクトップ用の改行を非表示、モバイル用の改行を表示 */
+  .contact-intro .desktop-br {
+    display: none;
+  }
+
+  .contact-intro .mobile-br {
+    display: inline;
+  }
+
+  .contact-details {
+    gap: 20px;
+  }
+
+  .contact-right {
+    padding: 40px 20px;
   }
 }

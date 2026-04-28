@@ -411,27 +411,28 @@
   }
 
   .about-hero-left {
-    width: 100vw; /* 画面いっぱい */
-    margin-left: calc(-50vw + 50%); /* 左右を画面端まで広げる */
+    width: 100vw; /* 画面幅いっぱいに拡張 */
+    margin-left: calc(-50vw + 50%); /* 画面中央から左右に広げる */
     order: 1; /* 画像を上に */
     margin-top: 0 !important;
-    padding-top: 0 !important; /* パディングを削除 */
     margin-bottom: 0 !important;
+    padding-top: 0 !important;
     padding-bottom: 0 !important;
+    position: relative !important;
+    z-index: 1 !important;
   }
 
   .about-hero-left img {
     width: 100%;
     height: auto;
-    min-height: 300px; /* 元の最小高さ */
-    max-height: 400px; /* 元の最大高さ */
+    min-height: 300px;
+    max-height: 400px;
     object-fit: cover;
-    object-position: center top !important; /* 画像の上部を表示 */
-    margin-top: 0 !important; /* マージンを削除 */
-    margin-bottom: 0 !important;
+    object-position: center top !important;
+    margin: 0 !important;
     padding: 0 !important;
-    display: block !important; /* 画像下の隙間を防止 */
-    vertical-align: top !important; /* 縦方向の隙間を防止 */
+    display: block !important;
+    vertical-align: top !important; /* 画像下の隙間を削除 */
   }
 
   .about-hero-right {
