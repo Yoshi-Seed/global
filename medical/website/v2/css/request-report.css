@@ -66,6 +66,15 @@
   max-width: 70ch;
 }
 
+/* デスクトップ版：デスクトップ用の改行を表示、モバイル用の改行を非表示 */
+.contact-intro .desktop-br {
+  display: inline;
+}
+
+.contact-intro .mobile-br {
+  display: none;
+}
+
 .contact-details {
   list-style: none;
   padding: 0;
@@ -201,6 +210,16 @@
   .contact-intro {
     font-size: 1rem;
     margin-bottom: 32px;
+    max-width: 100%;
+  }
+
+  /* モバイル版：デスクトップ用の改行を非表示、モバイル用の改行を表示 */
+  .contact-intro .desktop-br {
+    display: none;
+  }
+
+  .contact-intro .mobile-br {
+    display: inline;
   }
 
   .contact-details {
