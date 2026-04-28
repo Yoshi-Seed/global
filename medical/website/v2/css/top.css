@@ -1492,17 +1492,29 @@
   .contact-left {
     position: relative;
     width: 100%;
-    margin: 0 !important;
-    padding: 0 !important;
-    padding-top: 72px !important; /* ヘッダー分のスペースを確保 */
+    margin: 0 !important; /* すべてのマージンを削除 */
+    padding: 0 !important; /* すべてのパディングを削除 */
+    padding-top: 72px !important; /* ヘッダー分のスペースを確保（ロゴ48px + パディング24px） */
     display: block;
-    min-height: auto !important;
-    background-image: none !important; /* 背景画像を削除 */
-    background-color: var(--bg-ivory) !important; /* ベージュ背景に変更 */
+    min-height: auto !important; /* 最小高さを解除 */
+    background-size: cover;
+    background-position: center top; /* 画像を上部に配置 */
+    vertical-align: top !important; /* トップ配置 */
   }
   
   .contact-left-overlay {
-    display: none !important; /* オーバーレイを非表示 */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    background: linear-gradient(
+      90deg,
+      rgba(110, 134, 161, 0.45) 0%,
+      rgba(110, 134, 161, 0.20) 55%,
+      rgba(110, 134, 161, 0.05) 100%
+    );
   }
   
   .contact-left-content {
