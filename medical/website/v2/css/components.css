@@ -319,18 +319,22 @@
   
   /* Mobile: Row 2 - Certification Logos */
   .footer-certifications {
-    gap: 16px;
-    justify-content: center;
+    gap: 8px; /* ロゴ間隔を縮小 */
+    justify-content: space-between; /* 等間隔で配置 */
+    align-items: center; /* 垂直方向中央揃え */
     order: 2;
-    flex-wrap: wrap;
-    max-width: 100%;
-    padding: 0 20px;
+    flex-wrap: nowrap !important; /* 横一列に強制 */
+    max-width: 100% !important; /* 横幅制限を解除 */
+    width: 100%;
+    padding: 0 12px; /* 左右の余白を縮小 */
   }
   
   .footer-certifications .cert-logo {
-    height: 40px;
-    max-width: 80px;
+    height: 36px; /* 高さを少し縮小（40px → 36px） */
+    max-width: 18% !important; /* 各ロゴの最大幅を制限（5つで100%になるように） */
+    width: auto;
     object-fit: contain;
+    flex-shrink: 0; /* 縮小を防止 */
   }
   
   /* Mobile: Row 3 - Copyright (bottom) */
