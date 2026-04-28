@@ -319,18 +319,22 @@
   
   /* Mobile: Row 2 - Certification Logos */
   .footer-certifications {
-    gap: 16px;
-    justify-content: center;
+    gap: 8px; /* ロゴ間隔を縮小 */
+    justify-content: space-between; /* 等間隔で配置 */
+    align-items: center; /* 垂直方向中央揃え */
     order: 2;
-    flex-wrap: wrap;
-    max-width: 100%;
-    padding: 0 20px;
+    flex-wrap: nowrap !important; /* 横一列に強制 */
+    max-width: 100% !important; /* 横幅制限を解除 */
+    width: 100%;
+    padding: 0 12px; /* 左右の余白を縮小 */
   }
   
   .footer-certifications .cert-logo {
-    height: 40px;
-    max-width: 80px;
+    height: 36px; /* 高さを少し縮小（40px → 36px） */
+    max-width: 18% !important; /* 各ロゴの最大幅を制限（5つで100%になるように） */
+    width: auto;
     object-fit: contain;
+    flex-shrink: 0; /* 縮小を防止 */
   }
   
   /* Mobile: Row 3 - Copyright (bottom) */
@@ -571,13 +575,18 @@
    =================================== */
 
 @media (max-width: 768px) {
+  /* モバイル：bodyの下部マージンを削除 */
+  body {
+    margin-bottom: 0 !important;
+  }
+
   /* モバイル：横幅制限とオーバーフロー防止 */
   .site-header {
     max-width: 100vw;
     width: 100%;
     overflow: visible !important; /* メニューが表示されるようにoverflowを解除 */
     margin-bottom: 0 !important; /* ヘッダー下部の余白を削除 */
-    padding-bottom: 0 !important; /* ヘッダー下部のパディングを削除 */
+    padding: 12px 0 !important; /* 上下のパディングを最小限に（18px → 12px） */
   }
 
   .site-footer,
@@ -595,6 +604,7 @@
     max-width: 100%;
     width: 100%;
     overflow: visible !important; /* メニューが表示されるようにoverflowを解除 */
+    margin-bottom: 0 !important; /* ヘッダーコンテナの下部余白を削除 */
   }
   
   .header-logo {

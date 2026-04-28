@@ -44,6 +44,38 @@ function initTipsCarousel() {
     dots[index].classList.add('active');
   }
   
+  // Touch/Swipe support for mobile
+  let touchStartX = 0;
+  let touchEndX = 0;
+  
+  track.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+  
+  track.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+  }, { passive: true });
+  
+  function handleSwipe() {
+    const swipeThreshold = 50;
+    const diff = touchStartX - touchEndX;
+    
+    if (Math.abs(diff) > swipeThreshold) {
+      if (diff > 0) {
+        // Swipe left - go to next slide
+        if (currentIndex < totalSlides - 1) {
+          goToSlide(currentIndex + 1);
+        }
+      } else {
+        // Swipe right - go to previous slide
+        if (currentIndex > 0) {
+          goToSlide(currentIndex - 1);
+        }
+      }
+    }
+  }
+  
   // Auto-advance disabled
   // setInterval(() => {
   //   currentIndex = (currentIndex + 1) % totalSlides;
