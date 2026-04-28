@@ -187,14 +187,13 @@
   }
 
   .contact-left {
-    background-image: none !important; /* 背景画像を削除 */
-    background-color: var(--bg-ivory) !important; /* ベージュ背景 */
-    min-height: auto !important;
+    /* 背景画像を表示（デフォルトのスタイルを使用） */
+    min-height: 500px; /* モバイル用の高さ */
     padding: 40px 20px;
   }
 
   .contact-left-overlay {
-    display: none !important; /* オーバーレイも非表示 */
+    /* オーバーレイを表示（デフォルトのスタイルを使用） */
   }
 
   .contact-left-content {
