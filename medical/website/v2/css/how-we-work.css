@@ -1109,6 +1109,12 @@
     padding: 32px 24px;
   }
   
+  /* モバイル版：カードのホバー/タップ時の移動を無効化 */
+  .value-card:hover,
+  .value-card:active {
+    transform: none !important;
+  }
+  
   .value-title {
     font-size: 1.5rem;
     margin-bottom: 20px;
