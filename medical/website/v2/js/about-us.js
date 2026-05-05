@@ -61,17 +61,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Touch swipe support
       let startX = 0;
+      let startY = 0;
       let currentX = 0;
+      let currentY = 0;
       let isDragging = false;
 
       tbody.addEventListener('touchstart', (e) => {
         startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        currentX = startX;
+        currentY = startY;
         isDragging = true;
       }, { passive: true });
 
       tbody.addEventListener('touchmove', (e) => {
         if (!isDragging) return;
         currentX = e.touches[0].clientX;
+        currentY = e.touches[0].clientY;
       }, { passive: true });
 
       tbody.addEventListener('touchend', () => {
@@ -79,14 +85,30 @@ document.addEventListener('DOMContentLoaded', () => {
         isDragging = false;
         
         const diffX = startX - currentX;
-        if (Math.abs(diffX) > 50) {
-          if (diffX > 0 && currentIndex < cards.length - 1) {
-            currentIndex++;
-          } else if (diffX < 0 && currentIndex > 0) {
-            currentIndex--;
+        const diffY = Math.abs(startY - currentY);
+        
+        // 縦スクロールではなく横スワイプであることを確認
+        if (Math.abs(diffX) > 50 && Math.abs(diffX) > diffY) {
+          if (diffX > 0) {
+            // 左にスワイプ（次へ）
+            if (currentIndex < cards.length - 1) {
+              currentIndex++;
+              updateCarousel();
+            }
+          } else {
+            // 右にスワイプ（前へ）
+            if (currentIndex > 0) {
+              currentIndex--;
+              updateCarousel();
+            }
           }
-          updateCarousel();
         }
+        
+        // リセット
+        startX = 0;
+        startY = 0;
+        currentX = 0;
+        currentY = 0;
       }, { passive: true });
     }
   }
