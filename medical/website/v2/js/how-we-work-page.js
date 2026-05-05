@@ -120,33 +120,71 @@ function initTestimonialCarousel() {
   const dots = dotsContainer.querySelectorAll('.testimonial-dot');
   
   function goToTestimonial(index) {
-    currentIndex = index;
-    const cardWidth = cards[0].offsetWidth;
-    const gap = 16;
-    const containerPadding = window.innerWidth * 0.05;
-    const offset = -(cardWidth + gap) * index;
+    // インデックスの境界チェック
+    if (index < 0 || index >= totalCards) {
+      return;
+    }
     
-    track.style.transform = `translateX(${offset}px)`;
+    currentIndex = index;
+    const card = cards[index];
+    
+    if (card) {
+      // カードの左端位置を取得
+      const cardLeft = card.offsetLeft;
+      const trackWidth = track.offsetWidth;
+      const cardWidth = card.offsetWidth;
+      const padding = trackWidth * 0.05;
+      
+      // カードを中央に配置するためのスクロール位置を計算
+      const scrollPosition = cardLeft - (trackWidth - cardWidth) / 2;
+      
+      track.scrollTo({
+        left: Math.max(0, scrollPosition), // 負の値を防ぐ
+        behavior: 'smooth'
+      });
+    }
     
     // Update dots
     dots.forEach(dot => dot.classList.remove('active'));
-    dots[index].classList.add('active');
+    if (dots[index]) {
+      dots[index].classList.add('active');
+    }
   }
   
-  // Scroll snap support
+  // Scroll snap support - update dots based on scroll position
+  let scrollTimeout;
   track.addEventListener('scroll', () => {
-    const scrollLeft = track.scrollLeft;
-    const cardWidth = cards[0].offsetWidth + 16;
-    const newIndex = Math.round(scrollLeft / cardWidth);
-    
-    if (newIndex !== currentIndex) {
-      currentIndex = newIndex;
-      dots.forEach(dot => dot.classList.remove('active'));
-      if (dots[currentIndex]) {
-        dots[currentIndex].classList.add('active');
+    // デバウンス処理：スクロールが停止してから実行
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+      const scrollLeft = track.scrollLeft;
+      const trackWidth = track.offsetWidth;
+      const padding = trackWidth * 0.05;
+      
+      // 各カードの中心位置を計算して、最も近いものを選択
+      let closestIndex = 0;
+      let minDistance = Infinity;
+      
+      cards.forEach((card, i) => {
+        const cardCenter = card.offsetLeft + card.offsetWidth / 2 - padding;
+        const viewportCenter = scrollLeft + trackWidth / 2;
+        const distance = Math.abs(cardCenter - viewportCenter);
+        
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestIndex = i;
+        }
+      });
+      
+      if (closestIndex !== currentIndex) {
+        currentIndex = closestIndex;
+        dots.forEach(dot => dot.classList.remove('active'));
+        if (dots[currentIndex]) {
+          dots[currentIndex].classList.add('active');
+        }
       }
-    }
-  });
+    }, 100);
+  }, { passive: true });
   
   // Recalculate on resize
   window.addEventListener('resize', () => {
