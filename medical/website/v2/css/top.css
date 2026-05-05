@@ -582,20 +582,8 @@
     line-height: 1.6; /* 行間を適切に調整 */
   }
 
-  /* モバイル版：2つの文を改行なしで続けて表示 */
-  /* アニメーションを無効化してinline表示を確実に */
-  .hero-description .slide-left,
-  .hero-description .slide-right {
-    display: inline !important; /* blockからinlineに変更 */
-    margin-bottom: 0 !important; /* 下マージンを削除 */
-    animation: none !important; /* アニメーションを無効化 */
-    opacity: 1 !important; /* 最初から表示 */
-    transform: none !important; /* 変形を無効化 */
-  }
-  
-  /* より具体的なセレクタで確実に適用 */
-  .hero-content .hero-text .hero-description span.slide-left,
-  .hero-content .hero-text .hero-description span.slide-right {
+  /* モバイル版：結合されたテキストを表示（アニメーション無効化） */
+  .hero-description .slide-combined {
     display: inline !important;
     margin-bottom: 0 !important;
     animation: none !important;
@@ -603,7 +591,7 @@
     transform: none !important;
   }
   
-  /* spanタグ指定でさらに確実に */
+  /* すべてのhero-description内のspanをinlineに */
   p.hero-description span {
     display: inline !important;
     margin-bottom: 0 !important;
