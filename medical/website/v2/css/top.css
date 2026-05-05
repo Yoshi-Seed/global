@@ -572,6 +572,12 @@
     padding-top: 0 !important;
   }
 
+  /* モバイル版：ヒーロー説明文を左揃えに */
+  .hero-description {
+    text-align: left !important;
+    text-justify: auto !important;
+  }
+
   .why-seed-section {
     padding: 60px 0;
   }
