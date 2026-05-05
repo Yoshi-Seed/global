@@ -633,6 +633,8 @@
     background: transparent; /* 背景を透明に */
     touch-action: pan-x; /* 横スワイプを有効化 */
     cursor: grab;
+    -webkit-user-select: none; /* iOS用：テキスト選択を無効化 */
+    user-select: none;
   }
   
   .moderators-table tbody:active {
@@ -658,6 +660,10 @@
     text-align: left;
     font-size: 0.95rem; /* モバイルでのフォントサイズを縮小 */
     line-height: 1.5;
+    word-wrap: break-word; /* 長い単語を改行 */
+    overflow-wrap: break-word; /* 長いテキストを改行 */
+    white-space: normal; /* 自動改行を有効化 */
+    max-width: 100%; /* 幅制限 */
   }
 
   /* Mobile: 各セルの前にラベルを追加 */

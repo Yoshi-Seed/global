@@ -59,26 +59,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       };
 
-      // Touch swipe support - improved for iOS
+      // Touch swipe support - optimized for iOS
       let touchStartX = 0;
       let touchStartY = 0;
       let touchEndX = 0;
       let touchEndY = 0;
       let isSwiping = false;
 
-      const handleTouchStart = (e) => {
-        touchStartX = e.changedTouches[0].screenX;
-        touchStartY = e.changedTouches[0].screenY;
+      tbody.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].clientX;
+        touchStartY = e.changedTouches[0].clientY;
+        touchEndX = touchStartX;
+        touchEndY = touchStartY;
         isSwiping = true;
-      };
+      }, { passive: true });
 
-      const handleTouchMove = (e) => {
+      tbody.addEventListener('touchmove', (e) => {
         if (!isSwiping) return;
-        touchEndX = e.changedTouches[0].screenX;
-        touchEndY = e.changedTouches[0].screenY;
-      };
+        touchEndX = e.changedTouches[0].clientX;
+        touchEndY = e.changedTouches[0].clientY;
+      }, { passive: true });
 
-      const handleTouchEnd = () => {
+      tbody.addEventListener('touchend', (e) => {
         if (!isSwiping) return;
         isSwiping = false;
         
@@ -86,8 +88,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const diffY = Math.abs(touchStartY - touchEndY);
         const absDiffX = Math.abs(diffX);
         
-        // 横スワイプの判定：50px以上かつ横方向が縦方向より大きい
-        if (absDiffX > 50 && absDiffX > diffY) {
+        // 横スワイプの判定：30px以上かつ横方向が縦方向より大きい
+        if (absDiffX > 30 && absDiffX > diffY * 1.5) {
           if (diffX > 0) {
             // 左にスワイプ（次へ）
             if (currentIndex < cards.length - 1) {
@@ -108,11 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
         touchStartY = 0;
         touchEndX = 0;
         touchEndY = 0;
-      };
-
-      tbody.addEventListener('touchstart', handleTouchStart, { passive: true });
-      tbody.addEventListener('touchmove', handleTouchMove, { passive: true });
-      tbody.addEventListener('touchend', handleTouchEnd, { passive: true });
+      }, { passive: true });
     }
   }
 });
