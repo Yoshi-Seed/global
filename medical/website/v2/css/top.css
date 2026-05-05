@@ -572,10 +572,14 @@
     padding-top: 0 !important;
   }
 
-  /* モバイル版：ヒーロー説明文を左揃えに */
+  /* モバイル版：ヒーロー説明文を左揃えに＋単語間隔を最適化 */
   .hero-description {
     text-align: left !important;
     text-justify: auto !important;
+    word-spacing: normal !important; /* 単語間隔を標準に */
+    word-break: keep-all; /* 単語の途中で改行しない */
+    overflow-wrap: break-word; /* 長い単語は適切に折り返す */
+    line-height: 1.6; /* 行間を適切に調整 */
   }
 
   .why-seed-section {
