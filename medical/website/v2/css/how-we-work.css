@@ -1109,10 +1109,25 @@
     padding: 32px 24px;
   }
   
-  /* モバイル版：カードのホバー/タップ時の移動を無効化 */
+  /* モバイル版：カードのホバー/タップ時の移動を完全に無効化 */
+  .value-card {
+    transition: none !important; /* トランジションを無効化 */
+    transform: none !important; /* 変形を無効化 */
+  }
+  
   .value-card:hover,
-  .value-card:active {
+  .value-card:active,
+  .value-card:focus {
     transform: none !important;
+    transition: none !important;
+  }
+  
+  /* より具体的なセレクタで確実に上書き */
+  .core-values-grid .value-card,
+  .core-values-grid .value-card:hover,
+  .core-values-grid .value-card:active {
+    transform: translateY(0) !important;
+    transition: none !important;
   }
   
   .value-title {
