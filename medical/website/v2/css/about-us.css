@@ -656,6 +656,8 @@
     border-bottom: 1px solid rgba(91, 26, 6, 0.08); /* 薄い区切り線 */
     padding: 14px 0;
     text-align: left;
+    font-size: 0.95rem; /* モバイルでのフォントサイズを縮小 */
+    line-height: 1.5;
   }
 
   /* Mobile: 各セルの前にラベルを追加 */

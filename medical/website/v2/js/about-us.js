@@ -59,43 +59,42 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       };
 
-      // Touch swipe support
-      let startX = 0;
-      let startY = 0;
-      let currentX = 0;
-      let currentY = 0;
-      let isDragging = false;
+      // Touch swipe support - improved for iOS
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let touchEndX = 0;
+      let touchEndY = 0;
+      let isSwiping = false;
 
-      tbody.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].clientX;
-        startY = e.touches[0].clientY;
-        currentX = startX;
-        currentY = startY;
-        isDragging = true;
-      }, { passive: true });
+      const handleTouchStart = (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
+        isSwiping = true;
+      };
 
-      tbody.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
-        currentX = e.touches[0].clientX;
-        currentY = e.touches[0].clientY;
-      }, { passive: true });
+      const handleTouchMove = (e) => {
+        if (!isSwiping) return;
+        touchEndX = e.changedTouches[0].screenX;
+        touchEndY = e.changedTouches[0].screenY;
+      };
 
-      tbody.addEventListener('touchend', () => {
-        if (!isDragging) return;
-        isDragging = false;
+      const handleTouchEnd = () => {
+        if (!isSwiping) return;
+        isSwiping = false;
         
-        const diffX = startX - currentX;
-        const diffY = Math.abs(startY - currentY);
+        const diffX = touchStartX - touchEndX;
+        const diffY = Math.abs(touchStartY - touchEndY);
+        const absDiffX = Math.abs(diffX);
         
-        // 縦スクロールではなく横スワイプであることを確認
-        if (Math.abs(diffX) > 50 && Math.abs(diffX) > diffY) {
+        // 横スワイプの判定：50px以上かつ横方向が縦方向より大きい
+        if (absDiffX > 50 && absDiffX > diffY) {
           if (diffX > 0) {
             // 左にスワイプ（次へ）
             if (currentIndex < cards.length - 1) {
               currentIndex++;
               updateCarousel();
             }
-          } else {
+          } else if (diffX < 0) {
             // 右にスワイプ（前へ）
             if (currentIndex > 0) {
               currentIndex--;
@@ -104,12 +103,16 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         }
         
-        // リセット
-        startX = 0;
-        startY = 0;
-        currentX = 0;
-        currentY = 0;
-      }, { passive: true });
+        // 変数をリセット
+        touchStartX = 0;
+        touchStartY = 0;
+        touchEndX = 0;
+        touchEndY = 0;
+      };
+
+      tbody.addEventListener('touchstart', handleTouchStart, { passive: true });
+      tbody.addEventListener('touchmove', handleTouchMove, { passive: true });
+      tbody.addEventListener('touchend', handleTouchEnd, { passive: true });
     }
   }
 });
