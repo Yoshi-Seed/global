@@ -708,7 +708,7 @@
   /* Highlight first sentence */
   .testimonial-text .highlight-sentence {
     font-size: 1.15rem;
-    font-style: italic;
+    font-style: normal; /* イタリックを解除 */
     font-weight: 500;
   }
   
