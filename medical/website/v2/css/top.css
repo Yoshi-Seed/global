@@ -572,6 +572,31 @@
     padding-top: 0 !important;
   }
 
+  /* モバイル版：ヒーロー説明文を左揃えに＋単語間隔を最適化 */
+  .hero-description {
+    text-align: left !important;
+    text-justify: auto !important;
+    word-spacing: normal !important; /* 単語間隔を標準に */
+    word-break: keep-all; /* 単語の途中で改行しない */
+    overflow-wrap: break-word; /* 長い単語は適切に折り返す */
+    line-height: 1.6; /* 行間を適切に調整 */
+  }
+
+  /* モバイル版：結合されたテキストを表示（アニメーション無効化） */
+  .hero-description .slide-combined {
+    display: inline !important;
+    margin-bottom: 0 !important;
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  
+  /* すべてのhero-description内のspanをinlineに */
+  p.hero-description span {
+    display: inline !important;
+    margin-bottom: 0 !important;
+  }
+
   .why-seed-section {
     padding: 60px 0;
   }
