@@ -294,6 +294,11 @@
     color: var(--primary-text);
     text-align: left;
   }
+  
+  /* Mobile: Hide Ovarian cancer button */
+  .microsite-btn--ovarian {
+    display: none !important;
+  }
 
   /* Mobile: Microsites section - ボタンが境界線上に配置されるよう設定 */
   .microsites-section {
