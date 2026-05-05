@@ -574,10 +574,8 @@
 
   /* モバイル版：ヒーロー説明文を両端揃えに＋単語間隔を最適化 */
   .hero-description {
-    text-align: justify !important; /* 両端揃えに */
-    text-align-last: left !important; /* 最終行は左揃え */
-    text-justify: inter-word !important; /* 単語間で調整 */
-    word-spacing: -0.05em !important; /* 単語間隔を少し詰める */
+    text-align: center !important; /* 中央揃えに */
+    word-spacing: normal !important; /* 単語間隔を標準に */
     word-break: keep-all; /* 単語の途中で改行しない */
     overflow-wrap: break-word; /* 長い単語は適切に折り返す */
     line-height: 1.6; /* 行間を適切に調整 */
