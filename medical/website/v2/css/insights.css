@@ -729,7 +729,7 @@ button#clearFilters:hover,
   #searchInput {
     width: 100%;
     padding: 14px 16px;
-    font-size: 0.95rem;
+    font-size: 16px; /* 16px以上でズームを防ぐ */
     box-sizing: border-box;
     min-height: 48px; /* タップしやすいサイズ */
     border-radius: 12px;
@@ -738,7 +738,7 @@ button#clearFilters:hover,
   }
   
   #searchInput::placeholder {
-    font-size: 0.9rem; /* プレースホルダーを少し小さく */
+    font-size: 16px; /* プレースホルダーも16px以上 */
   }
   
   /* Mobile: Search label styling */
