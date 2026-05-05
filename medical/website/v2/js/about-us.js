@@ -62,16 +62,22 @@ document.addEventListener('DOMContentLoaded', () => {
       // Touch swipe support
       let startX = 0;
       let currentX = 0;
+      let isDragging = false;
 
       tbody.addEventListener('touchstart', (e) => {
         startX = e.touches[0].clientX;
-      });
+        isDragging = true;
+      }, { passive: true });
 
       tbody.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
         currentX = e.touches[0].clientX;
-      });
+      }, { passive: true });
 
       tbody.addEventListener('touchend', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        
         const diffX = startX - currentX;
         if (Math.abs(diffX) > 50) {
           if (diffX > 0 && currentIndex < cards.length - 1) {
@@ -81,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
           }
           updateCarousel();
         }
-      });
+      }, { passive: true });
     }
   }
 });
