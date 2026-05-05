@@ -583,15 +583,21 @@
   }
 
   /* モバイル版：2つの文を改行なしで続けて表示 */
-  .hero-section .hero-text .hero-description .slide-left,
-  .hero-section .hero-text .hero-description .slide-right {
+  .hero-description .slide-left,
+  .hero-description .slide-right {
     display: inline !important; /* blockからinlineに変更 */
     margin-bottom: 0 !important; /* 下マージンを削除 */
   }
   
-  /* 念のため、より汎用的なセレクタも追加 */
-  .hero-description span.slide-left,
-  .hero-description span.slide-right {
+  /* より具体的なセレクタで確実に適用 */
+  .hero-content .hero-text .hero-description span.slide-left,
+  .hero-content .hero-text .hero-description span.slide-right {
+    display: inline !important;
+    margin-bottom: 0 !important;
+  }
+  
+  /* spanタグ指定でさらに確実に */
+  p.hero-description span {
     display: inline !important;
     margin-bottom: 0 !important;
   }
