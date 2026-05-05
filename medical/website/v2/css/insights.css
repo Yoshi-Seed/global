@@ -782,7 +782,7 @@ button#clearFilters:hover,
     justify-content: center;
     flex: 0 0 auto; /* 横に伸びず、縮まず、必要最小限の幅 */
     padding: 8px 16px; /* 上下8px、左右16px */
-    border: 0.5px solid #5b1a06; /* 細い枠線、色を#5b1a06に変更 */
+    border: 1px solid #5b1a06; /* しっかりした枠線、色を#5b1a06に変更 */
     border-radius: 25px; /* 楕円形 */
     background-color: transparent; /* 未選択時：透明 */
     color: #4A2B1D; /* 未選択時：茶色文字 */
