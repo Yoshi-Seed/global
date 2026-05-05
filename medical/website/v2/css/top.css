@@ -1590,6 +1590,17 @@
     font-size: 0.95rem;
   }
   
+  /* 住所リンクのスタイル（モバイルのみ） */
+  .contact-details .address-link {
+    text-decoration: underline;
+    text-decoration-color: rgba(91, 26, 6, 0.3);
+    text-underline-offset: 2px;
+  }
+  
+  .contact-details .address-link:hover {
+    text-decoration-color: rgba(91, 26, 6, 0.6);
+  }
+  
   .contact-icon-img {
     width: 24px;
     height: 24px;
