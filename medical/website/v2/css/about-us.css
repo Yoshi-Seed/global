@@ -639,11 +639,13 @@
     width: 100%;
     transition: transform 0.3s ease;
     background: transparent; /* 背景を透明に */
-    touch-action: pan-x; /* 横スワイプを有効化 */
+    touch-action: pan-y; /* 縦スクロールを許可、横スワイプは手動制御 */
     cursor: grab;
     -webkit-user-select: none; /* iOS用：テキスト選択を無効化 */
     user-select: none;
     pointer-events: auto; /* タッチ操作を有効化 */
+    will-change: transform; /* パフォーマンス最適化 */
+    position: relative; /* 位置指定を明示 */
   }
   
   .moderators-table tbody:active {
