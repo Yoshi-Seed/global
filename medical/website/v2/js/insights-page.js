@@ -421,16 +421,16 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const cardsHtml = displayReports.map(card => {
       const tags = (card.tags || []).map((t) => `<span class="tag-pill">${escapeHtml(t)}</span>`).join('');
+      const pdfLink = card.pdf ? escapeHtml(card.pdf) : '#';
       return `
         <article class="report-card">
           <div class="report-meta">
             <span class="report-number">#${escapeHtml(card.number)}</span>
-            <span class="report-date">${escapeHtml(card.date)}</span>
           </div>
           <h3 class="report-title">${escapeHtml(card.title)}</h3>
           <p class="report-summary">${escapeHtml(card.summary)}</p>
           <div class="report-tags">${tags}</div>
-          <a href="#" class="btn-learn-more">Download</a>
+          <a href="${pdfLink}" class="btn-learn-more" download>Download</a>
         </article>
       `;
     }).join('');
