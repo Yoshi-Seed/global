@@ -45,11 +45,16 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       const updateCarousel = () => {
-        // Use container width for consistent sliding (100% width per card)
+        // Calculate card width including margins (left + right)
         const containerWidth = tbody.parentElement.offsetWidth;
+        const cardMargins = 40; // 20px left + 20px right
+        const cardWidth = containerWidth - cardMargins;
         
-        // Transform tbody to slide cards (each card is 100% of container width)
-        tbody.style.transform = `translateX(-${currentIndex * containerWidth}px)`;
+        // Total width to slide = card width + margins
+        const slideWidth = containerWidth;
+        
+        // Transform tbody to slide cards
+        tbody.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
         
         // Update active dot
         const dots = dotsContainer.querySelectorAll('.dot');

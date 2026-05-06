@@ -652,11 +652,11 @@
 
   .moderators-table tr {
     display: block;
-    width: 100% !important; /* カード幅を100%に強制 */
-    min-width: 100%; /* 最小幅も100%に */
+    width: calc(100% - 40px) !important; /* カード幅を左右20pxずつ狭める */
+    min-width: calc(100% - 40px); /* 最小幅も同様に */
     flex-shrink: 0;
-    margin: 0; /* マージン削除 */
-    padding: 20px; /* パディングを確保 */
+    margin: 0 20px; /* 左右に20pxの余白 */
+    padding: 16px; /* パディングを縮小 */
     background: #fff6ea; /* 薄いベージュ */
     border: none; /* 枠線削除 */
     border-radius: 12px;
@@ -666,10 +666,10 @@
   .moderators-table td {
     display: block;
     border-bottom: 1px solid rgba(91, 26, 6, 0.08); /* 薄い区切り線 */
-    padding: 10px 0;
+    padding: 8px 0; /* パディングを縮小 */
     text-align: left;
-    font-size: 14px; /* フォントサイズをピクセル指定 */
-    line-height: 1.4;
+    font-size: 12px; /* フォントサイズを縮小 */
+    line-height: 1.5; /* 行間を少し広げる */
     word-wrap: break-word; /* 長い単語を改行 */
     overflow-wrap: break-word; /* 長いテキストを改行 */
     white-space: normal !important; /* 自動改行を強制 */
@@ -684,8 +684,8 @@
     font-weight: 700;
     color: #4e613f;
     display: block;
-    margin-bottom: 4px;
-    font-size: 12px; /* ラベルサイズをピクセル指定 */
+    margin-bottom: 3px;
+    font-size: 11px; /* ラベルサイズを縮小 */
   }
 
   .moderators-table td:last-child {
@@ -721,17 +721,20 @@
 /* iPhone専用の最適化（390px以下） */
 @media (max-width: 390px) {
   .moderators-table tr {
-    padding: 16px !important; /* パディングを少し縮小 */
+    padding: 14px !important; /* パディングをさらに縮小 */
+    width: calc(100% - 32px) !important; /* さらに余白を確保 */
+    min-width: calc(100% - 32px);
+    margin: 0 16px; /* 左右に16pxの余白 */
   }
 
   .moderators-table td {
-    font-size: 13px !important; /* フォントサイズをさらに小さく */
-    line-height: 1.35;
-    padding: 8px 0;
+    font-size: 11px !important; /* フォントサイズをさらに小さく */
+    line-height: 1.5;
+    padding: 7px 0;
   }
 
   .moderators-table td:before {
-    font-size: 11px !important; /* ラベルサイズを小さく */
-    margin-bottom: 3px;
+    font-size: 10px !important; /* ラベルサイズを小さく */
+    margin-bottom: 2px;
   }
 }
