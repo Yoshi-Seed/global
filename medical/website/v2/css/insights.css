@@ -448,72 +448,11 @@
 
 .report-carousel-section .carousel-container {
   display: flex;
-  transition: transform 0.5s ease;
-}
-
-.report-carousel-section .carousel-slide {
-  min-width: 100%;
-  padding: 0 10px;
-  box-sizing: border-box;
-  display: flex;
   gap: 20px;
   justify-content: center;
-}
-
-.report-carousel-section .carousel-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 40px;
-}
-
-.report-carousel-section .carousel-btn.carousel-prev {
-  order: 1;
-  display: none;
-}
-
-.report-carousel-section .carousel-dots {
-  display: flex;
-  order: 2;
-  margin-top: 0;
-  gap: 12px;
-}
-
-.report-carousel-section .carousel-btn.carousel-next {
-  order: 3;
-  display: none;
-}
-
-.report-carousel-section .carousel-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: rgba(249, 229, 193, 0.2);
-  border: 2px solid rgba(249, 229, 193, 0.4);
-  color: #f9e5c1;
-  font-size: 0.9rem;
-}
-
-.report-carousel-section .carousel-btn:hover {
-  background-color: rgba(249, 229, 193, 0.3);
-  border-color: rgba(249, 229, 193, 0.6);
-}
-
-.report-carousel-section .carousel-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: rgba(249, 229, 193, 0.3);
-  border: none;
-  padding: 0;
-  transition: all 0.3s ease;
-}
-
-.report-carousel-section .carousel-dot.active {
-  background-color: #f9e5c1;
-  width: 12px;
-  border-radius: 50%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 .report-card {
@@ -942,22 +881,18 @@ button#clearFilters:hover,
     margin-left: 0; /* ボタンを左揃え */
   }
 
-  /* Mobile: Report card carousel - one card at a time, more square-like */
-  .report-carousel-section .carousel-slide {
-    padding: 0 20px; /* 左右に余白を追加 */
-    display: block !important; /* flexを解除してblock表示 */
+  /* Mobile: Report cards - display 2 cards vertically */
+  .report-carousel-section .carousel-container {
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 20px;
   }
 
   .report-card {
-    max-width: 100%; /* 画面幅いっぱい */
-    width: 100% !important; /* 幅を100%に強制 */
-    min-height: auto; /* 高さを自動調整 */
-    aspect-ratio: auto; /* アスペクト比を自由に */
-  }
-  
-  /* モバイルでは1枚目のカードのみ表示 */
-  .report-carousel-section .carousel-slide .report-card:nth-child(n+2) {
-    display: none !important;
+    max-width: 100%;
+    width: 100%;
+    min-height: auto;
+    aspect-ratio: auto;
   }
 
   .report-title {

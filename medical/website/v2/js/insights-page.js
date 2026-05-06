@@ -413,40 +413,29 @@ document.addEventListener('DOMContentLoaded', () => {
     grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 
-  // ---------- Report carousel ----------
+  // ---------- Report cards (static, no carousel) ----------
   const reportContainer = document.getElementById('reportCarouselContainer');
   if (reportContainer) {
-    // Mobile: 1 card per slide; Desktop: 2 cards per slide
-    const cardsPerSlide = isMobile() ? 1 : 2;
-    const slides = [];
+    // Show only first 2 reports (Japanese physicians prescribing & Japan's reimbursement)
+    const displayReports = reportSummaries.slice(0, 2);
     
-    for (let i = 0; i < reportSummaries.length; i += cardsPerSlide) {
-      const cardsInSlide = reportSummaries.slice(i, i + cardsPerSlide);
-      
-      const cardsHtml = cardsInSlide.map(card => {
-        const tags = (card.tags || []).map((t) => `<span class="tag-pill">${escapeHtml(t)}</span>`).join('');
-        return `
-          <article class="report-card">
-            <div class="report-meta">
-              <span class="report-number">#${escapeHtml(card.number)}</span>
-              <span class="report-date">${escapeHtml(card.date)}</span>
-            </div>
-            <h3 class="report-title">${escapeHtml(card.title)}</h3>
-            <p class="report-summary">${escapeHtml(card.summary)}</p>
-            <div class="report-tags">${tags}</div>
-            <a href="#" class="btn-learn-more">Download</a>
-          </article>
-        `;
-      }).join('');
-      
-      slides.push(`
-        <div class="carousel-slide">
-          ${cardsHtml}
-        </div>
-      `);
-    }
+    const cardsHtml = displayReports.map(card => {
+      const tags = (card.tags || []).map((t) => `<span class="tag-pill">${escapeHtml(t)}</span>`).join('');
+      return `
+        <article class="report-card">
+          <div class="report-meta">
+            <span class="report-number">#${escapeHtml(card.number)}</span>
+            <span class="report-date">${escapeHtml(card.date)}</span>
+          </div>
+          <h3 class="report-title">${escapeHtml(card.title)}</h3>
+          <p class="report-summary">${escapeHtml(card.summary)}</p>
+          <div class="report-tags">${tags}</div>
+          <a href="#" class="btn-learn-more">Download</a>
+        </article>
+      `;
+    }).join('');
     
-    reportContainer.innerHTML = slides.join('');
+    reportContainer.innerHTML = cardsHtml;
   }
 
   // First render
