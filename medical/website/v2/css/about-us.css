@@ -646,7 +646,7 @@
     min-width: calc(100% - 40px); /* 左右に余白 */
     flex-shrink: 0;
     margin: 0 20px; /* 左右余白 */
-    padding: 30px; /* 内側余白をたっぷり */
+    padding: 20px; /* 内側余白を縮小 */
     background: #fff6ea; /* 薄いベージュ */
     border: none; /* 枠線削除 */
     border-radius: 12px;
@@ -656,10 +656,10 @@
   .moderators-table td {
     display: block;
     border-bottom: 1px solid rgba(91, 26, 6, 0.08); /* 薄い区切り線 */
-    padding: 12px 0;
+    padding: 8px 0;
     text-align: left;
-    font-size: 0.85rem; /* モバイルでのフォントサイズをさらに縮小 */
-    line-height: 1.4;
+    font-size: 0.8rem; /* モバイルでのフォントサイズをさらに縮小 */
+    line-height: 1.35;
     word-wrap: break-word; /* 長い単語を改行 */
     overflow-wrap: break-word; /* 長いテキストを改行 */
     white-space: normal; /* 自動改行を有効化 */
@@ -672,8 +672,8 @@
     font-weight: 700;
     color: #4e613f;
     display: block;
-    margin-bottom: 4px;
-    font-size: 0.75rem;
+    margin-bottom: 3px;
+    font-size: 0.7rem;
   }
 
   .moderators-table td:last-child {
