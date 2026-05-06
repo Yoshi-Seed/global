@@ -624,12 +624,13 @@
     display: none !important;
   }
 
-  /* Mobile: モデレーターカルーセル */
+  /* Mobile: モデレーターカルーセル - 左右余白あり、スクロール廃止 */
   .moderators-carousel-container {
     position: relative;
-    width: 100%;
-    overflow: hidden !important; /* はみ出しを強制カット */
-    padding: 40px 0;
+    width: 85% !important; /* 左右に余白を確保 */
+    margin: 0 auto !important; /* 中央寄せ */
+    overflow: visible !important; /* カード外のドットを表示 */
+    padding: 40px 0 60px 0; /* 下に余白を追加してドット用スペース確保 */
     box-sizing: border-box;
   }
 
@@ -642,15 +643,15 @@
   }
 
   .moderator-card {
-    width: 100% !important; /* 幅を強制リセット */
+    width: 100% !important;
     min-width: 100%;
     max-width: 100%;
-    padding: 0 20px;
-    margin: 0 !important; /* マージンをリセット */
+    padding: 0;
+    margin: 0 !important;
     box-sizing: border-box !important;
     flex-shrink: 0;
     display: flex;
-    justify-content: center; /* 中央配置を強制 */
+    justify-content: center;
     align-items: flex-start;
   }
 
@@ -658,9 +659,13 @@
     background: #fff6ea; /* 単一背景色のみ */
     border-radius: 40px;
     padding: 40px 30px;
-    box-shadow: none; /* 影を削除 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* 軽い影を追加 */
     width: 100%;
     max-width: 100%;
+    height: auto !important; /* 固定高さを廃止、自動調整 */
+    min-height: auto !important; /* 最小高さも自動 */
+    max-height: none !important; /* 最大高さ制限を削除 */
+    overflow: visible !important; /* カード内スクロールを完全廃止 */
     box-sizing: border-box !important;
     margin: 0 !important;
   }
@@ -669,6 +674,7 @@
     margin-bottom: 24px;
     box-sizing: border-box !important;
     width: 100%;
+    overflow: visible !important; /* テキストの見切れ防止 */
   }
 
   .moderator-field:last-child {
@@ -683,6 +689,7 @@
     display: block;
     word-wrap: break-word;
     overflow-wrap: break-word;
+    white-space: normal !important; /* 改行を許可 */
   }
 
   .moderator-value {
@@ -693,7 +700,8 @@
     border-bottom: 1px solid rgba(112, 72, 50, 0.15);
     word-wrap: break-word;
     overflow-wrap: break-word;
-    white-space: normal;
+    white-space: normal !important; /* 改行を許可 */
+    overflow: visible !important; /* テキストの見切れ防止 */
   }
 
   .moderator-field:last-child .moderator-value {
@@ -701,14 +709,17 @@
     padding-bottom: 0;
   }
 
-  /* Mobile: カルーセルドット - カード外に配置 */
+  /* Mobile: カルーセルドット - カード完全外側に配置 */
   .moderators-carousel-dots {
     display: flex !important;
     justify-content: center;
     gap: 8px;
-    margin-top: 20px;
+    margin-top: 30px;
     padding: 0;
-    position: relative;
+    position: absolute !important;
+    bottom: 10px !important; /* カードコンテナの下側外に配置 */
+    left: 50% !important;
+    transform: translateX(-50%) !important;
     z-index: 10;
   }
 
