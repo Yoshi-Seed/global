@@ -606,6 +606,13 @@
     z-index: 10 !important;
   }
 
+  /* Mobile: Moderators content - パディング削除 */
+  .moderators-content .container {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    max-width: 100% !important;
+  }
+
   /* Mobile: Moderators table - カルーセル形式 */
   .moderators-table-wrap {
     overflow: hidden; /* カルーセル用にオーバーフローを隠す */
@@ -613,6 +620,7 @@
     background: transparent; /* 背景を透明に */
     border: none; /* 枠線削除 */
     padding: 0; /* 余計な余白削除 */
+    margin: 0; /* マージン削除 */
     touch-action: pan-y; /* 縦スクロールは許可、横スワイプを有効化 */
   }
 
@@ -643,10 +651,10 @@
 
   .moderators-table tr {
     display: block;
-    min-width: calc(100% - 40px); /* 左右に余白 */
+    width: 100%; /* カード幅を100%に */
     flex-shrink: 0;
-    margin: 0 20px; /* 左右余白 */
-    padding: 20px; /* 内側余白を縮小 */
+    margin: 0; /* マージン削除 */
+    padding: 16px; /* パディングをさらに縮小 */
     background: #fff6ea; /* 薄いベージュ */
     border: none; /* 枠線削除 */
     border-radius: 12px;
