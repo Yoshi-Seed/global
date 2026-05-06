@@ -91,9 +91,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Replace table with carousel
     tableWrap.innerHTML = carouselHTML;
     
+    // Re-query dots container after HTML replacement
+    const newDotsContainer = document.getElementById('moderatorsDots');
+    
     // Clear and recreate dots
-    if (dotsContainer) {
-      dotsContainer.innerHTML = '';
+    if (newDotsContainer) {
+      newDotsContainer.innerHTML = '';
       moderators.forEach((_, index) => {
         const dot = document.createElement('button');
         dot.className = 'dot';
@@ -103,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
           currentIndex = index;
           updateCarousel();
         });
-        dotsContainer.appendChild(dot);
+        newDotsContainer.appendChild(dot);
       });
     }
     
@@ -116,9 +119,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const cardWidth = carousel.offsetWidth;
       carousel.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
       
-      // Update dots
-      if (dotsContainer) {
-        const dots = dotsContainer.querySelectorAll('.dot');
+      // Update dots - use newDotsContainer reference
+      const dotsElement = document.getElementById('moderatorsDots');
+      if (dotsElement) {
+        const dots = dotsElement.querySelectorAll('.dot');
         dots.forEach((dot, index) => {
           dot.classList.toggle('active', index === currentIndex);
         });
