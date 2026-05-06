@@ -607,10 +607,16 @@
   }
 
   /* Mobile: Moderators content - パディング削除 */
+  .moderators-content {
+    overflow: hidden !important; /* 外側でもはみ出しを防止 */
+  }
+  
   .moderators-content .container {
     padding-left: 0 !important;
     padding-right: 0 !important;
     max-width: 100% !important;
+    overflow: hidden !important;
+    box-sizing: border-box;
   }
 
   /* Mobile: Moderators table - PC版テーブルを非表示 */
@@ -622,32 +628,47 @@
   .moderators-carousel-container {
     position: relative;
     width: 100%;
-    overflow: hidden;
+    overflow: hidden !important; /* はみ出しを強制カット */
     padding: 40px 0;
+    box-sizing: border-box;
   }
 
   .moderators-carousel-wrapper {
     display: flex;
     transition: transform 0.3s ease;
     touch-action: pan-y;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .moderator-card {
+    width: 100% !important; /* 幅を強制リセット */
     min-width: 100%;
+    max-width: 100%;
     padding: 0 20px;
-    box-sizing: border-box;
+    margin: 0 !important; /* マージンをリセット */
+    box-sizing: border-box !important;
     flex-shrink: 0;
+    display: flex;
+    justify-content: center; /* 中央配置を強制 */
+    align-items: flex-start;
   }
 
   .moderator-card-inner {
-    background: #fff6ea;
+    background: #fff6ea; /* 単一背景色のみ */
     border-radius: 40px;
     padding: 40px 30px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: none; /* 影を削除 */
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box !important;
+    margin: 0 !important;
   }
 
   .moderator-field {
     margin-bottom: 24px;
+    box-sizing: border-box !important;
+    width: 100%;
   }
 
   .moderator-field:last-child {
@@ -660,6 +681,8 @@
     color: #4e613f;
     margin-bottom: 8px;
     display: block;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   .moderator-value {
@@ -668,6 +691,9 @@
     color: #704832;
     padding-bottom: 16px;
     border-bottom: 1px solid rgba(112, 72, 50, 0.15);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
   }
 
   .moderator-field:last-child .moderator-value {
@@ -703,9 +729,14 @@
 
 /* iPhone専用の最適化（390px以下） */
 @media (max-width: 390px) {
+  .moderator-card {
+    padding: 0 16px !important;
+  }
+
   .moderator-card-inner {
     padding: 30px 24px;
     border-radius: 32px;
+    box-sizing: border-box !important;
   }
 
   .moderator-label {
