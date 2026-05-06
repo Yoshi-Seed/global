@@ -701,18 +701,20 @@
     padding-bottom: 0;
   }
 
-  /* Mobile: カルーセルドット */
+  /* Mobile: カルーセルドット - カード外に配置 */
   .moderators-carousel-dots {
     display: flex !important;
     justify-content: center;
-    gap: 10px;
-    margin-top: 30px;
+    gap: 8px;
+    margin-top: 20px;
     padding: 0;
+    position: relative;
+    z-index: 10;
   }
 
   .moderators-carousel-dots .dot {
-    width: 12px;
-    height: 12px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     background-color: #a8b89e;
     border: none;
@@ -723,7 +725,7 @@
 
   .moderators-carousel-dots .dot.active {
     background-color: #4e613f;
-    transform: scale(1.2);
+    transform: scale(1.3);
   }
 }
 
