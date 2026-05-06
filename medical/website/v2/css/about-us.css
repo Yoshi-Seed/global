@@ -613,15 +613,106 @@
     max-width: 100% !important;
   }
 
-  /* Mobile: Moderators table - 完全非表示 */
-  .moderators-table-wrap {
-    display: none !important; /* モバイル版では完全に非表示 */
+  /* Mobile: Moderators table - PC版テーブルを非表示 */
+  .moderators-table {
+    display: none !important;
   }
 
-  /* Mobile: モデレーターカルーセルドット - 非表示 */
+  /* Mobile: モデレーターカルーセル */
+  .moderators-carousel-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 40px 0;
+  }
+
+  .moderators-carousel-wrapper {
+    display: flex;
+    transition: transform 0.3s ease;
+    touch-action: pan-y;
+  }
+
+  .moderator-card {
+    min-width: 100%;
+    padding: 0 20px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+  }
+
+  .moderator-card-inner {
+    background: #fff6ea;
+    border-radius: 40px;
+    padding: 40px 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .moderator-field {
+    margin-bottom: 24px;
+  }
+
+  .moderator-field:last-child {
+    margin-bottom: 0;
+  }
+
+  .moderator-label {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #4e613f;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .moderator-value {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #704832;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(112, 72, 50, 0.15);
+  }
+
+  .moderator-field:last-child .moderator-value {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  /* Mobile: カルーセルドット */
   .moderators-carousel-dots {
-    display: none !important; /* モバイル版では完全に非表示 */
+    display: flex !important;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 30px;
+    padding: 0;
+  }
+
+  .moderators-carousel-dots .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #a8b89e;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+  }
+
+  .moderators-carousel-dots .dot.active {
+    background-color: #4e613f;
+    transform: scale(1.2);
   }
 }
 
-/* iPhone専用の最適化（390px以下） - モバイル版ではテーブル非表示のため不要 */
+/* iPhone専用の最適化（390px以下） */
+@media (max-width: 390px) {
+  .moderator-card-inner {
+    padding: 30px 24px;
+    border-radius: 32px;
+  }
+
+  .moderator-label {
+    font-size: 1rem;
+  }
+
+  .moderator-value {
+    font-size: 0.95rem;
+  }
+}
