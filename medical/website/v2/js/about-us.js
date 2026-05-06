@@ -45,8 +45,15 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       const updateCarousel = () => {
+        // Calculate the width of each card including margins
+        const card = cards[0];
+        const cardWidth = card.offsetWidth;
+        const marginLeft = parseInt(window.getComputedStyle(card).marginLeft);
+        const marginRight = parseInt(window.getComputedStyle(card).marginRight);
+        const totalCardWidth = cardWidth + marginLeft + marginRight;
+        
         // Transform tbody to slide cards
-        tbody.style.transform = `translateX(-${currentIndex * 100}%)`;
+        tbody.style.transform = `translateX(-${currentIndex * totalCardWidth}px)`;
         
         // Update active dot
         const dots = dotsContainer.querySelectorAll('.dot');
