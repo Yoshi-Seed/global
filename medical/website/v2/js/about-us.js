@@ -45,15 +45,11 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       const updateCarousel = () => {
-        // Calculate the width of each card including margins
-        const card = cards[0];
-        const cardWidth = card.offsetWidth;
-        const marginLeft = parseInt(window.getComputedStyle(card).marginLeft);
-        const marginRight = parseInt(window.getComputedStyle(card).marginRight);
-        const totalCardWidth = cardWidth + marginLeft + marginRight;
+        // Use container width for consistent sliding (100% width per card)
+        const containerWidth = tbody.parentElement.offsetWidth;
         
-        // Transform tbody to slide cards
-        tbody.style.transform = `translateX(-${currentIndex * totalCardWidth}px)`;
+        // Transform tbody to slide cards (each card is 100% of container width)
+        tbody.style.transform = `translateX(-${currentIndex * containerWidth}px)`;
         
         // Update active dot
         const dots = dotsContainer.querySelectorAll('.dot');
@@ -66,45 +62,65 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       };
 
-      // Touch swipe support - optimized for iOS
+      // Touch swipe support - optimized for iOS (enhanced)
       let touchStartX = 0;
       let touchStartY = 0;
       let touchEndX = 0;
       let touchEndY = 0;
       let isSwiping = false;
+      let touchStartTime = 0;
 
       tbody.addEventListener('touchstart', (e) => {
-        touchStartX = e.changedTouches[0].clientX;
-        touchStartY = e.changedTouches[0].clientY;
+        // Use touches[0] for better iOS compatibility
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
         touchEndX = touchStartX;
         touchEndY = touchStartY;
+        touchStartTime = Date.now();
         isSwiping = true;
+        tbody.style.transition = 'none'; // Disable transition during swipe
       }, { passive: true });
 
       tbody.addEventListener('touchmove', (e) => {
         if (!isSwiping) return;
-        touchEndX = e.changedTouches[0].clientX;
-        touchEndY = e.changedTouches[0].clientY;
-      }, { passive: true });
-
-      tbody.addEventListener('touchend', (e) => {
-        if (!isSwiping) return;
-        isSwiping = false;
+        touchEndX = e.touches[0].clientX;
+        touchEndY = e.touches[0].clientY;
         
         const diffX = touchStartX - touchEndX;
         const diffY = Math.abs(touchStartY - touchEndY);
         const absDiffX = Math.abs(diffX);
         
-        // 横スワイプの判定：30px以上かつ横方向が縦方向より大きい
-        if (absDiffX > 30 && absDiffX > diffY * 1.5) {
+        // Prevent vertical scroll if horizontal swipe is detected
+        if (absDiffX > diffY && absDiffX > 10) {
+          e.preventDefault();
+        }
+      }, { passive: false }); // passive: false to allow preventDefault
+
+      tbody.addEventListener('touchend', (e) => {
+        if (!isSwiping) return;
+        isSwiping = false;
+        
+        tbody.style.transition = 'transform 0.3s ease'; // Re-enable transition
+        
+        const diffX = touchStartX - touchEndX;
+        const diffY = Math.abs(touchStartY - touchEndY);
+        const absDiffX = Math.abs(diffX);
+        const swipeTime = Date.now() - touchStartTime;
+        
+        // More sensitive swipe detection for iPhone
+        // Accept if: moved > 40px OR fast swipe (< 300ms and > 20px)
+        const isValidSwipe = (absDiffX > 40 && absDiffX > diffY) || 
+                            (swipeTime < 300 && absDiffX > 20 && absDiffX > diffY);
+        
+        if (isValidSwipe) {
           if (diffX > 0) {
-            // 左にスワイプ（次へ）
+            // Left swipe (next)
             if (currentIndex < cards.length - 1) {
               currentIndex++;
               updateCarousel();
             }
-          } else if (diffX < 0) {
-            // 右にスワイプ（前へ）
+          } else {
+            // Right swipe (previous)
             if (currentIndex > 0) {
               currentIndex--;
               updateCarousel();
@@ -112,11 +128,12 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         }
         
-        // 変数をリセット
+        // Reset variables
         touchStartX = 0;
         touchStartY = 0;
         touchEndX = 0;
         touchEndY = 0;
+        touchStartTime = 0;
       }, { passive: true });
     }
   }
