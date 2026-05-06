@@ -624,13 +624,13 @@
     display: none !important;
   }
 
-  /* Mobile: モデレーターカルーセル - 左右余白あり、スクロール廃止 */
+  /* Mobile: モデレーターカルーセル - フルスクリーン表示 */
   .moderators-carousel-container {
     position: relative;
-    width: 85% !important; /* 左右に余白を確保 */
-    margin: 0 auto !important; /* 中央寄せ */
-    overflow: visible !important; /* カード外のドットを表示 */
-    padding: 40px 0 60px 0; /* 下に余白を追加してドット用スペース確保 */
+    width: 100% !important; /* 画面いっぱいに表示 */
+    margin: 0 !important;
+    overflow: hidden !important;
+    padding: 0 !important; /* 全ての余白を削除 */
     box-sizing: border-box;
   }
 
@@ -646,7 +646,7 @@
     width: 100% !important;
     min-width: 100%;
     max-width: 100%;
-    padding: 0;
+    padding: 0 !important; /* パディングを完全削除 */
     margin: 0 !important;
     box-sizing: border-box !important;
     flex-shrink: 0;
@@ -657,9 +657,9 @@
 
   .moderator-card-inner {
     background: #fff6ea; /* 単一背景色のみ */
-    border-radius: 40px;
+    border-radius: 0 !important; /* 角丸を削除して画面端まで表示 */
     padding: 40px 30px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* 軽い影を追加 */
+    box-shadow: none !important; /* 影を削除 */
     width: 100%;
     max-width: 100%;
     height: auto !important; /* 固定高さを廃止、自動調整 */
@@ -709,34 +709,9 @@
     padding-bottom: 0;
   }
 
-  /* Mobile: カルーセルドット - カード完全外側に配置 */
+  /* Mobile: カルーセルドットを完全に非表示 */
   .moderators-carousel-dots {
-    display: flex !important;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 30px;
-    padding: 0;
-    position: absolute !important;
-    bottom: 10px !important; /* カードコンテナの下側外に配置 */
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    z-index: 10;
-  }
-
-  .moderators-carousel-dots .dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: #a8b89e;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    padding: 0;
-  }
-
-  .moderators-carousel-dots .dot.active {
-    background-color: #4e613f;
-    transform: scale(1.3);
+    display: none !important;
   }
 }
 
