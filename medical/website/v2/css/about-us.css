@@ -613,130 +613,15 @@
     max-width: 100% !important;
   }
 
-  /* Mobile: Moderators table - カルーセル形式 */
+  /* Mobile: Moderators table - 完全非表示 */
   .moderators-table-wrap {
-    overflow: hidden; /* カルーセル用にオーバーフローを隠す */
-    position: relative;
-    background: transparent; /* 背景を透明に */
-    border: none; /* 枠線削除 */
-    padding: 0; /* 余計な余白削除 */
-    margin: 0; /* マージン削除 */
-    touch-action: pan-y; /* 縦スクロールは許可、横スワイプを有効化 */
+    display: none !important; /* モバイル版では完全に非表示 */
   }
 
-  .moderators-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: transparent; /* 背景を透明に */
-  }
-
-  .moderators-table thead {
-    display: none; /* ヘッダーを非表示 */
-  }
-
-  .moderators-table tbody {
-    display: flex; /* カルーセル用にflex表示 */
-    width: 100%;
-    transition: transform 0.3s ease;
-    background: transparent; /* 背景を透明に */
-    touch-action: pan-y; /* 縦スクロールを許可、横スワイプは手動制御 */
-    cursor: grab;
-    -webkit-user-select: none; /* iOS用：テキスト選択を無効化 */
-    user-select: none;
-    pointer-events: auto; /* タッチ操作を有効化 */
-    will-change: transform; /* パフォーマンス最適化 */
-    position: relative; /* 位置指定を明示 */
-  }
-  
-  .moderators-table tbody:active {
-    cursor: grabbing;
-  }
-
-  .moderators-table tr {
-    display: block;
-    width: calc(100% - 40px) !important; /* カード幅を左右20pxずつ狭める */
-    min-width: calc(100% - 40px); /* 最小幅も同様に */
-    flex-shrink: 0;
-    margin: 0 20px; /* 左右に20pxの余白 */
-    padding: 16px; /* パディングを縮小 */
-    background: #fff6ea; /* 薄いベージュ */
-    border: none; /* 枠線削除 */
-    border-radius: 12px;
-    box-sizing: border-box;
-  }
-
-  .moderators-table td {
-    display: block;
-    border-bottom: 1px solid rgba(91, 26, 6, 0.08); /* 薄い区切り線 */
-    padding: 8px 0; /* パディングを縮小 */
-    text-align: left;
-    font-size: 12px; /* フォントサイズを縮小 */
-    line-height: 1.5; /* 行間を少し広げる */
-    word-wrap: break-word; /* 長い単語を改行 */
-    overflow-wrap: break-word; /* 長いテキストを改行 */
-    white-space: normal !important; /* 自動改行を強制 */
-    max-width: 100%; /* 幅制限 */
-    overflow: visible; /* テキストを表示 */
-    text-overflow: clip; /* 省略記号を削除 */
-  }
-
-  /* Mobile: 各セルの前にラベルを追加 */
-  .moderators-table td:before {
-    content: attr(data-label);
-    font-weight: 700;
-    color: #4e613f;
-    display: block;
-    margin-bottom: 3px;
-    font-size: 11px; /* ラベルサイズを縮小 */
-  }
-
-  .moderators-table td:last-child {
-    border-bottom: none; /* 最後のセルは区切り線なし */
-  }
-
-  /* Mobile: カルーセルドット */
+  /* Mobile: モデレーターカルーセルドット - 非表示 */
   .moderators-carousel-dots {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 24px;
-    padding: 0;
-    background: transparent; /* 背景を透明に */
-  }
-
-  .moderators-carousel-dots .dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: rgba(91, 26, 6, 0.3);
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-
-  .moderators-carousel-dots .dot.active {
-    background-color: #4e613f;
-    width: 10px;
+    display: none !important; /* モバイル版では完全に非表示 */
   }
 }
 
-/* iPhone専用の最適化（390px以下） */
-@media (max-width: 390px) {
-  .moderators-table tr {
-    padding: 14px !important; /* パディングをさらに縮小 */
-    width: calc(100% - 32px) !important; /* さらに余白を確保 */
-    min-width: calc(100% - 32px);
-    margin: 0 16px; /* 左右に16pxの余白 */
-  }
-
-  .moderators-table td {
-    font-size: 11px !important; /* フォントサイズをさらに小さく */
-    line-height: 1.5;
-    padding: 7px 0;
-  }
-
-  .moderators-table td:before {
-    font-size: 10px !important; /* ラベルサイズを小さく */
-    margin-bottom: 2px;
-  }
-}
+/* iPhone専用の最適化（390px以下） - モバイル版ではテーブル非表示のため不要 */
