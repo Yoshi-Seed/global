@@ -85,6 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
           `).join('')}
         </div>
       </div>
+      <div class="moderators-carousel-dots" id="moderatorsDots"></div>
     `;
     
     // Replace table with carousel
