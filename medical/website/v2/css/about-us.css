@@ -624,13 +624,13 @@
     display: none !important;
   }
 
-  /* Mobile: モデレーターカルーセル - フルスクリーン表示 */
+  /* Mobile: モデレーターカルーセル */
   .moderators-carousel-container {
     position: relative;
-    width: 100% !important; /* 画面いっぱいに表示 */
+    width: 100% !important;
     margin: 0 !important;
     overflow: hidden !important;
-    padding: 0 !important; /* 全ての余白を削除 */
+    padding: 0 20px !important; /* 左右に余白を確保 */
     box-sizing: border-box;
   }
 
@@ -656,10 +656,10 @@
   }
 
   .moderator-card-inner {
-    background: #fff6ea; /* 単一背景色のみ */
-    border-radius: 0 !important; /* 角丸を削除して画面端まで表示 */
+    background: #fff6ea;
+    border-radius: 20px !important; /* 角丸を追加 */
     padding: 40px 30px;
-    box-shadow: none !important; /* 影を削除 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important; /* 軽い影を追加 */
     width: 100%;
     max-width: 100%;
     height: auto !important; /* 固定高さを廃止、自動調整 */
