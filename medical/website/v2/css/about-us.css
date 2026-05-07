@@ -624,14 +624,15 @@
     display: none !important;
   }
 
-  /* Mobile: モデレーターカルーセル */
+  /* Mobile: モデレーターカルーセル - 画像デザイン準拠 */
   .moderators-carousel-container {
     position: relative;
     width: 100% !important;
     margin: 0 !important;
-    overflow: hidden !important;
-    padding: 0 !important; /* 外側の余白を削除 */
+    overflow: visible !important;
+    padding: 40px 20px 80px 20px !important; /* 上下に余白、下はドット用 */
     box-sizing: border-box;
+    background: #FDF5E6; /* 暖かみのあるベージュ */
   }
 
   .moderators-carousel-wrapper {
@@ -656,25 +657,25 @@
   }
 
   .moderator-card-inner {
-    background: #fff6ea;
-    border-radius: 20px !important; /* 角丸を追加 */
-    padding: 40px 30px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important; /* 軽い影を追加 */
+    background: #FFFEF8; /* 白に近いクリーム色 */
+    border-radius: 48px !important; /* 非常に大きな角丸 (3xl) */
+    padding: 50px 40px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important; /* より深い影 */
     width: 100%;
     max-width: 100%;
-    height: auto !important; /* 固定高さを廃止、自動調整 */
-    min-height: auto !important; /* 最小高さも自動 */
-    max-height: none !important; /* 最大高さ制限を削除 */
-    overflow: visible !important; /* カード内スクロールを完全廃止 */
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
     box-sizing: border-box !important;
-    margin: 0 !important;
+    margin: 0 auto !important;
   }
 
   .moderator-field {
-    margin-bottom: 24px;
+    margin-bottom: 28px;
     box-sizing: border-box !important;
     width: 100%;
-    overflow: visible !important; /* テキストの見切れ防止 */
+    overflow: visible !important;
   }
 
   .moderator-field:last-child {
@@ -682,26 +683,29 @@
   }
 
   .moderator-label {
-    font-size: 1.1rem;
+    font-size: 1.25rem;
     font-weight: 700;
-    color: #4e613f;
-    margin-bottom: 8px;
+    color: #4e5d0c; /* 濃いオリーブグリーン */
+    margin-bottom: 12px;
     display: block;
     word-wrap: break-word;
     overflow-wrap: break-word;
-    white-space: normal !important; /* 改行を許可 */
+    white-space: normal !important;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: -0.01em;
   }
 
   .moderator-value {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #704832;
-    padding-bottom: 16px;
-    border-bottom: 1px solid rgba(112, 72, 50, 0.15);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #5b3a29; /* 深みのあるブラウン */
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(91, 58, 41, 0.2); /* 細い横線 */
     word-wrap: break-word;
     overflow-wrap: break-word;
-    white-space: normal !important; /* 改行を許可 */
-    overflow: visible !important; /* テキストの見切れ防止 */
+    white-space: normal !important;
+    overflow: visible !important;
+    font-family: 'Montserrat', sans-serif;
   }
 
   .moderator-field:last-child .moderator-value {
@@ -709,9 +713,37 @@
     padding-bottom: 0;
   }
 
-  /* Mobile: カルーセルドットを完全に非表示 */
+  /* Mobile: カルーセルドット - 画像デザイン準拠 */
   .moderators-carousel-dots {
-    display: none !important;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    position: absolute !important;
+    bottom: 30px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 10;
+    padding: 0;
+    margin: 0;
+  }
+
+  .moderators-carousel-dots .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #b8c5a3; /* ライトグリーン */
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+    opacity: 0.6;
+  }
+
+  .moderators-carousel-dots .dot.active {
+    background-color: #4e613f; /* 濃い緑 */
+    transform: scale(1.15);
+    opacity: 1;
   }
 }
 
