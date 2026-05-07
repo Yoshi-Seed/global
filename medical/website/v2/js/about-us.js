@@ -158,12 +158,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         newDotsContainer.appendChild(dot);
       });
-    
-    // Touch swipe support
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchStartTime = 0;
-    let isSwiping = false;
+      
+      // Touch swipe support
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let touchStartTime = 0;
+      let isSwiping = false;
     
     carousel.addEventListener('touchstart', (e) => {
       touchStartX = e.touches[0].clientX;
@@ -227,8 +227,9 @@ document.addEventListener('DOMContentLoaded', () => {
       touchStartTime = 0;
     }, { passive: true });
     
-    // Initial state
-    updateCarousel();
+      // Initial state
+      updateCarousel();
+    }, 100); // Close setTimeout
   }
 
   // Initialize on page load if content is visible and mobile
