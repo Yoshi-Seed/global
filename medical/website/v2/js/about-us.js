@@ -30,9 +30,17 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const tableWrap = document.querySelector('.moderators-table-wrap');
     const table = document.querySelector('.moderators-table');
-    const dotsContainer = document.getElementById('moderatorsDots');
     
-    if (!tableWrap || !table) return;
+    if (!tableWrap || !table) {
+      console.error('Table wrap or table not found!');
+      return;
+    }
+    
+    // Check if carousel already exists
+    if (document.getElementById('moderatorsCarousel')) {
+      console.log('Carousel already initialized');
+      return;
+    }
     
     // Get moderator data from table
     const rows = table.querySelectorAll('tbody tr');
@@ -51,7 +59,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
     
-    if (moderators.length === 0) return;
+    console.log('Moderators data:', moderators);
+    
+    if (moderators.length === 0) {
+      console.error('No moderators data found!');
+      return;
+    }
     
     // Create carousel HTML
     const carouselHTML = `
@@ -91,11 +104,37 @@ document.addEventListener('DOMContentLoaded', () => {
     // Replace table with carousel
     tableWrap.innerHTML = carouselHTML;
     
-    // Re-query dots container after HTML replacement
-    const newDotsContainer = document.getElementById('moderatorsDots');
+    console.log('Carousel HTML inserted');
     
-    // Clear and recreate dots
-    if (newDotsContainer) {
+    // Wait for DOM update
+    setTimeout(() => {
+      // Re-query elements after HTML replacement
+      const carousel = document.getElementById('moderatorsCarousel');
+      const newDotsContainer = document.getElementById('moderatorsDots');
+      
+      if (!carousel || !newDotsContainer) {
+        console.error('Carousel or dots container not found after insertion!');
+        return;
+      }
+      
+      const cards = carousel.querySelectorAll('.moderator-card');
+      let currentIndex = 0;
+      
+      console.log('Carousel elements found:', { carousel, cards: cards.length, dots: newDotsContainer });
+      
+      const updateCarousel = () => {
+        const cardWidth = carousel.offsetWidth;
+        carousel.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+        console.log('Update carousel:', { currentIndex, cardWidth });
+        
+        // Update dots
+        const dots = newDotsContainer.querySelectorAll('.dot');
+        dots.forEach((dot, index) => {
+          dot.classList.toggle('active', index === currentIndex);
+        });
+      };
+      
+      // Clear and recreate dots
       newDotsContainer.innerHTML = '';
       moderators.forEach((_, index) => {
         const dot = document.createElement('button');
@@ -108,26 +147,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         newDotsContainer.appendChild(dot);
       });
-    }
-    
-    // Initialize carousel functionality
-    const carousel = document.getElementById('moderatorsCarousel');
-    const cards = carousel.querySelectorAll('.moderator-card');
-    let currentIndex = 0;
-    
-    const updateCarousel = () => {
-      const cardWidth = carousel.offsetWidth;
-      carousel.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
-      
-      // Update dots - use newDotsContainer reference
-      const dotsElement = document.getElementById('moderatorsDots');
-      if (dotsElement) {
-        const dots = dotsElement.querySelectorAll('.dot');
-        dots.forEach((dot, index) => {
-          dot.classList.toggle('active', index === currentIndex);
-        });
-      }
-    };
     
     // Touch swipe support
     let touchStartX = 0;
