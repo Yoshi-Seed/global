@@ -744,6 +744,12 @@
     transform: scale(1.15);
     opacity: 1;
   }
+
+  /* Mobile: moderators-note に左右のパディングを追加 */
+  .moderators-note {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
 }
 
 /* iPhone専用の最適化（390px以下） */
