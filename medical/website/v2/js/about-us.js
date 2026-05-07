@@ -3,10 +3,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const trigger = document.getElementById('moderators-trigger');
   const content = document.getElementById('moderators-content');
 
+  console.log('DOM loaded', { trigger, content });
+
   if (trigger && content) {
-    trigger.addEventListener('click', () => {
+    console.log('Trigger and content found, adding click listener');
+    
+    trigger.addEventListener('click', (e) => {
+      console.log('Trigger clicked!', e);
+      
       const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
       trigger.setAttribute('aria-expanded', String(!isExpanded));
+
+      console.log('Toggle expansion:', { isExpanded, newState: !isExpanded });
 
       if (isExpanded) {
         content.hidden = true;
@@ -16,12 +24,15 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Initialize mobile carousel after content is visible
         if (window.innerWidth <= 768) {
+          console.log('Mobile detected, initializing carousel');
           setTimeout(() => {
             initMobileCarousel();
           }, 100);
         }
       }
     });
+  } else {
+    console.error('Trigger or content not found!', { trigger, content });
   }
 
   // Mobile: Create moderator carousel from table data
