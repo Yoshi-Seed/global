@@ -768,6 +768,7 @@
   .moderators-note {
     padding-left: 20px !important;
     padding-right: 20px !important;
+    margin-top: 20px !important; /* ドットとの間隔を狭くする */
   }
 }
 
