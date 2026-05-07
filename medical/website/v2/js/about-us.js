@@ -134,9 +134,12 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log('Carousel elements found:', { carousel, cards: cards.length, dots: newDotsContainer });
       
       const updateCarousel = () => {
-        const cardWidth = carousel.offsetWidth;
-        carousel.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
-        console.log('Update carousel:', { currentIndex, cardWidth });
+        // Get the width of a single card (not the carousel wrapper)
+        const card = cards[0];
+        const cardWidth = card ? card.offsetWidth : carousel.offsetWidth;
+        const translateX = currentIndex * cardWidth;
+        carousel.style.transform = `translateX(-${translateX}px)`;
+        console.log('Update carousel:', { currentIndex, cardWidth, translateX, carouselWidth: carousel.offsetWidth });
         
         // Update dots
         const dots = newDotsContainer.querySelectorAll('.dot');
