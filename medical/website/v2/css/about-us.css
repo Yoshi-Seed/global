@@ -630,7 +630,7 @@
     width: 100% !important;
     margin: 0 !important;
     overflow: hidden !important;
-    padding: 0 20px !important; /* 左右に余白を確保 */
+    padding: 0 !important; /* 外側の余白を削除 */
     box-sizing: border-box;
   }
 
