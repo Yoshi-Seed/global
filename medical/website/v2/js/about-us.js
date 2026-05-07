@@ -164,68 +164,68 @@ document.addEventListener('DOMContentLoaded', () => {
       let touchStartY = 0;
       let touchStartTime = 0;
       let isSwiping = false;
-    
-    carousel.addEventListener('touchstart', (e) => {
-      touchStartX = e.touches[0].clientX;
-      touchStartY = e.touches[0].clientY;
-      touchStartTime = Date.now();
-      isSwiping = true;
-      carousel.style.transition = 'none';
-    }, { passive: true });
-    
-    carousel.addEventListener('touchmove', (e) => {
-      if (!isSwiping) return;
       
-      const touchCurrentX = e.touches[0].clientX;
-      const touchCurrentY = e.touches[0].clientY;
+      carousel.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchStartTime = Date.now();
+        isSwiping = true;
+        carousel.style.transition = 'none';
+      }, { passive: true });
       
-      const diffX = Math.abs(touchCurrentX - touchStartX);
-      const diffY = Math.abs(touchCurrentY - touchStartY);
+      carousel.addEventListener('touchmove', (e) => {
+        if (!isSwiping) return;
+        
+        const touchCurrentX = e.touches[0].clientX;
+        const touchCurrentY = e.touches[0].clientY;
+        
+        const diffX = Math.abs(touchCurrentX - touchStartX);
+        const diffY = Math.abs(touchCurrentY - touchStartY);
+        
+        // Prevent vertical scroll if horizontal swipe detected
+        if (diffX > diffY && diffX > 10) {
+          e.preventDefault();
+        }
+      }, { passive: false });
       
-      // Prevent vertical scroll if horizontal swipe detected
-      if (diffX > diffY && diffX > 10) {
-        e.preventDefault();
-      }
-    }, { passive: false });
-    
-    carousel.addEventListener('touchend', (e) => {
-      if (!isSwiping) return;
-      
-      const touchEndX = e.changedTouches[0].clientX;
-      const touchEndY = e.changedTouches[0].clientY;
-      
-      carousel.style.transition = 'transform 0.3s ease';
-      
-      const diffX = touchStartX - touchEndX;
-      const diffY = Math.abs(touchStartY - touchEndY);
-      const absDiffX = Math.abs(diffX);
-      const swipeTime = Date.now() - touchStartTime;
-      
-      // Swipe detection
-      const isValidSwipe = (absDiffX > 50 && absDiffX > diffY * 1.5) || 
-                          (swipeTime < 300 && absDiffX > 30 && absDiffX > diffY * 1.5);
-      
-      if (isValidSwipe) {
-        if (diffX > 0) {
-          // Left swipe (next)
-          if (currentIndex < cards.length - 1) {
-            currentIndex++;
-            updateCarousel();
-          }
-        } else {
-          // Right swipe (previous)
-          if (currentIndex > 0) {
-            currentIndex--;
-            updateCarousel();
+      carousel.addEventListener('touchend', (e) => {
+        if (!isSwiping) return;
+        
+        const touchEndX = e.changedTouches[0].clientX;
+        const touchEndY = e.changedTouches[0].clientY;
+        
+        carousel.style.transition = 'transform 0.3s ease';
+        
+        const diffX = touchStartX - touchEndX;
+        const diffY = Math.abs(touchStartY - touchEndY);
+        const absDiffX = Math.abs(diffX);
+        const swipeTime = Date.now() - touchStartTime;
+        
+        // Swipe detection
+        const isValidSwipe = (absDiffX > 50 && absDiffX > diffY * 1.5) || 
+                            (swipeTime < 300 && absDiffX > 30 && absDiffX > diffY * 1.5);
+        
+        if (isValidSwipe) {
+          if (diffX > 0) {
+            // Left swipe (next)
+            if (currentIndex < cards.length - 1) {
+              currentIndex++;
+              updateCarousel();
+            }
+          } else {
+            // Right swipe (previous)
+            if (currentIndex > 0) {
+              currentIndex--;
+              updateCarousel();
+            }
           }
         }
-      }
-      
-      isSwiping = false;
-      touchStartX = 0;
-      touchStartY = 0;
-      touchStartTime = 0;
-    }, { passive: true });
+        
+        isSwiping = false;
+        touchStartX = 0;
+        touchStartY = 0;
+        touchStartTime = 0;
+      }, { passive: true });
     
       // Initial state
       updateCarousel();
