@@ -603,7 +603,11 @@
     bottom: -22px !important; /* 画像の下端から22px下 */
     left: 50% !important;
     transform: translateX(-50%) !important;
-    z-index: 10 !important;
+    z-index: 9999 !important; /* 最前面に配置 */
+    pointer-events: auto !important; /* クリックを確実に有効化 */
+    cursor: pointer !important;
+    width: 44px !important;
+    height: 44px !important;
   }
 
   /* Mobile: Moderators content - パディング削除 */
