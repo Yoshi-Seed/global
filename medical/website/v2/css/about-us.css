@@ -609,7 +609,7 @@
   /* Mobile: Moderators content - パディング削除 */
   .moderators-content {
     overflow: hidden !important;
-    background: #FDF5E6 !important; /* 暖かみのあるベージュ */
+    background: #f9e5c1 !important; /* Our Moderators セクションの背景色 */
     padding-top: 0 !important;
     padding-bottom: 0 !important;
   }
@@ -679,7 +679,7 @@
     background: #FFFEF8; /* 白に近いクリーム色 */
     border-radius: 48px !important; /* 非常に大きな角丸 (3xl) */
     padding: 50px 40px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important; /* より深い影 */
+    box-shadow: none !important; /* 影を削除 */
     width: 100%;
     max-width: 100%;
     height: auto !important;
