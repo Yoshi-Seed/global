@@ -608,15 +608,26 @@
 
   /* Mobile: Moderators content - パディング削除 */
   .moderators-content {
-    overflow: hidden !important; /* 外側でもはみ出しを防止 */
+    overflow: hidden !important;
+    background: #FDF5E6 !important; /* 暖かみのあるベージュ */
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
   }
   
   .moderators-content .container {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
+    padding: 0 !important;
     max-width: 100% !important;
     overflow: hidden !important;
     box-sizing: border-box;
+  }
+
+  /* Mobile: moderators-table-wrap - 余計なボーダーや影を削除 */
+  .moderators-table-wrap {
+    overflow: visible !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
   }
 
   /* Mobile: Moderators table - PC版テーブルを非表示 */
@@ -629,10 +640,10 @@
     position: relative;
     width: 100% !important;
     margin: 0 !important;
-    overflow: visible !important;
+    overflow: hidden !important; /* スクロールバーを完全に非表示 */
     padding: 40px 20px 80px 20px !important; /* 上下に余白、下はドット用 */
     box-sizing: border-box;
-    background: #FDF5E6; /* 暖かみのあるベージュ */
+    background: transparent !important; /* 背景は.moderators-contentで設定 */
   }
 
   .moderators-carousel-wrapper {
@@ -641,6 +652,14 @@
     touch-action: pan-y;
     width: 100%;
     box-sizing: border-box;
+    overflow: hidden !important; /* スクロールバーを完全に非表示 */
+    /* スクロールバー非表示 - 全ブラウザ対応 */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+
+  .moderators-carousel-wrapper::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
   }
 
   .moderator-card {
