@@ -660,9 +660,9 @@
     display: flex;
     transition: transform 0.3s ease;
     touch-action: pan-y;
-    width: 100%;
+    width: 600% !important; /* 6枚分の幅を確保 (100% × 6) */
     box-sizing: border-box;
-    overflow: hidden !important; /* スクロールバーを完全に非表示 */
+    overflow: visible !important; /* カードを表示するため */
     /* スクロールバー非表示 - 全ブラウザ対応 */
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE and Edge */

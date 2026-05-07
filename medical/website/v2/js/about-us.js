@@ -116,6 +116,9 @@ document.addEventListener('DOMContentLoaded', () => {
     tableWrap.innerHTML = carouselHTML;
     
     console.log('Carousel HTML inserted');
+    console.log('Generated HTML length:', carouselHTML.length);
+    console.log('Number of moderators:', moderators.length);
+    console.log('First moderator:', moderators[0]);
     
     // Wait for DOM update
     setTimeout(() => {
