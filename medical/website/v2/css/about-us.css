@@ -630,8 +630,14 @@
     box-shadow: none !important;
   }
 
-  /* Mobile: Moderators table - PC版テーブルを非表示 */
+  /* Mobile: Moderators table - カルーセル初期化のため、一時的に非表示だが存在させる */
   .moderators-table {
+    position: absolute !important;
+    left: -9999px !important;
+    visibility: hidden !important;
+  }
+  
+  .moderators-table thead {
     display: none !important;
   }
 
