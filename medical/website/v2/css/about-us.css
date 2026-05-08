@@ -337,6 +337,7 @@
   font-family: var(--font-body);
   color: var(--primary-text);
   margin: 18px 0 0;
+  line-height: 1.5; /* 行間を詰める */
 }
 
 /* Responsive */
@@ -651,7 +652,7 @@
     width: 100% !important;
     margin: 0 !important;
     overflow: hidden !important; /* スクロールバーを完全に非表示 */
-    padding: 40px 20px 80px 20px !important; /* 上下に余白、下はドット用 */
+    padding: 40px 20px 40px 20px !important; /* padding-bottomを縮小：80px → 40px */
     box-sizing: border-box;
     background: transparent !important; /* 背景は.moderators-contentで設定 */
   }
@@ -778,7 +779,8 @@
   .moderators-note {
     padding-left: 20px !important;
     padding-right: 20px !important;
-    margin-top: 8px !important; /* ドットとの間隔をさらに狭くする（20px → 8px） */
+    margin-top: 0px !important; /* ドットとの間隔を最小限に（8px → 0px） */
+    line-height: 1.4 !important; /* モバイルで行間をさらに詰める */
   }
 }
 
