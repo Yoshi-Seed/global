@@ -288,6 +288,8 @@
     text-align: center;
     line-height: 1.8;
     order: 1;
+    margin-left: 0 !important; /* モバイル版：PC版のmargin-leftをリセット */
+    margin-right: 0 !important; /* モバイル版：PC版のmargin-rightをリセット */
   }
   
   /* Hide desktop nav rows on mobile */
