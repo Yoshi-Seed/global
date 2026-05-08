@@ -1592,13 +1592,11 @@
   
   /* 住所リンクのスタイル（モバイルのみ） */
   .contact-details .address-link {
-    text-decoration: underline;
-    text-decoration-color: rgba(91, 26, 6, 0.3);
-    text-underline-offset: 2px;
+    text-decoration: none;
   }
   
   .contact-details .address-link:hover {
-    text-decoration-color: rgba(91, 26, 6, 0.6);
+    text-decoration: none;
   }
   
   .contact-icon-img {
