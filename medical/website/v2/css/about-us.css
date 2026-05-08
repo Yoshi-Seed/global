@@ -673,10 +673,10 @@
   }
 
   .moderator-card {
-    width: 100% !important;
-    min-width: 100%;
-    max-width: 100%;
-    padding: 0 !important; /* パディングを完全削除 */
+    width: calc(100% / 6) !important; /* 600%幅のラッパーの1/6 = ビューポート幅 */
+    min-width: calc(100% / 6) !important;
+    max-width: calc(100% / 6) !important;
+    padding: 0 16px !important; /* 左右に余白を追加 */
     margin: 0 !important;
     box-sizing: border-box !important;
     flex-shrink: 0;
