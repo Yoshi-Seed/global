@@ -182,6 +182,8 @@
   gap: 12px;
   flex: 1;
   align-items: center;
+  margin-left: auto; /* PC版：メニューを右に移動 */
+  margin-right: 60px; /* PC版：右端から適度な距離を保つ */
 }
 
 .footer-nav-row {
