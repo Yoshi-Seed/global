@@ -563,6 +563,21 @@
     display: block !important; /* flexを解除 */
   }
 
+  /* Mobile: 背景画像の透明度を上げる */
+  .moderators-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.5); /* 白いオーバーレイで画像を薄くする */
+    z-index: 1;
+  }
+
+  /* Mobile: テキストをオーバーレイの上に表示 */
+  .moderators-hero .moderators-hero-inner {
+    position: relative;
+    z-index: 2;
+  }
+
   /* Mobile: Moderators hero inner - containerのpadding無効化 */
   .moderators-hero-inner {
     position: static !important; /* 通常フローに戻す */
