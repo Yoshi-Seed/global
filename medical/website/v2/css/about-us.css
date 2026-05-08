@@ -676,7 +676,7 @@
     width: calc(100% / 6) !important; /* 600%幅のラッパーの1/6 = ビューポート幅 */
     min-width: calc(100% / 6) !important;
     max-width: calc(100% / 6) !important;
-    padding: 0 16px !important; /* 左右に余白を追加 */
+    padding: 0 20px !important; /* 左右に余白（外側） */
     margin: 0 !important;
     box-sizing: border-box !important;
     flex-shrink: 0;
@@ -688,7 +688,7 @@
   .moderator-card-inner {
     background: #FFFEF8; /* 白に近いクリーム色 */
     border-radius: 48px !important; /* 非常に大きな角丸 (3xl) */
-    padding: 50px 40px;
+    padding: 40px 30px; /* パディングを縮小：50px→40px, 40px→30px */
     box-shadow: none !important; /* 影を削除 */
     width: 100%;
     max-width: 100%;
