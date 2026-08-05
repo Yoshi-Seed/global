@@ -383,7 +383,35 @@
     // ==========================================
     
     /**
-     * 直近3ヵ月の期間を取得（前月確定ローリング…3668 tokens truncated…ータを保存
+     * 直近3ヵ月の期間を取得（前月確定ローリング）
+     * 例：今日が2025/11/9 → 前月=10月 → 直近3ヶ月 = 8月, 9月, 10月
+     * 計算方法: 現在月から1ヶ月、2ヶ月、3ヶ月前
+     * 
+     * 注意: toISOString()はUTCを使うためタイムゾーンでずれる問題があり、
+     * ローカルの年月を直接使用する
+     */
+    function getRecentThreeMonths() {
+      const today = new Date();
+      const currentYear = today.getFullYear();
+      const currentMonth = today.getMonth(); // 0-based (0=Jan, 10=Nov)
+      
+      console.log('[getRecentThreeMonths] ======== START ========');
+      console.lo…3102 tokens truncated…ートデータを保存
+        renderTargetTypeChartWithComparison(targetTypeComparison);
+
+        // 【新ロジック】疾患カテゴリー Top 5（期間比較）
+        const diseaseComparison = generateComparisonData(allProjects, 'diseaseName');
+        chartData.disease = diseaseComparison; // チャートデータを保存
+        renderDiseaseChartWithComparison(diseaseComparison);
+
+        // 【新ロジック】専門（診療科）Top 5（期間比較）
+        const specialtyComparison = generateComparisonData(allProjects, 'specialty');
+        chartData.specialty = specialtyComparison; // チャートデータを保存
+        renderSpecialtyChartWithComparison(specialtyComparison);
+
+        // 【新ロジック】クライアント Top 5（期間比較）
+        const clientComparison = generateComparisonData(allProjects, 'client');
+        chartData.client = clientComparison; // チャートデータを保存
         renderClientChartWithComparison(clientComparison);
 
         // 最近のプロジェクト
