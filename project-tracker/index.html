@@ -8,7 +8,7 @@
   <link rel="icon" type="image/png" href="SP_logo_shape_only.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Project Tracker スタイルシート -->
-  <link rel="stylesheet" href="css/style-2026.css">
+  <link rel="stylesheet" href="css/style-2026.css?v=20260805-2">
   <link rel="stylesheet" href="css/components.css">
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -19,7 +19,7 @@
   <script src="js/utils.js"></script>
   <script src="js/data/specialties-master.js"></script>
 </head>
-<body class="bg-gray-50">
+<body class="dashboard-page bg-gray-50">
   <!-- ナビゲーション -->
   <nav class="bg-white shadow-md sticky top-0 z-40">
     <div class="container mx-auto px-2 sm:px-4 py-2 sm:py-3">
@@ -57,6 +57,20 @@
 
   <!-- メインコンテンツ -->
   <div class="container mx-auto px-4 py-8">
+    <section class="dashboard-hero mb-8" aria-labelledby="dashboardTitle">
+      <div>
+        <p class="dashboard-eyebrow">PROJECT INTELLIGENCE</p>
+        <h2 id="dashboardTitle">実績を、次の判断へ。</h2>
+        <p>案件・リクルート・疾患トレンドをひとつの画面で把握できます。</p>
+      </div>
+      <div id="dataConnection" class="connection-status is-loading" role="status" aria-live="polite">
+        <span class="connection-dot" aria-hidden="true"></span>
+        <span id="dataConnectionText">データを取得しています</span>
+        <button id="retryDataButton" type="button" class="connection-retry hidden" onclick="retryDashboardData()">
+          <i class="fas fa-rotate-right" aria-hidden="true"></i> 再接続
+        </button>
+      </div>
+    </section>
     
     <!-- データインポート促進バナー -->
     <div id="importBanner" class="hidden bg-gradient-to-r from-purple-500 to-blue-600 text-white rounded-lg shadow-lg p-6 mb-8">
@@ -266,10 +280,10 @@
   </div>
 
   <!-- 共通設定 -->
-  <script src="js/config.js"></script>
+  <script src="js/config.js?v=20260805-2"></script>
   <script src="js/specialties.js"></script>
   <!-- API Client -->
-  <script src="js/api.js"></script>
+  <script src="js/api.js?v=20260805-2"></script>
   <!-- Export helpers -->
   <script src="js/export.js"></script>
 
@@ -277,10 +291,64 @@
   <script>
     // 初期化
     async function initDashboard() {
+      const restoredFromStorage = api.lastLoadMeta && api.lastLoadMeta.source === 'stored';
+      if (restoredFromStorage) {
+        updateConnectionStatus({
+          status: 'stored',
+          count: api.cache.projects ? api.cache.projects.length : 0,
+        });
+      }
+
       // データ存在確認＆自動取得
       await ensureDataLoaded();
       await loadStatistics();
+
+      // 保存データを先に描画できた場合だけ、最新版を背後で取得する。
+      if (restoredFromStorage) {
+        refreshDashboardInBackground();
+      }
     }
+
+    async function refreshDashboardInBackground() {
+      try {
+        await api.getAllProjects(true);
+        await loadStatistics();
+      } catch (error) {
+        console.warn('Background refresh failed:', error);
+      }
+    }
+
+    function updateConnectionStatus(detail) {
+      const panel = document.getElementById('dataConnection');
+      const text = document.getElementById('dataConnectionText');
+      const retryButton = document.getElementById('retryDataButton');
+      if (!panel || !text || !retryButton) return;
+
+      panel.className = `connection-status is-${detail.status}`;
+      retryButton.classList.toggle('hidden', !['stored', 'error'].includes(detail.status));
+
+      const messages = {
+        loading: 'GASから最新データを取得しています',
+        retrying: `再接続中（${detail.attempt}/${detail.maxRetries}）`,
+        online: `最新データに接続済み（${detail.count || 0}件）`,
+        stored: `通信不安定：保存データを表示中（${detail.count || 0}件）`,
+        error: 'データを取得できませんでした',
+      };
+      text.textContent = messages[detail.status] || 'データ接続を確認しています';
+    }
+
+    async function retryDashboardData() {
+      const button = document.getElementById('retryDataButton');
+      button.disabled = true;
+      try {
+        await api.getAllProjects(true);
+        await loadStatistics();
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    window.addEventListener('project-api-status', event => updateConnectionStatus(event.detail));
     
     // データが取得されているか確認（初回起動時の自動同期）
     async function ensureDataLoaded() {
@@ -336,320 +404,7 @@
       // 直近3ヶ月 = 現在月から3ヶ月前、2ヶ月前、1ヶ月前
       for (let i = 3; i >= 1; i--) {
         const d = new Date(currentYear, currentMonth - i, 1);
-        // UTC変換を避けて、ローカルの年月を直接使用
-        const year = d.getFullYear();
-        const month = String(d.getMonth() + 1).padStart(2, '0'); // 1-based, 0埋め
-        const monthStr = `${year}-${month}`;
-        months.push(monthStr);
-        console.log(`[getRecentThreeMonths]   ${i}ヶ月前: year=${year}, month=${d.getMonth() + 1} → ${monthStr}`);
-      }
-      
-      console.log('[getRecentThreeMonths] Result:', months);
-      console.log('[getRecentThreeMonths] Expected: [2025-08, 2025-09, 2025-10]');
-      console.log('[getRecentThreeMonths] ======== END ========');
-      return months;
-    }
-    
-    /**
-     * 昨年同時期の3ヵ月を取得
-     */
-    function getYoYThreeMonths() {
-      const recentMonths = getRecentThreeMonths();
-      return recentMonths.map(month => {
-        const [year, m] = month.split('-');
-        return `${parseInt(year) - 1}-${m}`;
-      });
-    }
-    
-    /**
-     * 直近6ヵ月の期間を取得（スパークライン用）
-     */
-    function getRecentSixMonths() {
-      const today = new Date();
-      const currentYear = today.getFullYear();
-      const currentMonth = today.getMonth();
-
-      const months = [];
-      for (let i = 6; i >= 1; i--) {
-        const d = new Date(currentYear, currentMonth - i, 1);
-        // UTC変換を避けて、ローカルの年月を直接使用
-        const year = d.getFullYear();
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        months.push(`${year}-${month}`);
-      }
-      return months;
-    }
-
-    /**
-     * 直近12ヵ月の期間を取得
-     */
-    function getRecentTwelveMonths() {
-      const today = new Date();
-      const currentYear = today.getFullYear();
-      const currentMonth = today.getMonth();
-
-      const months = [];
-      for (let i = 12; i >= 1; i--) {
-        const d = new Date(currentYear, currentMonth - i, 1);
-        const year = d.getFullYear();
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        months.push(`${year}-${month}`);
-      }
-      return months;
-    }
-
-    /**
-     * 昨年同時期の12ヵ月を取得
-     */
-    function getYoYTwelveMonths() {
-      return getRecentTwelveMonths().map(month => {
-        const [year, m] = month.split('-');
-        return `${parseInt(year) - 1}-${m}`;
-      });
-    }
-    
-    /**
-     * プロジェクトを月別に集計
-     * 
-     * config.js の AGGREGATION_CONFIG から除外ルールとキーワードを読み込み
-     */
-    function aggregateByMonth(projects, fieldName) {
-      const monthlyData = {};
-      
-      // config.js から設定を取得
-      const EXACT_EXCLUDE_VALUES = window.AGGREGATION_CONFIG?.EXACT_EXCLUDE_VALUES || [];
-      const SPECIALTY_KEYWORDS = window.AGGREGATION_CONFIG?.SPECIALTY_KEYWORDS || [];
-      
-      projects.forEach(project => {
-        // 実施年月をパース
-        let month = null;
-        if (project.implementationDate) {
-          const dateStr = project.implementationDate.trim();
-          
-          // パターン1: yyyy/mm または yyyy/mm/dd 形式
-          if (/^\d{4}\/\d{1,2}/.test(dateStr)) {
-            const parts = dateStr.split('/');
-            const year = parts[0];
-            const m = parts[1].padStart(2, '0');
-            month = `${year}-${m}`;
-          }
-          // パターン2: yyyy-mm または yyyy-mm-dd 形式
-          else if (/^\d{4}-\d{1,2}/.test(dateStr)) {
-            const parts = dateStr.split('-');
-            const year = parts[0];
-            const m = parts[1].padStart(2, '0');
-            month = `${year}-${m}`;
-          }
-          // パターン3: yyyy/m（スラッシュのみ、日付なし）
-          else if (/^\d{4}\/\d{1,2}$/.test(dateStr)) {
-            const parts = dateStr.split('/');
-            const year = parts[0];
-            const m = parts[1].padStart(2, '0');
-            month = `${year}-${m}`;
-          }
-          // パターン4: その他の形式（Date()でパース試行）
-          else {
-            const date = new Date(dateStr);
-            if (!isNaN(date.getTime())) {
-              month = date.toISOString().substring(0, 7);
-            }
-          }
-        }
-        
-        if (!month) return; // 日付が不正な場合はスキップ
-        
-        let fieldValue = project[fieldName];
-        if (!fieldValue || fieldValue.trim() === '') return; // 空の値はスキップ
-        
-        fieldValue = fieldValue.trim();
-        
-        // 診療科フィールドの場合は、非診療科の値を除外
-        if (fieldName === 'specialty') {
-          // 完全一致での除外チェック（「医師」単体は除外、「内科医」は許可）
-          if (EXACT_EXCLUDE_VALUES.includes(fieldValue)) {
-            console.log(`Excluding exact match: "${fieldValue}"`);
-            return; // 非診療科の値はスキップ
-          }
-          
-          // 診療科キーワードが含まれているかチェック（部分一致）
-          const hasSpecialtyKeyword = SPECIALTY_KEYWORDS.some(keyword => 
-            fieldValue.includes(keyword)
-          );
-          
-          // 診療科キーワードが含まれていない場合もスキップ
-          if (!hasSpecialtyKeyword) {
-            console.log(`Skipping non-specialty value: "${fieldValue}"`);
-            return;
-          }
-          
-          console.log(`Including specialty: "${fieldValue}"`);
-        }
-        
-        if (!monthlyData[month]) {
-          monthlyData[month] = {};
-        }
-        if (!monthlyData[month][fieldValue]) {
-          monthlyData[month][fieldValue] = 0;
-        }
-        monthlyData[month][fieldValue]++;
-      });
-      
-      return monthlyData;
-    }
-    
-    /**
-     * 期間比較データを生成
-     */
-    function generateComparisonData(projects, fieldName, options = {}) {
-      console.log(`generateComparisonData for ${fieldName}:`, {
-        totalProjects: projects.length,
-        sampleDates: projects.slice(0, 5).map(p => p.implementationDate)
-      });
-
-      const monthlyData = aggregateByMonth(projects, fieldName);
-      console.log(`Monthly data for ${fieldName}:`, Object.keys(monthlyData).sort());
-
-      const {
-        recentMonths = getRecentThreeMonths(),
-        yoyMonths = getYoYThreeMonths(),
-        sparklineMonths = getRecentSixMonths(),
-        filterFn
-      } = options;
-
-      console.log(`Periods:`, { recentMonths, yoyMonths });
-
-      // 直近3ヵ月の集計
-      const currData = {};
-      recentMonths.forEach(month => {
-        if (monthlyData[month]) {
-          console.log(`  ${month} data:`, monthlyData[month]);
-          Object.entries(monthlyData[month]).forEach(([key, count]) => {
-            currData[key] = (currData[key] || 0) + count;
-          });
-        }
-      });
-      
-      console.log(`Current period (${fieldName}) aggregated data:`, currData);
-      
-      // 昨年同時期の集計
-      const prevData = {};
-      yoyMonths.forEach(month => {
-        if (monthlyData[month]) {
-          console.log(`  ${month} data (YoY):`, monthlyData[month]);
-          Object.entries(monthlyData[month]).forEach(([key, count]) => {
-            prevData[key] = (prevData[key] || 0) + count;
-          });
-        }
-      });
-      
-      console.log(`Previous period (${fieldName}) aggregated data:`, prevData);
-      
-      // 直近6ヵ月の月別推移（スパークライン用）
-      const sparklineData = {};
-      sparklineMonths.forEach(month => {
-        if (monthlyData[month]) {
-          Object.entries(monthlyData[month]).forEach(([key, count]) => {
-            if (!sparklineData[key]) sparklineData[key] = [];
-            sparklineData[key].push(count);
-          });
-        }
-      });
-
-      // 比較データを生成
-      const allKeys = new Set([...Object.keys(currData), ...Object.keys(prevData)]);
-      const comparison = [];
-
-      const currTotal = Object.values(currData).reduce((sum, v) => sum + v, 0);
-      const prevTotal = Object.values(prevData).reduce((sum, v) => sum + v, 0);
-
-      allKeys.forEach(key => {
-        const curr = currData[key] || 0;
-        const prev = prevData[key] || 0;
-        const delta = curr - prev;
-        const yoyPercent = prev > 0 ? ((delta / prev) * 100) : null;
-
-        // 全体に対する構成比
-        const currShare = currTotal > 0 ? (curr / currTotal) * 100 : 0;
-        const prevShare = prevTotal > 0 ? (prev / prevTotal) * 100 : 0;
-        const shareDelta = currShare - prevShare;
-
-        comparison.push({
-          name: key,
-          curr: curr,
-          prev: prev,
-          delta: delta,
-          yoyPercent: yoyPercent,
-          currShare: currShare,
-          prevShare: prevShare,
-          shareDelta: shareDelta,
-          sparkline: sparklineData[key] || []
-        });
-      });
-      
-      console.log(`${fieldName} comparison before filtering (${comparison.length} items):`, comparison);
-      
-      // config.js から閾値設定を取得
-      const thresholds = window.AGGREGATION_CONFIG?.FILTER_THRESHOLDS || {};
-      const fieldThreshold = thresholds[fieldName] || thresholds.default || { prev: 5, curr: 8 };
-      
-      // ノイズ抑制フィルター：フィールドごとに基準を調整
-      const defaultFilter = (item) => {
-        return item.prev >= fieldThreshold.prev || item.curr >= fieldThreshold.curr;
-      };
-
-      const effectiveFilter = filterFn || defaultFilter;
-      const filtered = comparison.filter(effectiveFilter);
-      
-      console.log(`${fieldName} comparison after filtering (${filtered.length} items):`, filtered);
-      
-      // 件数順でソート
-      filtered.sort((a, b) => b.curr - a.curr);
-      
-      const result = {
-        data: filtered,
-        recentPeriod: recentMonths,
-        yoyPeriod: yoyMonths,
-        currTotal,
-        prevTotal
-      };
-      
-      console.log(`${fieldName} final result:`, result);
-      
-      return result;
-    }
-
-    // 統計情報を読み込み
-    async function loadStatistics() {
-      try {
-        const stats = await api.getStats();
-        const allProjects = await api.getAllProjects();
-
-        // デバッグログ
-        console.log('📊 Dashboard Statistics:');
-        console.log('  - Total Projects (from stats):', stats.totalProjects);
-        console.log('  - All Projects (direct):', allProjects.length);
-        console.log('  - Total Recruits:', stats.totalRecruits);
-        console.log('  - Average Recruits:', stats.averageRecruits);
-        
-        // データがない場合はインポートバナーを表示
-        if (stats.totalProjects === 0) {
-          document.getElementById('importBanner').classList.remove('hidden');
-        }
-
-        // 基本統計
-        document.getElementById('totalProjects').textContent = stats.totalProjects;
-        document.getElementById('totalRecruits').textContent = stats.totalRecruits.toLocaleString();
-        document.getElementById('avgRecruits').textContent = stats.averageRecruits;
-
-        // 今月のプロジェクト数
-        const thisMonth = new Date().toISOString().substring(0, 7);
-        document.getElementById('thisMonthProjects').textContent = stats.monthlyTrend[thisMonth] || 0;
-
-        // 対象者タイプ別分布 Top 5（過去1年比較）
-        const targetTypeComparison = generateComparisonData(allProjects, 'targetType', {
-          recentMonths: getRecentTwelveMonths(),
-          yoyMonths: getYoYTwelveMonths(),
-          filterFn: (item) => item.prev >= 5 || item.curr >= 5
+        // UTC変換を避けて、ローカ…2947 tokens truncated…n: (item) => item.prev >= 5 || item.curr >= 5
         });
         chartData.targetType = targetTypeComparison; // チャートデータを保存
         renderTargetTypeChartWithComparison(targetTypeComparison);
@@ -674,7 +429,7 @@
 
       } catch (error) {
         console.error('Failed to load statistics:', error);
-        alert('データの読み込みに失敗しました。ページを再読み込みしてください。');
+        updateConnectionStatus({ status: 'error', message: error.message });
       }
     }
 
@@ -1144,3 +899,4 @@
   </script>
 </body>
 </html>
+
