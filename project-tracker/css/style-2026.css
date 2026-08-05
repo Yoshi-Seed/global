@@ -609,3 +609,10 @@ nav .active-page {
 .app-page .bg-blue-50 p {
   color: #1f2937 !important;
 }
+
+.app-page #similarProjectsList .text-gray-900,
+.app-page #similarProjectsList .text-gray-600,
+.app-page #similarProjectsList span.font-medium:not(.text-red-600):not(.text-green-600),
+.app-page #detailModal button.bg-gray-200 {
+  color: #1f2937 !important;
+}
