@@ -19,6 +19,11 @@ const GAS_CONFIG = {
 
   // キャッシュ設定（クライアント側）
   CACHE_TTL_MS: 60000,
+
+  // 読み込み安定化設定
+  REQUEST_TIMEOUT_MS: 20000,
+  MAX_RETRIES: 2,
+  RETRY_BASE_DELAY_MS: 1500,
 };
 
 function buildUrl_(baseUrl, params = {}) {

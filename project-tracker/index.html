@@ -8,7 +8,7 @@
   <link rel="icon" type="image/png" href="SP_logo_shape_only.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Project Tracker スタイルシート -->
-  <link rel="stylesheet" href="css/style-2026.css">
+  <link rel="stylesheet" href="css/style-2026.css?v=20260805-2">
   <link rel="stylesheet" href="css/components.css">
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -19,7 +19,7 @@
   <script src="js/utils.js"></script>
   <script src="js/data/specialties-master.js"></script>
 </head>
-<body class="bg-gray-50">
+<body class="dashboard-page bg-gray-50">
   <!-- ナビゲーション -->
   <nav class="bg-white shadow-md sticky top-0 z-40">
     <div class="container mx-auto px-2 sm:px-4 py-2 sm:py-3">
@@ -57,6 +57,20 @@
 
   <!-- メインコンテンツ -->
   <div class="container mx-auto px-4 py-8">
+    <section class="dashboard-hero mb-8" aria-labelledby="dashboardTitle">
+      <div>
+        <p class="dashboard-eyebrow">PROJECT INTELLIGENCE</p>
+        <h2 id="dashboardTitle">実績を、次の判断へ。</h2>
+        <p>案件・リクルート・疾患トレンドをひとつの画面で把握できます。</p>
+      </div>
+      <div id="dataConnection" class="connection-status is-loading" role="status" aria-live="polite">
+        <span class="connection-dot" aria-hidden="true"></span>
+        <span id="dataConnectionText">データを取得しています</span>
+        <button id="retryDataButton" type="button" class="connection-retry hidden" onclick="retryDashboardData()">
+          <i class="fas fa-rotate-right" aria-hidden="true"></i> 再接続
+        </button>
+      </div>
+    </section>
     
     <!-- データインポート促進バナー -->
     <div id="importBanner" class="hidden bg-gradient-to-r from-purple-500 to-blue-600 text-white rounded-lg shadow-lg p-6 mb-8">
@@ -266,10 +280,10 @@
   </div>
 
   <!-- 共通設定 -->
-  <script src="js/config.js"></script>
+  <script src="js/config.js?v=20260805-2"></script>
   <script src="js/specialties.js"></script>
   <!-- API Client -->
-  <script src="js/api.js"></script>
+  <script src="js/api.js?v=20260805-2"></script>
   <!-- Export helpers -->
   <script src="js/export.js"></script>
 
@@ -277,10 +291,64 @@
   <script>
     // 初期化
     async function initDashboard() {
+      const restoredFromStorage = api.lastLoadMeta && api.lastLoadMeta.source === 'stored';
+      if (restoredFromStorage) {
+        updateConnectionStatus({
+          status: 'stored',
+          count: api.cache.projects ? api.cache.projects.length : 0,
+        });
+      }
+
       // データ存在確認＆自動取得
       await ensureDataLoaded();
       await loadStatistics();
+
+      // 保存データを先に描画できた場合だけ、最新版を背後で取得する。
+      if (restoredFromStorage) {
+        refreshDashboardInBackground();
+      }
     }
+
+    async function refreshDashboardInBackground() {
+      try {
+        await api.getAllProjects(true);
+        await loadStatistics();
+      } catch (error) {
+        console.warn('Background refresh failed:', error);
+      }
+    }
+
+    function updateConnectionStatus(detail) {
+      const panel = document.getElementById('dataConnection');
+      const text = document.getElementById('dataConnectionText');
+      const retryButton = document.getElementById('retryDataButton');
+      if (!panel || !text || !retryButton) return;
+
+      panel.className = `connection-status is-${detail.status}`;
+      retryButton.classList.toggle('hidden', !['stored', 'error'].includes(detail.status));
+
+      const messages = {
+        loading: 'GASから最新データを取得しています',
+        retrying: `再接続中（${detail.attempt}/${detail.maxRetries}）`,
+        online: `最新データに接続済み（${detail.count || 0}件）`,
+        stored: `通信不安定：保存データを表示中（${detail.count || 0}件）`,
+        error: 'データを取得できませんでした',
+      };
+      text.textContent = messages[detail.status] || 'データ接続を確認しています';
+    }
+
+    async function retryDashboardData() {
+      const button = document.getElementById('retryDataButton');
+      button.disabled = true;
+      try {
+        await api.getAllProjects(true);
+        await loadStatistics();
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    window.addEventListener('project-api-status', event => updateConnectionStatus(event.detail));
     
     // データが取得されているか確認（初回起動時の自動同期）
     async function ensureDataLoaded() {
@@ -674,7 +742,7 @@
 
       } catch (error) {
         console.error('Failed to load statistics:', error);
-        alert('データの読み込みに失敗しました。ページを再読み込みしてください。');
+        updateConnectionStatus({ status: 'error', message: error.message });
       }
     }
 

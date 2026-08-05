@@ -26,6 +26,11 @@ class ProjectAPI {
     // ※詳細モーダル表示や類似案件読み込み等で短時間に複数回 getAllProjects() が呼ばれても、
     //   実際の fetch は1回に抑える。
     this._projectsFetchPromise = null;
+    this.storageKey = 'projectTracker.projects.v2';
+    this.lastLoadMeta = { source: 'none', savedAt: null };
+
+    // 前回成功データを先に復元。GASが一時的に不調でも空画面にしない。
+    this.restorePersistentCache_();
 
     // 専門科の略語マッピング
     this.specialtyDictionary = typeof SpecialtyDictionary !== 'undefined'
@@ -39,7 +44,7 @@ class ProjectAPI {
    */
   async getAllProjects(forceRefresh = false) {
     // すでに同じ取得が走っているなら、それを待って返す（多重fetch防止）
-    if (!forceRefresh && this._projectsFetchPromise) {
+    if (this._projectsFetchPromise) {
       return this._projectsFetchPromise;
     }
 
@@ -74,24 +79,16 @@ class ProjectAPI {
         }
 
         console.log('Fetching data from Google Sheets via GAS...');
-        const response = await fetch(this.API_BASE, { cache: 'no-store' });
-
-        if (!response.ok) {
-          // 429 などのケースで分かりやすく
-          const msg = response.status === 429
-            ? 'HTTP 429: Too many requests (GAS rate limit). Please try again shortly.'
-            : `HTTP ${response.status}: ${response.statusText}`;
-          throw new Error(msg);
-        }
-
-        // GAS側は JSON を返す想定
-        const raw = await response.json();
+        const raw = await this.fetchJsonWithRetry_(this.API_BASE);
         const projects = Array.isArray(raw) ? raw : (raw.projects || []);
         const normalized = projects.map((p, i) => this.normalizeProject_(p, i));
 
         // キャッシュ更新
         this.cache.projects = normalized;
         this.cache.timestamp = Date.now();
+        this.lastLoadMeta = { source: 'network', savedAt: this.cache.timestamp };
+        this.persistCache_(normalized, this.cache.timestamp);
+        this.notifyStatus_('online', { count: normalized.length });
 
         console.log(`Loaded ${normalized.length} projects from Google Sheets`);
         return normalized;
@@ -102,9 +99,20 @@ class ProjectAPI {
         // キャッシュがあれば返す（古くても）
         if (this.cache.projects) {
           console.warn('Using stale cache due to fetch error');
+          const storedAt = this.lastLoadMeta.savedAt || this.cache.timestamp;
+          // 同じ画面表示中に集計処理が何度も再取得を始めないよう、
+          // セッション内のキャッシュ時刻だけ更新する。
+          this.cache.timestamp = Date.now();
+          this.lastLoadMeta = { source: 'stored', savedAt: storedAt };
+          this.notifyStatus_('stored', {
+            count: this.cache.projects.length,
+            savedAt: storedAt,
+            message: error.message,
+          });
           return this.cache.projects;
         }
 
+        this.notifyStatus_('error', { message: error.message });
         throw error;
       } finally {
         // 重要：in-flight を必ず解除（次回の取得ができなくなるのを防ぐ）
@@ -113,6 +121,91 @@ class ProjectAPI {
     })();
 
     return this._projectsFetchPromise;
+  }
+
+  async fetchJsonWithRetry_(url) {
+    const timeoutMs = Number(GAS_CONFIG.REQUEST_TIMEOUT_MS) || 12000;
+    const maxRetries = Math.max(1, Number(GAS_CONFIG.MAX_RETRIES) || 3);
+    const baseDelay = Number(GAS_CONFIG.RETRY_BASE_DELAY_MS) || 900;
+    let lastError;
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      this.notifyStatus_(attempt === 1 ? 'loading' : 'retrying', {
+        attempt,
+        maxRetries,
+      });
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+      try {
+        const response = await fetch(url, {
+          cache: 'no-store',
+          signal: controller.signal,
+          headers: { Accept: 'application/json' },
+        });
+
+        if (!response.ok) {
+          const message = response.status === 429
+            ? 'GASのアクセス上限に達しました（HTTP 429）'
+            : `GAS応答エラー（HTTP ${response.status}）`;
+          const error = new Error(message);
+          error.retryable = response.status === 408 || response.status === 429 || response.status >= 500;
+          throw error;
+        }
+
+        const raw = await response.json();
+        if (raw && raw.success === false) {
+          throw new Error(raw.message || 'GASがエラーを返しました');
+        }
+        return raw;
+      } catch (error) {
+        lastError = error.name === 'AbortError'
+          ? new Error(`GASの応答が${Math.round(timeoutMs / 1000)}秒以内にありませんでした`)
+          : error;
+
+        const retryable = error.name === 'AbortError' || error.retryable !== false;
+        if (!retryable || attempt === maxRetries) break;
+
+        const delay = baseDelay * (2 ** (attempt - 1)) + Math.floor(Math.random() * 250);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      } finally {
+        clearTimeout(timeoutId);
+      }
+    }
+
+    throw lastError || new Error('GASからデータを取得できませんでした');
+  }
+
+  restorePersistentCache_() {
+    try {
+      const stored = localStorage.getItem(this.storageKey);
+      if (!stored) return;
+      const parsed = JSON.parse(stored);
+      if (!Array.isArray(parsed.projects)) return;
+      this.cache.projects = parsed.projects;
+      const savedAt = Number(parsed.savedAt) || 0;
+      // 保存データは即時表示し、最新化は画面側からバックグラウンドで行う。
+      this.cache.timestamp = Date.now();
+      this.lastLoadMeta = { source: 'stored', savedAt };
+    } catch (error) {
+      console.warn('Stored project cache could not be restored:', error);
+    }
+  }
+
+  persistCache_(projects, savedAt) {
+    try {
+      localStorage.setItem(this.storageKey, JSON.stringify({ projects, savedAt }));
+    } catch (error) {
+      console.warn('Project cache could not be persisted:', error);
+    }
+  }
+
+  notifyStatus_(status, detail = {}) {
+    if (typeof window === 'undefined' || typeof window.dispatchEvent !== 'function') return;
+    window.dispatchEvent(new CustomEvent('project-api-status', {
+      detail: { status, ...detail },
+    }));
   }
 
   /**
