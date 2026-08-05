@@ -666,4 +666,3 @@ class ProjectAPI {
 
 // グローバルインスタンス
 const api = new ProjectAPI();
-
