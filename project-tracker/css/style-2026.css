@@ -604,3 +604,8 @@ nav .active-page {
   .connection-status { min-width: 0; width: 100%; flex-wrap: wrap; border-radius: 1rem; }
   .dashboard-page .container { padding-left: .85rem; padding-right: .85rem; }
 }
+
+.app-page .bg-yellow-50 p,
+.app-page .bg-blue-50 p {
+  color: #1f2937 !important;
+}
