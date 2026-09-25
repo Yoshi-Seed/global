@@ -1,0 +1,318 @@
+/* Autumn Glass · Seed Planning · 2026-09
+   Presentation-only layer. Keep last, after the original CSS and inline styles.
+   No dependency, no JavaScript, no changes to GAS/API/data contracts. */
+body.autumn-page {
+  --ink: #303b37;
+  --muted: #61665e;
+  --cedar: #285e58;
+  --maple: #945a3c;
+  --line: rgba(113, 94, 67, .19);
+  --paper: #fcfaf6;
+  --glass: rgba(255, 253, 249, .83);
+  --glass-shadow: inset 0 1px 0 rgba(255,255,255,.98), inset 1px 0 0 rgba(255,255,255,.65), 0 8px 28px rgba(94, 70, 37, .065), 0 1px 3px rgba(94, 70, 37, .045);
+  --sp-primary: #285e58;
+  --sp-primary-dark: #204e49;
+  --sp-primary-light: #39766e;
+  --sp-primary-alpha-10: rgba(40,94,88,.10);
+  --sp-primary-alpha-20: rgba(40,94,88,.18);
+  --sp-gradient: linear-gradient(140deg, #39766e, #285e58);
+  --sp-secondary: #f6f0e4;
+  --sp-secondary-dark: #eee4d2;
+  --primary-color: #285e58;
+  --primary-light: #39766e;
+  --accent-gradient: linear-gradient(145deg, #39766e, #285e58);
+  --text-main: var(--ink);
+  --text-muted: var(--muted);
+  --text-light: #71766e;
+  --dashboard-text: var(--ink);
+  --dashboard-muted: var(--muted);
+  --dashboard-border: var(--line);
+  --dashboard-panel: var(--glass);
+  --dashboard-accent: var(--cedar);
+  --dashboard-accent-2: #ac764b;
+  --shadow-glow: 0 8px 24px rgba(94,70,37,.1);
+  min-height: 100vh;
+  color-scheme: light;
+  color: var(--ink);
+  background: radial-gradient(ellipse at 2% 4%, rgba(217,163,100,.22), transparent 43%), radial-gradient(ellipse at 98% 22%, rgba(190,118,87,.13), transparent 41%), radial-gradient(ellipse at 12% 92%, rgba(153,166,121,.15), transparent 46%), #f7f3eb !important;
+  background-attachment: fixed !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", Meiryo, sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.autumn-page ::selection { background: #dce9e0; color: #213f39; }
+.autumn-page .container { max-width: 1440px; }
+.autumn-page > .container, .autumn-page .seasonal-dawn-wrapper > .container { padding: 2rem clamp(1rem, 3vw, 2.5rem) 4rem; }
+.autumn-page .container > .grid { gap: 1.25rem; }
+.autumn-page :is(h1,h2,h3,h4) { color: var(--ink); letter-spacing: .015em; line-height: 1.5; }
+.autumn-page .text-xs { font-size: .875rem; line-height: 1.6; }
+.autumn-page :is(.text-gray-400,.text-gray-500,.text-gray-600) { color: var(--muted) !important; }
+.autumn-page :is(.text-gray-700,.text-gray-800,.text-gray-900) { color: var(--ink) !important; }
+.autumn-page :is(.text-blue-600,.text-indigo-600,.text-sp-primary) { color: var(--cedar) !important; }
+.autumn-page .text-purple-600 { color: #7a596c !important; }
+.autumn-page .text-green-600 { color: #47704a !important; }
+.autumn-page .text-orange-600, .autumn-page .text-yellow-600 { color: #926126 !important; }
+.autumn-page .text-red-600, .autumn-page .text-red-500 { color: #aa4037 !important; }
+.autumn-page :is(.border-gray-200,.border-gray-300) { border-color: var(--line) !important; }
+.autumn-page label { color: var(--ink); }
+
+/* Glass belongs on navigation and quiet surfaces; text always has a light backing. */
+body.autumn-page > nav {
+  background: linear-gradient(120deg, rgba(255,255,255,.87), rgba(252,246,235,.8)) !important;
+  border-bottom: 1px solid rgba(255,255,255,.95);
+  box-shadow: 0 1px 0 var(--line), 0 6px 24px rgba(94,70,37,.06) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(145%) !important;
+  backdrop-filter: blur(24px) saturate(145%) !important;
+}
+.autumn-page > nav .container { padding: 1rem clamp(1rem,3vw,2.5rem); }
+.autumn-page > nav h1 { font-size: 1.05rem; letter-spacing: .045em; color: var(--ink) !important; }
+.autumn-page > nav a {
+  min-height: 42px;
+  padding: .5rem .9rem !important;
+  font-size: .875rem;
+  border-radius: 999px !important;
+  border: 1px solid transparent;
+  transition: background .18s, box-shadow .18s;
+  white-space: nowrap;
+}
+.autumn-page > nav a.bg-gray-100 {
+  background: transparent !important;
+  color: #586159 !important;
+  border-color: transparent;
+}
+.autumn-page > nav a.bg-gray-100:hover { background: rgba(255,255,255,.9) !important; border-color: var(--line); }
+body.autumn-page > nav a[aria-current="page"] {
+  background: linear-gradient(145deg, #39766e, #285e58) !important;
+  border: 1px solid rgba(33,76,66,.5);
+  color: #fff !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.3), 0 3px 10px rgba(40,94,88,.17) !important;
+}
+.autumn-page > nav a span { display: inline; }
+.autumn-page > nav a img { object-fit: contain; flex-shrink: 0; }
+
+body.autumn-page :is(.rounded-lg.shadow-md, .bg-white.shadow, .bg-white.shadow-sm, .bg-white.shadow-lg, .bg-white.rounded-lg, .bg-white.rounded-xl.shadow-2xl, .bg-white.rounded-2xl.shadow-2xl, .search-container):not(button):not(a):not(input):not(select):not(textarea):not(nav),
+body.autumn-page .container > .grid > div,
+body.autumn-page .container > .bg-white {
+  background: var(--glass) !important;
+  color: var(--ink);
+  border: 1px solid rgba(255,255,255,.96) !important;
+  border-radius: 22px !important;
+  box-shadow: var(--glass-shadow) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(120%);
+  backdrop-filter: blur(18px) saturate(120%);
+  transition: border-color .18s, box-shadow .18s;
+}
+body.autumn-page :is(.bg-white.shadow:hover,.bg-white.shadow-md:hover) { transform: none; }
+.autumn-page .container > .grid.md\:grid-cols-4 > div::before { display: none; }
+.autumn-page :is(.bg-gray-50,.bg-gray-100) { background-color: #f5f2eb !important; }
+.autumn-page :is(.bg-blue-100,.bg-indigo-100) { background: #e2ece6 !important; color: #285e58 !important; }
+.autumn-page .bg-purple-100 { background: #eee4e9 !important; color: #765565 !important; }
+.autumn-page .bg-orange-100 { background: #f3e7d4 !important; color: #926126 !important; }
+.autumn-page .rounded-full { box-shadow: none; letter-spacing: 0; }
+
+/* A compact, bright opening keeps the working content in view. */
+.autumn-page .dashboard-hero {
+  align-items: center;
+  padding: 1.7rem 2rem;
+  border: 1px solid rgba(255,255,255,.95);
+  background: linear-gradient(115deg, rgba(255,253,249,.88), rgba(245,228,201,.52));
+  box-shadow: var(--glass-shadow);
+  border-radius: 24px;
+  gap: 1.5rem;
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+.autumn-page .dashboard-hero::after { display: none; }
+.autumn-page .dashboard-eyebrow { color: var(--maple); font-size: .75rem; letter-spacing: .18em; font-weight: 700; }
+.autumn-page .dashboard-hero h2 { font-size: clamp(1.65rem, 2.7vw, 2.3rem); font-weight: 700; }
+.autumn-page .dashboard-hero p:not(.dashboard-eyebrow) { color: var(--muted); font-size: .9375rem; }
+.autumn-page .connection-status { min-width: 0; background: rgba(255,255,255,.72); color: var(--muted); font-size: .875rem; border-color: var(--line); box-shadow: inset 0 1px 0 #fff; }
+.autumn-page .connection-status.is-online .connection-dot { background: #49714d; box-shadow: 0 0 0 .25rem rgba(73,113,77,.1); }
+.autumn-page .connection-status.is-error .connection-dot { background: #af473d; }
+.autumn-page .connection-retry { color: var(--cedar); }
+.autumn-page.dashboard-page .text-3xl { font-size: 2.3rem; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.autumn-page.dashboard-page .container > .grid.md\:grid-cols-4 > div { padding: 1.4rem; }
+.autumn-page.dashboard-page .container > .grid.md\:grid-cols-4 .rounded-full { border-radius: 16px; padding: .8rem !important; }
+
+/* Form fields, focus, and stable controls. */
+body.autumn-page.app-page :is(input[type="text"],input[type="email"],input[type="password"],input[type="number"],input[type="date"],input[type="month"],input[type="search"],select,textarea) {
+  color: var(--ink) !important;
+  background: rgba(255,255,255,.94) !important;
+  border: 1px solid #b9b8ac !important;
+  border-radius: 12px !important;
+  padding: .75rem .9rem !important;
+  font-size: 1rem;
+  line-height: 1.5;
+  min-height: 46px;
+  box-shadow: inset 0 1px 2px rgba(68,53,35,.025) !important;
+  transition: border-color .18s, box-shadow .18s;
+}
+body.autumn-page.app-page :is(input,select,textarea):focus {
+  color: var(--ink) !important;
+  background: #fff !important;
+  border-color: var(--cedar) !important;
+  box-shadow: 0 0 0 3px rgba(40,94,88,.13) !important;
+}
+.autumn-page ::placeholder { color: #73776d !important; opacity: 1; }
+.autumn-page input[type="checkbox"] { accent-color: var(--cedar); width: 18px; height: 18px; flex-shrink: 0; }
+.autumn-page :is(a,button,input,select,textarea):focus-visible { outline: 3px solid #39766e !important; outline-offset: 3px; }
+.autumn-page #projectForm { padding: 2rem; background: rgba(255,253,249,.94) !important; }
+.autumn-page #projectForm > div + div { border-top: 1px solid rgba(113,94,67,.12); padding-top: 1.4rem; }
+.autumn-page #projectForm label { font-size: .9375rem; }
+.autumn-page #specialtyList { background: #fffefa !important; color: var(--ink); box-shadow: 0 12px 32px rgba(68,53,35,.14) !important; }
+.autumn-page #specialtyList li { min-height: 44px; }
+body.autumn-page.app-page :is(button.bg-blue-600,a.bg-blue-600,.btn-primary,a.bg-sp-primary,button.bg-sp-primary,.btn-sp-primary) {
+  background: var(--sp-gradient) !important;
+  color: white !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 3px 9px rgba(40,94,88,.14) !important;
+}
+body.autumn-page.app-page :is(button.bg-white,a.bg-white,button.bg-gray-100,button.bg-gray-200,.btn-secondary) { background: #fffdf8 !important; color: var(--cedar) !important; border: 1px solid #c7c7b9 !important; box-shadow: inset 0 1px 0 #fff !important; }
+.autumn-page button { transition: background .18s, box-shadow .18s; }
+body.autumn-page :is(button,a).bg-red-600 { background: #aa4037 !important; box-shadow: none !important; }
+.autumn-page :is(button,a).bg-green-500 { background: #456a49 !important; }
+.autumn-page button:disabled { cursor: not-allowed; }
+
+/* Search keeps the existing three steps and every filter state. */
+.autumn-page .search-container { padding: 1.75rem; }
+.autumn-page .search-container > .text-center { text-align: left; }
+.autumn-page .search-container h2 { justify-content: flex-start; font-size: 1.6rem; color: var(--ink); }
+.autumn-page .search-container h3 { color: var(--ink); font-size: 1rem; }
+.autumn-page .search-container p { font-size: .875rem; color: var(--muted); }
+.autumn-page .search-container > .backdrop-blur-sm { background: rgba(246,241,230,.65); border: 1px solid rgba(113,94,67,.1); border-radius: 16px; backdrop-filter: none; }
+.autumn-page .step-number { flex-shrink: 0; width: 28px; height: 28px; padding: 0 !important; color: #fff; background: var(--cedar); font-size: .875rem; }
+body.autumn-page.app-page button:is(.filter-btn,.category-btn,.specialty-btn) {
+  color: var(--cedar) !important; background: rgba(255,255,255,.84) !important;
+  border: 1px solid #bccac0 !important; border-radius: 10px;
+  font-size: .875rem; min-height: 42px; padding: .5rem .8rem;
+  transform: none !important; box-shadow: none !important;
+}
+body.autumn-page.app-page button:is(.filter-btn.active,.category-btn.active,.specialty-btn.selected) {
+  color: #fff !important; background: var(--cedar) !important; border-color: var(--cedar) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 3px 8px rgba(40,94,88,.14) !important;
+}
+body.autumn-page.app-page button:is(.filter-btn,.category-btn,.specialty-btn):hover { border-color: var(--cedar) !important; }
+.autumn-page #freewordSearch { padding-right: 5rem !important; }
+.autumn-page .project-card { font-size: .9375rem; }
+.autumn-page .project-card:hover { transform: translateY(-2px); }
+.autumn-page .view-toggle-btn { min-height: 42px; }
+.autumn-page .view-toggle-btn.active { background: var(--cedar) !important; }
+.autumn-page .view-toggle-btn:not(.active) { color: var(--cedar) !important; }
+
+/* Quiet tables with stronger headings and row separation. */
+.autumn-page table { font-size: .875rem; }
+.autumn-page th { background: #f0ece2 !important; color: #4e574d !important; font-size: .875rem !important; letter-spacing: .01em !important; text-transform: none; padding: .9rem 1rem !important; border-bottom: 1px solid #d8d2c5 !important; white-space: nowrap; }
+.autumn-page td { padding: .9rem 1rem !important; color: var(--ink); border-bottom: 1px solid rgba(113,94,67,.14) !important; }
+.autumn-page tbody.bg-white { background: transparent !important; }
+.autumn-page tbody tr:nth-child(even), .autumn-page #projectTable tbody tr:nth-child(even) { background-color: rgba(245,242,234,.6); }
+.autumn-page tbody tr:hover, .autumn-page #projectTable tbody tr:hover { background-color: #eaf0e8 !important; }
+.autumn-page .overflow-x-auto { scrollbar-color: #bdb29c transparent; }
+
+/* Link directory: consistent surfaces, group labels, comfortable hit areas. */
+.autumn-page .group-section { opacity: 1; animation: none; }
+.autumn-page .group-section > div > div:first-child {
+  background: linear-gradient(100deg, rgba(237,223,199,.73), rgba(255,253,249,.7)) !important;
+  border-bottom: 1px solid rgba(113,94,67,.13); padding: 1rem 1.5rem;
+}
+.autumn-page .group-section h3 { color: #624a35 !important; font-size: 1rem; }
+.autumn-page .group-section > div > .grid { padding: 1.25rem; gap: 1rem; }
+body.autumn-page .link-card, body.autumn-page .link-card[class*="from-"] {
+  display: block; background: linear-gradient(135deg, rgba(255,255,255,.94), rgba(250,246,237,.84)) !important;
+  color: var(--ink) !important; border: 1px solid #e2dacc !important;
+  border-radius: 16px; padding: 1.25rem; box-shadow: inset 0 1px 0 #fff;
+  transition: border-color .18s, box-shadow .18s, transform .18s;
+}
+body.autumn-page .link-card:hover, body.autumn-page .link-card[class*="from-"]:hover {
+  background: #fffefa !important; border-color: #baa88a !important;
+  box-shadow: 0 6px 18px rgba(94,70,37,.09); transform: translateY(-2px);
+}
+.autumn-page .link-card h4 { color: var(--ink) !important; font-size: 1rem; line-height: 1.6; overflow-wrap: anywhere; }
+.autumn-page .link-card p { color: var(--muted) !important; margin-top: .2rem; }
+.autumn-page .link-card .rounded-full {
+  display: flex; align-items: center; justify-content: center; flex: 0 0 44px; height: 44px;
+  border-radius: 13px; padding: .6rem !important; background: #ece5d7 !important; color: #816039 !important;
+}
+.autumn-page #world-times-list { gap: 1rem; }
+.autumn-page #world-times-list > div { background: rgba(255,255,255,.65) !important; border: 1px solid var(--line); border-radius: 15px; box-shadow: inset 0 1px 0 #fff; }
+.autumn-page #world-times-list [id^="time-"] { color: var(--ink) !important; font-size: 1rem; letter-spacing: .01em; }
+.autumn-page .marquee-text { color: var(--muted); }
+.autumn-page .exchange-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .7rem; margin-bottom: 1.25rem; }
+.autumn-page .exchange-actions > a:first-child { background: rgba(241,246,236,.9) !important; border-color: #c6d1bc !important; min-height: 46px; flex-wrap: wrap; row-gap: .2rem; }
+.autumn-page .invoice-rate-button {
+  display: inline-flex; align-items: center; justify-content: center; gap: .65rem;
+  padding: .65rem 1rem; min-height: 46px; border-radius: 12px;
+  background: linear-gradient(135deg, #39766e, #285e58); color: #fff;
+  border: 1px solid #285e58; font-size: .875rem; font-weight: 600;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 3px 8px rgba(40,94,88,.15);
+  transition: box-shadow .18s, background .18s;
+}
+.autumn-page .invoice-rate-button:hover { background: #204e49; box-shadow: 0 4px 12px rgba(40,94,88,.25); }
+.autumn-page .invoice-rate-button > i:last-child { font-size: .75rem; opacity: .85; }
+
+/* Dialogs stay legible, without blurring the content underneath the text. */
+body.autumn-page :is(.modal-content, #detailModal .bg-white, #similarProjectsModal .bg-white) { background: #fffdf8 !important; color: var(--ink); border: 1px solid #e4dccc; box-shadow: 0 20px 70px rgba(49,42,28,.2) !important; }
+.autumn-page :is(#detailModal,#loadingOverlay) .bg-white { background: #fffdf8 !important; }
+.autumn-page #importBanner { background: var(--cedar) !important; }
+.autumn-page #importBanner h3 { color: #fff; }
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .autumn-page #projectCards { grid-template-columns: repeat(3,minmax(0,1fr)); }
+  .autumn-page .group-section .grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media (max-width: 767px) {
+  .autumn-page > nav { position: relative; }
+  .autumn-page > nav .container { padding: .85rem 1rem; }
+  .autumn-page > nav .container > div { gap: .8rem; }
+  .autumn-page > nav .container > div > div:last-child { width: 100%; gap: .3rem; }
+  .autumn-page > nav a { padding: .4rem .6rem !important; min-height: 40px; font-size: .875rem; }
+  .autumn-page > nav a i { font-size: .8rem; }
+  .autumn-page > nav h1 { font-size: 1rem; }
+  .autumn-page > .container, .autumn-page .seasonal-dawn-wrapper > .container { padding: 1.2rem 1rem 3rem; }
+  .autumn-page .dashboard-hero { padding: 1.4rem; align-items: flex-start; gap: 1rem; }
+  .autumn-page .connection-status { width: auto; }
+  .autumn-page .dashboard-page .container { padding: 1rem; }
+  .autumn-page.dashboard-page .container > .grid.md\:grid-cols-4 { grid-template-columns: repeat(2,minmax(0,1fr)); gap: .75rem; }
+  .autumn-page.dashboard-page .container > .grid.md\:grid-cols-4 > div { padding: 1rem; }
+  .autumn-page.dashboard-page .container > .grid.md\:grid-cols-4 > div > .flex { flex-wrap: wrap; gap: .5rem; }
+  .autumn-page.dashboard-page .text-3xl { font-size: 1.85rem; }
+  .autumn-page :is(.search-container,#projectForm) { padding: 1.25rem; }
+  .autumn-page .group-section > div > .grid { padding: 1rem; }
+  .autumn-page .link-card { padding: 1rem !important; }
+  .autumn-page .exchange-actions { align-items: stretch; }
+  .autumn-page .exchange-actions > a { width: 100%; justify-content: center; }
+  .autumn-page h2.flex { flex-wrap: wrap; gap: .5rem; }
+  .autumn-page .group-section .grid { grid-template-columns: minmax(0,1fr); }
+  .autumn-page #projectForm .flex { flex-wrap: wrap; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .autumn-page *, .autumn-page *::before, .autumn-page *::after { scroll-behavior: auto !important; transition: none !important; }
+  .autumn-page :is(.card-enter,.badge,.group-section) { animation: none !important; opacity: 1; }
+  .autumn-page .marquee-text { animation: none; padding-left: 0; white-space: normal; }
+  .autumn-page .marquee-container { height: auto; }
+  .autumn-page .link-card:hover, .autumn-page .project-card:hover { transform: none; }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  body.autumn-page > nav, body.autumn-page :is(.rounded-lg.shadow-md,.bg-white.rounded-lg,.search-container,.dashboard-hero) { background: #fcfaf6 !important; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  body.autumn-page > nav, body.autumn-page :is(.rounded-lg.shadow-md,.bg-white.rounded-lg,.search-container,.dashboard-hero) { background: #fcfaf6 !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+}
+@media print {
+  body.autumn-page { background: white !important; color: #222; }
+  .autumn-page > nav { position: static; }
+  body.autumn-page :is(.rounded-lg.shadow-md,.bg-white.rounded-lg,.search-container,.dashboard-hero) { background: white !important; box-shadow: none !important; backdrop-filter: none; }
+}
+/* Compact dynamic project cards use the same readable type scale. */
+.autumn-page .project-card h3 { font-size: 1rem; line-height: 1.6 !important; }
+.autumn-page .project-card .badge { font-size: .875rem !important; line-height: 1.5; }
+.autumn-page .project-card button { min-height: 42px; background: var(--cedar) !important; }
+body.autumn-page nav[aria-label="Pagination"] { background: transparent !important; border: 0; box-shadow: none !important; backdrop-filter: none !important; }
+.autumn-page footer { background: rgba(255,253,249,.7) !important; }
+.autumn-page footer .container { padding-top: 0; padding-bottom: 0; }
+
+/* Controls must outrank legacy dark panel styles sharing their utility classes. */
+body.autumn-page.app-page button.bg-green-500 { background: #456a49 !important; color: white !important; box-shadow: 0 3px 9px rgba(40,94,88,.12) !important; }
+.autumn-page.dashboard-page .container > .mt-8.flex { flex-wrap: wrap; gap: .75rem; }
+.autumn-page.dashboard-page .container > .mt-8.flex > a { margin: 0 !important; min-height: 46px; padding: .7rem 1.25rem; box-shadow: inset 0 1px 0 rgba(255,255,255,.3), 0 3px 9px rgba(67,64,46,.12); }
+.autumn-page.dashboard-page .container > .mt-8.flex > a.bg-purple-500 { background: #765b69; }
+.autumn-page.dashboard-page .container > .mt-8.flex > a.bg-blue-500 { background: var(--cedar); }

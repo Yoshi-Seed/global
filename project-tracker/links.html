@@ -66,8 +66,10 @@
     }
 
   </style>
+  <!-- Autumn Glass: presentation only; existing application scripts are unchanged. -->
+  <link rel="stylesheet" href="css/autumn-glass.css?v=20260924-3">
 </head>
-<body class="app-page bg-gray-50">
+<body class="autumn-page page-links app-page bg-gray-50">
   <!-- ナビゲーション -->
   <nav class="bg-white shadow-md sticky top-0 z-40">
     <div class="container mx-auto px-2 sm:px-4 py-2 sm:py-3">
@@ -88,7 +90,7 @@
           <a href="projects.html" class="px-2 sm:px-4 py-2 text-xs sm:text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center">
             <i class="fas fa-search sm:mr-2"></i><span class="hidden sm:inline ml-1">案件検索</span>
           </a>
-          <a href="links.html" class="px-2 sm:px-4 py-2 text-xs sm:text-sm text-white rounded-lg transition flex items-center" style="background-color: #1F7A85;">
+          <a href="links.html" aria-current="page" class="px-2 sm:px-4 py-2 text-xs sm:text-sm text-white rounded-lg transition flex items-center" style="background-color: #1F7A85;">
             <i class="fas fa-link sm:mr-2"></i><span class="hidden sm:inline ml-1">リンク集</span>
           </a>
           <a href="https://seedplanning.monday.com/boards/2723929863" target="_blank" rel="noopener noreferrer" class="px-2 sm:px-4 py-2 text-xs sm:text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center">
@@ -122,7 +124,7 @@
           </h2>
           
           <!-- 為替レート表示バー -->
-          <div class="mb-3">
+          <div class="exchange-actions mb-3">
             <a href="https://finance.yahoo.co.jp/fx/convert?bid=1&base=USD&counter=JPY" 
                target="_blank" 
                rel="noopener noreferrer"
@@ -135,6 +137,11 @@
                 (<span id="rate-update-time">取得中...</span>)
               </span>
               <i class="fas fa-external-link-alt text-xs text-gray-400 ml-2 group-hover:text-green-600 transition"></i>
+            </a>
+            <a class="invoice-rate-button" href="https://script.google.com/a/macros/seedplanning.co.jp/s/AKfycbzn54Eg-cwmUQhvEYvyTD57r90SBZnEK-MQA4ihfS1n4GjL64h55vLjbBFY9xLgiHcA/exec" target="_blank" rel="noopener noreferrer" aria-label="請求書レート確認（新しいタブで開く）">
+              <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i>
+              <span>請求書レート確認</span>
+              <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>
             </a>
           </div>
           
